@@ -48,14 +48,18 @@ export default function Login() {
     login(data)
   }
 
+  const handleRegisterClick = () => {
+    console.log('User clicked login button')
+
+    navigate('/register')
+  }
+
   return (
-    <div className='container relative hidden h-screen flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0'>
+    <div className='min-h-screen bg-background py-12 px-4 sm:px-6 lg:px-8'>
       <div className='flex min-h-screen flex-col items-center justify-center'>
         {/* Title and logo */}
         <div className='sm:mx-auto sm:w-full sm:max-w-md'>
-          <h2 className='mt-10 text-center text-3xl font-semibold leading-10 text-slate-800'>
-            Đăng Nhập
-          </h2>
+          <h2 className='mt-10 text-center text-3xl font-semibold leading-10 text-slate-800'>Đăng Nhập</h2>
         </div>
 
         {/* Form */}
@@ -89,12 +93,22 @@ export default function Login() {
                   </FormItem>
                 )}
               />
-              <Button disabled={isLoading} type='submit'>
+              <Button
+                disabled={isLoading}
+                type='submit'
+                className='px-6 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors duration-400 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2'
+              >
                 {isLoading && <Loader2Icon className='mr-2 h-4 w-4 animate-spin' />}
                 Đăng nhập
               </Button>
             </form>
           </Form>
+          <p className='mt-4 text-center text-accent'>
+            Chưa có tài khoản?{' '}
+            <button className='text-primary hover:underline' onClick={handleRegisterClick}>
+              Đăng ký
+            </button>
+          </p>
         </div>
       </div>
     </div>

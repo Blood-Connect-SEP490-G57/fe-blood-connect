@@ -8,6 +8,7 @@ import Protected from './components/protected'
 import Home from './pages/Home'
 import { Toaster } from './components/ui/toaster'
 import MainLayout from './components/layout/main-layout'
+import RegistrationPage from '@/pages/register.tsx'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -31,6 +32,12 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
               path='/'
               element={
                 <Home />
+              }
+            />
+            <Route
+              path='/register'
+              element={
+                <RegistrationPage />
               }
             />
             <Route
