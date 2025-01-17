@@ -1,55 +1,91 @@
 import React from 'react';
+import { Button } from '@/components/ui/button';
 
 interface MainLayoutProps {
   children: React.ReactNode;
 }
+
 const navigation = [
-  { name: 'Trang chủ', href: '#' },
-  { name: 'Tin Tức', href: '#' },
-  { name: 'Hỏi đáp', href: '#' },
-  { name: 'Liên Hệ', href: '#' },
+  { name: 'Trang chủ', href: '/' },
+  { name: 'Tin Tức', href: '/news' },
+  { name: 'Hỏi đáp', href: '/faq' },
+  { name: 'Liên Hệ', href: '/contact' },
 ]
 
 const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Header */}
-      <header className="absolute inset-x-0 top-0 z-50">
-        <nav aria-label="Global" className="flex items-center justify-between p-6 lg:px-8">
-          <div className="flex lg:flex-1">
-
-          </div>
-          <div className="flex lg:hidden">
-            <button
-              type="button"
-              className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
-            >
-              <span className="sr-only">Open main menu</span>
-            </button>
-          </div>
-          <div className="hidden lg:flex lg:gap-x-12">
-            {navigation.map((item) => (
-              <a key={item.name} href={item.href} className="text-sm/6 font-semibold text-gray-900">
-                {item.name}
+      <header className="bg-white shadow-sm">
+        <nav className="container mx-auto px-4">
+          <div className="flex items-center justify-between h-16">
+            <div className="flex items-center">
+              <a href="/" className="text-red-600 font-bold text-xl">
+                Giọt Máu Hi Vọng
               </a>
-            ))}
-          </div>
-          <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-            <a href="#" className="text-sm/6 font-semibold text-gray-900">
-              Log in <span aria-hidden="true">&rarr;</span>
-            </a>
+            </div>
+
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex items-center space-x-8">
+              {navigation.map((item) => (
+                <a
+                  key={item.name}
+                  href={item.href}
+                  className="text-gray-700 hover:text-red-600 transition-colors"
+                >
+                  {item.name}
+                </a>
+              ))}
+              <Button variant="default" className="bg-red-600 hover:bg-red-700">
+                Đăng nhập
+              </Button>
+            </div>
+
+            {/* Mobile menu button */}
+            <div className="md:hidden">
+              <Button variant="ghost" size="sm">
+                <span className="sr-only">Open menu</span>
+                {/* Add your menu icon here */}
+              </Button>
+            </div>
           </div>
         </nav>
       </header>
 
       {/* Content */}
-      <main className="flex-1 p-4 bg-gray-100">
+      <main className="flex-1">
         {children}
       </main>
 
       {/* Footer */}
-      <footer className="bg-blue-600 text-white p-4 text-center">
-        My Website Footer ©2025 Created by Me
+      <footer className="bg-gray-900 text-white py-12">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Về chúng tôi</h3>
+              <p className="text-gray-400">
+                Giọt Máu Hi Vọng là dự án phi lợi nhuận nhằm kết nối những người hiến máu tình nguyện với những người cần máu.
+              </p>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Liên hệ</h3>
+              <p className="text-gray-400">
+                Email: contact@giotmauhivong.vn<br />
+                Điện thoại: (84) 123-456-789<br />
+                Địa chỉ: Hà Nội, Việt Nam
+              </p>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Theo dõi chúng tôi</h3>
+              <div className="flex space-x-4">
+                {/* Add social media icons/links here */}
+              </div>
+            </div>
+          </div>
+          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+            <p>&copy; 2024 Giọt Máu Hi Vọng. All rights reserved.</p>
+          </div>
+        </div>
       </footer>
     </div>
   );
