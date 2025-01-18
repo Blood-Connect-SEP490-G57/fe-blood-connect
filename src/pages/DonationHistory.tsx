@@ -1,4 +1,3 @@
-import React from 'react'
 import { Calendar, Clock, MapPin, CheckCircle, XCircle, AlertCircle } from 'lucide-react'
 import {
   Table,

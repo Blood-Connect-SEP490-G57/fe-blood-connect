@@ -100,9 +100,8 @@ const HeroImage: React.FC = () => {
       {floatingCards.map((card, index) => (
         <div
           key={index}
-          className={`absolute ${card.position} bg-white p-4 rounded-lg shadow-xl animate-bounce-slow ${
-            index > 0 ? 'delay-150' : ''
-          }`}
+          className={`absolute ${card.position} bg-white p-4 rounded-lg shadow-xl animate-bounce-slow ${index > 0 ? 'delay-150' : ''
+            }`}
         >
           <div className='flex items-center gap-3'>
             <div className='p-2 bg-red-100 rounded-full'>{card.icon}</div>

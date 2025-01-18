@@ -5,10 +5,7 @@ import { Input } from '@/components/ui/input'
 import {
   Bell,
   Shield,
-  Smartphone,
-  Mail,
   Lock,
-  KeyRound,
   AlertTriangle,
 } from 'lucide-react'
 import { Switch } from '@/components/ui/switch'
@@ -85,11 +82,12 @@ const Settings = () => {
                 </div>
                 <Separator />
                 <div>
-                  <Dialog>
+                  <Dialog open={isChangingPassword} onOpenChange={setIsChangingPassword}>
                     <DialogTrigger asChild>
                       <Button
                         variant="outline"
                         className="w-full border-red-600 text-red-600 hover:bg-red-50"
+                        onClick={() => setIsChangingPassword(true)}
                       >
                         <Lock className="w-4 h-4 mr-2" />
                         Đổi mật khẩu

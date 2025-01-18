@@ -1,12 +1,13 @@
-import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Search, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import CampaignDetails from '@/components/blood-donation/campaign-details';
+import CampaignDetails from '@/components/blood-donation-registration/campaign-details';
+import { Dispatch, SetStateAction } from 'react';
+import { Step } from '@/pages/BloodDonationRegistration';
 
-const SelectCampaignStep = ({ searchQuery, setSearchQuery, selectedCampaign, setSelectedCampaign, setCurrentStep }) => {
+const SelectCampaignStep = ({ searchQuery, setSearchQuery, selectedCampaign, setSelectedCampaign, setCurrentStep }: { searchQuery: string, setSearchQuery: (query: string) => void, selectedCampaign: any, setSelectedCampaign: (campaign: any) => void, setCurrentStep: Dispatch<SetStateAction<Step>> }) => {
   const campaigns = [
     {
       id: '1',
@@ -67,8 +68,8 @@ const SelectCampaignStep = ({ searchQuery, setSearchQuery, selectedCampaign, set
                 key={campaign.id}
                 className={cn(
                   "cursor-pointer transition-all duration-200 rounded-lg border-2",
-                  selectedCampaign?.id === campaign.id 
-                    ? "border-red-600 shadow-md" 
+                  selectedCampaign?.id === campaign.id
+                    ? "border-red-600 shadow-md"
                     : "border-transparent hover:border-red-200"
                 )}
                 onClick={() => setSelectedCampaign(campaign)}

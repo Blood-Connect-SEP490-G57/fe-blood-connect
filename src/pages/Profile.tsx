@@ -1,4 +1,3 @@
-import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
@@ -13,7 +12,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import { Camera, User, Mail, Phone, MapPin, Droplet } from 'lucide-react'
+import { User } from 'lucide-react'
 import UserAvatar from '@/components/ui/user-avatar'
 
 const profileFormSchema = z.object({
@@ -35,8 +34,6 @@ const Profile = () => {
       bloodType: 'A+',
     },
   })
-
-  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const handleAvatarChange = async (file: File) => {
     try {

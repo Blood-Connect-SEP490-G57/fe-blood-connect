@@ -227,9 +227,8 @@ const RegistrationPage = () => {
             {[1, 2, 3, 4, 5].map((stepNumber) => (
               <div
                 key={stepNumber}
-                className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                  step >= stepNumber ? 'bg-primary text-primary-foreground' : 'bg-secondary text-accent'
-                }`}
+                className={`w-8 h-8 rounded-full flex items-center justify-center ${step >= stepNumber ? 'bg-primary text-primary-foreground' : 'bg-secondary text-accent'
+                  }`}
               >
                 {stepNumber}
               </div>

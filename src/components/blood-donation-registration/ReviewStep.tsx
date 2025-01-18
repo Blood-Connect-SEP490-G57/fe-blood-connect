@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import CampaignDetails from '@/components/blood-donation/campaign-details';
+import CampaignDetails from '@/components/blood-donation-registration/campaign-details';
 import { questions } from './questionnaire';
 import { STEPS } from '@/pages/BloodDonationRegistration';
 
@@ -34,7 +34,7 @@ const ReviewStep = ({ selectedCampaign, answers, setCurrentStep }: { selectedCam
             <CampaignDetails campaign={selectedCampaign} />
           </div>
         )}
-        
+
         <div className="space-y-4">
           <h3 className="font-medium text-lg">Câu trả lời của bạn</h3>
           <div className="bg-gray-50 rounded-lg p-4 space-y-3">

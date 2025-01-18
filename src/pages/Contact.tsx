@@ -174,10 +174,10 @@ const ContactPage = () => {
                       <FormItem>
                         <FormLabel>Nội dung</FormLabel>
                         <FormControl>
-                          <Textarea 
-                            placeholder="Nhập nội dung tin nhắn của bạn" 
-                            className="min-h-[150px]" 
-                            {...field} 
+                          <Textarea
+                            placeholder="Nhập nội dung tin nhắn của bạn"
+                            className="min-h-[150px]"
+                            {...field}
                           />
                         </FormControl>
                         <FormMessage />
@@ -206,7 +206,7 @@ const ContactPage = () => {
               </Form>
             </div>
           </div>
-        </div>    
+        </div>
       </div>
     </div>
   )

@@ -1,8 +1,8 @@
-import QuestionnaireStep from '@/components/blood-donation/QuestionnaireStep'
-import ReviewStep from '@/components/blood-donation/ReviewStep'
-import SelectCampaignStep from '@/components/blood-donation/SelectCampaignStep'
-import SelectDateStep from '@/components/blood-donation/SelectDateStep'
-import SuccessStep from '@/components/blood-donation/SuccessStep'
+import QuestionnaireStep from '@/components/blood-donation-registration/QuestionnaireStep'
+import ReviewStep from '@/components/blood-donation-registration/ReviewStep'
+import SelectCampaignStep from '@/components/blood-donation-registration/SelectCampaignStep'
+import SelectDateStep from '@/components/blood-donation-registration/SelectDateStep'
+import SuccessStep from '@/components/blood-donation-registration/SuccessStep'
 import { cn } from '@/lib/utils'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -15,7 +15,7 @@ export const STEPS = {
   SUCCESS: 4,
 } as const
 
-type Step = typeof STEPS[keyof typeof STEPS]
+export type Step = typeof STEPS[keyof typeof STEPS]
 
 const stepTitles: Record<Step, string> = {
   [STEPS.SELECT_DATE]: 'Chọn ngày',
@@ -52,12 +52,12 @@ const BloodDonationRegistration = () => {
         <div className="flex justify-between items-center relative">
           {/* Progress Line */}
           <div className="absolute left-0 right-0 h-1 bg-gray-200 top-1/2 transform -translate-y-1/2 z-0">
-            <div 
+            <div
               className="h-full bg-red-600 transition-all duration-300"
               style={{ width: `${(currentStep / (Object.keys(STEPS).length - 1)) * 100}%` }}
             />
           </div>
-          
+
           {/* Step Circles */}
           {Object.values(STEPS).map((step) => (
             <div key={step} className="z-10">
@@ -90,7 +90,7 @@ const BloodDonationRegistration = () => {
       case STEPS.SELECT_CAMPAIGN:
         return <SelectCampaignStep searchQuery={searchQuery} setSearchQuery={setSearchQuery} selectedCampaign={selectedCampaign} setSelectedCampaign={setSelectedCampaign} setCurrentStep={setCurrentStep} />;
       case STEPS.QUESTIONNAIRE:
-        return <QuestionnaireStep answers={answers} handleAnswerChange={handleAnswerChange} setCurrentStep={setCurrentStep} />;
+        return <QuestionnaireStep answers={answers} handleAnswerChange={handleAnswerChange} setCurrentStep={(step: number) => setCurrentStep(step as Step)} />;
       case STEPS.REVIEW:
         return <ReviewStep selectedCampaign={selectedCampaign} answers={answers} setCurrentStep={setCurrentStep} />;
       case STEPS.SUCCESS:
