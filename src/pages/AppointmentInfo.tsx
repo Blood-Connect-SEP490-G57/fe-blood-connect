@@ -1,4 +1,3 @@
-import React from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { MapPin, Calendar, User, Phone, Mail, Building, CreditCard, Baby, Briefcase, Droplet } from 'lucide-react'
@@ -158,7 +157,7 @@ const AppointmentInfo = () => {
               <p className="text-lg text-gray-600 text-center">
                 Chưa có phiếu đăng ký hiến máu
               </p>
-              <Button 
+              <Button
                 className="bg-red-600 hover:bg-red-700 text-white"
                 onClick={() => console.log('Navigate to registration')}
               >

@@ -1,9 +1,14 @@
-import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { CheckCircle, ChevronRight } from 'lucide-react';
 
-const SuccessStep = ({ navigate }) => {
+import { FC } from 'react';
+
+interface SuccessStepProps {
+  navigate: (path: string) => void;
+}
+
+const SuccessStep: FC<SuccessStepProps> = ({ navigate }) => {
   return (
     <Card className="border-none shadow-lg text-center">
       <CardContent className="pt-6">

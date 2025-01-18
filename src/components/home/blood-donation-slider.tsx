@@ -70,7 +70,7 @@ const BloodDonationSlider: React.FC<campaignsProps> = ({ campaigns }) => {
                       alt={campaign.name}
                       className='w-full h-full object-cover'
                       onError={(e) => {
-                        ;(e.target as HTMLImageElement).src =
+                        ; (e.target as HTMLImageElement).src =
                           'https://images.unsplash.com/photo-1615461066841-6116e61058f4'
                       }}
                     />
@@ -128,9 +128,8 @@ const BloodDonationSlider: React.FC<campaignsProps> = ({ campaigns }) => {
               <button
                 key={index}
                 onClick={() => setCurrentSlide(index)}
-                className={`w-3 h-3 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary ${
-                  currentSlide === index ? 'bg-primary' : 'bg-gray-300'
-                }`}
+                className={`w-3 h-3 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary ${currentSlide === index ? 'bg-primary' : 'bg-gray-300'
+                  }`}
                 aria-label={`Go to slide ${index + 1}`}
               />
             ))}

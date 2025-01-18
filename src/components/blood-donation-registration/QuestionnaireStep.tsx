@@ -1,9 +1,14 @@
-import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import Questionnaire from '@/components/blood-donation/questionnaire';
+import Questionnaire from '@/components/blood-donation-registration/questionnaire';
 
-const QuestionnaireStep = ({ answers, handleAnswerChange, setCurrentStep }) => {
+interface QuestionnaireStepProps {
+  answers: { [key: string]: any };
+  handleAnswerChange: (questionId: string, answer: any) => void;
+  setCurrentStep: (step: number) => void;
+}
+
+const QuestionnaireStep: React.FC<QuestionnaireStepProps> = ({ answers, handleAnswerChange, setCurrentStep }) => {
   return (
     <div className="space-y-6">
       <Card className="border-none shadow-lg">

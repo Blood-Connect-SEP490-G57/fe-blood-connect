@@ -1,4 +1,3 @@
-import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -7,8 +6,14 @@ import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { vi } from 'date-fns/locale';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { STEPS, Step } from '@/pages/BloodDonationRegistration';
 
-const SelectDateStep = ({ dateRange, setDateRange, setCurrentStep }) => {
+type DateRange = {
+  from: Date | undefined;
+  to: Date | undefined;
+};
+
+const SelectDateStep = ({ dateRange, setDateRange, setCurrentStep }: { dateRange: DateRange, setDateRange: (range: DateRange) => void, setCurrentStep: (step: Step) => void }) => {
   return (
     <Card className="border-none shadow-lg">
       <CardHeader>
@@ -41,7 +46,7 @@ const SelectDateStep = ({ dateRange, setDateRange, setCurrentStep }) => {
                 mode="single"
                 selected={dateRange.from}
                 onSelect={(date) =>
-                  setDateRange(prev => ({ ...prev, from: date }))
+                  setDateRange({ ...dateRange, from: date })
                 }
                 disabled={(date) => date < new Date()}
                 locale={vi}
@@ -72,7 +77,7 @@ const SelectDateStep = ({ dateRange, setDateRange, setCurrentStep }) => {
                 mode="single"
                 selected={dateRange.to}
                 onSelect={(date) =>
-                  setDateRange(prev => ({ ...prev, to: date }))
+                  setDateRange({ ...dateRange, to: date })
                 }
                 disabled={(date) => {
                   return date < new Date() || (dateRange.from ? date < dateRange.from : false);
@@ -87,7 +92,7 @@ const SelectDateStep = ({ dateRange, setDateRange, setCurrentStep }) => {
         <Button
           className="w-full bg-red-600 text-white hover:bg-red-700"
           disabled={!dateRange.from || !dateRange.to}
-          onClick={() => setCurrentStep(1)}
+          onClick={() => setCurrentStep(STEPS.SELECT_CAMPAIGN)}
         >
           Tiếp tục
           <ChevronRight className="ml-2 h-4 w-4" />
