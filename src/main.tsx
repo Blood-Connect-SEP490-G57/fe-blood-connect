@@ -9,6 +9,14 @@ import Home from './pages/Home'
 import { Toaster } from './components/ui/toaster'
 import MainLayout from './components/layout/main-layout'
 import RegistrationPage from '@/pages/register.tsx'
+import ContactPage from './pages/Contact'
+import FAQPage from './pages/FAQ'
+import NewsPage from './pages/News'
+import DonationHistory from './pages/DonationHistory'
+import AppointmentInfo from './pages/AppointmentInfo'
+import BloodDonationRegistration from './pages/BloodDonationRegistration'
+import Profile from './pages/Profile'
+import Settings from './pages/Settings'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -45,6 +53,60 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
               element={
                 <Protected tokenRequired={false} destination='/login'>
                   <Login />
+                </Protected>
+              }
+            />
+            <Route
+              path='/contact'
+              element={
+                <ContactPage />
+              }
+            />
+            <Route
+              path='/faq'
+              element={
+                <FAQPage />
+              }
+            />
+            <Route
+              path='/news'
+              element={
+                <NewsPage />
+              }
+            />
+            <Route
+              path='/donation-history'
+              element={
+                <Protected tokenRequired={false} destination='/login'>
+                  <DonationHistory />
+                </Protected>
+              }
+            />
+            <Route
+              path='/appointment-info'
+              element={
+                <Protected tokenRequired={false} destination='/login'>
+                  <AppointmentInfo />
+                </Protected>
+              }
+            />
+            <Route
+              path='/blood-donation-registration'
+              element={
+                <BloodDonationRegistration />
+              }
+            />
+            <Route
+              path='/profile'
+              element={
+                <Profile />
+              }
+            />
+            <Route
+              path='/settings'
+              element={
+                <Protected tokenRequired={false} destination='/login'>
+                  <Settings />
                 </Protected>
               }
             />
