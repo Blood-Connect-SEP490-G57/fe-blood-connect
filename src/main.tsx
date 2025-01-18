@@ -14,6 +14,9 @@ import FAQPage from './pages/FAQ'
 import NewsPage from './pages/News'
 import DonationHistory from './pages/DonationHistory'
 import AppointmentInfo from './pages/AppointmentInfo'
+import BloodDonationRegistration from './pages/BloodDonationRegistration'
+import Profile from './pages/Profile'
+import Settings from './pages/Settings'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -84,6 +87,26 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
               element={
                 <Protected tokenRequired={false} destination='/login'>
                   <AppointmentInfo />
+                </Protected>
+              }
+            />
+            <Route
+              path='/blood-donation-registration'
+              element={
+                <BloodDonationRegistration />
+              }
+            />
+            <Route
+              path='/profile'
+              element={
+                <Profile />
+              }
+            />
+            <Route
+              path='/settings'
+              element={
+                <Protected tokenRequired={false} destination='/login'>
+                  <Settings />
                 </Protected>
               }
             />
