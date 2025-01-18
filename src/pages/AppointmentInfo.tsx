@@ -88,7 +88,7 @@ const ContactItem = ({ icon: Icon, label, value }: { icon: any, label: string, v
 const AppointmentInfo = () => {
   const personalInfo: PersonalInfo = {
     fullName: 'Bế Tuấn Minh',
-    idNumber: '020203000671',
+    idNumber: '98437597984389567',
     dateOfBirth: '22/03/2003',
     gender: 'Nam',
     occupation: 'Kỹ sư',
