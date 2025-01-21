@@ -12,12 +12,10 @@ import RegistrationPage from '@/pages/register.tsx'
 import ContactPage from './pages/Contact'
 import FAQPage from './pages/FAQ'
 import NewsPage from './pages/News'
-import DonationHistory from './components/user-profile/DonationHistory'
-import AppointmentInfo from './components/user-profile/AppointmentInfo'
 import BloodDonationRegistration from './pages/BloodDonationRegistration'
-import Profile from './components/user-profile/Profile'
 import Settings from './pages/Settings'
 import UserProfilePage from './pages/UserProfile'
+import ForgotPassword from './pages/ForgotPassword'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -60,6 +58,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
                 </Protected>
               }
             />
+            <Route path='/forgot-password' element={<ForgotPassword />} />
             <Route path='*' element={<Navigate to='/' />} />
           </Routes>
         </MainLayout>
