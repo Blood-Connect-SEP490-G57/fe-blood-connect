@@ -12,11 +12,12 @@ import RegistrationPage from '@/pages/register.tsx'
 import ContactPage from './pages/Contact'
 import FAQPage from './pages/FAQ'
 import NewsPage from './pages/News'
-import DonationHistory from './pages/DonationHistory'
-import AppointmentInfo from './pages/AppointmentInfo'
+import DonationHistory from './components/user-profile/DonationHistory'
+import AppointmentInfo from './components/user-profile/AppointmentInfo'
 import BloodDonationRegistration from './pages/BloodDonationRegistration'
-import Profile from './pages/Profile'
+import Profile from './components/user-profile/Profile'
 import Settings from './pages/Settings'
+import UserProfilePage from './pages/UserProfile'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -49,24 +50,8 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
             <Route path='/contact' element={<ContactPage />} />
             <Route path='/faq' element={<FAQPage />} />
             <Route path='/news' element={<NewsPage />} />
-            <Route
-              path='/donation-history'
-              element={
-                <Protected tokenRequired={false} destination='/login'>
-                  <DonationHistory />
-                </Protected>
-              }
-            />
-            <Route
-              path='/appointment-info'
-              element={
-                <Protected tokenRequired={false} destination='/login'>
-                  <AppointmentInfo />
-                </Protected>
-              }
-            />
             <Route path='/blood-donation-registration' element={<BloodDonationRegistration />} />
-            <Route path='/profile' element={<Profile />} />
+            <Route path='/user-profile-page' element={<UserProfilePage />} />
             <Route
               path='/settings'
               element={

@@ -19,8 +19,6 @@ const Header: React.FC = () => {
     { name: 'TIN TỨC', href: '/news' },
     { name: 'HỎI ĐÁP', href: '/faq' },
     { name: 'LIÊN HỆ', href: '/contact' },
-    { name: 'LỊCH SỬ ĐẶT HẸN', href: '/donation-history' },
-    { name: 'LỊCH HẸN CỦA TÔI', href: '/appointment-info' },
     { name: 'ĐĂNG KÝ HIẾN MÁU', href: '/blood-donation-registration' }
   ]
 
@@ -69,7 +67,7 @@ const Header: React.FC = () => {
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => navigate('/profile')}>
+                <DropdownMenuItem onClick={() => navigate('/user-profile-page')}>
                   <User className='mr-2 h-4 w-4' />
                   <span>Hồ sơ cá nhân</span>
                 </DropdownMenuItem>
