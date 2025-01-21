@@ -17,10 +17,10 @@ export const formatMoney = (value: any) => {
     style: 'currency',
     currency: 'VND',
     minimumFractionDigits: 0, // Số lượng số thập phân tối thiểu
-    maximumFractionDigits: 0, // Số lượng số thập phân tối đa
-  });
+    maximumFractionDigits: 0 // Số lượng số thập phân tối đa
+  })
 
-  return formatter.format(value);
+  return formatter.format(value)
 }
 
 export const getViewMenu = (value: string | number, menu: { code: string | number; title: string }[]) => {
