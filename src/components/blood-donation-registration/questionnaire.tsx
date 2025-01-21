@@ -25,7 +25,6 @@ export const questions: Question[] = [
     question: 'Bạn có đang sử dụng thuốc kháng sinh không?',
     options: ['Không', 'Có']
   }
-  // Thêm các câu hỏi khác...
 ]
 
 interface QuestionnaireProps {
