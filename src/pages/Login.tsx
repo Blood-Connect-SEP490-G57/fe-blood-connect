@@ -113,7 +113,7 @@ export default function Login() {
                 </div>
 
                 <div className='text-sm'>
-                  <a href='#' className='font-medium text-red-600 hover:text-red-500'>
+                  <a href='/forgot-password' className='font-medium text-red-600 hover:text-red-500'>
                     Quên mật khẩu?
                   </a>
                 </div>

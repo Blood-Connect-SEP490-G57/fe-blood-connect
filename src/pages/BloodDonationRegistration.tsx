@@ -6,12 +6,12 @@ import { cn } from '@/lib/utils'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-export const STEPS = {
-  SELECT_CAMPAIGN: 0,
-  QUESTIONNAIRE: 1,
-  REVIEW: 2,
-  SUCCESS: 3
-} as const
+export enum STEPS {
+  SELECT_CAMPAIGN = 0,
+  QUESTIONNAIRE = 1,
+  REVIEW = 2,
+  SUCCESS = 3
+}
 
 export type Step = (typeof STEPS)[keyof typeof STEPS]
 
@@ -25,13 +25,6 @@ const stepTitles: Record<Step, string> = {
 const BloodDonationRegistration = () => {
   const navigate = useNavigate()
   const [currentStep, setCurrentStep] = useState<Step>(STEPS.SELECT_CAMPAIGN)
-  const [dateRange, setDateRange] = useState<{
-    from: Date | undefined
-    to: Date | undefined
-  }>({
-    from: undefined,
-    to: undefined
-  })
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCampaign, setSelectedCampaign] = useState<any>(null)
   const [answers, setAnswers] = useState<Record<string, string>>({})
@@ -56,21 +49,23 @@ const BloodDonationRegistration = () => {
           </div>
 
           {/* Step Circles */}
-          {Object.values(STEPS).map((step) => (
-            <div key={step} className='z-10'>
-              <div className='flex flex-col items-center'>
-                <div
-                  className={cn(
-                    'w-8 h-8 rounded-full flex items-center justify-center transition-colors duration-300',
-                    currentStep >= step ? 'bg-red-600 text-white' : 'bg-gray-200 text-gray-600'
-                  )}
-                >
-                  {step + 1}
+          {Object.values(STEPS)
+            .filter((step) => typeof step === 'number')
+            .map((step) => (
+              <div key={step} className='z-10'>
+                <div className='flex flex-col items-center'>
+                  <div
+                    className={cn(
+                      'w-8 h-8 rounded-full flex items-center justify-center transition-colors duration-300',
+                      currentStep >= step ? 'bg-red-600 text-white' : 'bg-gray-200 text-gray-600'
+                    )}
+                  >
+                    {step + 1}
+                  </div>
+                  <span className='text-sm mt-2 font-medium text-gray-600'>{stepTitles[step]}</span>
                 </div>
-                <span className='text-sm mt-2 font-medium text-gray-600'>{stepTitles[step]}</span>
               </div>
-            </div>
-          ))}
+            ))}
         </div>
       </div>
     )
