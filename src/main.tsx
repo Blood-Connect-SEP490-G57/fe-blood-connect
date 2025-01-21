@@ -36,18 +36,8 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
       <BrowserRouter>
         <MainLayout>
           <Routes>
-            <Route
-              path='/'
-              element={
-                <Home />
-              }
-            />
-            <Route
-              path='/register'
-              element={
-                <RegistrationPage />
-              }
-            />
+            <Route path='/' element={<Home />} />
+            <Route path='/register' element={<RegistrationPage />} />
             <Route
               path='/login'
               element={
@@ -56,24 +46,9 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
                 </Protected>
               }
             />
-            <Route
-              path='/contact'
-              element={
-                <ContactPage />
-              }
-            />
-            <Route
-              path='/faq'
-              element={
-                <FAQPage />
-              }
-            />
-            <Route
-              path='/news'
-              element={
-                <NewsPage />
-              }
-            />
+            <Route path='/contact' element={<ContactPage />} />
+            <Route path='/faq' element={<FAQPage />} />
+            <Route path='/news' element={<NewsPage />} />
             <Route
               path='/donation-history'
               element={
@@ -90,18 +65,8 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
                 </Protected>
               }
             />
-            <Route
-              path='/blood-donation-registration'
-              element={
-                <BloodDonationRegistration />
-              }
-            />
-            <Route
-              path='/profile'
-              element={
-                <Profile />
-              }
-            />
+            <Route path='/blood-donation-registration' element={<BloodDonationRegistration />} />
+            <Route path='/profile' element={<Profile />} />
             <Route
               path='/settings'
               element={

@@ -1,13 +1,27 @@
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Search, ChevronRight } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import CampaignDetails from '@/components/blood-donation-registration/campaign-details';
-import { Dispatch, SetStateAction } from 'react';
-import { Step } from '@/pages/BloodDonationRegistration';
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Search, ChevronRight } from 'lucide-react'
+import { cn } from '@/lib/utils'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import CampaignDetails from '@/components/blood-donation-registration/campaign-details'
+import { Dispatch, SetStateAction, useState } from 'react'
+import { Step } from '@/pages/BloodDonationRegistration'
 
-const SelectCampaignStep = ({ searchQuery, setSearchQuery, selectedCampaign, setSelectedCampaign, setCurrentStep }: { searchQuery: string, setSearchQuery: (query: string) => void, selectedCampaign: any, setSelectedCampaign: (campaign: any) => void, setCurrentStep: Dispatch<SetStateAction<Step>> }) => {
+const SelectCampaignStep = ({
+  searchQuery,
+  setSearchQuery,
+  selectedCampaign,
+  setSelectedCampaign,
+  setCurrentStep
+}: {
+  searchQuery: string
+  setSearchQuery: (query: string) => void
+  selectedCampaign: any
+  setSelectedCampaign: (campaign: any) => void
+  setCurrentStep: Dispatch<SetStateAction<Step>>
+}) => {
+  const [selectedDistrict, setSelectedDistrict] = useState<string>('')
+
   const campaigns = [
     {
       id: '1',
@@ -15,7 +29,8 @@ const SelectCampaignStep = ({ searchQuery, setSearchQuery, selectedCampaign, set
       location: 'Bệnh viện Bạch Mai, Hà Nội',
       date: '2024-03-20',
       timeSlot: '08:00 - 11:00',
-      description: 'Chương trình hiến máu nhân đạo tổ chức định kỳ tại Bệnh viện Bạch Mai. Chúng tôi mong muốn thu thập được nguồn máu dự trữ để phục vụ công tác cấp cứu và điều trị.',
+      description:
+        'Chương trình hiến máu nhân đạo tổ chức định kỳ tại Bệnh viện Bạch Mai. Chúng tôi mong muốn thu thập được nguồn máu dự trữ để phục vụ công tác cấp cứu và điều trị.',
       currentDonors: 15,
       maxDonors: 50,
       requirements: [
@@ -31,48 +46,72 @@ const SelectCampaignStep = ({ searchQuery, setSearchQuery, selectedCampaign, set
       location: 'Trung tâm Y tế Quận Hoàn Kiếm',
       date: '2024-03-25',
       timeSlot: '09:00 - 12:00',
-      description: 'Ngày hội hiến máu tình nguyện với chủ đề "Một giọt máu - Một tấm lòng". Tham gia cùng chúng tôi để mang lại sự sống cho những người cần máu.',
+      description:
+        'Ngày hội hiến máu tình nguyện với chủ đề "Một giọt máu - Một tấm lòng". Tham gia cùng chúng tôi để mang lại sự sống cho những người cần máu.',
       currentDonors: 20,
       maxDonors: 60,
-      requirements: [
-        'Độ tuổi từ 18-60',
-        'Cân nặng trên 45kg',
-        'Không mắc các bệnh truyền nhiễm',
-        'Không sử dụng thuốc kháng sinh trong 7 ngày gần đây'
-      ]
+      requirements: ['Độ tuổi từ 18-60', 'Cân nặng trên 45kg', 'Không mắc các bệnh truyền nhiễm']
     }
-  ];
+  ]
+
+  const filteredCampaigns = campaigns.filter(
+    (campaign) =>
+      campaign.location.includes(selectedDistrict) && campaign.name.toLowerCase().includes(searchQuery.toLowerCase())
+  )
 
   return (
-    <div className="space-y-6">
-      <Card className="border-none shadow-lg">
+    <div className='space-y-6'>
+      <Card className='border-none shadow-lg'>
         <CardHeader>
           <CardTitle>Chọn buổi hiến máu</CardTitle>
-          <CardDescription>
-            Chọn buổi hiến máu phù hợp với lịch của bạn
-          </CardDescription>
+          <CardDescription>Chọn buổi hiến máu phù hợp với lịch của bạn</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="relative mb-6">
-            <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+          <div className='relative mb-6'>
+            <Search className='absolute left-3 top-3 h-4 w-4 text-gray-400' />
             <Input
-              placeholder="Tìm kiếm buổi hiến máu..."
-              className="pl-10"
+              placeholder='Tìm kiếm buổi hiến máu...'
+              className='pl-10'
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <div className="space-y-4">
-            {campaigns.map((campaign) => (
+          <div className='relative mb-6'>
+            <label htmlFor='district' className='block text-sm font-medium text-gray-700'>
+              Chọn Huyện
+            </label>
+            <select
+              id='district'
+              name='district'
+              className='mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm rounded-md'
+              value={selectedDistrict}
+              onChange={(e) => setSelectedDistrict(e.target.value)}
+            >
+              <option value=''>Tất cả</option>
+              <option value='Hoàn Kiếm'>Hoàn Kiếm</option>
+              <option value='Đống Đa'>Đống Đa</option>
+              <option value='Ba Đình'>Ba Đình</option>
+              {/* Thêm các huyện khác nếu cần */}
+            </select>
+          </div>
+          <div className='space-y-4'>
+            {filteredCampaigns.map((campaign) => (
               <div
                 key={campaign.id}
+                role='button'
+                tabIndex={0}
                 className={cn(
-                  "cursor-pointer transition-all duration-200 rounded-lg border-2",
+                  'cursor-pointer transition-all duration-200 rounded-lg border-2',
                   selectedCampaign?.id === campaign.id
-                    ? "border-red-600 shadow-md"
-                    : "border-transparent hover:border-red-200"
+                    ? 'border-red-600 shadow-md'
+                    : 'border-transparent hover:border-red-200'
                 )}
                 onClick={() => setSelectedCampaign(campaign)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    setSelectedCampaign(campaign)
+                  }
+                }}
               >
                 <CampaignDetails campaign={campaign} />
               </div>
@@ -81,24 +120,21 @@ const SelectCampaignStep = ({ searchQuery, setSearchQuery, selectedCampaign, set
         </CardContent>
       </Card>
 
-      <div className="flex justify-between">
-        <Button
-          variant="outline"
-          onClick={() => setCurrentStep(0)}
-        >
+      <div className='flex justify-between'>
+        <Button variant='outline' onClick={() => setCurrentStep(0)}>
           Quay lại
         </Button>
         <Button
-          className="bg-red-600 text-white hover:bg-red-700"
+          className='bg-red-600 text-white hover:bg-red-700'
           disabled={!selectedCampaign}
-          onClick={() => setCurrentStep(2)}
+          onClick={() => setCurrentStep(1)}
         >
           Tiếp tục
-          <ChevronRight className="ml-2 h-4 w-4" />
+          <ChevronRight className='ml-2 h-4 w-4' />
         </Button>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default SelectCampaignStep; 
+export default SelectCampaignStep

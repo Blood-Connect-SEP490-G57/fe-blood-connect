@@ -1,48 +1,46 @@
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import Questionnaire from '@/components/blood-donation-registration/questionnaire';
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import Questionnaire from '@/components/blood-donation-registration/questionnaire'
+import PropTypes from 'prop-types'
 
 interface QuestionnaireStepProps {
-  answers: { [key: string]: any };
-  handleAnswerChange: (questionId: string, answer: any) => void;
-  setCurrentStep: (step: number) => void;
+  answers: { [key: string]: any }
+  handleAnswerChange: (questionId: string, answer: any) => void
+  setCurrentStep: (step: number) => void
 }
 
 const QuestionnaireStep: React.FC<QuestionnaireStepProps> = ({ answers, handleAnswerChange, setCurrentStep }) => {
+  QuestionnaireStep.propTypes = {
+    answers: PropTypes.object.isRequired,
+    handleAnswerChange: PropTypes.func.isRequired,
+    setCurrentStep: PropTypes.func.isRequired
+  }
   return (
-    <div className="space-y-6">
-      <Card className="border-none shadow-lg">
+    <div className='space-y-6'>
+      <Card className='border-none shadow-lg'>
         <CardHeader>
           <CardTitle>Bảng câu hỏi sức khỏe</CardTitle>
-          <CardDescription>
-            Vui lòng trả lời các câu hỏi sau để đảm bảo bạn đủ điều kiện hiến máu
-          </CardDescription>
+          <CardDescription>Vui lòng trả lời các câu hỏi sau để đảm bảo bạn đủ điều kiện hiến máu</CardDescription>
         </CardHeader>
         <CardContent>
-          <Questionnaire
-            onAnswerChange={handleAnswerChange}
-            answers={answers}
-          />
+          <Questionnaire onAnswerChange={handleAnswerChange} answers={answers} />
         </CardContent>
       </Card>
 
-      <div className="flex justify-between">
-        <Button
-          variant="outline"
-          onClick={() => setCurrentStep(1)}
-        >
+      <div className='flex justify-between'>
+        <Button variant='outline' onClick={() => setCurrentStep(0)}>
           Quay lại
         </Button>
         <Button
-          className="bg-red-600 text-white hover:bg-red-700"
-          onClick={() => setCurrentStep(3)}
+          className='bg-red-600 text-white hover:bg-red-700'
+          onClick={() => setCurrentStep(2)}
           disabled={Object.keys(answers).length < 3}
         >
           Tiếp tục
         </Button>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default QuestionnaireStep; 
+export default QuestionnaireStep

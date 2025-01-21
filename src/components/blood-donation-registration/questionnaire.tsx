@@ -24,7 +24,7 @@ export const questions: Question[] = [
     id: 'q3',
     question: 'Bạn có đang sử dụng thuốc kháng sinh không?',
     options: ['Không', 'Có']
-  },
+  }
   // Thêm các câu hỏi khác...
 ]
 
@@ -35,18 +35,15 @@ interface QuestionnaireProps {
 
 const Questionnaire: React.FC<QuestionnaireProps> = ({ onAnswerChange, answers }) => {
   return (
-    <div className="space-y-6">
+    <div className='space-y-6'>
       {questions.map((q) => (
         <Card key={q.id}>
-          <CardContent className="pt-6">
-            <div className="space-y-4">
-              <Label className="text-base">{q.question}</Label>
-              <RadioGroup
-                value={answers[q.id]}
-                onValueChange={(value) => onAnswerChange(q.id, value)}
-              >
+          <CardContent className='pt-6'>
+            <div className='space-y-4'>
+              <Label className='text-base'>{q.question}</Label>
+              <RadioGroup value={answers[q.id]} onValueChange={(value) => onAnswerChange(q.id, value)}>
                 {q.options.map((option, i) => (
-                  <div key={i} className="flex items-center space-x-2">
+                  <div key={i} className='flex items-center space-x-2'>
                     <RadioGroupItem value={option} id={`${q.id}-${i}`} />
                     <Label htmlFor={`${q.id}-${i}`}>{option}</Label>
                   </div>
@@ -60,4 +57,4 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({ onAnswerChange, answers }
   )
 }
 
-export default Questionnaire 
+export default Questionnaire

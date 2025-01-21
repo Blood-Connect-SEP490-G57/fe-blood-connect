@@ -20,66 +20,37 @@ interface ContactInfo {
 
 const RegistrationIcon = () => (
   <svg
-    width="128"
-    height="128"
-    viewBox="0 0 128 128"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    className="text-red-600"
+    width='128'
+    height='128'
+    viewBox='0 0 128 128'
+    fill='none'
+    xmlns='http://www.w3.org/2000/svg'
+    className='text-red-600'
   >
-    <rect
-      x="24"
-      y="16"
-      width="80"
-      height="96"
-      rx="8"
-      className="fill-red-50"
-      stroke="currentColor"
-      strokeWidth="4"
-    />
-    <path
-      d="M44 48H84"
-      stroke="currentColor"
-      strokeWidth="4"
-      strokeLinecap="round"
-    />
-    <path
-      d="M44 64H84"
-      stroke="currentColor"
-      strokeWidth="4"
-      strokeLinecap="round"
-    />
-    <path
-      d="M44 80H64"
-      stroke="currentColor"
-      strokeWidth="4"
-      strokeLinecap="round"
-    />
-    <circle
-      cx="64"
-      cy="32"
-      r="4"
-      fill="currentColor"
-    />
+    <rect x='24' y='16' width='80' height='96' rx='8' className='fill-red-50' stroke='currentColor' strokeWidth='4' />
+    <path d='M44 48H84' stroke='currentColor' strokeWidth='4' strokeLinecap='round' />
+    <path d='M44 64H84' stroke='currentColor' strokeWidth='4' strokeLinecap='round' />
+    <path d='M44 80H64' stroke='currentColor' strokeWidth='4' strokeLinecap='round' />
+    <circle cx='64' cy='32' r='4' fill='currentColor' />
   </svg>
 )
 
-const InfoItem = ({ icon: Icon, label, value }: { icon: any, label: string, value: string }) => (
-  <div className="flex justify-between items-center">
-    <div className="flex items-center gap-2 text-gray-600">
-      <Icon className="w-4 h-4" />
+const InfoItem = ({ icon: Icon, label, value }: { icon: any; label: string; value: string }) => (
+  <div className='flex justify-between items-center'>
+    <div className='flex items-center gap-2 text-gray-600'>
+      <Icon className='w-4 h-4' />
       <span>{label}:</span>
     </div>
-    <span className="font-medium">{value}</span>
+    <span className='font-medium'>{value}</span>
   </div>
 )
 
-const ContactItem = ({ icon: Icon, label, value }: { icon: any, label: string, value: string }) => (
-  <div className="flex items-start gap-2">
-    <Icon className="w-5 h-5 text-gray-500 mt-1" />
+const ContactItem = ({ icon: Icon, label, value }: { icon: any; label: string; value: string }) => (
+  <div className='flex items-start gap-2'>
+    <Icon className='w-5 h-5 text-gray-500 mt-1' />
     <div>
-      <span className="text-gray-600">{label}:</span>
-      <p className="font-medium">{value || '-'}</p>
+      <span className='text-gray-600'>{label}:</span>
+      <p className='font-medium'>{value || '-'}</p>
     </div>
   </div>
 )
@@ -118,23 +89,21 @@ const AppointmentInfo = () => {
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-red-50 py-12">
-      <div className="container mx-auto px-4">
-        <h1 className="text-2xl font-bold text-gray-900 mb-8">
-          Thông tin đăng ký hiến máu
-        </h1>
+    <div className='min-h-screen bg-gradient-to-br from-red-50 via-white to-red-50 py-12'>
+      <div className='container mx-auto px-4'>
+        <h1 className='text-2xl font-bold text-gray-900 mb-8'>Thông tin đăng ký hiến máu</h1>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-8'>
           {/* Personal Information Card */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-xl text-red-600 flex items-center gap-2">
-                <User className="w-5 h-5" />
+              <CardTitle className='text-xl text-red-600 flex items-center gap-2'>
+                <User className='w-5 h-5' />
                 Thông tin cá nhân
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 gap-4">
+            <CardContent className='space-y-4'>
+              <div className='grid grid-cols-1 gap-4'>
                 {personalInfoItems.map((item, index) => (
                   <InfoItem key={index} {...item} />
                 ))}
@@ -145,20 +114,18 @@ const AppointmentInfo = () => {
           {/* Appointment Registration Card */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-xl text-red-600 flex items-center gap-2">
-                <Calendar className="w-5 h-5" />
+              <CardTitle className='text-xl text-red-600 flex items-center gap-2'>
+                <Calendar className='w-5 h-5' />
                 Phiếu đăng ký hiến máu
               </CardTitle>
             </CardHeader>
-            <CardContent className="flex flex-col items-center justify-center space-y-6">
-              <div className="w-32 h-32">
+            <CardContent className='flex flex-col items-center justify-center space-y-6'>
+              <div className='w-32 h-32'>
                 <RegistrationIcon />
               </div>
-              <p className="text-lg text-gray-600 text-center">
-                Chưa có phiếu đăng ký hiến máu
-              </p>
+              <p className='text-lg text-gray-600 text-center'>Chưa có phiếu đăng ký hiến máu</p>
               <Button
-                className="bg-red-600 hover:bg-red-700 text-white"
+                className='bg-red-600 hover:bg-red-700 text-white'
                 onClick={() => console.log('Navigate to registration')}
               >
                 Đăng ký hiến máu
@@ -167,15 +134,15 @@ const AppointmentInfo = () => {
           </Card>
 
           {/* Contact Information Card */}
-          <Card className="md:col-span-2">
+          <Card className='md:col-span-2'>
             <CardHeader>
-              <CardTitle className="text-xl text-red-600 flex items-center gap-2">
-                <Phone className="w-5 h-5" />
+              <CardTitle className='text-xl text-red-600 flex items-center gap-2'>
+                <Phone className='w-5 h-5' />
                 Thông tin liên hệ
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
+              <div className='space-y-4'>
                 {contactInfoItems.map((item, index) => (
                   <ContactItem key={index} {...item} />
                 ))}
@@ -188,4 +155,4 @@ const AppointmentInfo = () => {
   )
 }
 
-export default AppointmentInfo 
+export default AppointmentInfo
