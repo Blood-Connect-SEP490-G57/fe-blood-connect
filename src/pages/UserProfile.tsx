@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
-
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Calendar, History, Info, User } from 'lucide-react'
 import Profile from '@/components/user-profile/Profile'
 import AppointmentInfo from '@/components/user-profile/AppointmentInfo'
 import DonationHistory from '@/components/user-profile/DonationHistory'
+
 const UserProfilePage: React.FC = () => {
   const [selectedOption, setSelectedOption] = useState('profile')
 
@@ -20,9 +20,10 @@ const UserProfilePage: React.FC = () => {
         return <Profile />
     }
   }
+
   return (
-    <div className='flex min-h-screen bg-gray-100'>
-      <div className='w-1/4 p-4 bg-white shadow-lg'>
+    <div className='flex flex-col md:flex-row min-h-screen bg-gray-100'>
+      <div className='w-full md:w-1/4 p-4 bg-white shadow-lg'>
         <Card className='border-none'>
           <CardHeader>
             <CardTitle className='text-xl text-red-600 flex items-center gap-2'>
@@ -61,7 +62,7 @@ const UserProfilePage: React.FC = () => {
           </CardContent>
         </Card>
       </div>
-      <div className='w-3/4 p-4'>{renderContent()}</div>
+      <div className='w-full md:w-3/4 p-4'>{renderContent()}</div>
     </div>
   )
 }

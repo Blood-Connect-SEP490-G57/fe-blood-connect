@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import {
@@ -9,12 +9,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
-import { User, Settings, LogOut } from 'lucide-react'
+import { User, Settings, LogOut, Menu } from 'lucide-react'
 import UserAvatar from '@/components/ui/user-avatar'
 
 const Header: React.FC = () => {
   const navigate = useNavigate()
-
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const navigation = [
     { name: 'TIN TỨC', href: '/news' },
     { name: 'HỎI ĐÁP', href: '/faq' },
@@ -102,11 +102,40 @@ const Header: React.FC = () => {
 
           {/* Mobile menu button */}
           <div className='md:hidden'>
-            <Button variant='ghost' size='sm'>
+            <Button variant='ghost' size='sm' onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+              <Menu className='w-6 h-6' />
               <span className='sr-only'>Open menu</span>
             </Button>
           </div>
         </div>
+        {/* Mobile Navigation */}
+        {isMobileMenuOpen && (
+          <div className='md:hidden'>
+            <div className='flex flex-col space-y-4 mt-4'>
+              {navigation.map((item) => (
+                <a key={item.name} href={item.href} className='text-gray-700 hover:text-primary transition-colors'>
+                  {item.name}
+                </a>
+              ))}
+              <div className='flex flex-col space-y-2'>
+                <Button
+                  variant='outline'
+                  className='border-red-600 text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors'
+                  onClick={handleLoginClick}
+                >
+                  Đăng nhập
+                </Button>
+                <Button
+                  variant='default'
+                  className='bg-red-600 text-white hover:bg-red-700 transition-colors'
+                  onClick={handleRegisterClick}
+                >
+                  Đăng ký
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
       </nav>
     </header>
   )
