@@ -79,3 +79,23 @@ export const useTypeStore = create<DataTypeStore>((set) => ({
   dataType: '/users',
   setDataType: (dataType) => set(() => ({ dataType }))
 }))
+
+export const useBankReconcileSearchStore = create<SearchState>((set) => ({
+  searchParams: {},
+  setSearchParams: (searchParams) => set(() => ({ searchParams }))
+}))
+
+export const useBankTransactionSearchStore = create<SearchState>((set) => ({
+  searchParams: {},
+  setSearchParams: (searchParams) => set(() => ({ searchParams }))
+}))
+
+export const useFundTransferSearchStore = create<SearchState>((set) => ({
+  searchParams: {},
+  setSearchParams: (searchParams) => set(() => ({ searchParams }))
+}))
+
+export const useTransactionSearchStore = create<SearchState>((set) => ({
+  searchParams: {},
+  setSearchParams: (searchParams) => set(() => ({ searchParams }))
+}))
