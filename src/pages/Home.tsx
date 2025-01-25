@@ -1,8 +1,8 @@
 import React from 'react'
 import HeroSection from '@/components/home/hero-section'
 import FeaturesSection from '@/components/home/features-section'
-import EventsSection from '@/components/home/events-section'
 import BloodDonationSlider from '@/components/home/blood-donation-slider.tsx'
+import BloodDonationCriteria from '@/components/home/BloodDonationCriteria'
 
 const Home: React.FC = () => {
   const Campaign = [
@@ -56,29 +56,11 @@ const Home: React.FC = () => {
     }
   ]
 
-  const upcomingEvents = [
-    {
-      date: '29/07',
-      title: 'Hiến máu tại Đại học Y Hà Nội',
-      description: 'Chương trình hiến máu tình nguyện dành cho sinh viên và người dân'
-    },
-    {
-      date: '01/08',
-      title: 'Ngày hội hiến máu tình nguyện',
-      description: 'Tổ chức tại Viện Huyết học - Truyền máu Trung ương'
-    },
-    {
-      date: '15/08',
-      title: 'Hiến máu cứu người - Một nghĩa cử cao đẹp',
-      description: 'Chương trình hiến máu tại các bệnh viện trên địa bàn thành phố'
-    }
-  ]
-
   return (
     <div className='min-h-screen'>
       <HeroSection />
       <BloodDonationSlider campaigns={Campaign}></BloodDonationSlider>
-      <EventsSection events={upcomingEvents} />
+      <BloodDonationCriteria />
       <FeaturesSection features={features} />
     </div>
   )
