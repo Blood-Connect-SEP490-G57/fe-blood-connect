@@ -44,6 +44,9 @@ const Header: React.FC = () => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [isNotificationOpen])
+  const handleNotificationClick = () => {
+    navigate('/notifications')
+  }
 
   const handleLoginClick = () => {
     navigate('/login')
@@ -85,7 +88,7 @@ const Header: React.FC = () => {
                 <div
                   ref={notificationRef}
                   className='absolute right-0 mt-2 z-50 w-80'
-                  onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside
+                  onClick={() => handleNotificationClick()}
                   role='button'
                   tabIndex={0}
                   onKeyDown={(e) => {
