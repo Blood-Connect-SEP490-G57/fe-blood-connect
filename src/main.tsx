@@ -16,6 +16,7 @@ import BloodDonationRegistration from './pages/BloodDonationRegistration'
 import Settings from './pages/Settings'
 import UserProfilePage from './pages/UserProfile'
 import ForgotPassword from './pages/ForgotPassword'
+import NotificationDetail from './pages/NotificationDetail.tsx'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -59,6 +60,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
               }
             />
             <Route path='/forgot-password' element={<ForgotPassword />} />
+            <Route path='/notifications' element={<NotificationDetail />} />
             <Route path='*' element={<Navigate to='/' />} />
           </Routes>
         </MainLayout>
