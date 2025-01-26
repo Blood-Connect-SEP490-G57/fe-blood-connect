@@ -3,6 +3,7 @@ import HeroSection from '@/components/home/hero-section'
 import FeaturesSection from '@/components/home/features-section'
 import BloodDonationSlider from '@/components/home/blood-donation-slider.tsx'
 import BloodDonationCriteria from '@/components/home/BloodDonationCriteria'
+import BloodDonationBenefits from '@/components/home/blood-donation-benefit'
 
 const Home: React.FC = () => {
   const Campaign = [
@@ -61,7 +62,7 @@ const Home: React.FC = () => {
       <HeroSection />
       <BloodDonationSlider campaigns={Campaign}></BloodDonationSlider>
       <BloodDonationCriteria />
-      <FeaturesSection features={features} />
+      <BloodDonationBenefits />
     </div>
   )
 }
