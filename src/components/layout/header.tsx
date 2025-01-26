@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import {
@@ -9,18 +9,41 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
-import { User, Settings, LogOut, Menu } from 'lucide-react'
+import { User, Settings, LogOut, Menu, Bell } from 'lucide-react'
 import UserAvatar from '@/components/ui/user-avatar'
+import Notifications from '@/components/notification/Notifications'
 
 const Header: React.FC = () => {
   const navigate = useNavigate()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false)
+  const notificationRef = useRef<HTMLDivElement>(null)
   const navigation = [
     { name: 'TIN TỨC', href: '/news' },
     { name: 'HỎI ĐÁP', href: '/faq' },
     { name: 'LIÊN HỆ', href: '/contact' },
     { name: 'ĐĂNG KÝ HIẾN MÁU', href: '/blood-donation-registration' }
   ]
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        notificationRef.current &&
+        !notificationRef.current.contains(event.target as Node) &&
+        !(event.target as Element).closest('button')
+      ) {
+        setIsNotificationOpen(false)
+      }
+    }
+
+    if (isNotificationOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isNotificationOpen])
 
   const handleLoginClick = () => {
     navigate('/login')
@@ -47,6 +70,34 @@ const Header: React.FC = () => {
                 {item.name}
               </a>
             ))}
+            <div className='relative'>
+              <Button
+                variant='ghost'
+                onClick={(e) => {
+                  e.stopPropagation() // Prevent event bubbling
+                  setIsNotificationOpen((prev) => !prev)
+                }}
+                className='p-inherit text-red-600 hover:text-white hover:bg-red-600'
+              >
+                <Bell className='w-full h-full' />
+              </Button>
+              {isNotificationOpen && (
+                <div
+                  ref={notificationRef}
+                  className='absolute right-0 mt-2 z-50 w-80'
+                  onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside
+                  role='button'
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.stopPropagation()
+                    }
+                  }}
+                >
+                  <Notifications onClose={() => setIsNotificationOpen(false)} />
+                </div>
+              )}
+            </div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant='ghost' className='relative h-8 w-8 rounded-full'>
