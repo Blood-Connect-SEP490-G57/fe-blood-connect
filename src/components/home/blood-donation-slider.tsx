@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { MapPin, Calendar, Users, ChevronLeft, ChevronRight } from 'lucide-react' // Cập nhật các icon
+import { MapPin, Calendar, Users, ChevronLeft, ChevronRight } from 'lucide-react'
 
 interface Campaign {
   id: number
@@ -25,7 +25,7 @@ const BloodDonationSlider: React.FC<campaignsProps> = ({ campaigns }) => {
     }, 5000)
 
     return () => clearInterval(timer)
-  }, [])
+  }, [campaigns.length])
 
   const handlePrevious = (): void => {
     setCurrentSlide((prev) => (prev - 1 + campaigns.length) % campaigns.length)

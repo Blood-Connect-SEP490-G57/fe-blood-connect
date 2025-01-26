@@ -1,5 +1,5 @@
 import { Card, CardContent } from '@/components/ui/card'
-import { FaIdCard, FaUserMd, FaHeartbeat, FaWeight, FaCalendarCheck, FaTint } from 'react-icons/fa'
+import { CreditCard, User, Heart, Scale, Calendar, TestTube } from 'lucide-react'
 
 const BloodDonationCriteria = () => {
   return (
@@ -16,42 +16,42 @@ const BloodDonationCriteria = () => {
         {/* Criterion cards with varied spans */}
         <Card className='bg-white col-span-1 shadow-md rounded-xl'>
           <CardContent className='flex items-center gap-4 p-6'>
-            <FaIdCard className='text-red-600 text-3xl' />
+            <CreditCard className='text-red-600 text-3xl' />
             <p>Mang theo chứng minh nhân dân/hộ chiếu</p>
           </CardContent>
         </Card>
 
         <Card className='bg-white col-span-1 shadow-md rounded-xl'>
           <CardContent className='flex items-center gap-4 p-6'>
-            <FaUserMd className='text-red-600 text-3xl' />
+            <User className='text-red-600 text-3xl' />
             <p>Không mắc hoặc không có các hành vi nguy cơ lây nhiễm HIV...</p>
           </CardContent>
         </Card>
 
         <Card className='bg-white col-span-1 md:col-span-2 shadow-md rounded-xl'>
           <CardContent className='flex items-center gap-4 p-6'>
-            <FaHeartbeat className='text-red-600 text-3xl' />
+            <Heart className='text-red-600 text-3xl' />
             <p>Không nghiện ma túy, rượu bia và các chất kích thích</p>
           </CardContent>
         </Card>
 
         <Card className='bg-white col-span-1 shadow-md rounded-xl'>
           <CardContent className='flex items-center gap-4 p-6'>
-            <FaWeight className='text-red-600 text-3xl' />
+            <Scale className='text-red-600 text-3xl' />
             <p>Cân nặng: Nam ≥ 45 kg Nữ ≥ 45 kg</p>
           </CardContent>
         </Card>
 
         <Card className='bg-white col-span-1 shadow-md rounded-xl'>
           <CardContent className='flex items-center gap-4 p-6'>
-            <FaCalendarCheck className='text-red-600 text-3xl' />
+            <Calendar className='text-red-600 text-3xl' />
             <p>Thời gian tối thiểu giữa 2 lần hiến máu là 12 tuần</p>
           </CardContent>
         </Card>
 
         <Card className='bg-white col-span-1 md:col-span-2 shadow-md rounded-xl'>
           <CardContent className='flex items-center gap-4 p-6'>
-            <FaTint className='text-red-600 text-3xl' />
+            <TestTube className='text-red-600 text-3xl' />
             <p>Kết quả test nhanh âm tính với kháng nguyên bề mặt của siêu vi B</p>
           </CardContent>
         </Card>
