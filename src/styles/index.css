@@ -117,3 +117,24 @@
     opacity: 1;
   }
 }
+.notification-enter {
+  opacity: 0;
+  transform: scale(0.9);
+}
+
+.notification-enter-active {
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 200ms, transform 200ms;
+}
+
+.notification-exit {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.notification-exit-active {
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 200ms, transform 200ms;
+}
