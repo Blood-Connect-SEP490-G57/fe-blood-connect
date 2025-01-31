@@ -55,7 +55,7 @@ const BloodDonationSlider: React.FC<campaignsProps> = ({ campaigns }) => {
           <h2 className='text-2xl font-bold text-gray-700'>Không có sự kiện nào</h2>
         </div>
       ) : (
-        <div className='relative overflow-hidden rounded-lg shadow-lg bg-card'>
+        <div className='relative overflow-hidden rounded-lg shadow-lg bg-card p-4 md:p-8'>
           <h2 className='text-3xl font-bold mb-12 text-center'>Sự Kiện Sắp Diễn Ra</h2>
           <div
             className='flex transition-transform duration-500 ease-in-out'

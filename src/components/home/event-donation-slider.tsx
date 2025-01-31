@@ -61,9 +61,16 @@ export default function EventDonationSlider() {
   }
 
   return (
-    <div className='relative max-w-7xl mx-auto p-4'>
+    <div className='relative  mx-auto p-4 w-full'>
+      <div className='relative w-full text-white text-center py-8 mb-8 rounded-lg shadow-lg' style={{ backgroundImage: "url('https://d147a5vd7kzml6.cloudfront.net/img/e_nursing_nl/4341/760x428/resize:fixed/picc_lijn_verzorging.jpg')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
+        <div className='absolute inset-0 bg-red-600 opacity-40'></div>
+        <div className='relative'>
+          <h2 className='text-3xl font-bold'>Các hoạt động hiến máu nhân đạo</h2>
+          <p className='mt-4'>Tham gia các hoạt động hiến máu để cứu giúp những người cần máu.</p>
+        </div>
+      </div>
       {/* Slider Container */}
-      <div className='relative h-96 rounded-xl overflow-hidden shadow-lg'>
+      <div className='relative h-96 rounded-xl overflow-hidden shadow-lg max-w-7xl mx-auto center'>
         {events.map((event, index) => (
           <div
             key={event.id}
@@ -156,7 +163,7 @@ function ArrowLeftIcon(props: React.SVGProps<SVGSVGElement>) {
 
 function ArrowRightIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
-    <svg {...props} fill='none' stroke='currentColor' viewBox='0 24 24'>
+    <svg {...props} fill='none' stroke='currentColor' viewBox='0 0 24 24'>
       <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M9 5l7 7-7 7' />
     </svg>
   )

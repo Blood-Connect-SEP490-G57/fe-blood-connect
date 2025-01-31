@@ -46,7 +46,7 @@ const Home: React.FC = () => {
       <BloodDonationSlider campaigns={Campaign}></BloodDonationSlider>
       <BloodDonationCriteria />
       <BloodDonationBenefits />
-      <AdviceSection />
+      <AdviceSection /> 
       <EventDonationSlider />
     </div>
   )
