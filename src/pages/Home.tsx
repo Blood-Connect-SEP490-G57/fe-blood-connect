@@ -4,6 +4,7 @@ import BloodDonationSlider from '@/components/home/blood-donation-slider.tsx'
 import BloodDonationCriteria from '@/components/home/BloodDonationCriteria'
 import BloodDonationBenefits from '@/components/home/blood-donation-benefit'
 import AdviceSection from '@/components/home/AdviceSection'
+import EventDonationSlider from '@/components/home/event-donation-slider'
 
 const Campaign = [
   {
@@ -38,7 +39,6 @@ const Campaign = [
   }
 ]
 
-
 const Home: React.FC = () => {
   return (
     <div className='min-h-screen p-4'>
@@ -47,6 +47,7 @@ const Home: React.FC = () => {
       <BloodDonationCriteria />
       <BloodDonationBenefits />
       <AdviceSection />
+      <EventDonationSlider />
     </div>
   )
 }
