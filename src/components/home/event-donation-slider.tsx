@@ -9,54 +9,57 @@ interface BloodEvent {
 
 export default function EventDonationSlider() {
   const [activeIndex, setActiveIndex] = useState(0)
+  const [direction, setDirection] = useState<'left' | 'right'>('right')
 
   const events: BloodEvent[] = [
     {
       id: 1,
-      title: 'Ngày Hội Hiến Máu Tình Nguyện 2024',
-      date: '15/03/2024',
+      title: 'Ngày Hội Hiến Máu Tình Nguyện Đợt 2 năm 2024',
+      date: '23/10/2024',
       images: [
-        '/path/to/image1.jpg',
-        '/path/to/image2.jpg',
-        '/path/to/image3.jpg',
-        '/path/to/image4.jpg',
-        '/path/to/image5.jpg',
-        '/path/to/image6.jpg'
+        '/images/landing/event/Event1/1.jpg',
+        '/images/landing/event/Event1/2.jpg',
+        '/images/landing/event/Event1/3.jpg',
+        '/images/landing/event/Event1/4.jpg',
+        '/images/landing/event/Event1/5.jpg',
+        '/images/landing/event/Event1/6.jpg'
       ]
     },
     {
       id: 2,
-      title: 'Giọt Hồng Cứu Người - Xuân Yêu Thương',
-      date: '20/03/2024',
+      title: 'Ngày Hội Hiến Máu Tình Nguyện Đợt 1 năm 2024',
+      date: '02/06/2024',
       images: [
-        '/path/to/image1.jpg',
-        '/path/to/image2.jpg',
-        '/path/to/image3.jpg',
-        '/path/to/image4.jpg',
-        '/path/to/image5.jpg',
-        '/path/to/image6.jpg'
+        '/images/landing/event/Event2/1.jpg',
+        '/images/landing/event/Event2/2.jpg',
+        '/images/landing/event/Event2/3.jpg',
+        '/images/landing/event/Event2/4.jpg',
+        '/images/landing/event/Event2/5.jpg',
+        '/images/landing/event/Event2/6.jpg'
       ]
     },
     {
       id: 3,
-      title: 'Hiến Máu Khẩn Cấp Cứu Bệnh Nhân',
+      title: 'Ngày Hội Hiến Máu Tình Nguyện Đợt 2 năm 2023',
       date: '25/03/2024',
       images: [
-        '/path/to/image1.jpg',
-        '/path/to/image2.jpg',
-        '/path/to/image3.jpg',
-        '/path/to/image4.jpg',
-        '/path/to/image5.jpg',
-        '/path/to/image6.jpg'
+        '/images/landing/event/Event3/1.jpg',
+        '/images/landing/event/Event3/2.jpg',
+        '/images/landing/event/Event3/3.jpg',
+        '/images/landing/event/Event3/4.jpg',
+        '/images/landing/event/Event3/5.jpg',
+        '/images/landing/event/Event3/6.jpg'
       ]
     }
   ]
 
   const goToPrev = () => {
+    setDirection('left')
     setActiveIndex((prev) => (prev === 0 ? events.length - 1 : prev - 1))
   }
 
   const goToNext = () => {
+    setDirection('right')
     setActiveIndex((prev) => (prev === events.length - 1 ? 0 : prev + 1))
   }
 
@@ -74,17 +77,13 @@ export default function EventDonationSlider() {
         {events.map((event, index) => (
           <div
             key={event.id}
-            className={`absolute inset-0 transition-opacity duration-500 ${
-              index === activeIndex ? 'opacity-100' : 'opacity-0'
-            }`}
+            className={`absolute inset-0 transition-transform duration-500 ${index === activeIndex ? 'translate-x-0' : direction === 'right' ? 'translate-x-full' : '-translate-x-full'}`}
           >
             <div className={`h-full ${index === activeIndex ? 'bg-red-600' : 'bg-white'} p-8`}>
               <div className='grid grid-cols-4 grid-rows-2 h-full gap-4'>
                 {/* Event Info */}
                 <div
-                  className={`row-span-2 flex flex-col justify-center ${
-                    index === activeIndex ? 'text-white' : 'text-red-600'
-                  }`}
+                  className={`row-span-2 flex flex-col justify-center ${index === activeIndex ? 'text-white' : 'text-red-600'}`}
                 >
                   <h2 className='text-2xl font-bold mb-4'>{event.title}</h2>
                   <p className='flex items-center gap-2'>
@@ -127,10 +126,11 @@ export default function EventDonationSlider() {
           {events.map((_, index) => (
             <button
               key={index}
-              onClick={() => setActiveIndex(index)}
-              className={`w-3 h-3 rounded-full transition-colors ${
-                index === activeIndex ? 'bg-white' : 'bg-white/50 hover:bg-white/70'
-              }`}
+              onClick={() => {
+                setDirection(index > activeIndex ? 'right' : 'left')
+                setActiveIndex(index)
+              }}
+              className={`w-3 h-3 rounded-full transition-colors ${index === activeIndex ? 'bg-white' : 'bg-white/50 hover:bg-white/70'}`}
             />
           ))}
         </div>
