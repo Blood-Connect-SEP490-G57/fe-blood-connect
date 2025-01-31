@@ -42,6 +42,7 @@ const AdviceSection = () => {
           ]}
           doctor='Bác sĩ Nguyễn Thị Hương'
           position='Trưởng khoa Huyết học'
+          hospital='Bệnh viện Đa Khoa Tỉnh Ninh Bình'
         />
       </div>
     </div>
