@@ -26,6 +26,24 @@ const notifications = [
     message: 'KÊU GỈ TNV MÁU HIẾM THAM GIA HIẾN MÁU TRƯỚC TẾT',
     timeAgo: '3 ngày trước',
     read: true
+  },
+  {
+    id: 3,
+    date: '22/01/2025',
+    type: 'Tin tức',
+    title: 'THÔNG BÁO KHẨN !!!',
+    message: 'KÊU GỈ TNV MÁU HIẾM THAM GIA HIẾN MÁU TRƯỚC TẾT',
+    timeAgo: '4 ngày trước',
+    read: true
+  },
+  {
+    id: 4,
+    date: '21/01/2025',
+    type: 'Nhắc nhở',
+    title: 'THÔNG BÁO KHẨN !!!',
+    message: 'KÊU GỈ TNV MÁU HIẾM THAM GIA HIẾN MÁU TRƯỚC TẾT',
+    timeAgo: '5 ngày trước',
+    read: false
   }
   // Add other notifications here as needed
 ]
@@ -40,7 +58,7 @@ const Notifications: React.FC<NotificationsProps> = ({ onClose }) => {
   })
 
   return (
-    <div className='max-w-md mx-auto p-4 bg-white rounded-2xl shadow-lg border border-red-500 overflow-hidden'>
+    <div className='max-w-lg w-full mx-auto p-4 bg-white rounded-2xl shadow-lg border border-red-500 overflow-y-auto' style={{ maxHeight: '80vh', minWidth: '600px' }}>
       <div className='flex justify-between items-center border-b border-red-500 pb-2'>
         <h2 className='text-xl font-bold text-red-600'>Thông báo</h2>
         <div className='relative'>
