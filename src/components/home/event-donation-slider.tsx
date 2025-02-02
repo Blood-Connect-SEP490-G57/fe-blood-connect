@@ -65,7 +65,15 @@ export default function EventDonationSlider() {
 
   return (
     <div className='relative mt-8 mx-auto w-full'>
-      <div className='relative w-full text-white text-center py-4 mb-4 rounded-lg shadow-lg' style={{ backgroundImage: "url('https://d147a5vd7kzml6.cloudfront.net/img/e_nursing_nl/4341/760x428/resize:fixed/picc_lijn_verzorging.jpg')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
+      <div
+        className='relative w-full text-white text-center py-4 mb-4 rounded-lg shadow-lg'
+        style={{
+          backgroundImage:
+            "url('https://d147a5vd7kzml6.cloudfront.net/img/e_nursing_nl/4341/760x428/resize:fixed/picc_lijn_verzorging.jpg')",
+          backgroundSize: 'cover',
+          backgroundPosition: 'center'
+        }}
+      >
         <div className='absolute inset-0 bg-red-600 opacity-40'></div>
         <div className='relative'>
           <h2 className='text-3xl font-bold'>Các hoạt động hiến máu nhân đạo</h2>
@@ -77,13 +85,17 @@ export default function EventDonationSlider() {
         {events.map((event, index) => (
           <div
             key={event.id}
-            className={`absolute inset-0 transition-transform duration-500 ${index === activeIndex ? 'translate-x-0' : direction === 'right' ? 'translate-x-full' : '-translate-x-full'}`}
+            className={`absolute inset-0 transition-transform duration-500 ${
+              index === activeIndex ? 'translate-x-0' : direction === 'right' ? 'translate-x-full' : '-translate-x-full'
+            }`}
           >
             <div className={`h-full ${index === activeIndex ? 'bg-red-600' : 'bg-white'} p-8`}>
               <div className='grid grid-cols-4 grid-rows-2 h-full gap-4'>
                 {/* Event Info */}
                 <div
-                  className={`row-span-2 flex flex-col justify-center ${index === activeIndex ? 'text-white' : 'text-red-600'}`}
+                  className={`row-span-2 flex flex-col justify-center ${
+                    index === activeIndex ? 'text-white' : 'text-red-600'
+                  }`}
                 >
                   <h2 className='text-2xl font-bold mb-4'>{event.title}</h2>
                   <p className='flex items-center gap-2'>
@@ -130,7 +142,9 @@ export default function EventDonationSlider() {
                 setDirection(index > activeIndex ? 'right' : 'left')
                 setActiveIndex(index)
               }}
-              className={`w-3 h-3 rounded-full transition-colors ${index === activeIndex ? 'bg-white' : 'bg-white/50 hover:bg-white/70'}`}
+              className={`w-3 h-3 rounded-full transition-colors ${
+                index === activeIndex ? 'bg-white' : 'bg-white/50 hover:bg-white/70'
+              }`}
             />
           ))}
         </div>

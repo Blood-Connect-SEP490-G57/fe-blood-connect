@@ -58,7 +58,10 @@ const Notifications: React.FC<NotificationsProps> = ({ onClose }) => {
   })
 
   return (
-    <div className='max-w-lg w-full mx-auto p-4 bg-white rounded-2xl shadow-lg border border-red-500 overflow-y-auto' style={{ maxHeight: '80vh', minWidth: '600px' }}>
+    <div
+      className='max-w-lg w-full mx-auto p-4 bg-white rounded-2xl shadow-lg border border-red-500 overflow-y-auto'
+      style={{ maxHeight: '80vh', minWidth: '600px' }}
+    >
       <div className='flex justify-between items-center border-b border-red-500 pb-2'>
         <h2 className='text-xl font-bold text-red-600'>Thông báo</h2>
         <div className='relative'>

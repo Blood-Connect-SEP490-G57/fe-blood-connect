@@ -44,9 +44,7 @@ const UserVerificationPage = () => {
         return (
           <div className='space-y-6'>
             <h2 className='text-2xl font-heading font-semibold text-foreground'>Tải lên giấy tờ tùy thân</h2>
-            <p className='text-accent '>
-              Để xác thực tài khoản vui lòng cung cấp thông tin giấy tờ tùy thân của bạn.
-            </p>
+            <p className='text-accent '>Để xác thực tài khoản vui lòng cung cấp thông tin giấy tờ tùy thân của bạn.</p>
 
             <div
               {...getRootProps()}
