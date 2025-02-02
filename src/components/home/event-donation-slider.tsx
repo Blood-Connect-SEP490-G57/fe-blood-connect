@@ -64,8 +64,8 @@ export default function EventDonationSlider() {
   }
 
   return (
-    <div className='relative  mx-auto p-4 w-full'>
-      <div className='relative w-full text-white text-center py-8 mb-8 rounded-lg shadow-lg' style={{ backgroundImage: "url('https://d147a5vd7kzml6.cloudfront.net/img/e_nursing_nl/4341/760x428/resize:fixed/picc_lijn_verzorging.jpg')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
+    <div className='relative mt-8 mx-auto w-full'>
+      <div className='relative w-full text-white text-center py-4 mb-4 rounded-lg shadow-lg' style={{ backgroundImage: "url('https://d147a5vd7kzml6.cloudfront.net/img/e_nursing_nl/4341/760x428/resize:fixed/picc_lijn_verzorging.jpg')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
         <div className='absolute inset-0 bg-red-600 opacity-40'></div>
         <div className='relative'>
           <h2 className='text-3xl font-bold'>Các hoạt động hiến máu nhân đạo</h2>
@@ -73,7 +73,7 @@ export default function EventDonationSlider() {
         </div>
       </div>
       {/* Slider Container */}
-      <div className='relative h-96 rounded-xl overflow-hidden shadow-lg max-w-7xl mx-auto center'>
+      <div className='relative h-96 py-4 mb-4 rounded-xl overflow-hidden shadow-lg max-w-7xl mx-auto center'>
         {events.map((event, index) => (
           <div
             key={event.id}
