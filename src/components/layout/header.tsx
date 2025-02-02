@@ -87,7 +87,7 @@ const Header: React.FC = () => {
               {isNotificationOpen && (
                 <div
                   ref={notificationRef}
-                  className='absolute right-0 mt-2 z-50 w-80'
+                  className='absolute right-0 mt-2 z-50 w-full max-w-lg'
                   onClick={() => handleNotificationClick()}
                   role='button'
                   tabIndex={0}
@@ -96,6 +96,7 @@ const Header: React.FC = () => {
                       e.stopPropagation()
                     }
                   }}
+                  style={{ maxHeight: '80vh', minWidth: '600px' }}
                 >
                   <Notifications onClose={() => setIsNotificationOpen(false)} />
                 </div>
