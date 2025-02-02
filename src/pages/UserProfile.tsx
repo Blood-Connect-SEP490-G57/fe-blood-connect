@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
-import { Calendar, Check, History, Info, User } from 'lucide-react'
+import { Calendar, CheckCircle, History, Info, User } from 'lucide-react'
 import Profile from '@/components/user-profile/Profile'
 import AppointmentInfo from '@/components/user-profile/AppointmentInfo'
 import DonationHistory from '@/components/user-profile/DonationHistory'
@@ -68,7 +68,7 @@ const UserProfilePage: React.FC = () => {
               }`}
               onClick={() => setSelectedOption('verification')}
             >
-              <Check className='w-5 h-5' />
+              <CheckCircle className='w-5 h-5' />
               Xác thực tài khoản
             </button>
           </CardContent>
