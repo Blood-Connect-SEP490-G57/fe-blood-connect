@@ -41,7 +41,7 @@ const Campaign = [
 
 const Home: React.FC = () => {
   return (
-    <div className='min-h-screen p-4'>
+    <div className='min-h-screen'>
       <HeroSection />
       <BloodDonationSlider campaigns={Campaign}></BloodDonationSlider>
       <BloodDonationCriteria />
