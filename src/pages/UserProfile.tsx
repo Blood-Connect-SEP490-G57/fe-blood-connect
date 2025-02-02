@@ -64,7 +64,7 @@ const UserProfilePage: React.FC = () => {
             </button>
             <button
               className={`w-full text-left p-2 rounded-md flex items-center gap-2 ${
-              selectedOption === 'verification' ? 'bg-red-100' : ''
+                selectedOption === 'verification' ? 'bg-red-100' : ''
               }`}
               onClick={() => setSelectedOption('verification')}
             >

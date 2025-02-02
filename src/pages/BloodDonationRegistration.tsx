@@ -44,7 +44,11 @@ const BloodDonationRegistration = () => {
           <div className='absolute left-0 right-0 h-1 bg-gray-200 top-1/2 transform -translate-y-1/2 z-0'>
             <div
               className='h-full bg-red-600 transition-all duration-300'
-              style={{ width: `${(currentStep / (Object.values(STEPS).filter((step) => typeof step === 'number').length - 1)) * 100}%` }}
+              style={{
+                width: `${
+                  (currentStep / (Object.values(STEPS).filter((step) => typeof step === 'number').length - 1)) * 100
+                }%`
+              }}
             />
           </div>
 
