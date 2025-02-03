@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
-import { Loader2Icon } from 'lucide-react'
+import { Loader2Icon, Phone, Lock } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
@@ -39,7 +39,7 @@ export default function Login() {
   }
 
   return (
-    <div className='min-h-screen bg-gradient-to-br from-red-50 via-white to-red-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8'>
+    <div className='min-h-screen bg-gradient-to-br from-red-50 via-white to-red-50 flex flex-col py-12 sm:px-6 lg:px-8'>
       <div className='sm:mx-auto sm:w-full sm:max-w-md'>
         {/* Logo */}
         <div className='flex justify-center mb-6'>
@@ -66,9 +66,10 @@ export default function Login() {
                     <FormLabel className='block text-sm font-medium text-gray-700'>Số điện thoại</FormLabel>
                     <FormControl>
                       <div className='mt-1 relative'>
+                        <Phone className='absolute left-3 top-3 text-accent' />
                         <Input
                           {...field}
-                          className='appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500'
+                          className='appearance-none block w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500'
                           placeholder='Nhập số điện thoại'
                         />
                       </div>
@@ -86,10 +87,11 @@ export default function Login() {
                     <FormLabel className='block text-sm font-medium text-gray-700'>Mật khẩu</FormLabel>
                     <FormControl>
                       <div className='mt-1 relative'>
+                        <Lock className='absolute left-3 top-3 text-accent' />
                         <Input
                           {...field}
                           type='password'
-                          className='appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500'
+                          className='appearance-none block w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500'
                           placeholder='Nhập mật khẩu'
                         />
                       </div>

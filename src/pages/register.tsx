@@ -28,6 +28,19 @@ const RegistrationPage = () => {
 
   return (
     <div className='min-h-screen bg-background py-12 px-4 sm:px-6 lg:px-8'>
+      <div className='sm:mx-auto sm:w-full sm:max-w-md'>
+        {/* Logo */}
+        <div className='flex justify-center mb-6'>
+          <div className='w-20 h-20 bg-red-600 rounded-full flex items-center justify-center'>
+            <span className='text-4xl'>🩸</span>
+          </div>
+        </div>
+
+        <h2 className='mt-3 text-center text-3xl font-extrabold text-gray-900'>Đăng Ký</h2>
+        <p className='mt-2 text-center text-sm text-gray-600'>
+          Chào mừng bạn đến với <span className='font-semibold text-red-600'>Giọt Máu Hi Vọng</span>
+        </p>
+      </div>
       <div className='max-w-md mx-auto bg-card p-8 rounded-lg shadow-sm'>
         <div className='space-y-6'>
           <h2 className='text-2xl font-heading font-semibold text-foreground'>Đăng ký tài khoản</h2>
