@@ -10,9 +10,17 @@ import UserAvatar from '@/components/ui/user-avatar'
 
 const profileFormSchema = z.object({
   fullName: z.string().min(2, 'Tên phải có ít nhất 2 ký tự'),
-  email: z.string().email('Email không hợp lệ'),
+  birthDate: z.string().min(10, 'Ngày sinh không hợp lệ'),
+  gender: z.string().min(2, 'Giới tính không hợp lệ'),
+  occupation: z.string().min(2, 'Nghề nghiệp không hợp lệ'),
+  organization: z.string().min(2, 'Cơ quan/Trường lớp không hợp lệ'),
+  contactAddress: z.string().min(5, 'Địa chỉ liên lạc không hợp lệ'),
+  permanentAddress: z.string().min(5, 'Địa chỉ thường trú không hợp lệ'),
   phone: z.string().min(10, 'Số điện thoại không hợp lệ'),
-  address: z.string().min(5, 'Địa chỉ không hợp lệ'),
+  email: z.string().email('Email không hợp lệ'),
+  idNumber: z.string().min(9, 'Số CCCD/Hộ chiếu không hợp lệ'),
+  idIssuePlace: z.string().min(2, 'Nơi cấp không hợp lệ'),
+  studentMilitaryId: z.string().min(2, 'Số thẻ HSSV/Quân nhân không hợp lệ'),
   bloodType: z.string().optional()
 })
 
@@ -21,9 +29,17 @@ const Profile = () => {
     resolver: zodResolver(profileFormSchema),
     defaultValues: {
       fullName: 'Bế Minh',
-      email: 'be.minh@example.com',
+      birthDate: '01/01/2000',
+      gender: 'Nam',
+      occupation: 'Sinh viên',
+      organization: 'Đại học ABC',
+      contactAddress: 'Hà Nội, Việt Nam',
+      permanentAddress: 'Hà Nội, Việt Nam',
       phone: '0123456789',
-      address: 'Hà Nội, Việt Nam',
+      email: 'be.minh@example.com',
+      idNumber: '123456789',
+      idIssuePlace: 'Hà Nội',
+      studentMilitaryId: 'HS123456',
       bloodType: 'A+'
     }
   })
@@ -88,12 +104,82 @@ const Profile = () => {
 
                     <FormField
                       control={form.control}
-                      name='email'
+                      name='birthDate'
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Email</FormLabel>
+                          <FormLabel>Ngày sinh</FormLabel>
                           <FormControl>
-                            <Input {...field} type='email' />
+                            <Input {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name='gender'
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Giới tính</FormLabel>
+                          <FormControl>
+                            <Input {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name='occupation'
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Nghề nghiệp</FormLabel>
+                          <FormControl>
+                            <Input {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name='organization'
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Cơ quan/Trường lớp</FormLabel>
+                          <FormControl>
+                            <Input {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name='contactAddress'
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Địa chỉ liên lạc</FormLabel>
+                          <FormControl>
+                            <Input {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name='permanentAddress'
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Địa chỉ thường trú theo CCCD</FormLabel>
+                          <FormControl>
+                            <Input {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -105,9 +191,23 @@ const Profile = () => {
                       name='phone'
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Số điện thoại</FormLabel>
+                          <FormLabel>Điện thoại</FormLabel>
                           <FormControl>
                             <Input {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name='email'
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Email</FormLabel>
+                          <FormControl>
+                            <Input {...field} type='email' />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -128,12 +228,42 @@ const Profile = () => {
                       )}
                     />
 
+                    <div className='md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6'>
+                      <FormField
+                        control={form.control}
+                        name='idNumber'
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Số CCCD/Hộ chiếu</FormLabel>
+                            <FormControl>
+                              <Input {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name='idIssuePlace'
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Nơi cấp</FormLabel>
+                            <FormControl>
+                              <Input {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+
                     <FormField
                       control={form.control}
-                      name='address'
+                      name='studentMilitaryId'
                       render={({ field }) => (
-                        <FormItem className='md:col-span-2'>
-                          <FormLabel>Địa chỉ</FormLabel>
+                        <FormItem>
+                          <FormLabel>Số thẻ HSSV/Quân nhân</FormLabel>
                           <FormControl>
                             <Input {...field} />
                           </FormControl>
