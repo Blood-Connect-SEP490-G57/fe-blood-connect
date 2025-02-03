@@ -6,9 +6,13 @@ import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { Phone } from 'lucide-react'
 
 const formSchema = z.object({
-  email: z.string().email('Email không hợp lệ').nonempty('Email không được để trống')
+  phoneNumber: z
+    .string()
+    .min(10, 'Số điện thoại phải có ít nhất 10 chữ số')
+    .nonempty('Số điện thoại không được để trống')
 })
 
 const ForgotPassword: React.FC = () => {
@@ -16,7 +20,7 @@ const ForgotPassword: React.FC = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: ''
+      phoneNumber: ''
     }
   })
 
@@ -31,7 +35,7 @@ const ForgotPassword: React.FC = () => {
   }
 
   return (
-    <div className='min-h-screen bg-gradient-to-br from-red-50 via-white to-red-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8'>
+    <div className='min-h-screen bg-gradient-to-br from-red-50 via-white to-red-50 flex flex-col py-12 sm:px-6 lg:px-8'>
       <div className='sm:mx-auto sm:w-full sm:max-w-md'>
         <div className='flex justify-center mb-6'>
           <div className='w-20 h-20 bg-red-600 rounded-full flex items-center justify-center'>
@@ -40,7 +44,9 @@ const ForgotPassword: React.FC = () => {
         </div>
 
         <h2 className='mt-3 text-center text-3xl font-extrabold text-gray-900'>Quên Mật Khẩu</h2>
-        <p className='mt-2 text-center text-sm text-gray-600'>Nhập email của bạn để nhận liên kết đặt lại mật khẩu</p>
+        <p className='mt-2 text-center text-sm text-gray-600'>
+          Nhập số điện thoại của bạn để nhận liên kết đặt lại mật khẩu
+        </p>
       </div>
 
       <div className='mt-8 sm:mx-auto sm:w-full sm:max-w-md'>
@@ -49,17 +55,18 @@ const ForgotPassword: React.FC = () => {
             <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
               <FormField
                 control={form.control}
-                name='email'
+                name='phoneNumber'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className='block text-sm font-medium text-gray-700'>Email</FormLabel>
+                    <FormLabel className='block text-sm font-medium text-gray-700'>Số điện thoại</FormLabel>
                     <FormControl>
                       <div className='mt-1 relative'>
+                        <Phone className='absolute left-3 top-1/2 transform -translate-y-1/2 text-accent' />
                         <Input
                           {...field}
-                          type='email'
-                          className='appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500'
-                          placeholder='Nhập email của bạn'
+                          type='tel'
+                          className='appearance-none block w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500'
+                          placeholder='Nhập số điện thoại của bạn'
                         />
                       </div>
                     </FormControl>
