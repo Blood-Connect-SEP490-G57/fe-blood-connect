@@ -1,4 +1,3 @@
-import React, { useState } from 'react'
 import { Lock, Phone, Check } from 'lucide-react' // Import icon from lucide-react
 import { useNavigate } from 'react-router-dom'
 import { RegisterSchema } from '@/schema/auth-schema'

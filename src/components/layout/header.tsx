@@ -82,13 +82,16 @@ const Header: React.FC = () => {
                   e.stopPropagation() // Prevent event bubbling
                   setIsNotificationOpen((prev) => !prev)
                 }}
-                className='p-inherit text-red-600 hover:text-white hover:bg-red-600 relative'
+                className='group p-inherit text-red-600 hover:text-white hover:bg-red-600 relative'
               >
                 <div className='relative w-full h-full'>
-                  <Bell className='text-red-600' />
-                  <span className='absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full px-2'>1</span>
+                  <Bell className='group-hover:text-white text-red-600 hover:text-white' />
+                  <span className='absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full px-2 hover:bg-red-700 group-hover:bg-red-700'>
+                    1
+                  </span>
                 </div>
               </Button>
+
               {isNotificationOpen && (
                 <div
                   ref={notificationRef}
