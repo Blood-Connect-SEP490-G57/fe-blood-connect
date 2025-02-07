@@ -141,7 +141,7 @@ const DonationHistory = () => {
                       <Button
                         variant='outline'
                         size='sm'
-                        className='text-red-600 border-red-600 hover:bg-red-50'
+                        className='text-red-600 border-red-600 hover:bg-red-500 hover:text-white'
                         onClick={() => console.log(`Cancel appointment ${appointment.id}`)}
                       >
                         Hủy lịch hẹn
