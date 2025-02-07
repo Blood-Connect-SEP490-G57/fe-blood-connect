@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import PropTypes from 'prop-types'
-import { Bell } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 
@@ -64,12 +63,6 @@ const Notifications: React.FC<NotificationsProps> = ({ onClose }) => {
     >
       <div className='flex justify-between items-center border-b border-red-500 pb-2'>
         <h2 className='text-xl font-bold text-red-600'>Thông báo</h2>
-        <div className='relative'>
-          <Bell className='text-red-600' />
-          <span className='absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full px-2'>
-            {notifications.length}
-          </span>
-        </div>
       </div>
       <div className='flex flex-wrap gap-2 my-2'>
         {['Tất cả', 'Chưa đọc', 'Nhắc nhở', 'Sự kiện', 'Tin tức'].map((item) => (
@@ -96,7 +89,7 @@ const Notifications: React.FC<NotificationsProps> = ({ onClose }) => {
         ))}
       </div>
       <div className='mt-4 flex justify-between'>
-        <Button variant='outline' className='text-red-600 border-red-500'>
+        <Button variant='outline' className='text-red-600 border-red-500 hover:text-white hover:bg-red-600'>
           Đánh dấu đã đọc tất cả
         </Button>
         <Button variant='ghost' onClick={onClose} className='text-gray-600 hover:bg-gray-100'>
