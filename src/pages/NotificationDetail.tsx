@@ -53,6 +53,8 @@ const NotificationDetail = () => {
         return notifications.filter((n) => n.type === 'Nhắc nhở')
       case 'events':
         return notifications.filter((n) => n.type === 'Sự kiện')
+      case 'Tin tức':
+        return notifications.filter((n) => n.type === 'Tin tức')
       default:
         return notifications
     }
