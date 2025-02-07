@@ -23,8 +23,8 @@ const Header: React.FC = () => {
     { name: 'HỎI ĐÁP', href: '/faq' },
     { name: 'LIÊN HỆ', href: '/contact' },
     { name: 'ĐĂNG KÝ HIẾN MÁU', href: '/blood-donation-registration' },
-    { name: 'LỊCH HẸN CỦA TÔI', href: '/user-profile-page' },
-    { name: 'LỊCH SỬ ĐẶT HẸN', href: '/user-profile-page' }
+    { name: 'LỊCH HẸN CỦA TÔI', href: '/user-profile-page#appointment-info' },
+    { name: 'LỊCH SỬ ĐẶT HẸN', href: '/user-profile-page#appointment-history' }
   ]
 
   useEffect(() => {

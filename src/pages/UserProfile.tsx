@@ -1,14 +1,40 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Calendar, CheckCircle, History, Info, User } from 'lucide-react'
 import Profile from '@/components/user-profile/Profile'
 import AppointmentInfo from '@/components/user-profile/AppointmentInfo'
 import DonationHistory from '@/components/user-profile/DonationHistory'
-import UserVerificationPage from '../components/user-profile/UserVerification'
+import UserVerification from '@/components/user-profile/UserVerification'
 
 const UserProfilePage: React.FC = () => {
-  const [selectedOption, setSelectedOption] = useState('profile')
+  const [selectedOption, setSelectedOption] = useState<string>('profile')
 
+  // Effect to initialize state on mount from the URL hash
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash.slice(1)
+      if (hash && ['profile', 'appointment-info', 'appointment-history', 'verification'].includes(hash)) {
+        setSelectedOption(hash)
+      }
+    }
+
+    // Set the initial option from URL
+    handleHashChange()
+
+    // Add an event listener for hash changes
+    window.addEventListener('hashchange', handleHashChange)
+
+    // Clean up the event listener on unmount
+    return () => {
+      window.removeEventListener('hashchange', handleHashChange)
+    }
+  }, [])
+
+  const handleOptionClick = (option: string) => {
+    setSelectedOption(option)
+    // Update the URL hash without reloading the page
+    window.location.hash = option
+  }
   const renderContent = () => {
     switch (selectedOption) {
       case 'profile':
@@ -18,7 +44,7 @@ const UserProfilePage: React.FC = () => {
       case 'appointment-history':
         return <DonationHistory />
       case 'verification':
-        return <UserVerificationPage />
+        return <UserVerification />
       default:
         return <Profile />
     }
@@ -39,7 +65,7 @@ const UserProfilePage: React.FC = () => {
               className={`w-full text-left p-2 rounded-md flex items-center gap-2 ${
                 selectedOption === 'profile' ? 'bg-red-100' : ''
               }`}
-              onClick={() => setSelectedOption('profile')}
+              onClick={() => handleOptionClick('profile')}
             >
               <Info className='w-5 h-5' />
               Thông tin cá nhân
@@ -48,7 +74,7 @@ const UserProfilePage: React.FC = () => {
               className={`w-full text-left p-2 rounded-md flex items-center gap-2 ${
                 selectedOption === 'appointment-info' ? 'bg-red-100' : ''
               }`}
-              onClick={() => setSelectedOption('appointment-info')}
+              onClick={() => handleOptionClick('appointment-info')}
             >
               <Calendar className='w-5 h-5' />
               Lịch Hẹn của Tôi
@@ -57,7 +83,7 @@ const UserProfilePage: React.FC = () => {
               className={`w-full text-left p-2 rounded-md flex items-center gap-2 ${
                 selectedOption === 'appointment-history' ? 'bg-red-100' : ''
               }`}
-              onClick={() => setSelectedOption('appointment-history')}
+              onClick={() => handleOptionClick('appointment-history')}
             >
               <History className='w-5 h-5' />
               Lịch sử đặt hẹn
@@ -66,7 +92,7 @@ const UserProfilePage: React.FC = () => {
               className={`w-full text-left p-2 rounded-md flex items-center gap-2 ${
                 selectedOption === 'verification' ? 'bg-red-100' : ''
               }`}
-              onClick={() => setSelectedOption('verification')}
+              onClick={() => handleOptionClick('verification')}
             >
               <CheckCircle className='w-5 h-5' />
               Xác thực tài khoản
