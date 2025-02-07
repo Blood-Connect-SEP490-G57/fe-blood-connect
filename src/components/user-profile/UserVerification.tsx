@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { Upload, Mail, User, Phone, Calendar, Check } from 'lucide-react'
 import { useDropzone } from 'react-dropzone'
-import { useNavigate } from 'react-router-dom'
 
 interface FormData {
   identityDoc: File | null
@@ -12,9 +11,8 @@ interface FormData {
   verificationCode: string
 }
 
-const UserVerificationPage = () => {
+const UserVerification = () => {
   const [step, setStep] = useState(1)
-  const navigate = useNavigate()
   const [formData, setFormData] = useState<FormData>({
     identityDoc: null,
     fullName: '',
@@ -162,12 +160,6 @@ const UserVerificationPage = () => {
     }
   }
 
-  const handleLoginClick = () => {
-    console.log('User clicked login button')
-
-    navigate('/login')
-  }
-
   return (
     <div className='min-h-screen bg-background py-12 px-4 sm:px-6 lg:px-8'>
       <div className='max-w-md mx-auto bg-card p-8 rounded-lg shadow-sm'>
@@ -189,7 +181,7 @@ const UserVerificationPage = () => {
         {renderStep()}
 
         <div className='mt-8 flex justify-between'>
-          {step > 1 && (
+          {step > 1 && step < 4 && (
             <button
               onClick={prevStep}
               className='px-6 py-2 bg-secondary text-accent rounded-lg hover:bg-opacity-90 transition-colors'
@@ -210,20 +202,13 @@ const UserVerificationPage = () => {
               onClick={() => console.log('Verification completed', formData)}
               className='px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-opacity-90 transition-colors ml-auto'
             >
-              Đăng nhập
+              Đăng kí hiến máu
             </button>
           )}
         </div>
-
-        <p className='mt-4 text-center text-accent'>
-          Đã có tài khoản?{' '}
-          <button className='text-primary hover:underline' onClick={handleLoginClick}>
-            Đăng nhập ngay
-          </button>
-        </p>
       </div>
     </div>
   )
 }
 
-export default UserVerificationPage
+export default UserVerification
