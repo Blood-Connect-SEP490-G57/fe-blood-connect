@@ -9,25 +9,21 @@ import { Loader2Icon, Phone, Lock } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-
-const formSchema = z.object({
-  phoneNumber: z.string().min(10, 'Số điện thoại phải có ít nhất 10 chữ số'),
-  password: z.string().min(6, 'Mật khẩu phải có ít nhất 6 ký tự')
-})
+import { LoginSchema } from '@/schema/auth-schema'
 
 export default function Login() {
   const navigate = useNavigate()
   const [isLoading, setIsLoading] = React.useState<boolean>(false)
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof LoginSchema>>({
+    resolver: zodResolver(LoginSchema),
     defaultValues: {
       phoneNumber: '',
       password: ''
     }
   })
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+  const onSubmit = async (values: z.infer<typeof LoginSchema>) => {
     setIsLoading(true)
     // Xử lý đăng nhập ở đây
     console.log(values)

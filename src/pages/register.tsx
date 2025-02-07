@@ -1,6 +1,10 @@
 import React, { useState } from 'react'
-import { Lock, Phone, Check } from 'lucide-react' // Import icon từ lucide-react
+import { Lock, Phone, Check } from 'lucide-react' // Import icon from lucide-react
 import { useNavigate } from 'react-router-dom'
+import { RegisterSchema } from '@/schema/auth-schema'
+import { useForm, Controller } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
 
 interface FormData {
   phone: string
@@ -9,20 +13,23 @@ interface FormData {
 }
 
 const RegistrationPage = () => {
-  const [formData, setFormData] = useState<FormData>({
-    phone: '',
-    password: '',
-    confirmPassword: ''
-  })
   const navigate = useNavigate()
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    const { name, value } = e.target
-    setFormData({ ...formData, [name]: value })
-  }
+  const {
+    control,
+    handleSubmit,
+    formState: { errors }
+  } = useForm<z.infer<typeof RegisterSchema>>({
+    resolver: zodResolver(RegisterSchema),
+    defaultValues: {
+      phone: '',
+      password: '',
+      confirmPassword: ''
+    }
+  })
 
-  const handleRegister = (): void => {
-    console.log('Registration completed', formData)
+  const handleRegister = (data: FormData): void => {
+    console.log('Registration completed', data)
     navigate('/login')
   }
 
@@ -48,38 +55,53 @@ const RegistrationPage = () => {
           <div className='space-y-4'>
             <div className='relative'>
               <Phone className='absolute left-3 top-3 text-accent' />
-              <input
-                type='tel'
+              <Controller
                 name='phone'
-                placeholder='Số điện thoại'
-                className='w-full pl-10 pr-4 py-2 border border-input rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent'
-                value={formData.phone}
-                onChange={handleInputChange}
+                control={control}
+                render={({ field }) => (
+                  <input
+                    type='tel'
+                    {...field}
+                    placeholder='Số điện thoại'
+                    className='w-full pl-10 pr-4 py-2 border border-input rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent'
+                  />
+                )}
               />
+              {errors.phone && <p className='text-red-500 text-sm'>{errors.phone?.message}</p>}
             </div>
 
             <div className='relative'>
               <Lock className='absolute left-3 top-3 text-accent' />
-              <input
-                type='password'
+              <Controller
                 name='password'
-                placeholder='Mật khẩu'
-                className='w-full pl-10 pr-4 py-2 border border-input rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent'
-                value={formData.password}
-                onChange={handleInputChange}
+                control={control}
+                render={({ field }) => (
+                  <input
+                    type='password'
+                    {...field}
+                    placeholder='Mật khẩu'
+                    className='w-full pl-10 pr-4 py-2 border border-input rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent'
+                  />
+                )}
               />
+              {errors.password && <p className='text-red-500 text-sm'>{errors.password?.message}</p>}
             </div>
 
             <div className='relative'>
               <Lock className='absolute left-3 top-3 text-accent' />
-              <input
-                type='password'
+              <Controller
                 name='confirmPassword'
-                placeholder='Xác nhận mật khẩu'
-                className='w-full pl-10 pr-4 py-2 border border-input rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent'
-                value={formData.confirmPassword}
-                onChange={handleInputChange}
+                control={control}
+                render={({ field }) => (
+                  <input
+                    type='password'
+                    {...field}
+                    placeholder='Xác nhận mật khẩu'
+                    className='w-full pl-10 pr-4 py-2 border border-input rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent'
+                  />
+                )}
               />
+              {errors.confirmPassword && <p className='text-red-500 text-sm'>{errors.confirmPassword?.message}</p>}
             </div>
 
             <ul className='text-sm text-accent space-y-1'>
@@ -96,7 +118,7 @@ const RegistrationPage = () => {
           </div>
 
           <button
-            onClick={handleRegister}
+            onClick={handleSubmit(handleRegister)}
             className='px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-opacity-90 transition-colors w-full'
           >
             Đăng ký
