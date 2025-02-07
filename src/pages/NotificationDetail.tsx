@@ -34,6 +34,15 @@ const NotificationDetail = () => {
       message: 'KÊU GỈ TNV MÁU HIẾM THAM GIA HIẾN MÁU TRƯỚC TẾT',
       timeAgo: '3 ngày trước',
       read: true
+    },
+    {
+      id: 3,
+      date: '22/01/2025',
+      type: 'Tin tức',
+      title: 'THÔNG BÁO KHẨN !!!',
+      message: 'KÊU GỈ TNV MÁU HIẾM THAM GIA HIẾN MÁU TRƯỚC TẾT',
+      timeAgo: '4 ngày trước',
+      read: false
     }
   ])
 
@@ -53,7 +62,7 @@ const NotificationDetail = () => {
         return notifications.filter((n) => n.type === 'Nhắc nhở')
       case 'events':
         return notifications.filter((n) => n.type === 'Sự kiện')
-      case 'Tin tức':
+      case 'news':
         return notifications.filter((n) => n.type === 'Tin tức')
       default:
         return notifications
@@ -81,6 +90,7 @@ const NotificationDetail = () => {
               <TabsTrigger value='unread'>Chưa đọc</TabsTrigger>
               <TabsTrigger value='reminders'>Nhắc nhở</TabsTrigger>
               <TabsTrigger value='events'>Sự kiện</TabsTrigger>
+              <TabsTrigger value='news'>Tin tức</TabsTrigger>
             </TabsList>
           </div>
 
@@ -104,6 +114,11 @@ const NotificationDetail = () => {
 
           <TabsContent value='events' className='space-y-4'>
             {getFilteredNotifications('events').map((notification) => (
+              <NotificationCard key={notification.id} notification={notification} onMarkAsRead={markAsRead} />
+            ))}
+          </TabsContent>
+          <TabsContent value='news' className='space-y-4'>
+            {getFilteredNotifications('news').map((notification) => (
               <NotificationCard key={notification.id} notification={notification} onMarkAsRead={markAsRead} />
             ))}
           </TabsContent>
