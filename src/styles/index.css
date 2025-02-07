@@ -138,3 +138,24 @@
   transform: scale(0.9);
   transition: opacity 200ms, transform 200ms;
 }
+/* For Webkit browsers (Chrome, Safari) */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #f87171;
+  /* red-400 */
+  border-radius: 10px;
+  border: 3px solid #f1f1f1;
+}
+
+/* For Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #f87171 #f1f1f1;
+}
