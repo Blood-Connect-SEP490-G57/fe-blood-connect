@@ -1,21 +1,33 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { MapPin, Calendar, User, Phone, Mail, Building, CreditCard, Baby, Briefcase, Droplet } from 'lucide-react'
+import {
+  MapPin,
+  Calendar,
+  User,
+  Phone,
+  Mail,
+  Building,
+  CreditCard,
+  Baby,
+  Briefcase,
+  Droplet,
+  Contact
+} from 'lucide-react'
 
 interface PersonalInfo {
   fullName: string
   idNumber: string
-  dateOfBirth: string
+  birthDate: string
   gender: string
   occupation: string
   organization: string
-  bloodType: string
-}
-
-interface ContactInfo {
-  address: string
+  contactAddress: string
+  permanentAddress: string
   phone: string
   email: string
+  idIssuePlace: string
+  studentMilitaryId: string
+  bloodType: string
 }
 
 const RegistrationIcon = () => (
@@ -57,35 +69,39 @@ const ContactItem = ({ icon: Icon, label, value }: { icon: any; label: string; v
 
 const AppointmentInfo = () => {
   const personalInfo: PersonalInfo = {
-    fullName: 'Bế Tuấn Minh',
-    idNumber: '98437597984389567',
-    dateOfBirth: '22/03/2003',
+    fullName: 'Bế Minh',
+    birthDate: '01/01/2000',
     gender: 'Nam',
-    occupation: 'Kỹ sư',
-    organization: '-',
-    bloodType: '-'
-  }
-
-  const contactInfo: ContactInfo = {
-    address: 'khu 6, Thị trấn Đình Lập, Huyện Đình Lập, Tỉnh Lạng Sơn',
-    phone: '',
-    email: ''
+    occupation: 'Sinh viên',
+    organization: 'Đại học ABC',
+    contactAddress: 'Hà Nội, Việt Nam',
+    permanentAddress: 'Hà Nội, Việt Nam',
+    phone: '0123456789',
+    email: 'be.minh@example.com',
+    idNumber: '123456789',
+    idIssuePlace: 'Hà Nội',
+    studentMilitaryId: 'HS123456',
+    bloodType: 'A+'
   }
 
   const personalInfoItems = [
     { icon: User, label: 'Họ và tên', value: personalInfo.fullName },
     { icon: CreditCard, label: 'Số CCCD', value: personalInfo.idNumber },
-    { icon: Calendar, label: 'Ngày sinh', value: personalInfo.dateOfBirth },
+    { icon: Calendar, label: 'Ngày sinh', value: personalInfo.birthDate },
     { icon: Baby, label: 'Giới tính', value: personalInfo.gender },
     { icon: Briefcase, label: 'Nghề nghiệp', value: personalInfo.occupation },
     { icon: Building, label: 'Đơn vị', value: personalInfo.organization },
+    { icon: Droplet, label: 'Nhóm máu', value: personalInfo.bloodType },
+    { icon: MapPin, label: 'Địa chỉ thường trú', value: personalInfo.permanentAddress },
+    { icon: CreditCard, label: 'Nơi cấp CCCD', value: personalInfo.idIssuePlace },
+    { icon: CreditCard, label: 'Mã số sinh viên/quân nhân', value: personalInfo.studentMilitaryId },
     { icon: Droplet, label: 'Nhóm máu', value: personalInfo.bloodType }
   ]
 
   const contactInfoItems = [
-    { icon: MapPin, label: 'Địa chỉ liên lạc', value: contactInfo.address },
-    { icon: Phone, label: 'Số điện thoại', value: contactInfo.phone },
-    { icon: Mail, label: 'Email', value: contactInfo.email }
+    { icon: MapPin, label: 'Địa chỉ liên hệ', value: personalInfo.contactAddress },
+    { icon: Phone, label: 'Số điện thoại', value: personalInfo.phone },
+    { icon: Mail, label: 'Email', value: personalInfo.email }
   ]
 
   return (
@@ -137,7 +153,7 @@ const AppointmentInfo = () => {
           <Card className='md:col-span-2'>
             <CardHeader>
               <CardTitle className='text-xl text-red-600 flex items-center gap-2'>
-                <Phone className='w-5 h-5' />
+                <Contact className='w-5 h-5' />
                 Thông tin liên hệ
               </CardTitle>
             </CardHeader>

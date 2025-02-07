@@ -62,7 +62,7 @@ const UserVerificationPage = () => {
               <p className='text-accent mb-4'>Cách 2: Quét mã QR Code để tải lên từ điện thoại</p>
               <div className='inline-block p-4 bg-secondary rounded-lg'>
                 <img
-                  src='https://images.unsplash.com/photo-1572555349055-1254827e85c1'
+                  src='https://th.bing.com/th/id/R.fbd3782b74b283e3a06c44fc7600f0a8?rik=2WUTK7aTKMXbyA&riu=http%3a%2f%2fpngimg.com%2fuploads%2fqr_code%2fqr_code_PNG6.png&ehk=nUlk4YKcz%2fILTzIDicRXimAOjkyFKx9ofIkscb3FFxA%3d&risl=&pid=ImgRaw&r=0'
                   alt='QR Code'
                   className='w-32 h-32'
                 />
