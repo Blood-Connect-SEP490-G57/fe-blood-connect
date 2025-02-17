@@ -9,38 +9,34 @@ import { User } from 'lucide-react'
 import UserAvatar from '@/components/ui/user-avatar'
 
 const profileFormSchema = z.object({
+  idNumber: z.string().min(9, 'Số CCCD/Hộ chiếu không hợp lệ'),
+  studentMilitaryId: z.string().min(5, 'Số thẻ HSSV/Quân nhân không hợp lệ'),
   fullName: z.string().min(2, 'Tên phải có ít nhất 2 ký tự'),
   birthDate: z.string().min(10, 'Ngày sinh không hợp lệ'),
   gender: z.string().min(2, 'Giới tính không hợp lệ'),
-  occupation: z.string().min(2, 'Nghề nghiệp không hợp lệ'),
-  organization: z.string().min(2, 'Cơ quan/Trường lớp không hợp lệ'),
+  bloodType: z.string().optional(),
   contactAddress: z.string().min(5, 'Địa chỉ liên lạc không hợp lệ'),
-  permanentAddress: z.string().min(5, 'Địa chỉ thường trú không hợp lệ'),
+  organization: z.string().min(2, 'Cơ quan/Trường lớp không hợp lệ'),
   phone: z.string().min(10, 'Số điện thoại không hợp lệ'),
   email: z.string().email('Email không hợp lệ'),
-  idNumber: z.string().min(9, 'Số CCCD/Hộ chiếu không hợp lệ'),
-  idIssuePlace: z.string().min(2, 'Nơi cấp không hợp lệ'),
-  studentMilitaryId: z.string().min(2, 'Số thẻ HSSV/Quân nhân không hợp lệ'),
-  bloodType: z.string().optional()
+  occupation: z.string().min(2, 'Nghề nghiệp không hợp lệ')
 })
 
 const Profile = () => {
   const form = useForm<z.infer<typeof profileFormSchema>>({
     resolver: zodResolver(profileFormSchema),
     defaultValues: {
+      idNumber: '123456789',
+      studentMilitaryId: 'SV123456',
       fullName: 'Bế Minh',
       birthDate: '01/01/2000',
       gender: 'Nam',
-      occupation: 'Sinh viên',
-      organization: 'Đại học ABC',
+      bloodType: 'A+',
       contactAddress: 'Hà Nội, Việt Nam',
-      permanentAddress: 'Hà Nội, Việt Nam',
+      organization: 'Đại học ABC',
       phone: '0123456789',
       email: 'be.minh@example.com',
-      idNumber: '123456789',
-      idIssuePlace: 'Hà Nội',
-      studentMilitaryId: 'HS123456',
-      bloodType: 'A+'
+      occupation: 'Sinh viên'
     }
   })
 
@@ -86,191 +82,181 @@ const Profile = () => {
               </div>
 
               <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
-                  <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-                    <FormField
-                      control={form.control}
-                      name='fullName'
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Họ và tên</FormLabel>
-                          <FormControl>
-                            <Input {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
+                  {/* Phần 1: Thông tin cá nhân */}
+                  <div>
+                    <h2 className="text-lg font-semibold mb-4">Thông tin cá nhân</h2>
+                    <div className='grid grid-cols-1 gap-6'>
+                      <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+                        <FormField
+                          control={form.control}
+                          name='idNumber'
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Số CCCD</FormLabel>
+                              <FormControl>
+                                <Input {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
 
-                    <FormField
-                      control={form.control}
-                      name='birthDate'
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Ngày sinh</FormLabel>
-                          <FormControl>
-                            <Input {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                        <FormField
+                          control={form.control}
+                          name='studentMilitaryId'
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Số thẻ HSSV/Quân nhân</FormLabel>
+                              <FormControl>
+                                <Input {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
 
-                    <FormField
-                      control={form.control}
-                      name='gender'
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Giới tính</FormLabel>
-                          <FormControl>
-                            <Input {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                      <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+                        <FormField
+                          control={form.control}
+                          name='fullName'
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Họ và tên</FormLabel>
+                              <FormControl>
+                                <Input {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
 
-                    <FormField
-                      control={form.control}
-                      name='occupation'
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Nghề nghiệp</FormLabel>
-                          <FormControl>
-                            <Input {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                        <FormField
+                          control={form.control}
+                          name='birthDate'
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Ngày sinh</FormLabel>
+                              <FormControl>
+                                <Input {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
 
-                    <FormField
-                      control={form.control}
-                      name='organization'
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Cơ quan/Trường lớp</FormLabel>
-                          <FormControl>
-                            <Input {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                      <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+                        <FormField
+                          control={form.control}
+                          name='gender'
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Giới tính</FormLabel>
+                              <FormControl>
+                                <Input {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
 
-                    <FormField
-                      control={form.control}
-                      name='contactAddress'
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Địa chỉ liên lạc</FormLabel>
-                          <FormControl>
-                            <Input {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name='permanentAddress'
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Địa chỉ thường trú theo CCCD</FormLabel>
-                          <FormControl>
-                            <Input {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name='phone'
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Điện thoại</FormLabel>
-                          <FormControl>
-                            <Input {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name='email'
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Email</FormLabel>
-                          <FormControl>
-                            <Input {...field} type='email' />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name='bloodType'
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Nhóm máu</FormLabel>
-                          <FormControl>
-                            <Input {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <div className='md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6'>
-                      <FormField
-                        control={form.control}
-                        name='idNumber'
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Số CCCD/Hộ chiếu</FormLabel>
-                            <FormControl>
-                              <Input {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={form.control}
-                        name='idIssuePlace'
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Nơi cấp</FormLabel>
-                            <FormControl>
-                              <Input {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
+                        <FormField
+                          control={form.control}
+                          name='bloodType'
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Nhóm máu</FormLabel>
+                              <FormControl>
+                                <Input {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
                     </div>
+                  </div>
 
-                    <FormField
-                      control={form.control}
-                      name='studentMilitaryId'
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Số thẻ HSSV/Quân nhân</FormLabel>
-                          <FormControl>
-                            <Input {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                  {/* Phần 2: Thông tin liên hệ */}
+                  <div>
+                    <h2 className="text-lg font-semibold mb-4">Thông tin liên hệ</h2>
+                    <div className='grid grid-cols-1 gap-6'>
+                      <FormField
+                        control={form.control}
+                        name='contactAddress'
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Địa chỉ liên hệ</FormLabel>
+                            <FormControl>
+                              <Input {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+                        <FormField
+                          control={form.control}
+                          name='phone'
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Điện thoại di động</FormLabel>
+                              <FormControl>
+                                <Input {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={form.control}
+                          name='email'
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Email</FormLabel>
+                              <FormControl>
+                                <Input {...field} type='email' />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+
+                      <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+                        <FormField
+                          control={form.control}
+                          name='organization'
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Cơ quan/Trường lớp</FormLabel>
+                              <FormControl>
+                                <Input {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={form.control}
+                          name='occupation'
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Nghề nghiệp</FormLabel>
+                              <FormControl>
+                                <Input {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                    </div>
                   </div>
 
                   <div className='flex justify-end space-x-4'>
