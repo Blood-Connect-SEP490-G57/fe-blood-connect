@@ -4,7 +4,7 @@ import { CreditCard, User, Heart, Scale, Calendar, TestTube } from 'lucide-react
 const BloodDonationCriteria = () => {
   return (
     <div className='bg-red-600 min-h-screen flex items-center justify-center p-8'>
-      <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-6xl'>
+      <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-7xl'>
         {/* Image card (large span) */}
         <Card className='bg-white col-span-1 md:col-span-2 row-span-2 shadow-lg rounded-2xl'>
           <CardContent className='p-8'>

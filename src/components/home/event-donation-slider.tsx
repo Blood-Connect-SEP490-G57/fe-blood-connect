@@ -64,7 +64,7 @@ export default function EventDonationSlider() {
   }
 
   return (
-    <div className='relative mt-8 mx-auto w-full'>
+    <div className='relative mt-8 mx-auto w-full '>
       <div
         className='relative w-full text-white text-center py-4 mb-4 rounded-lg shadow-lg'
         style={{
@@ -81,7 +81,7 @@ export default function EventDonationSlider() {
         </div>
       </div>
       {/* Slider Container */}
-      <div className='relative h-96 py-4 mb-4 rounded-xl overflow-hidden shadow-lg max-w-7xl mx-auto center'>
+      <div className='relative h-96 py-8 mb-4 rounded-xl overflow-hidden shadow-lg max-w-7xl mx-auto'>
         {events.map((event, index) => (
           <div
             key={event.id}

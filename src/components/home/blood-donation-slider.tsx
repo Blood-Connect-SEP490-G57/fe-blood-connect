@@ -49,16 +49,16 @@ const BloodDonationSlider: React.FC<campaignsProps> = ({ campaigns }) => {
   }
 
   return (
-    <div className='max-w-6xl mx-auto px-4 py-8'>
+    <div className='max-w-7xl mx-auto py-8'>
       {campaigns.length === 0 ? (
         <div className='text-center py-12'>
           <h2 className='text-2xl font-bold text-gray-700'>Không có sự kiện nào</h2>
         </div>
       ) : (
-        <div className='relative overflow-hidden rounded-lg shadow-lg bg-card p-4 md:p-8'>
+        <div className='relative overflow-hidden rounded-lg shadow-lg max-w-7xl bg-card p-4 md:p-8'>
           <h2 className='text-3xl font-bold mb-12 text-center'>Sự Kiện Sắp Diễn Ra</h2>
           <div
-            className='flex transition-transform duration-500 ease-in-out'
+            className='flex transition-transform duration-500 ease-in-out mb-4'
             style={{ transform: `translateX(-${currentSlide * 100}%)` }}
           >
             {campaigns.map((campaign) => (
