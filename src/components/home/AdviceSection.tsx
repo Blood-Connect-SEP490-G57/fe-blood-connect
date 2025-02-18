@@ -5,7 +5,7 @@ const AdviceSection = () => {
     <div className='bg-red-600 mx-auto p-8'>
       <h1 className='text-2xl font-bold text-center mb-6 text-white'>Những lời khuyên trước và sau khi hiến máu</h1>
 
-      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
+      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto'>
         <AdviceItem
           title='Nên:'
           type='should'
