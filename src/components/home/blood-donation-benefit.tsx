@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react'
-
 interface Slide {
   title: string
   content: string[]
@@ -40,36 +39,16 @@ const BloodDonationBenefits: React.FC = () => {
   ]
 
   const contentRefs = useRef<Array<HTMLUListElement | null>>([])
-  const containerRef = useRef<HTMLDivElement | null>(null)
-  const [maxHeight, setMaxHeight] = useState<number>(0)
-
-  useEffect(() => {
-    if (contentRefs.current) {
-      let newMaxHeight = 0
-      contentRefs.current.forEach((ref) => {
-        if (ref && ref.offsetHeight > newMaxHeight) {
-          newMaxHeight = ref.offsetHeight
-        }
-      })
-      setMaxHeight(newMaxHeight)
-    }
-  }, [slides])
-
-  useEffect(() => {
-    if (containerRef.current) {
-      containerRef.current.style.minHeight = `${maxHeight}px`
-    }
-  }, [maxHeight])
 
   const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % slides.length)
   const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length)
 
   return (
     <div className='bg-gray-100 py-12'>
-      <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
+      <div className='max-w-7xl mx-auto'>
         <h2 className='text-3xl font-bold text-center text-red-600 mb-8'>Quyền lợi của người hiến máu</h2>
         <div className='grid grid-cols-1 md:grid-cols-2 gap-8'>
-          <div className='bg-red-500 text-white rounded-lg shadow-lg p-6 flex flex-col items-center justify-center'>
+          <div className='bg-red-500 text-white rounded-lg shadow-lg p-6 flex flex-col items-center justify-center h-[500px]'>
             <img
               src='/images/landing/heart-in-hand.jpg'
               alt='Heart in Hands'
@@ -78,7 +57,7 @@ const BloodDonationBenefits: React.FC = () => {
             <p className='text-lg text-center'>Người hiến máu tình nguyện sẽ được những quyền lợi sau:</p>
           </div>
 
-          <div className='bg-white rounded-lg shadow-lg p-6 relative flex flex-col justify-between' ref={containerRef}>
+          <div className='bg-white rounded-lg shadow-lg p-6 relative flex flex-col justify-between h-[500px]'>
             <h3 className='text-2xl font-semibold text-red-600 mb-4'>{slides[currentSlide].title}</h3>
             <ul
               className='list-disc pl-6 text-gray-700 space-y-2 flex-grow'
