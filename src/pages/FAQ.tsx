@@ -65,7 +65,7 @@ const FAQPage = () => {
   ]
 
   return (
-    <div className='min-h-screen bg-gradient-to-br from-red-50 via-white to-red-50 py-12'>
+    <div className='min-h-screen bg-white py-12'>
       <div className='container mx-auto px-4'>
         {/* Header Section */}
         <div className='text-center mb-16'>
