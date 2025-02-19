@@ -58,18 +58,18 @@ const Notifications: React.FC<NotificationsProps> = ({ onClose }) => {
 
   return (
     <div
-      className='max-w-lg w-full mx-auto p-4 bg-white rounded-2xl shadow-lg border border-red-500 overflow-y-auto'
+      className='max-w-lg w-full mx-auto p-4 bg-white rounded-2xl shadow-lg border  overflow-y-auto'
       style={{ maxHeight: '80vh', minWidth: '600px' }}
     >
-      <div className='flex justify-between items-center border-b border-red-500 pb-2'>
-        <h2 className='text-xl font-bold text-red-600'>Thông báo</h2>
+      <div className='flex justify-between items-center border-b  pb-2'>
+        <h2 className='text-xl font-bold'>Thông báo</h2>
       </div>
       <div className='flex flex-wrap gap-2 my-2'>
         {['Tất cả', 'Chưa đọc', 'Nhắc nhở', 'Sự kiện', 'Tin tức'].map((item) => (
           <Button
             key={item}
             variant={filter === item ? 'default' : 'outline'}
-            className={`text-red-600 border-red-500 ${filter === item ? 'bg-red-500 text-white' : 'hover:bg-red-100'}`}
+            className={`text-red-600 ${filter === item ? 'bg-red-500 text-white' : 'hover:bg-red-100'}`}
             onClick={() => setFilter(item)}
           >
             {item}
@@ -78,7 +78,7 @@ const Notifications: React.FC<NotificationsProps> = ({ onClose }) => {
       </div>
       <div className='mt-2'>
         {filteredNotifications.map((notif) => (
-          <Card key={notif.id} className='mb-2 border border-red-300'>
+          <Card key={notif.id} className='mb-2 border '>
             <CardContent className='p-4'>
               <p className='text-sm text-gray-500'>{notif.date}</p>
               <h3 className='text-lg font-bold text-red-700'>{notif.title}</h3>
