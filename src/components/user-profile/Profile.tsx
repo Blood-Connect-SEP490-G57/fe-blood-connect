@@ -56,11 +56,10 @@ const Profile = () => {
   }
 
   return (
-    <div className='min-h-screen bg-gradient-to-br from-red-50 via-white to-red-50 py-12'>
+    <div className='min-h-screen bg-white py-12'>
       <div className='container mx-auto px-4'>
         <h1 className='text-2xl font-bold text-gray-900 mb-8'>Hồ sơ cá nhân</h1>
-
-        <div className='max-w-3xl mx-auto'>
+        <div className='max-w-6xl mx-auto'>
           <Card>
             <CardHeader>
               <CardTitle className='text-xl text-red-600 flex items-center gap-2'>
@@ -181,7 +180,7 @@ const Profile = () => {
 
                   {/* Phần 2: Thông tin liên hệ */}
                   <div>
-                    <h2 className="text-lg font-semibold mb-4">Thông tin liên hệ</h2>
+                    <h2 className='text-lg font-semibold mb-4'>Thông tin liên hệ</h2>
                     <div className='grid grid-cols-1 gap-6'>
                       <FormField
                         control={form.control}
@@ -233,7 +232,7 @@ const Profile = () => {
                           name='organization'
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Cơ quan/Trường lớp</FormLabel>
+                              <FormLabel>Đơn vị</FormLabel>
                               <FormControl>
                                 <Input {...field} />
                               </FormControl>

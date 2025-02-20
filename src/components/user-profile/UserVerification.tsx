@@ -162,7 +162,7 @@ const UserVerification = () => {
 
   return (
     <div className='min-h-screen bg-background py-12 px-4 sm:px-6 lg:px-8'>
-      <div className='max-w-md mx-auto bg-card p-8 rounded-lg shadow-sm'>
+      <div className='max-w-5xl mx-auto bg-card p-8 rounded-lg shadow-sm'>
         <div className='mb-8'>
           <div className='flex justify-between items-center mb-8'>
             {[1, 2, 3, 4].map((stepNumber) => (

@@ -105,7 +105,7 @@ const AppointmentInfo = () => {
   ]
 
   return (
-    <div className='min-h-screen bg-gradient-to-br from-red-50 via-white to-red-50 py-12'>
+    <div className='min-h-screen bg-white py-12'>
       <div className='container mx-auto px-4'>
         <h1 className='text-2xl font-bold text-gray-900 mb-8'>Thông tin đăng ký hiến máu</h1>
 
