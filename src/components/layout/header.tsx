@@ -9,7 +9,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
-import { User, Settings, LogOut, Menu, Bell } from 'lucide-react'
+import { User, Settings, LogOut, Menu, Bell, X } from 'lucide-react' // Add X for close button
 import UserAvatar from '@/components/ui/user-avatar'
 import Notifications from '@/components/notification/Notifications'
 
@@ -164,7 +164,58 @@ const Header: React.FC = () => {
           </div>
 
           {/* Mobile menu button */}
+
           <div className='md:hidden'>
+            <Button
+              variant='ghost'
+              onClick={(e) => {
+                e.stopPropagation() // Prevent event bubbling
+                setIsNotificationOpen((prev) => !prev)
+              }}
+              className='group p-inherit text-red-600 hover:text-white hover:bg-red-600 relative'
+            >
+              <div className='relative w-full h-full'>
+                <Bell className='group-hover:text-white text-red-600 hover:text-white' />
+                <span className='absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full px-1.5 hover:bg-red-700 group-hover:bg-red-700'>
+                  1
+                </span>
+              </div>
+            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant='ghost' className='relative h-8 w-8 rounded-full'>
+                  <UserAvatar
+                    size='sm'
+                    user={{
+                      name: 'Bế Minh',
+                      image: undefined
+                    }}
+                  />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className='w-56' align='end' forceMount>
+                <DropdownMenuLabel className='font-normal'>
+                  <div className='flex flex-col space-y-1'>
+                    <p className='text-sm font-medium leading-none'>Bế Minh</p>
+                    <p className='text-xs leading-none text-muted-foreground'>be.minh@example.com</p>
+                  </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => navigate('/user-profile-page')}>
+                  <User className='mr-2 h-4 w-4' />
+                  <span>Hồ sơ cá nhân</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate('/settings')}>
+                  <Settings className='mr-2 h-4 w-4' />
+                  <span>Cài đặt</span>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem className='text-red-600'>
+                  <LogOut className='mr-2 h-4 w-4' />
+                  <span>Đăng xuất</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
             <Button variant='ghost' size='sm' onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
               <Menu className='w-6 h-6' />
               <span className='sr-only'>Open menu</span>
@@ -172,33 +223,38 @@ const Header: React.FC = () => {
           </div>
         </div>
         {/* Mobile Navigation */}
-        {isMobileMenuOpen && (
-          <div className='md:hidden'>
-            <div className='flex flex-col space-y-4 mt-4'>
-              {navigation.map((item) => (
-                <a key={item.name} href={item.href} className='text-gray-700 hover:text-primary transition-colors'>
-                  {item.name}
-                </a>
-              ))}
-              <div className='flex flex-col space-y-2'>
-                <Button
-                  variant='outline'
-                  className='border-red-600 text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors'
-                  onClick={handleLoginClick}
-                >
-                  Đăng nhập
-                </Button>
-                <Button
-                  variant='default'
-                  className='bg-red-600 text-white hover:bg-red-700 transition-colors'
-                  onClick={handleRegisterClick}
-                >
-                  Đăng ký
-                </Button>
-              </div>
+        <div
+          className={`md:hidden fixed top-0 right-0 h-full w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out z-50 ${
+            isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
+          }`}
+        >
+          <div className='flex flex-col space-y-4 p-4 h-full'>
+            <Button variant='ghost' size='sm' className='self-end mb-4' onClick={() => setIsMobileMenuOpen(false)}>
+              <X className='w-6 h-6' />
+            </Button>
+            {navigation.map((item) => (
+              <a key={item.name} href={item.href} className='text-gray-700 hover:text-primary transition-colors'>
+                {item.name}
+              </a>
+            ))}
+            <div className='flex flex-col space-y-2 mt-auto'>
+              <Button
+                variant='outline'
+                className='border-red-600 text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors'
+                onClick={handleLoginClick}
+              >
+                Đăng nhập
+              </Button>
+              <Button
+                variant='default'
+                className='bg-red-600 text-white hover:bg-red-700 transition-colors'
+                onClick={handleRegisterClick}
+              >
+                Đăng ký
+              </Button>
             </div>
           </div>
-        )}
+        </div>
       </nav>
     </header>
   )
