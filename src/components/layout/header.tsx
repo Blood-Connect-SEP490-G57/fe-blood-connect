@@ -19,12 +19,16 @@ const Header: React.FC = () => {
   const [isNotificationOpen, setIsNotificationOpen] = useState(false)
   const notificationRef = useRef<HTMLDivElement>(null)
   const navigation = [
+    { name: 'THÔNG TIN CÁ NHÂN', href: '/user-profile-page#profile' },
     { name: 'TIN TỨC', href: '/news' },
     { name: 'HỎI ĐÁP', href: '/faq' },
     { name: 'LIÊN HỆ', href: '/contact' },
     { name: 'ĐĂNG KÝ HIẾN MÁU', href: '/blood-donation-registration' },
     { name: 'LỊCH HẸN CỦA TÔI', href: '/user-profile-page#appointment-info' },
-    { name: 'LỊCH SỬ ĐẶT HẸN', href: '/user-profile-page#appointment-history' }
+    { name: 'LỊCH SỬ ĐẶT HẸN', href: '/user-profile-page#appointment-history' },
+    { name: 'XÁC THỰC TÀI KHOẢN' , href: '/user-profile-page#verification' },
+
+
   ]
 
   useEffect(() => {
