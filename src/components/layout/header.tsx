@@ -27,8 +27,6 @@ const Header: React.FC = () => {
     { name: 'LỊCH HẸN CỦA TÔI', href: '/user-profile-page#appointment-info' },
     { name: 'LỊCH SỬ ĐẶT HẸN', href: '/user-profile-page#appointment-history' },
     { name: 'XÁC THỰC TÀI KHOẢN' , href: '/user-profile-page#verification' },
-
-
   ]
 
   useEffect(() => {
@@ -74,11 +72,13 @@ const Header: React.FC = () => {
 
           {/* Desktop Navigation */}
           <div className='hidden md:flex items-center space-x-8'>
-            {navigation.map((item) => (
-              <a key={item.name} href={item.href} className='text-gray-700 hover:text-primary transition-colors'>
-                {item.name}
-              </a>
-            ))}
+            {navigation
+              .filter((item) => item.name !== 'THÔNG TIN CÁ NHÂN' && item.name !== 'XÁC THỰC TÀI KHOẢN') // Exclude these items from desktop
+              .map((item) => (
+                <a key={item.name} href={item.href} className='text-gray-700 hover:text-primary transition-colors'>
+                  {item.name}
+                </a>
+              ))}
             <div className='relative'>
               <Button
                 variant='ghost'
