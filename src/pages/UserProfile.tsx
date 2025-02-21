@@ -8,7 +8,7 @@ import UserVerification from '@/components/user-profile/UserVerification'
 
 const UserProfilePage: React.FC = () => {
   const [selectedOption, setSelectedOption] = useState<string>('profile')
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [isMobileMenuOpen] = useState(false)
 
   // Effect to initialize state on mount from the URL hash
   useEffect(() => {
