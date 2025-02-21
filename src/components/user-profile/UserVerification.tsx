@@ -161,19 +161,27 @@ const UserVerification = () => {
   }
 
   return (
-    <div className='min-h-screen bg-background py-12 px-4 sm:px-6 lg:px-8'>
-      <div className='max-w-5xl mx-auto bg-card p-8 rounded-lg shadow-sm'>
+    <div className='min-h-screen bg-white py-12 px-4 sm:px-6 lg:px-8'>
+      <div className='max-w-5xl mx-auto bg-card p-8 rounded-lg '>
         <div className='mb-8'>
-          <div className='flex justify-between items-center mb-8'>
-            {[1, 2, 3, 4].map((stepNumber) => (
-              <div
-                key={stepNumber}
-                className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                  step >= stepNumber ? 'bg-primary text-primary-foreground' : 'bg-secondary text-accent'
-                }`}
-              >
-                {stepNumber}
-              </div>
+          <div className='flex items-center mb-8'>
+            {[1, 2, 3, 4].map((stepNumber, index) => (
+              <React.Fragment key={stepNumber}>
+                <div
+                  className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                    step >= stepNumber ? 'bg-primary text-primary-foreground' : 'bg-secondary text-accent'
+                  }`}
+                >
+                  {stepNumber}
+                </div>
+                {index < 3 && (
+                  <div
+                    className={`flex-1 h-1 mx-2 transition-all duration-500 ease-in-out ${
+                      step > stepNumber ? 'bg-primary' : 'bg-secondary'
+                    }`}
+                  />
+                )}
+              </React.Fragment>
             ))}
           </div>
         </div>
