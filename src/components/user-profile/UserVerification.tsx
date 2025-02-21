@@ -43,7 +43,6 @@ const UserVerification = () => {
           <div className='space-y-6'>
             <h2 className='text-2xl font-heading font-semibold text-foreground'>Tải lên giấy tờ tùy thân</h2>
             <p className='text-accent '>Để xác thực tài khoản vui lòng cung cấp thông tin giấy tờ tùy thân của bạn.</p>
-
             <div
               {...getRootProps()}
               className='border-2 border-dashed border-input rounded-lg p-8 text-center cursor-pointer hover:border-primary transition-colors'
