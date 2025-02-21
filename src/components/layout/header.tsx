@@ -59,7 +59,7 @@ const Header: React.FC = () => {
   }
 
   return (
-    <header className='bg-white shadow-sm'>
+    <header className='bg-white shadow-sm fixed top-0 left-0 right-0 z-50'> {/* Added fixed positioning */}
       <nav className='container mx-auto px-4'>
         <div className='flex items-center justify-between h-16'>
           <div className='flex items-center'>
@@ -164,58 +164,7 @@ const Header: React.FC = () => {
           </div>
 
           {/* Mobile menu button */}
-
           <div className='md:hidden'>
-            <Button
-              variant='ghost'
-              onClick={(e) => {
-                e.stopPropagation() // Prevent event bubbling
-                setIsNotificationOpen((prev) => !prev)
-              }}
-              className='group p-inherit text-red-600 hover:text-white hover:bg-red-600 relative'
-            >
-              <div className='relative w-full h-full'>
-                <Bell className='group-hover:text-white text-red-600 hover:text-white' />
-                <span className='absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full px-1.5 hover:bg-red-700 group-hover:bg-red-700'>
-                  1
-                </span>
-              </div>
-            </Button>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant='ghost' className='relative h-8 w-8 rounded-full'>
-                  <UserAvatar
-                    size='sm'
-                    user={{
-                      name: 'Bế Minh',
-                      image: undefined
-                    }}
-                  />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className='w-56' align='end' forceMount>
-                <DropdownMenuLabel className='font-normal'>
-                  <div className='flex flex-col space-y-1'>
-                    <p className='text-sm font-medium leading-none'>Bế Minh</p>
-                    <p className='text-xs leading-none text-muted-foreground'>be.minh@example.com</p>
-                  </div>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => navigate('/user-profile-page')}>
-                  <User className='mr-2 h-4 w-4' />
-                  <span>Hồ sơ cá nhân</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => navigate('/settings')}>
-                  <Settings className='mr-2 h-4 w-4' />
-                  <span>Cài đặt</span>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem className='text-red-600'>
-                  <LogOut className='mr-2 h-4 w-4' />
-                  <span>Đăng xuất</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
             <Button variant='ghost' size='sm' onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
               <Menu className='w-6 h-6' />
               <span className='sr-only'>Open menu</span>
