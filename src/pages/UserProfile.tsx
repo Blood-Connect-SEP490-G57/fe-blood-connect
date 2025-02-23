@@ -8,7 +8,7 @@ import UserVerification from '@/components/user-profile/UserVerification'
 
 const UserProfilePage: React.FC = () => {
   const [selectedOption, setSelectedOption] = useState<string>('profile')
-  const [isMobileMenuOpen] = useState(false)
+  // const [isMobileMenuOpen] = useState(false)
 
   // Effect to initialize state on mount from the URL hash
   useEffect(() => {
@@ -53,55 +53,53 @@ const UserProfilePage: React.FC = () => {
 
   return (
     <div className='flex flex-col md:flex-row min-h-screen bg-gray-100'>
-      <div className='w-full md:w-1/4 p-4 bg-white shadow-lg'>
-        {isMobileMenuOpen && ( // Conditionally render the card based on isMobileMenuOpen
-          <Card className='border-none'>
-            <CardHeader>
-              <CardTitle className='text-xl text-red-600 flex items-center gap-2'>
-                <User className='w-5 h-5' />
-                Hồ sơ
-              </CardTitle>
-            </CardHeader>
-            <CardContent className='space-y-4'>
-              <button
-                className={`w-full text-left p-2 rounded-md flex items-center gap-2 ${
-                  selectedOption === 'profile' ? 'bg-red-100' : ''
-                }`}
-                onClick={() => handleOptionClick('profile')}
-              >
-                <Info className='w-5 h-5' />
-                Thông tin cá nhân
-              </button>
-              <button
-                className={`w-full text-left p-2 rounded-md flex items-center gap-2 ${
-                  selectedOption === 'appointment-info' ? 'bg-red-100' : ''
-                }`}
-                onClick={() => handleOptionClick('appointment-info')}
-              >
-                <Calendar className='w-5 h-5' />
-                Lịch Hẹn của Tôi
-              </button>
-              <button
-                className={`w-full text-left p-2 rounded-md flex items-center gap-2 ${
-                  selectedOption === 'appointment-history' ? 'bg-red-100' : ''
-                }`}
-                onClick={() => handleOptionClick('appointment-history')}
-              >
-                <History className='w-5 h-5' />
-                Lịch sử đặt hẹn
-              </button>
-              <button
-                className={`w-full text-left p-2 rounded-md flex items-center gap-2 ${
-                  selectedOption === 'verification' ? 'bg-red-100' : ''
-                }`}
-                onClick={() => handleOptionClick('verification')}
-              >
-                <CheckCircle className='w-5 h-5' />
-                Xác thực tài khoản
-              </button>
-            </CardContent>
-          </Card>
-        )}
+      <div className='hidden md:block w-full md:w-1/4 p-4 bg-white shadow-lg'> {/* Use hidden md:block */}
+        <Card className='border-none'>
+          <CardHeader>
+            <CardTitle className='text-xl text-red-600 flex items-center gap-2'>
+              <User className='w-5 h-5' />
+              Hồ sơ
+            </CardTitle>
+          </CardHeader>
+          <CardContent className='space-y-4'>
+            <button
+              className={`w-full text-left p-2 rounded-md flex items-center gap-2 ${
+                selectedOption === 'profile' ? 'bg-red-100' : ''
+              }`}
+              onClick={() => handleOptionClick('profile')}
+            >
+              <Info className='w-5 h-5' />
+              Thông tin cá nhân
+            </button>
+            <button
+              className={`w-full text-left p-2 rounded-md flex items-center gap-2 ${
+                selectedOption === 'appointment-info' ? 'bg-red-100' : ''
+              }`}
+              onClick={() => handleOptionClick('appointment-info')}
+            >
+              <Calendar className='w-5 h-5' />
+              Lịch Hẹn của Tôi
+            </button>
+            <button
+              className={`w-full text-left p-2 rounded-md flex items-center gap-2 ${
+                selectedOption === 'appointment-history' ? 'bg-red-100' : ''
+              }`}
+              onClick={() => handleOptionClick('appointment-history')}
+            >
+              <History className='w-5 h-5' />
+              Lịch sử đặt hẹn
+            </button>
+            <button
+              className={`w-full text-left p-2 rounded-md flex items-center gap-2 ${
+                selectedOption === 'verification' ? 'bg-red-100' : ''
+              }`}
+              onClick={() => handleOptionClick('verification')}
+            >
+              <CheckCircle className='w-5 h-5' />
+              Xác thực tài khoản
+            </button>
+          </CardContent>
+        </Card>
       </div>
       <div className='w-full md:w-3/4 p-4'>{renderContent()}</div>
     </div>
