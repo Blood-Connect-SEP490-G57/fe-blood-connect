@@ -19,13 +19,14 @@ const Header: React.FC = () => {
   const [isNotificationOpen, setIsNotificationOpen] = useState(false)
   const notificationRef = useRef<HTMLDivElement>(null)
   const navigation = [
-    { name: 'THÔNG TIN CÁ NHÂN', href: '/user-profile-page#profile' },
+    { name: 'TRANG CHỦ', href: '/' },
     { name: 'TIN TỨC', href: '/news' },
     { name: 'HỎI ĐÁP', href: '/faq' },
     { name: 'LIÊN HỆ', href: '/contact' },
     { name: 'ĐĂNG KÝ HIẾN MÁU', href: '/blood-donation-registration' },
     { name: 'LỊCH HẸN CỦA TÔI', href: '/user-profile-page#appointment-info' },
     { name: 'LỊCH SỬ ĐẶT HẸN', href: '/user-profile-page#appointment-history' },
+    { name: 'THÔNG TIN CÁ NHÂN', href: '/user-profile-page#profile' },
     { name: 'XÁC THỰC TÀI KHOẢN' , href: '/user-profile-page#verification' },
   ]
 
@@ -73,7 +74,7 @@ const Header: React.FC = () => {
           {/* Desktop Navigation */}
           <div className='hidden md:flex items-center space-x-8'>
             {navigation
-              .filter((item) => item.name !== 'THÔNG TIN CÁ NHÂN' && item.name !== 'XÁC THỰC TÀI KHOẢN') // Exclude these items from desktop
+              .filter((item) => item.name !== 'THÔNG TIN CÁ NHÂN' && item.name !== 'XÁC THỰC TÀI KHOẢN' && item.name !== 'TRANG CHỦ') // Exclude these items from desktop
               .map((item) => (
                 <a key={item.name} href={item.href} className='text-gray-700 hover:text-primary transition-colors'>
                   {item.name}
