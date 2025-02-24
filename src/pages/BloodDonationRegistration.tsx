@@ -36,31 +36,35 @@ const BloodDonationRegistration = () => {
     }))
   }
   const renderStepIndicator = () => {
+    const stepsArray = Object.values(STEPS).filter((step) => typeof step === 'number') as number[]
+
     return (
       <div className='mb-8'>
         <div className='flex items-center mb-8'>
-          {Object.values(STEPS)
-            .filter((step) => typeof step === 'number')
-            .map((step, index) => (
-              <React.Fragment key={step}>
-                <div className='flex flex-col items-center'>
-                  <div
-                    className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                      currentStep >= step ? 'bg-red-600 text-white' : 'bg-gray-200 text-gray-600'
-                    }`}
-                  >
-                    {step + 1}
-                  </div>
+          {stepsArray.map((step, index) => (
+            <React.Fragment key={step}>
+              <div className='flex flex-col items-center'>
+                <div
+                  className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                    currentStep === step
+                      ? 'bg-red-600 text-white font-bold' // Màu đậm hơn cho step hiện tại
+                      : currentStep > step
+                      ? 'bg-red-600 text-white' // Màu đỏ cho step đã đi qua
+                      : 'bg-gray-200 text-gray-600' // Màu xám cho step chưa đi đến
+                  }`}
+                >
+                  {step + 1}
                 </div>
-                {index < Object.values(STEPS).length - 1 && (
-                  <div
-                    className={`flex-1 h-1 mx-2 transition-all duration-500 ease-in-out ${
-                      currentStep > step ? 'bg-red-600' : 'bg-gray-200'
-                    }`}
-                  />
-                )}
-              </React.Fragment>
-            ))}
+              </div>
+              {index < stepsArray.length - 1 && (
+                <div
+                  className={`flex-1 h-1 mx-2 transition-all duration-500 ease-in-out ${
+                    currentStep > step ? 'bg-red-600' : 'bg-gray-200'
+                  }`}
+                />
+              )}
+            </React.Fragment>
+          ))}
         </div>
       </div>
     )
@@ -95,7 +99,7 @@ const BloodDonationRegistration = () => {
   }
 
   return (
-    <div className='min-h-screen bg-white py-12'>
+    <div className='min-h-screen bg-gray-100 py-12'>
       <div className='container mx-auto px-4'>
         <div className='max-w-3xl mx-auto'>
           <h1 className='text-2xl font-bold text-gray-900 mb-8'>Đăng ký hiến máu</h1>
