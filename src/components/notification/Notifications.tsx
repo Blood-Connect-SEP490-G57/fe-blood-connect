@@ -7,6 +7,7 @@ interface NotificationsProps {
   onClose: () => void
 }
 
+const notiItems = ['Tất cả', 'Chưa đọc', 'Nhắc nhở', 'Sự kiện', 'Tin tức'] // Flattened the array
 const notifications = [
   {
     id: 1,
@@ -43,6 +44,15 @@ const notifications = [
     message: 'KÊU GỈ TNV MÁU HIẾM THAM GIA HIẾN MÁU TRƯỚC TẾT',
     timeAgo: '5 ngày trước',
     read: false
+  },
+  {
+    id: 5,
+    date: '21/01/2025',
+    type: 'Nhắc nhở',
+    title: 'THÔNG BÁO KHẨN !!!',
+    message: 'KÊU GỈ TNV MÁU HIẾM THAM GIA HIẾN MÁU TRƯỚC TẾT',
+    timeAgo: '5 ngày trước',
+    read: false
   }
   // Add other notifications here as needed
 ]
@@ -58,27 +68,34 @@ const Notifications: React.FC<NotificationsProps> = ({ onClose }) => {
 
   return (
     <div
-      className='max-w-lg w-full mx-auto p-4 bg-white rounded-2xl shadow-lg border  overflow-y-auto'
-      style={{ maxHeight: '80vh', minWidth: '600px' }}
+      className='max-w-full w-full mx-auto p-4 bg-white rounded-2xl shadow-lg border overflow-y-auto'
+      style={{ maxHeight: '90vh' }}
     >
-      <div className='flex justify-between items-center border-b  pb-2'>
+      <div className='flex justify-between items-center border-b pb-2'>
         <h2 className='text-xl font-bold'>Thông báo</h2>
       </div>
       <div className='flex flex-wrap gap-2 my-2'>
-        {['Tất cả', 'Chưa đọc', 'Nhắc nhở', 'Sự kiện', 'Tin tức'].map((item) => (
-          <Button
-            key={item}
-            variant={filter === item ? 'default' : 'outline'}
-            className={`text-red-600 ${filter === item ? 'bg-red-500 text-white' : 'hover:bg-red-100'}`}
-            onClick={() => setFilter(item)}
-          >
-            {item}
-          </Button>
-        ))}
+        <div className='w-full overflow-x-auto pb-2 scrollbar-hide'>
+          <div className='flex gap-2 min-w-max'>
+            {notiItems.map((item) => (
+              <Button
+                key={item}
+                variant={filter === item ? 'default' : 'outline'}
+                className={`text-red-600 ${filter === item ? 'bg-red-500 text-white' : 'hover:bg-red-100'}`}
+                onClick={() => {
+                  setFilter(item)
+                  onClose()
+                }}
+              >
+                {item}
+              </Button>
+            ))}
+          </div>
+        </div>
       </div>
-      <div className='mt-2'>
+      <div className='mt-2 '>
         {filteredNotifications.map((notif) => (
-          <Card key={notif.id} className='mb-2 border '>
+          <Card key={notif.id} className='mb-2 border hover:bg-gray-100'>
             <CardContent className='p-4'>
               <p className='text-sm text-gray-500'>{notif.date}</p>
               <h3 className='text-lg font-bold text-red-700'>{notif.title}</h3>

@@ -8,6 +8,7 @@ import UserVerification from '@/components/user-profile/UserVerification'
 
 const UserProfilePage: React.FC = () => {
   const [selectedOption, setSelectedOption] = useState<string>('profile')
+  // const [isMobileMenuOpen] = useState(false)
 
   // Effect to initialize state on mount from the URL hash
   useEffect(() => {
@@ -52,7 +53,7 @@ const UserProfilePage: React.FC = () => {
 
   return (
     <div className='flex flex-col md:flex-row min-h-screen bg-gray-100'>
-      <div className='w-full md:w-1/4 p-4 bg-white shadow-lg'>
+      <div className='hidden md:block w-full md:w-1/4 p-4 bg-white shadow-lg'> {/* Use hidden md:block */}
         <Card className='border-none'>
           <CardHeader>
             <CardTitle className='text-xl text-red-600 flex items-center gap-2'>

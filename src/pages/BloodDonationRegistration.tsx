@@ -2,7 +2,7 @@ import QuestionnaireStep from '@/components/blood-donation-registration/Question
 import ReviewStep from '@/components/blood-donation-registration/ReviewStep'
 import SelectCampaignStep from '@/components/blood-donation-registration/SelectCampaignStep'
 import SuccessStep from '@/components/blood-donation-registration/SuccessStep'
-import { cn } from '@/lib/utils'
+import React from 'react'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -15,12 +15,12 @@ export enum STEPS {
 
 export type Step = (typeof STEPS)[keyof typeof STEPS]
 
-const stepTitles: Record<Step, string> = {
-  [STEPS.SELECT_CAMPAIGN]: 'Chọn buổi hiến máu',
-  [STEPS.QUESTIONNAIRE]: 'Khảo sát',
-  [STEPS.REVIEW]: 'Xác nhận',
-  [STEPS.SUCCESS]: 'Hoàn thành'
-}
+// const stepTitles: Record<Step, string> = {
+//   [STEPS.SELECT_CAMPAIGN]: 'Chọn buổi hiến máu',
+//   [STEPS.QUESTIONNAIRE]: 'Khảo sát',
+//   [STEPS.REVIEW]: 'Xác nhận',
+//   [STEPS.SUCCESS]: 'Hoàn thành'
+// }
 
 const BloodDonationRegistration = () => {
   const navigate = useNavigate()
@@ -35,46 +35,40 @@ const BloodDonationRegistration = () => {
       [questionId]: answer
     }))
   }
-
   const renderStepIndicator = () => {
+    const stepsArray = Object.values(STEPS).filter((step) => typeof step === 'number') as number[]
+
     return (
       <div className='mb-8'>
-        <div className='flex justify-between items-center relative'>
-          {/* Progress Line */}
-          <div className='absolute left-0 right-0 h-1 bg-gray-200 top-1/2 transform -translate-y-1/2 z-0'>
-            <div
-              className='h-full bg-red-600 transition-all duration-300'
-              style={{
-                width: `${
-                  (currentStep / (Object.values(STEPS).filter((step) => typeof step === 'number').length - 1)) * 100
-                }%`
-              }}
-            />
-          </div>
-
-          {/* Step Circles */}
-          {Object.values(STEPS)
-            .filter((step) => typeof step === 'number')
-            .map((step) => (
-              <div key={step} className='z-10'>
-                <div className='flex flex-col items-center'>
-                  <div
-                    className={cn(
-                      'w-8 h-8 rounded-full flex items-center justify-center transition-colors duration-300',
-                      currentStep >= step ? 'bg-red-600 text-white' : 'bg-gray-200 text-gray-600'
-                    )}
-                  >
-                    {step + 1}
-                  </div>
-                  <span className='text-sm mt-2 font-medium text-gray-600'>{stepTitles[step]}</span>
+        <div className='flex items-center mb-8'>
+          {stepsArray.map((step, index) => (
+            <React.Fragment key={step}>
+              <div className='flex flex-col items-center'>
+                <div
+                  className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                    currentStep === step
+                      ? 'bg-red-600 text-white font-bold' // Màu đậm hơn cho step hiện tại
+                      : currentStep > step
+                      ? 'bg-red-600 text-white' // Màu đỏ cho step đã đi qua
+                      : 'bg-gray-200 text-gray-600' // Màu xám cho step chưa đi đến
+                  }`}
+                >
+                  {step + 1}
                 </div>
               </div>
-            ))}
+              {index < stepsArray.length - 1 && (
+                <div
+                  className={`flex-1 h-1 mx-2 transition-all duration-500 ease-in-out ${
+                    currentStep > step ? 'bg-red-600' : 'bg-gray-200'
+                  }`}
+                />
+              )}
+            </React.Fragment>
+          ))}
         </div>
       </div>
     )
   }
-
   const renderStep = () => {
     switch (currentStep) {
       case STEPS.SELECT_CAMPAIGN:
@@ -99,15 +93,16 @@ const BloodDonationRegistration = () => {
         return <ReviewStep selectedCampaign={selectedCampaign} answers={answers} setCurrentStep={setCurrentStep} />
       case STEPS.SUCCESS:
         return <SuccessStep navigate={navigate} />
+      default:
+        return null // Ensure nothing is rendered beyond the defined steps
     }
   }
 
   return (
-    <div className='min-h-screen bg-white py-12'>
+    <div className='min-h-screen bg-gray-100 py-12'>
       <div className='container mx-auto px-4'>
         <div className='max-w-3xl mx-auto'>
           <h1 className='text-2xl font-bold text-gray-900 mb-8'>Đăng ký hiến máu</h1>
-
           {renderStepIndicator()}
           {renderStep()}
         </div>

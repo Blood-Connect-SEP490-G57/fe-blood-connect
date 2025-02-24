@@ -62,7 +62,7 @@ const NewsPage = () => {
   })
 
   return (
-    <div className='min-h-screen bg-gray-50 py-12'>
+    <div className='min-h-screen bg-white py-12'>
       <div className='container mx-auto px-4'>
         {/* Header Section */}
         <div className='text-center mb-12'>
@@ -84,17 +84,19 @@ const NewsPage = () => {
             />
             <Search className='absolute left-3 top-2.5 h-5 w-5 text-gray-400' />
           </div>
-          <div className='flex gap-2 overflow-x-auto pb-2'>
-            {categories.map((category) => (
-              <Button
-                key={category}
-                variant={selectedCategory === category ? 'default' : 'outline'}
-                onClick={() => setSelectedCategory(category)}
-                className='whitespace-nowrap'
-              >
-                {category}
-              </Button>
-            ))}
+          <div className='w-full overflow-x-auto pb-2 scrollbar-hide'>
+            <div className='flex gap-2 min-w-max'>
+              {categories.map((category) => (
+                <Button
+                  key={category}
+                  variant={selectedCategory === category ? 'default' : 'outline'}
+                  onClick={() => setSelectedCategory(category)}
+                  className='whitespace-nowrap'
+                >
+                  {category}
+                </Button>
+              ))}
+            </div>
           </div>
         </div>
 

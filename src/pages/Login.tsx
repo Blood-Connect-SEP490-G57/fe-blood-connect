@@ -39,7 +39,7 @@ export default function Login() {
       <div className='sm:mx-auto sm:w-full sm:max-w-md'>
         {/* Logo */}
         <div className='flex justify-center mb-6'>
-          <div className='w-20 h-20 bg-red-600 rounded-full flex items-center justify-center'>
+          <div className='w-20 h-20 bg-red-100 rounded-full flex items-center justify-center'>
             <span className='text-4xl'>🩸</span>
           </div>
         </div>

@@ -13,7 +13,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
       <Header></Header>
 
       {/* Content */}
-      <main className='flex-1'>{children}</main>
+      <main className='flex-1 mt-6'>{children}</main>
 
       {/* Footer */}
       <Footer></Footer>

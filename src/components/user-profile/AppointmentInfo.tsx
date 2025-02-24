@@ -95,7 +95,6 @@ const AppointmentInfo = () => {
     { icon: MapPin, label: 'Địa chỉ thường trú', value: personalInfo.permanentAddress },
     { icon: CreditCard, label: 'Nơi cấp CCCD', value: personalInfo.idIssuePlace },
     { icon: CreditCard, label: 'Mã số sinh viên/quân nhân', value: personalInfo.studentMilitaryId },
-    { icon: Droplet, label: 'Nhóm máu', value: personalInfo.bloodType }
   ]
 
   const contactInfoItems = [
@@ -109,7 +108,7 @@ const AppointmentInfo = () => {
       <div className='container mx-auto px-4'>
         <h1 className='text-2xl font-bold text-gray-900 mb-8'>Thông tin đăng ký hiến máu</h1>
 
-        <div className='grid grid-cols-1 md:grid-cols-2 gap-8'>
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-8 ml-4 mr-4'>
           {/* Personal Information Card */}
           <Card>
             <CardHeader>
@@ -126,9 +125,24 @@ const AppointmentInfo = () => {
               </div>
             </CardContent>
           </Card>
-
-          {/* Appointment Registration Card */}
+          {/* Contact Information Card */}
           <Card>
+            <CardHeader>
+              <CardTitle className='text-xl text-red-600 flex items-center gap-2'>
+                <Contact className='w-5 h-5' />
+                Thông tin liên hệ
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className='space-y-4'>
+                {contactInfoItems.map((item, index) => (
+                  <ContactItem key={index} {...item} />
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+          {/* Appointment Registration Card */}
+          <Card className='md:col-span-2'>
             <CardHeader>
               <CardTitle className='text-xl text-red-600 flex items-center gap-2'>
                 <Calendar className='w-5 h-5' />
@@ -146,23 +160,6 @@ const AppointmentInfo = () => {
               >
                 Đăng ký hiến máu
               </Button>
-            </CardContent>
-          </Card>
-
-          {/* Contact Information Card */}
-          <Card className='md:col-span-2'>
-            <CardHeader>
-              <CardTitle className='text-xl text-red-600 flex items-center gap-2'>
-                <Contact className='w-5 h-5' />
-                Thông tin liên hệ
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className='space-y-4'>
-                {contactInfoItems.map((item, index) => (
-                  <ContactItem key={index} {...item} />
-                ))}
-              </div>
             </CardContent>
           </Card>
         </div>
