@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Bell, Calendar, Filter } from 'lucide-react'
+import { Bell, Calendar } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -15,6 +15,13 @@ interface Notification {
 }
 
 const NotificationDetail = () => {
+  const tabs = [
+    { title: 'Tất cả', value: 'all' },
+    { title: 'Chưa đọc', value: 'unread' },
+    { title: 'Nhắc nhở', value: 'reminders' },
+    { title: 'Sự kiện', value: 'events' },
+    { title: 'Tin tức', value: 'news' }
+  ]
   const [selectedTab, setSelectedTab] = useState('all')
   const [notifications, setNotifications] = useState<Notification[]>([
     {
@@ -70,7 +77,7 @@ const NotificationDetail = () => {
   }
 
   return (
-    <div className='min-h-screen bg-gradient-to-br from-red-50 via-white to-red-50 py-12'>
+    <div className='min-h-screen bg-white py-12'>
       <div className='container mx-auto px-4 max-w-4xl'>
         <div className='flex items-center justify-between mb-8'>
           <div className='flex items-center gap-3'>
@@ -83,15 +90,25 @@ const NotificationDetail = () => {
         </div>
 
         <Tabs defaultValue='all' className='space-y-6'>
-          <div className='flex items-center gap-4 mb-6'>
-            <Filter className='h-5 w-5 text-gray-500' />
-            <TabsList className='bg-white border border-gray-200'>
-              <TabsTrigger value='all'>Tất cả</TabsTrigger>
-              <TabsTrigger value='unread'>Chưa đọc</TabsTrigger>
-              <TabsTrigger value='reminders'>Nhắc nhở</TabsTrigger>
-              <TabsTrigger value='events'>Sự kiện</TabsTrigger>
-              <TabsTrigger value='news'>Tin tức</TabsTrigger>
-            </TabsList>
+          <div className='flex items-center gap-4 mb-6 justify-end'>
+            {/* <Filter className='h-5 w-5 text-gray-500' /> */}
+            <div className='w-full overflow-x-auto pb-2 scrollbar-hide'>
+              <div className='flex gap-2 min-w-max'>
+                <TabsList className='bg-white border border-gray-200'>
+                  {tabs.map((tabs) => (
+                    <TabsTrigger
+                      key={tabs.value}
+                      value={tabs.value}
+                      // variant={selectedTab === tabs.value ? 'default' : 'outline'}
+                      onClick={() => setSelectedTab(tabs.value)}
+                      className='whitespace-nowrap'
+                    >
+                      {tabs.title}
+                    </TabsTrigger>
+                  ))}
+                </TabsList>
+              </div>
+            </div>
           </div>
 
           <TabsContent value='all' className='space-y-4'>
@@ -137,6 +154,15 @@ const NotificationCard = ({ notification, onMarkAsRead }: NotificationCardProps)
   return (
     <Card className={`transition-colors ${notification.read ? 'bg-white' : 'bg-red-50'}`}>
       <CardContent className='p-6'>
+        {!notification.read && (
+          <Button
+            variant='ghost'
+            className='text-red-600 hover:bg-red-50'
+            onClick={() => onMarkAsRead(notification.id)}
+          >
+            Đánh dấu đã đọc
+          </Button>
+        )}
         <div className='flex items-start justify-between gap-4'>
           <div className='space-y-1'>
             <div className='flex items-center gap-2 text-sm text-gray-500'>
@@ -148,15 +174,6 @@ const NotificationCard = ({ notification, onMarkAsRead }: NotificationCardProps)
             <h3 className='text-lg font-semibold text-gray-900'>{notification.title}</h3>
             <p className='text-gray-600'>{notification.message}</p>
           </div>
-          {!notification.read && (
-            <Button
-              variant='ghost'
-              className='text-red-600 hover:bg-red-50'
-              onClick={() => onMarkAsRead(notification.id)}
-            >
-              Đánh dấu đã đọc
-            </Button>
-          )}
         </div>
       </CardContent>
     </Card>

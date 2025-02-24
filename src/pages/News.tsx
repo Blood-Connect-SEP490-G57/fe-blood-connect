@@ -84,7 +84,7 @@ const NewsPage = () => {
             />
             <Search className='absolute left-3 top-2.5 h-5 w-5 text-gray-400' />
           </div>
-          <div className='w-full overflow-x-auto pb-2 scrollbar-hide'> {/* Added scrollbar-hide class */}
+          <div className='w-full overflow-x-auto pb-2 scrollbar-hide'>
             <div className='flex gap-2 min-w-max'>
               {categories.map((category) => (
                 <Button

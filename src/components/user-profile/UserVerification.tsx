@@ -161,58 +161,56 @@ const UserVerification = () => {
 
   return (
     <div className='min-h-screen bg-white py-12 px-4 sm:px-6 lg:px-8'>
-      <div className='max-w-5xl mx-auto bg-card p-8 rounded-lg '>
-        <div className='mb-8'>
-          <div className='flex items-center mb-8'>
-            {[1, 2, 3, 4].map((stepNumber, index) => (
-              <React.Fragment key={stepNumber}>
+      <div className='mb-8'>
+        <div className='flex items-center mb-8'>
+          {[1, 2, 3, 4].map((stepNumber, index) => (
+            <React.Fragment key={stepNumber}>
+              <div
+                className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                  step >= stepNumber ? 'bg-primary text-primary-foreground' : 'bg-secondary text-accent'
+                }`}
+              >
+                {stepNumber}
+              </div>
+              {index < 3 && (
                 <div
-                  className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                    step >= stepNumber ? 'bg-primary text-primary-foreground' : 'bg-secondary text-accent'
+                  className={`flex-1 h-1 mx-2 transition-all duration-500 ease-in-out ${
+                    step > stepNumber ? 'bg-primary' : 'bg-secondary'
                   }`}
-                >
-                  {stepNumber}
-                </div>
-                {index < 3 && (
-                  <div
-                    className={`flex-1 h-1 mx-2 transition-all duration-500 ease-in-out ${
-                      step > stepNumber ? 'bg-primary' : 'bg-secondary'
-                    }`}
-                  />
-                )}
-              </React.Fragment>
-            ))}
-          </div>
+                />
+              )}
+            </React.Fragment>
+          ))}
         </div>
+      </div>
 
-        {renderStep()}
+      {renderStep()}
 
-        <div className='mt-8 flex justify-between'>
-          {step > 1 && step < 4 && (
-            <button
-              onClick={prevStep}
-              className='px-6 py-2 bg-secondary text-accent rounded-lg hover:bg-opacity-90 transition-colors'
-            >
-              Quay lại
-            </button>
-          )}
+      <div className='mt-8 flex justify-between'>
+        {step > 1 && step < 4 && (
+          <button
+            onClick={prevStep}
+            className='px-6 py-2 bg-secondary text-accent rounded-lg hover:bg-opacity-90 transition-colors'
+          >
+            Quay lại
+          </button>
+        )}
 
-          {step < 4 ? (
-            <button
-              onClick={nextStep}
-              className='px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-opacity-90 transition-colors ml-auto'
-            >
-              Tiếp tục
-            </button>
-          ) : (
-            <button
-              onClick={() => console.log('Verification completed', formData)}
-              className='px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-opacity-90 transition-colors ml-auto'
-            >
-              Đăng kí hiến máu
-            </button>
-          )}
-        </div>
+        {step < 4 ? (
+          <button
+            onClick={nextStep}
+            className='px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-opacity-90 transition-colors ml-auto'
+          >
+            Tiếp tục
+          </button>
+        ) : (
+          <button
+            onClick={() => console.log('Verification completed', formData)}
+            className='px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-opacity-90 transition-colors ml-auto'
+          >
+            Đăng kí hiến máu
+          </button>
+        )}
       </div>
     </div>
   )
