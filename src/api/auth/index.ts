@@ -13,7 +13,7 @@ export const refreshAccessToken = async () => {
 
 export const loginUser = async (data: LoginType) => {
   const response = await apiPostCall('/api/v1/auth/login', {
-    username: data.username,
+    username: data.phoneNumber,
     password: data.password
   })
   return response.data
