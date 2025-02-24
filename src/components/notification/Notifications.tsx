@@ -93,9 +93,9 @@ const Notifications: React.FC<NotificationsProps> = ({ onClose }) => {
           </div>
         </div>
       </div>
-      <div className='mt-2'>
+      <div className='mt-2 '>
         {filteredNotifications.map((notif) => (
-          <Card key={notif.id} className='mb-2 border'>
+          <Card key={notif.id} className='mb-2 border hover:bg-gray-100'>
             <CardContent className='p-4'>
               <p className='text-sm text-gray-500'>{notif.date}</p>
               <h3 className='text-lg font-bold text-red-700'>{notif.title}</h3>

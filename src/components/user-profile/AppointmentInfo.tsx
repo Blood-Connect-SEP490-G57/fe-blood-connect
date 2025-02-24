@@ -108,7 +108,7 @@ const AppointmentInfo = () => {
       <div className='container mx-auto px-4'>
         <h1 className='text-2xl font-bold text-gray-900 mb-8'>Thông tin đăng ký hiến máu</h1>
 
-        <div className='grid grid-cols-1 md:grid-cols-2 gap-8'>
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-8 ml-4 mr-4'>
           {/* Personal Information Card */}
           <Card>
             <CardHeader>
