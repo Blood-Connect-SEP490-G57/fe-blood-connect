@@ -13,6 +13,7 @@ import { User, Settings, LogOut, Menu, Bell, X } from 'lucide-react' // Add X fo
 import UserAvatar from '@/components/ui/user-avatar'
 import Notifications from '@/components/notification/Notifications'
 import { useLocation } from 'react-router-dom' // Import useLocation
+import { useUserStore } from '@/hooks/stores'
 
 const Header: React.FC = () => {
   const navigate = useNavigate()
@@ -31,6 +32,13 @@ const Header: React.FC = () => {
     { name: 'XÁC THỰC TÀI KHOẢN', href: '/user-profile-page#verification' }
   ]
 
+  const handleLogout = () => {
+    localStorage.clear()
+    // document.cookie = 'roles=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
+    console.log('logout')
+    navigate('/login')
+  }
+
   const handleNotificationClick = () => {
     navigate('/notifications')
   }
@@ -42,7 +50,8 @@ const Header: React.FC = () => {
   const handleRegisterClick = () => {
     navigate('/register')
   }
-
+  const name = useUserStore((state) => state.username)
+  const email = useUserStore((state) => state.email)
   return (
     <header className='bg-white shadow-sm fixed top-0 left-0 right-0 z-50'>
       <nav className='container mx-auto px-4'>
@@ -87,7 +96,7 @@ const Header: React.FC = () => {
                       <UserAvatar
                         size='sm'
                         user={{
-                          name: 'Bế Minh',
+                          name: name || 'Khách',
                           image: undefined
                         }}
                       />
@@ -96,8 +105,8 @@ const Header: React.FC = () => {
                   <DropdownMenuContent className='w-56' align='end' forceMount>
                     <DropdownMenuLabel className='font-normal'>
                       <div className='flex flex-col space-y-1'>
-                        <p className='text-sm font-medium leading-none'>Bế Minh</p>
-                        <p className='text-xs leading-none text-muted-foreground'>be.minh@example.com</p>
+                        <p className='text-sm font-medium leading-none'>{name||"Khách"}</p>
+                        <p className='text-xs leading-none text-muted-foreground'>{email || 'be.minh@example.com'}</p>
                       </div>
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
@@ -110,7 +119,7 @@ const Header: React.FC = () => {
                       <span>Cài đặt</span>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem className='text-red-600'>
+                    <DropdownMenuItem className='text-red-600' onClick={handleLogout}>
                       <LogOut className='mr-2 h-4 w-4' />
                       <span>Đăng xuất</span>
                     </DropdownMenuItem>
