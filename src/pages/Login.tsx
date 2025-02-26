@@ -1,6 +1,5 @@
 'use client'
 
-import React from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -9,13 +8,15 @@ import { Loader2Icon, Phone, Lock } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { LoginSchema } from '@/schema/auth-schema'
+import { LoginSchema, LoginType } from '@/schema/auth-schema'
 import { loginUser } from '@/api/auth'
-import { Toast } from '@radix-ui/react-toast'
+import { toast } from '@/components/ui/use-toast'
+import { useMutation } from '@tanstack/react-query'
+import { isAxiosError } from 'axios'
 
 export default function Login() {
   const navigate = useNavigate()
-  const [isLoading, setIsLoading] = React.useState<boolean>(false)
+  // const [isLoading, setIsLoading] = React.useState<boolean>(false)
 
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
@@ -24,32 +25,28 @@ export default function Login() {
       password: ''
     }
   })
-
-  const onSubmit = async (values: z.infer<typeof LoginSchema>) => {
-    setIsLoading(true)
-    // Xử lý đăng nhập ở đây
-    console.log(values)
-    try {
-      const response = await loginUser(values)
-      console.log('Login Success:', response)
-
-      // setToastMessage('Đăng nhập thành công!')
-      // setToastType('success')
-      // Lưu token vào localStorage
-      localStorage.setItem('access_token', response.accessToken)
-      localStorage.setItem('refresh_token', response.refreshToken)
-
-      // Chuyển hướng đến trang chính
+  const { mutate: login, isLoading } = useMutation((data: LoginType) => loginUser(data), {
+    onSuccess: (res) => {
+      localStorage.clear()
+      localStorage.setItem('access_token', res.access_token)
+      localStorage.setItem('refresh_token', res.refresh_token)
+      // document.cookie = 'roles=' + res.roles + ';path=/'
+      console.log('login')
       navigate('/')
-    } catch (error) {
-      console.error('Login Error:', error)
-      // setToastMessage('Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.')
-      // setToastType('error')
-    } finally {
-      setIsLoading(false)
+    },
+    onError: (error: Error) => {
+      if (isAxiosError(error)) {
+        toast({
+          variant: 'destructive',
+          title: 'Đã có lỗi xảy ra',
+          description: error.response?.data?.message
+        })
+      }
     }
-    console.log(values)
-    setTimeout(() => setIsLoading(false), 2000)
+  })
+
+  const onSubmit = (data: LoginType) => {
+    login(data)
   }
 
   const handleRegisterClick = () => {

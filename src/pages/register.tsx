@@ -1,18 +1,20 @@
-import { Lock, Phone, Check } from 'lucide-react' // Import icon from lucide-react
-import { useNavigate } from 'react-router-dom'
-import { RegisterSchema } from '@/schema/auth-schema'
-import { useForm, Controller } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
+import { Lock, Phone, Check } from 'lucide-react'; // Import icon from lucide-react
+import { useNavigate } from 'react-router-dom';
+import { RegisterSchema } from '@/schema/auth-schema';
+import { useForm, Controller } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { registerUser } from '@/api/auth';
 
 interface FormData {
-  phone: string
-  password: string
-  confirmPassword: string
+  mobile: string;
+  password: string;
+  confirmPassword: string;
+  email: string; // Add email to the form data
 }
 
 const RegistrationPage = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const {
     control,
@@ -21,16 +23,19 @@ const RegistrationPage = () => {
   } = useForm<z.infer<typeof RegisterSchema>>({
     resolver: zodResolver(RegisterSchema),
     defaultValues: {
-      phone: '',
+      mobile: '',
       password: '',
-      confirmPassword: ''
+      confirmPassword: '',
+      email: '' // Add email as default value
     }
-  })
+  });
 
-  const handleRegister = (data: FormData): void => {
-    console.log('Registration completed', data)
-    navigate('/login')
-  }
+  const handleRegister = async (data: FormData): Promise<void> => {
+    console.log('Registration completed', data);
+    // Call the registerUser function to send the data
+    await registerUser(data);
+    navigate('/login'); // Redirect after successful registration
+  };
 
   return (
     <div className='min-h-screen bg-background py-12 px-4 sm:px-6 lg:px-8'>
@@ -55,7 +60,7 @@ const RegistrationPage = () => {
             <div className='relative'>
               <Phone className='absolute left-3 top-3 text-accent' />
               <Controller
-                name='phone'
+                name='mobile'
                 control={control}
                 render={({ field }) => (
                   <input
@@ -66,7 +71,7 @@ const RegistrationPage = () => {
                   />
                 )}
               />
-              {errors.phone && <p className='text-red-500 text-sm'>{errors.phone?.message}</p>}
+              {errors.mobile && <p className='text-red-500 text-sm'>{errors.mobile?.message}</p>}
             </div>
 
             <div className='relative'>
@@ -103,6 +108,24 @@ const RegistrationPage = () => {
               {errors.confirmPassword && <p className='text-red-500 text-sm'>{errors.confirmPassword?.message}</p>}
             </div>
 
+            <div className='relative'>
+              <Phone className='absolute left-3 top-3 text-accent' />
+              <Controller
+                name='email'
+                control={control}
+                render={({ field }) => (
+                  <input
+                    type='email'
+                    {...field}
+                    placeholder='Email'
+                    // value={'example@email.com'}
+                    className='w-full pl-10 pr-4 py-2 border border-input rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent'
+                  />
+                )}
+              />
+              {errors.email && <p className='text-red-500 text-sm'>{errors.email?.message} </p>}
+            </div>
+
             <ul className='text-sm text-accent space-y-1'>
               <li className='flex items-center'>
                 <Check className='mr-2 text-chart-2' /> Ít nhất 8 ký tự
@@ -132,7 +155,7 @@ const RegistrationPage = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default RegistrationPage
+export default RegistrationPage;
