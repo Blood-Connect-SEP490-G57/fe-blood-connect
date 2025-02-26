@@ -26,7 +26,6 @@ export const registerUser = async (data: RegisterType) => {
     password: data.password,
     confirmPassword: data.confirmPassword,
     username: data.mobile,  // Assuming username should be the same as the mobile
-    email: data.email,      // Send the email as well
   });
   return response.data;
 };

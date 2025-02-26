@@ -10,7 +10,6 @@ interface FormData {
   mobile: string;
   password: string;
   confirmPassword: string;
-  email: string; // Add email to the form data
 }
 
 const RegistrationPage = () => {
@@ -26,7 +25,6 @@ const RegistrationPage = () => {
       mobile: '',
       password: '',
       confirmPassword: '',
-      email: '' // Add email as default value
     }
   });
 
@@ -106,24 +104,6 @@ const RegistrationPage = () => {
                 )}
               />
               {errors.confirmPassword && <p className='text-red-500 text-sm'>{errors.confirmPassword?.message}</p>}
-            </div>
-
-            <div className='relative'>
-              <Phone className='absolute left-3 top-3 text-accent' />
-              <Controller
-                name='email'
-                control={control}
-                render={({ field }) => (
-                  <input
-                    type='email'
-                    {...field}
-                    placeholder='Email'
-                    // value={'example@email.com'}
-                    className='w-full pl-10 pr-4 py-2 border border-input rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent'
-                  />
-                )}
-              />
-              {errors.email && <p className='text-red-500 text-sm'>{errors.email?.message} </p>}
             </div>
 
             <ul className='text-sm text-accent space-y-1'>

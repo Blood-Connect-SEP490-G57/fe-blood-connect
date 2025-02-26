@@ -13,10 +13,10 @@ import { loginUser } from '@/api/auth'
 import { toast } from '@/components/ui/use-toast'
 import { useMutation } from '@tanstack/react-query'
 import { isAxiosError } from 'axios'
+import React from 'react'
 
 export default function Login() {
-  const navigate = useNavigate()
-  // const [isLoading, setIsLoading] = React.useState<boolean>(false)
+  const navigate = useNavigate();
 
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
@@ -165,7 +165,7 @@ export default function Login() {
           </div>
         </div>
       </div>
-      
+
     </>
   )
 }
