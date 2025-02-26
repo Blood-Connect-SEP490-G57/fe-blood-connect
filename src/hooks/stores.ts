@@ -50,10 +50,10 @@ export const useShareStore = create<ShareState>((set) => ({
   setLimit: (limit) => set(() => ({ limit }))
 }))
 
-export const useUserStore = create<IndividualState>((set) => ({
-  totalPage: 0,
-  setTotalPage: (totalPage) => set(() => ({ totalPage }))
-}))
+// export const useUserStore = create<IndividualState>((set) => ({
+//   totalPage: 0,
+//   setTotalPage: (totalPage) => set(() => ({ totalPage }))
+// }))
 
 export const useClientStore = create<IndividualState>((set) => ({
   totalPage: 0,
@@ -98,4 +98,50 @@ export const useFundTransferSearchStore = create<SearchState>((set) => ({
 export const useTransactionSearchStore = create<SearchState>((set) => ({
   searchParams: {},
   setSearchParams: (searchParams) => set(() => ({ searchParams }))
+}))
+// Add this interface and store
+interface UserStore {
+  username: string | null
+  setUsername: (username: string | null) => void
+  email: string | null
+  setEmail: (email: string | null) => void
+  CCCD: string | null
+  setCCCD: (CCCD: string | null) => void
+  Code: string | null
+  setCode: (Code: string | null) => void
+  dob: string | null
+  setDob: (dob: string | null) => void
+  gender: string | null
+  setGender: (gender: string | null) => void
+  address: string | null
+  setAddress: (address: string | null) => void
+  place: string | null
+  setPlace: (place: string | null) => void
+  job: string | null
+  setJob: (job: string | null) => void
+  phoneNumber: string | null
+  setPhoneNumber: (phone: string | null) => void
+}
+
+export const useUserStore = create<UserStore>((set) => ({
+  username: null,
+  setUsername: (username) => set({ username }),
+  email: null,
+  setEmail: (email) => set({ email }),
+  CCCD: null,
+  setCCCD: (CCCD) => set({ CCCD }),
+  Code: null,
+  setCode: (Code) => set({ Code }),
+  dob: null,
+  setDob: (dob) => set({ dob }),
+  gender: null,
+  setGender: (gender) => set({ gender }),
+  address: null,
+  setAddress: (address) => set({ address }),
+  place: null,
+  setPlace: (place) => set({ place }),
+  job: null,
+  setJob: (job) => set({ job }),
+  phoneNumber: null,
+  setPhoneNumber: (phone) => set({ phoneNumber: phone })
 }))

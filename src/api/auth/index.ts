@@ -2,6 +2,7 @@ import axios from 'axios';
 import { apiPostCall } from '..';
 import { LoginType, RegisterType } from '@/schema/auth-schema';
 
+
 export const refreshAccessToken = async () => {
   const response = await axios.get('/auth/refresh-token', {
     headers: {
