@@ -63,9 +63,8 @@ const Header: React.FC = () => {
               Giọt Máu Hi Vọng
             </a>
           </div>
-
-          {/* Desktop Navigation */}
-          <div className='hidden md:flex items-center space-x-8'>
+          {/* Desktop and Tablet Navigation */}
+          <div className='hidden xl:flex items-center space-x-8'>
             {navigation
               .filter(
                 (item) =>
@@ -98,7 +97,7 @@ const Header: React.FC = () => {
                       <UserAvatar
                         size='sm'
                         user={{
-                          name: name || 'Khách',
+                          name: name || 'Be Minh',
                           image: undefined
                         }}
                       />
@@ -132,7 +131,6 @@ const Header: React.FC = () => {
             <div className='flex items-center gap-3'>
               {!isLoggedIn && (
                 <>
-
                   <Button
                     variant='outline'
                     className='border-red-600 text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors'
@@ -153,7 +151,7 @@ const Header: React.FC = () => {
           </div>
 
           {/* Mobile menu button */}
-          <div className='md:hidden flex items-center space-x-2'>
+          <div className='xl:hidden flex items-center space-x-2'>
             {location.pathname !== '/login' && location.pathname !== '/register' && ( // Check if not on login page
               <Button
                 variant='ghost'
@@ -185,8 +183,12 @@ const Header: React.FC = () => {
         </div>
         {/* Mobile Navigation */}
         <div
-          className={`md:hidden fixed top-0 right-0 h-full w-64 
-            bg-white shadow-lg transform transition-transform duration-300 ease-in-out z-50 ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
+          style={{
+            minWidth: window.innerWidth < 1025 ? '250px' : '300px' 
+          }}
+          className={`xl:hidden fixed top-0 right-0 h-full w-64 
+            bg-white shadow-lg transform transition-transform duration-300 ease-in-out z-50 
+            ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
             }`}
         >
           <div className='flex flex-col space-y-4 p-4 h-full'>
@@ -262,7 +264,7 @@ const Header: React.FC = () => {
               tabIndex={0}
               style={{
                 maxHeight: '80vh',
-                minWidth: window.innerWidth < 450 ? '250px' : '600px' // Adjust minWidth based on screen size
+                minWidth: window.innerWidth < 780 ? '250px' : '600px' // Adjust minWidth based on screen size
               }}
             >
               <Notifications onClose={() => setIsMobileNotiOpen(false)} />
@@ -270,7 +272,7 @@ const Header: React.FC = () => {
           )}
         </div>
       </nav>
-    </header>
+    </header >
   )
 }
 
