@@ -2,6 +2,7 @@ import axios from 'axios';
 import { apiPostCall } from '..';
 import { LoginType, RegisterType } from '@/schema/auth-schema';
 
+
 export const refreshAccessToken = async () => {
   const response = await axios.get('/auth/refresh-token', {
     headers: {
@@ -24,8 +25,8 @@ export const registerUser = async (data: RegisterType) => {
     mobile: data.mobile,  // Corrected from "mobie" to "mobile"
     password: data.password,
     confirmPassword: data.confirmPassword,
-    username: data.mobile,  // Corrected from "mobie" to "mobile"
-    email: data.email,
+    username: data.mobile,  // Assuming username should be the same as the mobile
   });
   return response.data;
 };
+

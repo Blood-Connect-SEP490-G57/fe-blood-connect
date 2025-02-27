@@ -20,6 +20,7 @@ const Header: React.FC = () => {
   const location = useLocation() // Get the current location
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isMobileNotiOpen, setIsMobileNotiOpen] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
   const navigation = [
     { name: 'TRANG CHỦ', href: '/' },
     { name: 'TIN TỨC', href: '/news' },
@@ -31,6 +32,7 @@ const Header: React.FC = () => {
     { name: 'THÔNG TIN CÁ NHÂN', href: '/user-profile-page#profile' },
     { name: 'XÁC THỰC TÀI KHOẢN', href: '/user-profile-page#verification' }
   ]
+
 
   const handleLogout = () => {
     localStorage.clear()
@@ -105,7 +107,7 @@ const Header: React.FC = () => {
                   <DropdownMenuContent className='w-56' align='end' forceMount>
                     <DropdownMenuLabel className='font-normal'>
                       <div className='flex flex-col space-y-1'>
-                        <p className='text-sm font-medium leading-none'>{name||"Khách"}</p>
+                        <p className='text-sm font-medium leading-none'>{name || "Khách"}</p>
                         <p className='text-xs leading-none text-muted-foreground'>{email || 'be.minh@example.com'}</p>
                       </div>
                     </DropdownMenuLabel>
@@ -128,26 +130,31 @@ const Header: React.FC = () => {
               </>
             )}
             <div className='flex items-center gap-3'>
-              <Button
-                variant='outline'
-                className='border-red-600 text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors'
-                onClick={handleLoginClick}
-              >
-                Đăng nhập
-              </Button>
-              <Button
-                variant='default'
-                className='bg-red-600 text-white hover:bg-red-700 transition-colors'
-                onClick={handleRegisterClick}
-              >
-                Đăng ký
-              </Button>
+              {!isLoggedIn && (
+                <>
+
+                  <Button
+                    variant='outline'
+                    className='border-red-600 text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors'
+                    onClick={handleLoginClick}
+                  >
+                    Đăng nhập
+                  </Button>
+                  <Button
+                    variant='default'
+                    className='bg-red-600 text-white hover:bg-red-700 transition-colors'
+                    onClick={handleRegisterClick}
+                  >
+                    Đăng ký
+                  </Button>
+                </>
+              )}
             </div>
           </div>
 
           {/* Mobile menu button */}
           <div className='md:hidden flex items-center space-x-2'>
-            {location.pathname !== '/login' && location.pathname !== '/register' &&( // Check if not on login page
+            {location.pathname !== '/login' && location.pathname !== '/register' && ( // Check if not on login page
               <Button
                 variant='ghost'
                 onClick={() => {
@@ -179,8 +186,7 @@ const Header: React.FC = () => {
         {/* Mobile Navigation */}
         <div
           className={`md:hidden fixed top-0 right-0 h-full w-64 
-            bg-white shadow-lg transform transition-transform duration-300 ease-in-out z-50 ${
-              isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
+            bg-white shadow-lg transform transition-transform duration-300 ease-in-out z-50 ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
             }`}
         >
           <div className='flex flex-col space-y-4 p-4 h-full'>
@@ -204,27 +210,45 @@ const Header: React.FC = () => {
                 {item.name}
               </a>
             ))}
+
             <div className='flex flex-col space-y-2 mt-auto'>
-              <Button
-                variant='outline'
-                className='border-red-600 text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors'
-                onClick={() => {
-                  handleLoginClick()
-                  setIsMobileMenuOpen(false) // Close menu on click
-                }}
-              >
-                Đăng nhập
-              </Button>
-              <Button
-                variant='default'
-                className='bg-red-600 text-white hover:bg-red-700 transition-colors'
-                onClick={() => {
-                  handleRegisterClick()
-                  setIsMobileMenuOpen(false) // Close menu on click
-                }}
-              >
-                Đăng ký
-              </Button>
+              {isLoggedIn && (
+                <Button
+                  variant='outline'
+                  className='border-red-600 text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors'
+                  onClick={() => {
+                    handleLogout();
+                    setIsLoggedIn(false);
+                    setIsMobileMenuOpen(false); // Close menu on click
+                  }}
+                >
+                  Đăng xuất
+                </Button>
+              )}
+              {!isLoggedIn && (
+                <>
+                  <Button
+                    variant='outline'
+                    className='border-red-600 text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors'
+                    onClick={() => {
+                      handleLoginClick();
+                      setIsMobileMenuOpen(false); // Close menu on click
+                    }}
+                  >
+                    Đăng nhập
+                  </Button>
+                  <Button
+                    variant='default'
+                    className='bg-red-600 text-white hover:bg-red-700 transition-colors'
+                    onClick={() => {
+                      handleRegisterClick();
+                      setIsMobileMenuOpen(false); // Close menu on click
+                    }}
+                  >
+                    Đăng ký
+                  </Button>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -236,8 +260,8 @@ const Header: React.FC = () => {
               onClick={() => handleNotificationClick()}
               role='button'
               tabIndex={0}
-              style={{ 
-                maxHeight: '80vh', 
+              style={{
+                maxHeight: '80vh',
                 minWidth: window.innerWidth < 450 ? '250px' : '600px' // Adjust minWidth based on screen size
               }}
             >
