@@ -32,7 +32,7 @@ const RegistrationPage = () => {
     console.log('Registration completed', data);
     // Call the registerUser function to send the data
     await registerUser(data);
-    navigate('/login'); // Redirect after successful registration
+    navigate('/'); // Redirect after successful registration
   };
 
   return (
