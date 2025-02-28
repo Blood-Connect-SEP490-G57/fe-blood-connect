@@ -1,31 +1,101 @@
-import React, { useState } from 'react'
-import { Upload, Mail, User, Phone, Calendar, Check } from 'lucide-react'
+import React, { useState, useEffect } from 'react'
+import { Upload, Check } from 'lucide-react'
 import { useDropzone } from 'react-dropzone'
+import { extractFront, extractBack, getExtractById, updateExtractStatus } from '@/api/extract'
 
 interface FormData {
-  identityDoc: File | null
+  frontImage: File | null
+  backImage: File | null
+  extractId?: string
   fullName: string
   dateOfBirth: string
   email: string
-  phone: string
-  verificationCode: string
+  mobile: string
+  extractedInfo?: {
+    fullName?: string
+    dateOfBirth?: string
+    idNumber?: string
+  }
 }
 
 const UserVerification = () => {
   const [step, setStep] = useState(1)
   const [formData, setFormData] = useState<FormData>({
-    identityDoc: null,
+    frontImage: null,
+    backImage: null,
     fullName: '',
     dateOfBirth: '',
     email: '',
-    phone: '',
-    verificationCode: ''
+    mobile: ''
+  })
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+
+  const handleFrontImageDrop = async (acceptedFiles: File[]) => {
+    if (acceptedFiles.length === 0) {
+      setError('Vui lòng chọn file ảnh hợp lệ')
+      return
+    }
+
+    try {
+      setLoading(true)
+      const response = await extractFront(acceptedFiles[0])
+      if (response.success) {
+        setFormData({
+          ...formData,
+          frontImage: acceptedFiles[0],
+          extractId: response.data.extractId
+        })
+        setError('')
+      } else {
+        setError(response.message || 'Lỗi khi xử lý ảnh mặt trước')
+      }
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(`Lỗi khi xử lý ảnh mặt trước: ${err.message}`)
+      } else {
+        setError('Lỗi không xác định khi xử lý ảnh mặt trước')
+      }
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleBackImageDrop = async (acceptedFiles: File[]) => {
+    try {
+      setLoading(true)
+      const response = await extractBack(acceptedFiles[0], formData.extractId || '')
+      if (response.success) {
+        setFormData({ ...formData, backImage: acceptedFiles[0] })
+        nextStep()
+      } else {
+        setError(response.message || 'Lỗi khi xử lý ảnh mặt sau')
+      }
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(`Lỗi khi xử lý ảnh mặt sau: ${err.message}`)
+      } else {
+        setError('Lỗi không xác định khi xử lý ảnh mặt sau')
+      }
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const frontDropzone = useDropzone({
+    onDrop: handleFrontImageDrop,
+    accept: {
+      'image/*': ['.jpeg', '.jpg', '.png']
+    },
+    maxSize: 5 * 1024 * 1024 // 5MB
   })
 
-  const { getRootProps, getInputProps } = useDropzone({
-    onDrop: (acceptedFiles) => {
-      setFormData({ ...formData, identityDoc: acceptedFiles[0] })
-    }
+  const backDropzone = useDropzone({
+    onDrop: handleBackImageDrop,
+    accept: {
+      'image/*': ['.jpeg', '.jpg', '.png']
+    },
+    maxSize: 5 * 1024 * 1024 // 5MB
   })
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -36,113 +106,218 @@ const UserVerification = () => {
   const nextStep = (): void => setStep(step + 1)
   const prevStep = (): void => setStep(step - 1)
 
-  const renderStep = (): JSX.Element | null => {
-    switch (step) {
-      case 1:
-        return (
-          <div className='space-y-6'>
-            <h2 className='text-2xl font-heading font-semibold text-foreground'>Tải lên giấy tờ tùy thân</h2>
-            <p className='text-accent '>Để xác thực tài khoản vui lòng cung cấp thông tin giấy tờ tùy thân của bạn.</p>
-            <div
-              {...getRootProps()}
-              className='border-2 border-dashed border-input rounded-lg p-8 text-center cursor-pointer hover:border-primary transition-colors'
-            >
-              <input {...getInputProps()} />
-              <Upload className='mx-auto h-12 w-12 text-accent' />
-              <p className='mt-2'>Cách 1: Kéo và thả file tại đây</p>
-              <button className='mt-4 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-opacity-90 transition-colors'>
-                Chọn file để tải lên
+  const fetchExtractedInfo = async () => {
+    if (!formData.extractId) return
+
+    try {
+      setLoading(true)
+      const response = await getExtractById(formData.extractId)
+      setFormData({
+        ...formData,
+        extractedInfo: response,
+        fullName: response.fullName || '',
+        dateOfBirth: response.dateOfBirth || ''
+      })
+    } catch (err) {
+      setError('Không thể lấy thông tin đã trích xuất')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const validateContactInfo = () => {
+    if (!formData.email || !formData.mobile) {
+      setError('Vui lòng điền đầy đủ thông tin liên hệ')
+      return false
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(formData.email)) {
+      setError('Email không hợp lệ')
+      return false
+    }
+
+    const phoneRegex = /^[0-9]{10}$/
+    if (!phoneRegex.test(formData.mobile)) {
+      setError('Số điện thoại không hợp lệ')
+      return false
+    }
+
+    return true
+  }
+
+  const handleConfirm = async () => {
+    if (!validateContactInfo()) return
+
+    try {
+      setLoading(true)
+      await updateExtractStatus({
+        extractId: formData.extractId,
+        status: 'CONFIRMED',
+        contactInfo: {
+          email: formData.email,
+          phone: formData.mobile
+        }
+      })
+      setError('')
+      nextStep()
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(`Lỗi khi xác nhận thông tin: ${err.message}`)
+      } else {
+        setError('Lỗi không xác định khi xác nhận thông tin')
+      }
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const renderStep1 = () => (
+    <div className='space-y-6'>
+      <h2 className='text-2xl font-heading font-semibold text-foreground'>Tải lên CCCD</h2>
+
+      {/* Mặt trước */}
+      <div className='space-y-2'>
+        <p>Mặt trước CCCD:</p>
+        <div
+          {...frontDropzone.getRootProps()}
+          className='border-2 border-dashed border-input rounded-lg p-8 text-center cursor-pointer'
+        >
+          <input {...frontDropzone.getInputProps()} />
+          {formData.frontImage ? (
+            <div className='space-y-2'>
+              <p>Đã tải lên mặt trước</p>
+              <p className='text-sm text-gray-500'>{formData.frontImage.name}</p>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation()
+                  setFormData({ ...formData, frontImage: null })
+                }}
+                className='px-3 py-1 text-sm bg-red-100 text-red-600 rounded-md hover:bg-red-200'
+              >
+                Xóa
               </button>
             </div>
+          ) : (
+            <>
+              <Upload className='mx-auto h-12 w-12 text-accent' />
+              <p className='mt-2'>Kéo thả hoặc click để tải lên ảnh mặt trước</p>
+              <p className='text-sm text-gray-500 mt-1'>Hỗ trợ: JPG, PNG (Tối đa 5MB)</p>
+            </>
+          )}
+        </div>
+      </div>
 
-            <div className='mt-8 text-center'>
-              <p className='text-accent mb-4'>Cách 2: Quét mã QR Code để tải lên từ điện thoại</p>
-              <div className='inline-block p-4 bg-secondary rounded-lg'>
-                <img
-                  src='https://th.bing.com/th/id/R.fbd3782b74b283e3a06c44fc7600f0a8?rik=2WUTK7aTKMXbyA&riu=http%3a%2f%2fpngimg.com%2fuploads%2fqr_code%2fqr_code_PNG6.png&ehk=nUlk4YKcz%2fILTzIDicRXimAOjkyFKx9ofIkscb3FFxA%3d&risl=&pid=ImgRaw&r=0'
-                  alt='QR Code'
-                  className='w-32 h-32'
-                />
+      {/* Mặt sau - chỉ hiện khi đã có mặt trước */}
+      {formData.frontImage && (
+        <div className='space-y-2'>
+          <p>Mặt sau CCCD:</p>
+          <div
+            {...backDropzone.getRootProps()}
+            className='border-2 border-dashed border-input rounded-lg p-8 text-center cursor-pointer'
+          >
+            <input {...backDropzone.getInputProps()} />
+            {formData.backImage ? (
+              <div className='space-y-2'>
+                <p>Đã tải lên mặt sau</p>
+                <p className='text-sm text-gray-500'>{formData.backImage.name}</p>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    setFormData({ ...formData, backImage: null })
+                  }}
+                  className='px-3 py-1 text-sm bg-red-100 text-red-600 rounded-md hover:bg-red-200'
+                >
+                  Xóa
+                </button>
               </div>
-            </div>
+            ) : (
+              <>
+                <Upload className='mx-auto h-12 w-12 text-accent' />
+                <p className='mt-2'>Kéo thả hoặc click để tải lên ảnh mặt sau</p>
+                <p className='text-sm text-gray-500 mt-1'>Hỗ trợ: JPG, PNG (Tối đa 5MB)</p>
+              </>
+            )}
           </div>
-        )
+        </div>
+      )}
 
+      {error && <p className='text-red-500'>{error}</p>}
+    </div>
+  )
+
+  useEffect(() => {
+    if (step === 2 && formData.extractId) {
+      fetchExtractedInfo()
+    }
+  }, [step])
+
+  useEffect(() => {
+    return () => {
+      // Cleanup if component unmounts during upload
+      if (loading) {
+        setError('Quá trình xử lý đã bị hủy')
+        setLoading(false)
+      }
+    }
+  }, [loading])
+
+  const renderStep = (): JSX.Element | null => {
+    if (loading) {
+      return (
+        <div className='flex items-center justify-center'>
+          <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-primary'></div>
+          <span className='ml-2'>Đang xử lý...</span>
+        </div>
+      )
+    }
+
+    switch (step) {
+      case 1:
+        return renderStep1()
       case 2:
         return (
           <div className='space-y-6'>
-            <h2 className='text-2xl font-heading font-semibold text-foreground'>Thông tin cá nhân</h2>
-
-            <div className='space-y-4'>
-              <div className='relative'>
-                <User className='absolute left-3 top-3 text-accent' />
-                <input
-                  type='text'
-                  name='fullName'
-                  placeholder='Họ và tên'
-                  className='w-full pl-10 pr-4 py-2 border border-input rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent'
-                  value={formData.fullName}
-                  onChange={handleInputChange}
-                />
+            <h2 className='text-2xl font-heading font-semibold'>Thông tin đã trích xuất</h2>
+            {loading ? (
+              <p>Đang tải thông tin...</p>
+            ) : (
+              <div className='space-y-4'>
+                <p>Họ tên: {formData.extractedInfo?.fullName}</p>
+                <p>Ngày sinh: {formData.extractedInfo?.dateOfBirth}</p>
+                {/* Hiển thị các thông tin khác từ API */}
               </div>
-
-              <div className='relative'>
-                <Calendar className='absolute left-3 top-3 text-accent' />
-                <input
-                  type='date'
-                  name='dateOfBirth'
-                  className='w-full pl-10 pr-4 py-2 border border-input rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent'
-                  value={formData.dateOfBirth}
-                  onChange={handleInputChange}
-                />
-              </div>
-
-              <div className='relative'>
-                <Mail className='absolute left-3 top-3 text-accent' />
-                <input
-                  type='email'
-                  name='email'
-                  placeholder='Email'
-                  className='w-full pl-10 pr-4 py-2 border border-input rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent'
-                  value={formData.email}
-                  onChange={handleInputChange}
-                />
-              </div>
-
-              <div className='relative'>
-                <Phone className='absolute left-3 top-3 text-accent' />
-                <input
-                  type='tel'
-                  name='phone'
-                  placeholder='Số điện thoại'
-                  className='w-full pl-10 pr-4 py-2 border border-input rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent'
-                  value={formData.phone}
-                  onChange={handleInputChange}
-                />
-              </div>
-            </div>
+            )}
           </div>
         )
-
       case 3:
         return (
           <div className='space-y-6'>
-            <h2 className='text-2xl font-heading font-semibold text-foreground'>Xác thực tài khoản</h2>
-            <p className='text-accent'>Vui lòng nhập mã xác thực đã được gửi đến email của bạn</p>
-
-            <div className='flex justify-center space-x-4'>
-              {[1, 2, 3, 4, 5, 6].map((digit) => (
-                <input
-                  key={digit}
-                  type='text'
-                  maxLength={6}
-                  className='w-12 h-12 text-center border border-input rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-xl'
-                />
-              ))}
+            <h2 className='text-2xl font-heading font-semibold'>Xác nhận thông tin</h2>
+            <div className='space-y-4'>
+              {/* Form nhập thông tin liên hệ */}
+              <input
+                type='email'
+                name='email'
+                value={formData.email}
+                onChange={handleInputChange}
+                placeholder='Email'
+                className='w-full p-2 border rounded'
+              />
+              <input
+                type='tel'
+                name='mobile'
+                value={formData.mobile}
+                onChange={handleInputChange}
+                placeholder='Số điện thoại'
+                className='w-full p-2 border rounded'
+              />
+              <button onClick={handleConfirm} className='w-full bg-primary text-white p-2 rounded' disabled={loading}>
+                {loading ? 'Đang xử lý...' : 'Xác nhận thông tin'}
+              </button>
             </div>
           </div>
         )
-
       case 4:
         return (
           <div className='space-y-6 text-center'>
@@ -153,7 +328,6 @@ const UserVerification = () => {
             <p className='text-accent'>Bạn đã xác thực tài khoản thành công</p>
           </div>
         )
-
       default:
         return null
     }

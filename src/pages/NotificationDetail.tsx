@@ -22,7 +22,6 @@ const NotificationDetail = () => {
     { title: 'Sự kiện', value: 'events' },
     { title: 'Tin tức', value: 'news' }
   ]
-  const [selectedTab, setSelectedTab] = useState('all')
   const [notifications, setNotifications] = useState<Notification[]>([
     {
       id: 1,
@@ -99,8 +98,6 @@ const NotificationDetail = () => {
                     <TabsTrigger
                       key={tabs.value}
                       value={tabs.value}
-                      // variant={selectedTab === tabs.value ? 'default' : 'outline'}
-                      onClick={() => setSelectedTab(tabs.value)}
                       className='whitespace-nowrap'
                     >
                       {tabs.title}
