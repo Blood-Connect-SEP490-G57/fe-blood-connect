@@ -1,11 +1,11 @@
 import axios from 'axios'
 import { refreshAccessToken } from './auth'
 
-axios.defaults.baseURL = 'https://be-blood-connect-623385072086.asia-southeast1.run.app'
+axios.defaults.baseURL = 'http://localhost:8080'
 axios.defaults.headers.common['Content-Type'] = 'application/json'
 
 export const axiosPrivate = axios.create({
-  baseURL: 'https://be-blood-connect-623385072086.asia-southeast1.run.app',
+  baseURL: 'http://localhost:8080',
   headers: {
     'Content-Type': 'application/json'
   }
@@ -38,8 +38,13 @@ axiosPrivate.interceptors.response.use(
   }
 )
 
-export const apiPostCall = async (url: string, data?: unknown, isPrivate?: boolean) => {
-  const response = isPrivate ? await axiosPrivate.post(url, data) : await axios.post(url, data)
+// export const apiPostCall = async (url: string, data?: unknown, isPrivate?: boolean) => {
+//   const response = isPrivate ? await axiosPrivate.post(url, data) : await axios.post(url, data)
+//   return response
+// }
+
+export const apiPostCall = async (url: string, data?: unknown, config?: any) => {
+  const response = await axiosPrivate.post(url, data, config)
   return response
 }
 
@@ -53,7 +58,12 @@ export const apiDeleteCall = async (url: string, isPrivate?: boolean) => {
   return response
 }
 
-export const apiGetCall = async (url: string, isPrivate?: boolean) => {
-  const response = isPrivate ? await axiosPrivate.get(url) : await axios.get(url)
+// export const apiGetCall = async (url: string, isPrivate?: boolean) => {
+//   const response = isPrivate ? await axiosPrivate.get(url) : await axios.get(url)
+//   return response
+// }
+
+export const apiGetCall = async (url: string, config?: any) => {
+  const response = await axiosPrivate.get(url, config)
   return response
 }

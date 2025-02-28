@@ -38,14 +38,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
           <Routes>
             <Route path='/' element={<Home />} />
             <Route path='/register' element={<RegistrationPage />} />
-            <Route
-              path='/login'
-              element={
-                <Protected tokenRequired={false} destination='/login'>
-                  <Login />
-                </Protected>
-              }
-            />
+            <Route path='/login' element={<Login />} />
             <Route path='/contact' element={<ContactPage />} />
             <Route path='/faq' element={<FAQPage />} />
             <Route path='/news' element={<NewsPage />} />

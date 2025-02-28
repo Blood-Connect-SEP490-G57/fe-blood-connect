@@ -1,4 +1,4 @@
-import { Calendar, Clock, MapPin, CheckCircle, XCircle, AlertCircle, Droplet, StickyNote } from 'lucide-react'
+import { Calendar, MapPin, CheckCircle, XCircle, AlertCircle, Droplet, StickyNote } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 
