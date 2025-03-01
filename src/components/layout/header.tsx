@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import {
@@ -13,14 +13,26 @@ import { User, Settings, LogOut, Menu, Bell, X } from 'lucide-react' // Add X fo
 import UserAvatar from '@/components/ui/user-avatar'
 import Notifications from '@/components/notification/Notifications'
 import { useLocation } from 'react-router-dom' // Import useLocation
-import { useUserStore } from '@/hooks/stores'
+import { useAuth } from '@/components/authContext/AuthContext'
 
 const Header: React.FC = () => {
   const navigate = useNavigate()
   const location = useLocation() // Get the current location
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isMobileNotiOpen, setIsMobileNotiOpen] = useState(false)
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const { isLoggedIn, setIsLoggedIn } = useAuth()
+
+  useEffect(() => {
+    const token = localStorage.getItem('access_token')
+    setIsLoggedIn(!!token)
+  }, [setIsLoggedIn]) // Truyền setIsLoggedIn vào dependency array
+
+  const handleLogout = () => {
+    localStorage.clear()
+    setIsLoggedIn(false)
+    navigate('/login')
+  }
+
   const navigation = [
     { name: 'TRANG CHỦ', href: '/' },
     { name: 'TIN TỨC', href: '/news' },
@@ -33,14 +45,6 @@ const Header: React.FC = () => {
     { name: 'XÁC THỰC TÀI KHOẢN', href: '/user-profile-page#verification' }
   ]
 
-
-  const handleLogout = () => {
-    localStorage.clear()
-    // document.cookie = 'roles=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
-    console.log('logout')
-    navigate('/login')
-  }
-
   const handleNotificationClick = () => {
     navigate('/notifications')
   }
@@ -52,8 +56,7 @@ const Header: React.FC = () => {
   const handleRegisterClick = () => {
     navigate('/register')
   }
-  const name = useUserStore((state) => state.username)
-  const email = useUserStore((state) => state.email)
+
   return (
     <header className='bg-white shadow-sm fixed top-0 left-0 right-0 z-50'>
       <nav className='container mx-auto px-4'>
@@ -66,16 +69,21 @@ const Header: React.FC = () => {
           {/* Desktop and Tablet Navigation */}
           <div className='hidden xl:flex items-center space-x-8'>
             {navigation
-              .filter(
-                (item) =>
-                  item.name !== 'THÔNG TIN CÁ NHÂN' && item.name !== 'XÁC THỰC TÀI KHOẢN' && item.name !== 'TRANG CHỦ'
-              ) // Exclude these items from desktop
+              .filter((item) => {
+                if (!isLoggedIn && (item.name === 'LỊCH HẸN CỦA TÔI' || item.name === 'LỊCH SỬ ĐẶT HẸN')) {
+                  return false
+                }
+                return item.name !== 'THÔNG TIN CÁ NHÂN' && item.name !== 'XÁC THỰC TÀI KHOẢN' && item.name !== 'TRANG CHỦ'
+              }) // Exclude these items from desktop
               .map((item) => (
                 <a key={item.name} href={item.href} className='text-gray-700 hover:text-primary transition-colors'>
                   {item.name}
                 </a>
               ))}
-            {location.pathname !== '/login' && location.pathname !== '/register' && ( // Check if not on login page
+
+          </div>
+          <div className='hidden xl:flex items-center space-x-4'>
+            {isLoggedIn ? (
               <>
                 <Button
                   variant='ghost'
@@ -97,7 +105,7 @@ const Header: React.FC = () => {
                       <UserAvatar
                         size='sm'
                         user={{
-                          name: name || 'Be Minh',
+                          name: 'Be Minh',
                           image: undefined
                         }}
                       />
@@ -106,8 +114,8 @@ const Header: React.FC = () => {
                   <DropdownMenuContent className='w-56' align='end' forceMount>
                     <DropdownMenuLabel className='font-normal'>
                       <div className='flex flex-col space-y-1'>
-                        <p className='text-sm font-medium leading-none'>{name || "Khách"}</p>
-                        <p className='text-xs leading-none text-muted-foreground'>{email || 'be.minh@example.com'}</p>
+                        <p className='text-sm font-medium leading-none'>{"Be Minh"}</p>
+                        <p className='text-xs leading-none text-muted-foreground'>{'be.minh@example.com'}</p>
                       </div>
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
@@ -127,9 +135,8 @@ const Header: React.FC = () => {
                   </DropdownMenuContent>
                 </DropdownMenu>
               </>
-            )}
-            <div className='flex items-center gap-3'>
-              {!isLoggedIn && (
+            ) : (
+              <div className='flex items-center gap-3'>
                 <>
                   <Button
                     variant='outline'
@@ -146,13 +153,13 @@ const Header: React.FC = () => {
                     Đăng ký
                   </Button>
                 </>
-              )}
-            </div>
+              </div>
+            )}
           </div>
 
           {/* Mobile menu button */}
           <div className='xl:hidden flex items-center space-x-2'>
-            {location.pathname !== '/login' && location.pathname !== '/register' && ( // Check if not on login page
+            {isLoggedIn && location.pathname !== '/login' && location.pathname !== '/register' && ( // Check if not on login page
               <Button
                 variant='ghost'
                 onClick={() => {
@@ -184,7 +191,7 @@ const Header: React.FC = () => {
         {/* Mobile Navigation */}
         <div
           style={{
-            minWidth: window.innerWidth < 1025 ? '250px' : '300px' 
+            minWidth: window.innerWidth < 1025 ? '250px' : '300px'
           }}
           className={`xl:hidden fixed top-0 right-0 h-full w-64 
             bg-white shadow-lg transform transition-transform duration-300 ease-in-out z-50 
@@ -202,32 +209,39 @@ const Header: React.FC = () => {
             >
               <X className='w-6 h-6' />
             </Button>
-            {navigation.map((item) => (
-              <a
-                key={item.name}
-                href={item.href}
-                className='text-gray-700 hover:text-primary transition-colors'
-                onClick={() => setIsMobileMenuOpen(false)} // Close menu on click
-              >
-                {item.name}
-              </a>
-            ))}
+            {navigation
+              .filter((item) => {
+                if (!isLoggedIn && (item.name === 'LỊCH HẸN CỦA TÔI' || item.name === 'LỊCH SỬ ĐẶT HẸN' ||
+                  item.name === 'THÔNG TIN CÁ NHÂN' || item.name === 'XÁC THỰC TÀI KHOẢN'
+                )) {
+                  return false
+                }
+                return true
+              })
+              .map((item) => (
+                <a
+                  key={item.name}
+                  href={item.href}
+                  className='text-gray-700 hover:text-primary transition-colors'
+                  onClick={() => setIsMobileMenuOpen(false)} // Close menu on click
+                >
+                  {item.name}
+                </a>
+              ))}
 
             <div className='flex flex-col space-y-2 mt-auto'>
-              {isLoggedIn && (
+              {isLoggedIn ? (
                 <Button
                   variant='outline'
                   className='border-red-600 text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors'
                   onClick={() => {
                     handleLogout();
-                    setIsLoggedIn(false);
                     setIsMobileMenuOpen(false); // Close menu on click
                   }}
                 >
                   Đăng xuất
                 </Button>
-              )}
-              {!isLoggedIn && (
+              ) : (
                 <>
                   <Button
                     variant='outline'

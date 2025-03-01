@@ -11,10 +11,12 @@ import { LoginSchema, LoginType } from '@/schema/auth-schema'
 import { loginUser } from '@/api/auth'
 import { useMutation } from '@tanstack/react-query'
 import { isAxiosError } from 'axios'
+import { useAuth } from '@/components/authContext/AuthContext'
 
 export default function Login() {
   const { toast } = useToast()
   const navigate = useNavigate()
+  const { setIsLoggedIn } = useAuth()
 
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
@@ -28,6 +30,7 @@ export default function Login() {
       localStorage.clear()
       localStorage.setItem('access_token', res.accessToken)
       localStorage.setItem('refresh_token', res.refreshToken)
+      setIsLoggedIn(true)
       console.log(localStorage.getItem('access_token'))
       console.log(localStorage.getItem('refresh_token'))
       // document.cookie = 'roles=' + res.roles + ';path=/'

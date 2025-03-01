@@ -42,8 +42,18 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
             <Route path='/contact' element={<ContactPage />} />
             <Route path='/faq' element={<FAQPage />} />
             <Route path='/news' element={<NewsPage />} />
-            <Route path='/blood-donation-registration' element={<BloodDonationRegistration />} />
-            <Route path='/user-profile-page' element={<UserProfilePage />} />
+            <Route
+              path='/blood-donation-registration'
+              element={
+                <Protected tokenRequired={true} destination='/login'>
+                  <BloodDonationRegistration />
+                </Protected>} />
+            <Route
+              path='/user-profile-page' element={
+                <Protected tokenRequired={true} destination='/login'>
+                  <UserProfilePage />
+                </Protected>
+              } />
             <Route
               path='/settings'
               element={
@@ -53,7 +63,12 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
               }
             />
             <Route path='/forgot-password' element={<ForgotPassword />} />
-            <Route path='/notifications' element={<NotificationDetail />} />
+            <Route
+              path='/notifications' element={
+                <Protected tokenRequired={true} destination='/login'>
+                  <NotificationDetail />
+                </Protected>
+              } />
             <Route path='*' element={<Navigate to='/' />} />
           </Routes>
         </MainLayout>
