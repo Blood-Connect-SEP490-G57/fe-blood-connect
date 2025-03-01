@@ -12,11 +12,11 @@ export const refreshAccessToken = async () => {
 }
 
 export const loginUser = async (data: LoginType) => {
-  const res = await apiPostCall('/auth/login', {
+  const response = await apiPostCall('/auth/login', {
     username: data.username,
     password: data.password
   })
-  return res.data
+  return response.data
 }
 
 export const registerUser = async (data: RegisterType) => {
