@@ -66,26 +66,50 @@ const UserVerification = () => {
     try {
       setLoading(true)
       const response = await extractFront(acceptedFiles[0])
-      console.log('Front response:', response) // Debug response
+      console.log('Front response:', response)
 
       if (response.success) {
-        // Cập nhật extractId vào store
-        setExtractId(response.data.extract_id) // Chú ý tên field từ API
-
-        // Cập nhật form data
-        setFormData({
-          ...formData,
-          frontImage: acceptedFiles[0],
-          extractId: response.data.extract_id,
+        const extractData = response.data
+        setExtractId(extractData.extract_id)
+        setCardDetails({
+          id: extractData.id,
+          extractId: extractData.extract_id,
+          cardType: extractData.card_type,
+          extractStatus: extractData.extract_status,
+          cardId: extractData.card_id,
+          name: extractData.name,
+          dob: extractData.dob,
+          gender: extractData.gender,
+          national: extractData.national,
+          ethnicity: '',
+          home: extractData.home,
+          address: extractData.address,
+          doe: extractData.doe,
+          issueLoc: extractData.issue_loc,
+          issueDate: extractData.issue_date,
+          features: extractData.features,
+          data: extractData.data,
+          scoreFront: extractData.score_front,
+          scoreBack: extractData.score_back,
+          inputSource: extractData.input_source,
+          isActive: extractData.is_active,
+          cardImages: extractData.card_images
         })
 
-        // Reset error nếu thành công
+        setFormData(prev => ({
+          ...prev,
+          frontImage: acceptedFiles[0],
+          extractId: extractData.extract_id,
+          fullName: extractData.name,
+          dateOfBirth: extractData.dob
+        }))
+
         setError(null)
       } else {
         setError(response.message || 'Lỗi khi xử lý ảnh mặt trước')
       }
     } catch (err) {
-      console.error('Front extract error:', err) // Debug error
+      console.error('Front extract error:', err)
       if (err instanceof Error) {
         setError(`Lỗi khi xử lý ảnh mặt trước: ${err.message}`)
       } else {
@@ -105,14 +129,35 @@ const UserVerification = () => {
     try {
       setLoading(true)
       const response = await extractBack(acceptedFiles[0], extractId)
+      console.log('Back response:', response)
+
       if (response.success) {
-        setFormData({ ...formData, backImage: acceptedFiles[0] })
-        nextStep()
+        const extractData = response.data
+        setCardDetails({
+          ...cardDetails!,
+          features: extractData.features,
+          issueDate: extractData.issue_date,
+          issueLoc: extractData.issue_loc,
+          scoreBack: extractData.score_back,
+          inputSource: 'BACK',
+          cardImages: {
+            ...cardDetails!.cardImages,
+            back: extractData.card_images.back
+          }
+        })
+
+        setFormData(prev => ({
+          ...prev,
+          backImage: acceptedFiles[0]
+        }))
+
         setError(null)
+        nextStep() // Chuyển sang step 2 sau khi có cả 2 mặt
       } else {
         setError(response.message || 'Lỗi khi xử lý ảnh mặt sau')
       }
     } catch (err) {
+      console.error('Back extract error:', err)
       if (err instanceof Error) {
         setError(`Lỗi khi xử lý ảnh mặt sau: ${err.message}`)
       } else {
@@ -137,13 +182,41 @@ const UserVerification = () => {
     try {
       setLoading(true)
       const response = await getExtractById(extractId)
-      setCardDetails(response.cardDetails)
-      setFormData({
-        ...formData,
-        extractedInfo: response,
-        fullName: response.cardDetails.name || '',
-        dateOfBirth: response.cardDetails.dob || ''
-      })
+      if (response.success) {
+        const extractData = response.data
+        setCardDetails({
+          id: extractData.id,
+          extractId: extractData.extract_id,
+          cardType: extractData.card_type,
+          extractStatus: extractData.extract_status,
+          cardId: extractData.card_id,
+          name: extractData.name,
+          dob: extractData.dob,
+          gender: extractData.gender,
+          national: extractData.national,
+          ethnicity: '',
+          home: extractData.home,
+          address: extractData.address,
+          doe: extractData.doe,
+          issueLoc: extractData.issue_loc,
+          issueDate: extractData.issue_date,
+          features: extractData.features,
+          data: extractData.data,
+          scoreFront: extractData.score_front,
+          scoreBack: extractData.score_back,
+          inputSource: extractData.input_source,
+          isActive: extractData.is_active,
+          cardImages: extractData.card_images
+        })
+        setFormData({
+          ...formData,
+          extractedInfo: extractData,
+          fullName: extractData.name || '',
+          dateOfBirth: extractData.dob || ''
+        })
+      } else {
+        setError('Không thể lấy thông tin đã trích xuất')
+      }
     } catch (err) {
       setError('Không thể lấy thông tin đã trích xuất')
     } finally {
@@ -177,7 +250,7 @@ const UserVerification = () => {
 
     try {
       setLoading(true)
-      await updateExtractStatus({
+      const response = await updateExtractStatus({
         extractId: extractId,
         status: 'CONFIRMED',
         contactInfo: {
@@ -185,9 +258,15 @@ const UserVerification = () => {
           phone: formData.mobile
         }
       })
-      setError(null)
-      nextStep()
+
+      if (response.success) {
+        setError(null)
+        nextStep()
+      } else {
+        setError(response.message || 'Lỗi khi xác nhận thông tin')
+      }
     } catch (err) {
+      console.error('Confirm error:', err)
       if (err instanceof Error) {
         setError(`Lỗi khi xác nhận thông tin: ${err.message}`)
       } else {
@@ -276,7 +355,7 @@ const UserVerification = () => {
     if (step === 2 && extractId) {
       fetchExtractedInfo()
     }
-  }, [step])
+  }, [step, extractId])
 
   useEffect(() => {
     return () => {
@@ -287,6 +366,85 @@ const UserVerification = () => {
       }
     }
   }, [isLoading])
+
+  useEffect(() => {
+    console.log('cardDetails updated:', cardDetails)
+  }, [cardDetails])
+
+  const renderStep2 = () => (
+    <div className='space-y-6'>
+      <h2 className='text-2xl font-heading font-semibold'>Thông tin đã trích xuất</h2>
+      {isLoading ? (
+        <div className='flex items-center justify-center py-8'>
+          <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-primary'></div>
+        </div>
+      ) : (
+        cardDetails ? (
+          <div className='space-y-4 p-6 border rounded-lg'>
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+              <div className='space-y-2'>
+                <p className='text-sm text-gray-500'>Loại thẻ</p>
+                <p className='font-medium'>{cardDetails.cardType}</p>
+              </div>
+              <div className='space-y-2'>
+                <p className='text-sm text-gray-500'>Số CCCD</p>
+                <p className='font-medium'>{cardDetails.cardId}</p>
+              </div>
+              <div className='space-y-2'>
+                <p className='text-sm text-gray-500'>Họ và tên</p>
+                <p className='font-medium'>{cardDetails.name}</p>
+              </div>
+              <div className='space-y-2'>
+                <p className='text-sm text-gray-500'>Ngày sinh</p>
+                <p className='font-medium'>{cardDetails.dob}</p>
+              </div>
+              <div className='space-y-2'>
+                <p className='text-sm text-gray-500'>Giới tính</p>
+                <p className='font-medium'>{cardDetails.gender}</p>
+              </div>
+              <div className='space-y-2'>
+                <p className='text-sm text-gray-500'>Quốc tịch</p>
+                <p className='font-medium'>{cardDetails.national}</p>
+              </div>
+              <div className='space-y-2'>
+                <p className='text-sm text-gray-500'>Quê quán</p>
+                <p className='font-medium'>{cardDetails.home}</p>
+              </div>
+              <div className='space-y-2'>
+                <p className='text-sm text-gray-500'>Ngày hết hạn</p>
+                <p className='font-medium'>{cardDetails.doe}</p>
+              </div>
+              <div className='space-y-2'>
+                <p className='text-sm text-gray-500'>Nơi cấp</p>
+                <p className='font-medium'>{cardDetails.issueLoc}</p>
+              </div>
+              <div className='space-y-2'>
+                <p className='text-sm text-gray-500'>Ngày cấp</p>
+                <p className='font-medium'>{cardDetails.issueDate}</p>
+              </div>
+              <div className='space-y-2'>
+                <p className='text-sm text-gray-500'>Đặc điểm nhận dạng</p>
+                <p className='font-medium'>{cardDetails.features}</p>
+              </div>
+              <div className='space-y-2 col-span-2'>
+                <p className='text-sm text-gray-500'>Địa chỉ thường trú</p>
+                <p className='font-medium'>{cardDetails.address}</p>
+              </div>
+            </div>
+            {storeError && (
+              <div className='p-4 bg-red-50 text-red-600 rounded-lg mt-4'>
+                {storeError}
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className='p-4 bg-yellow-50 text-yellow-600 rounded-lg'>
+            Không có thông tin thẻ
+          </div>
+        )
+      )}
+    </div>
+  )
 
   const renderStep = (): JSX.Element | null => {
     if (isLoading) {
@@ -302,20 +460,7 @@ const UserVerification = () => {
       case 1:
         return renderStep1()
       case 2:
-        return (
-          <div className='space-y-6'>
-            <h2 className='text-2xl font-heading font-semibold'>Thông tin đã trích xuất</h2>
-            {isLoading ? (
-              <p>Đang tải thông tin...</p>
-            ) : (
-              <div className='space-y-4'>
-                <p>Họ tên: {formData.extractedInfo?.fullName}</p>
-                <p>Ngày sinh: {formData.extractedInfo?.dateOfBirth}</p>
-                {/* Hiển thị các thông tin khác từ API */}
-              </div>
-            )}
-          </div>
-        )
+        return renderStep2()
       case 3:
         return (
           <div className='space-y-6'>
