@@ -1,12 +1,13 @@
 import { apiPostCall, apiGetCall } from '..'
-
+import axios from 'axios'
 export const extractFront = async (file: File) => {
   const formData = new FormData()
   formData.append('image', file)
   formData.append('type', 'front')
 
-  const response = await apiPostCall('/recognition-id', formData, {
+  const response = await axios.post('/recognition-id', formData, {
     headers: {
+      Authorization: `Bearer ${localStorage.getItem('access_token')}`,
       'Content-Type': 'multipart/form-data'
     }
   })
@@ -19,8 +20,9 @@ export const extractBack = async (file: File, extractId: string) => {
   formData.append('extract_id', extractId)
   formData.append('image', file)
 
-  const response = await apiPostCall('/recognition-id', formData, {
+  const response = await axios.post('/recognition-id', formData, {
     headers: {
+      Authorization: `Bearer ${localStorage.getItem('access_token')}`,
       'Content-Type': 'multipart/form-data'
     }
   })

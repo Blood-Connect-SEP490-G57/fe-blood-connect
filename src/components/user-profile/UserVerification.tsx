@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Upload, Check } from 'lucide-react'
 import { useDropzone } from 'react-dropzone'
+import { useExtractStore } from '@/hooks/stores/useExtractStore'
 import { extractFront, extractBack, getExtractById, updateExtractStatus } from '@/api/extract'
 
 interface FormData {
@@ -11,11 +12,7 @@ interface FormData {
   dateOfBirth: string
   email: string
   mobile: string
-  extractedInfo?: {
-    fullName?: string
-    dateOfBirth?: string
-    idNumber?: string
-  }
+  extractedInfo?: any
 }
 
 const UserVerification = () => {
@@ -28,10 +25,39 @@ const UserVerification = () => {
     email: '',
     mobile: ''
   })
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
 
-  const handleFrontImageDrop = async (acceptedFiles: File[]) => {
+  const {
+    extractId,
+    cardDetails,
+    isLoading,
+    error: storeError,
+    setExtractId,
+    setCardDetails,
+    setLoading,
+    setError
+  } = useExtractStore()
+
+  const frontDropzone = useDropzone({
+    accept: {
+      'image/jpeg': ['.jpg', '.jpeg'],
+      'image/png': ['.png']
+    },
+    maxFiles: 1,
+    onDrop: handleFrontImageDrop,
+    maxSize: 5 * 1024 * 1024 // 5MB
+  })
+
+  const backDropzone = useDropzone({
+    accept: {
+      'image/jpeg': ['.jpg', '.jpeg'],
+      'image/png': ['.png']
+    },
+    maxFiles: 1,
+    onDrop: handleBackImageDrop,
+    maxSize: 5 * 1024 * 1024 // 5MB
+  })
+
+  async function handleFrontImageDrop(acceptedFiles: File[]) {
     if (acceptedFiles.length === 0) {
       setError('Vui lòng chọn file ảnh hợp lệ')
       return
@@ -40,17 +66,26 @@ const UserVerification = () => {
     try {
       setLoading(true)
       const response = await extractFront(acceptedFiles[0])
+      console.log('Front response:', response) // Debug response
+
       if (response.success) {
+        // Cập nhật extractId vào store
+        setExtractId(response.data.extract_id) // Chú ý tên field từ API
+
+        // Cập nhật form data
         setFormData({
           ...formData,
           frontImage: acceptedFiles[0],
-          extractId: response.data.extractId
+          extractId: response.data.extract_id,
         })
-        setError('')
+
+        // Reset error nếu thành công
+        setError(null)
       } else {
         setError(response.message || 'Lỗi khi xử lý ảnh mặt trước')
       }
     } catch (err) {
+      console.error('Front extract error:', err) // Debug error
       if (err instanceof Error) {
         setError(`Lỗi khi xử lý ảnh mặt trước: ${err.message}`)
       } else {
@@ -61,13 +96,19 @@ const UserVerification = () => {
     }
   }
 
-  const handleBackImageDrop = async (acceptedFiles: File[]) => {
+  async function handleBackImageDrop(acceptedFiles: File[]) {
+    if (!extractId) {
+      setError('Vui lòng tải lên mặt trước trước')
+      return
+    }
+
     try {
       setLoading(true)
-      const response = await extractBack(acceptedFiles[0], formData.extractId || '')
+      const response = await extractBack(acceptedFiles[0], extractId)
       if (response.success) {
         setFormData({ ...formData, backImage: acceptedFiles[0] })
         nextStep()
+        setError(null)
       } else {
         setError(response.message || 'Lỗi khi xử lý ảnh mặt sau')
       }
@@ -82,22 +123,6 @@ const UserVerification = () => {
     }
   }
 
-  const frontDropzone = useDropzone({
-    onDrop: handleFrontImageDrop,
-    accept: {
-      'image/*': ['.jpeg', '.jpg', '.png']
-    },
-    maxSize: 5 * 1024 * 1024 // 5MB
-  })
-
-  const backDropzone = useDropzone({
-    onDrop: handleBackImageDrop,
-    accept: {
-      'image/*': ['.jpeg', '.jpg', '.png']
-    },
-    maxSize: 5 * 1024 * 1024 // 5MB
-  })
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = e.target
     setFormData({ ...formData, [name]: value })
@@ -107,16 +132,17 @@ const UserVerification = () => {
   const prevStep = (): void => setStep(step - 1)
 
   const fetchExtractedInfo = async () => {
-    if (!formData.extractId) return
+    if (!extractId) return
 
     try {
       setLoading(true)
-      const response = await getExtractById(formData.extractId)
+      const response = await getExtractById(extractId)
+      setCardDetails(response.cardDetails)
       setFormData({
         ...formData,
         extractedInfo: response,
-        fullName: response.fullName || '',
-        dateOfBirth: response.dateOfBirth || ''
+        fullName: response.cardDetails.name || '',
+        dateOfBirth: response.cardDetails.dob || ''
       })
     } catch (err) {
       setError('Không thể lấy thông tin đã trích xuất')
@@ -152,14 +178,14 @@ const UserVerification = () => {
     try {
       setLoading(true)
       await updateExtractStatus({
-        extractId: formData.extractId,
+        extractId: extractId,
         status: 'CONFIRMED',
         contactInfo: {
           email: formData.email,
           phone: formData.mobile
         }
       })
-      setError('')
+      setError(null)
       nextStep()
     } catch (err) {
       if (err instanceof Error) {
@@ -209,7 +235,7 @@ const UserVerification = () => {
       </div>
 
       {/* Mặt sau - chỉ hiện khi đã có mặt trước */}
-      {formData.frontImage && (
+      {extractId && (
         <div className='space-y-2'>
           <p>Mặt sau CCCD:</p>
           <div
@@ -242,12 +268,12 @@ const UserVerification = () => {
         </div>
       )}
 
-      {error && <p className='text-red-500'>{error}</p>}
+      {storeError && <p className='text-red-500'>{storeError}</p>}
     </div>
   )
 
   useEffect(() => {
-    if (step === 2 && formData.extractId) {
+    if (step === 2 && extractId) {
       fetchExtractedInfo()
     }
   }, [step])
@@ -255,15 +281,15 @@ const UserVerification = () => {
   useEffect(() => {
     return () => {
       // Cleanup if component unmounts during upload
-      if (loading) {
+      if (isLoading) {
         setError('Quá trình xử lý đã bị hủy')
         setLoading(false)
       }
     }
-  }, [loading])
+  }, [isLoading])
 
   const renderStep = (): JSX.Element | null => {
-    if (loading) {
+    if (isLoading) {
       return (
         <div className='flex items-center justify-center'>
           <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-primary'></div>
@@ -279,7 +305,7 @@ const UserVerification = () => {
         return (
           <div className='space-y-6'>
             <h2 className='text-2xl font-heading font-semibold'>Thông tin đã trích xuất</h2>
-            {loading ? (
+            {isLoading ? (
               <p>Đang tải thông tin...</p>
             ) : (
               <div className='space-y-4'>
@@ -312,8 +338,8 @@ const UserVerification = () => {
                 placeholder='Số điện thoại'
                 className='w-full p-2 border rounded'
               />
-              <button onClick={handleConfirm} className='w-full bg-primary text-white p-2 rounded' disabled={loading}>
-                {loading ? 'Đang xử lý...' : 'Xác nhận thông tin'}
+              <button onClick={handleConfirm} className='w-full bg-primary text-white p-2 rounded' disabled={isLoading}>
+                {isLoading ? 'Đang xử lý...' : 'Xác nhận thông tin'}
               </button>
             </div>
           </div>
