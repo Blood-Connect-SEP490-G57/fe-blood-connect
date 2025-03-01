@@ -16,6 +16,8 @@ export const UserCardSchema = z.object({
   id: z.number().optional(),
   extractId: z.string(),
   cardId: z.string(),
+  cardType: z.string(),
+  extractStatus: z.string(),
   name: z.string(),
   dob: z.string(), // LocalDate as string
   gender: z.string(),
@@ -32,7 +34,11 @@ export const UserCardSchema = z.object({
   scoreBack: z.number().optional(),
   images: z.string().optional(),
   inputSource: z.enum(['FRONT', 'BACK']),
-  isActive: z.boolean().optional()
+  isActive: z.boolean().optional(),
+  cardImages: z.object({
+    front: z.string(),
+    back: z.string()
+  })
 })
 
 export type ExtractType = z.infer<typeof ExtractSchema>
