@@ -41,13 +41,8 @@ axiosPrivate.interceptors.response.use(
   }
 )
 
-// export const apiPostCall = async (url: string, data?: unknown, isPrivate?: boolean) => {
-//   const response = isPrivate ? await axiosPrivate.post(url, data) : await axios.post(url, data)
-//   return response
-// }
-
-export const apiPostCall = async (url: string, data?: unknown, config?: any) => {
-  const response = await axiosPrivate.post(url, data, config)
+export const apiPostCall = async (url: string, data?: unknown, isPrivate?: boolean) => {
+  const response = isPrivate ? await axiosPrivate.post(url, data) : await axios.post(url, data)
   return response
 }
 
@@ -61,12 +56,7 @@ export const apiDeleteCall = async (url: string, isPrivate?: boolean) => {
   return response
 }
 
-// export const apiGetCall = async (url: string, isPrivate?: boolean) => {
-//   const response = isPrivate ? await axiosPrivate.get(url) : await axios.get(url)
-//   return response
-// }
-
-export const apiGetCall = async (url: string, config?: any) => {
-  const response = await axiosPrivate.get(url, config)
+export const apiGetCall = async (url: string, isPrivate?: boolean) => {
+  const response = isPrivate ? await axiosPrivate.get(url) : await axios.get(url)
   return response
 }
