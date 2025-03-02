@@ -8,16 +8,16 @@ const BloodDonationSlider: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState<number>(0)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  
   useEffect(() => {
     const fetchCampaignsData = async () => {
       try {
         const response = await fetchCampaigns()
         if (Array.isArray(response)) {
-          // Change from response.data
           setCampaigns(response)
         } else {
           console.error('Invalid API response:', response)
-          setError('Dữ liệu từ API không hợp lệ')
+          setError('Không tìm thấy sự kiện nào')
         }
       } catch (err) {
         console.error('Error fetching campaigns:', err)
@@ -67,7 +67,7 @@ const BloodDonationSlider: React.FC = () => {
   }
 
   if (error) {
-    return <div>{error}</div>
+    return <div className='flex justify-center mt-4 mb-4'>{error}</div>
   }
 
   return (
