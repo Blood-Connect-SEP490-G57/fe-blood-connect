@@ -31,8 +31,6 @@ export default function Login() {
       localStorage.setItem('access_token', res.accessToken)
       localStorage.setItem('refresh_token', res.refreshToken)
       setIsLoggedIn(true)
-      console.log(localStorage.getItem('access_token'))
-      console.log(localStorage.getItem('refresh_token'))
       // document.cookie = 'roles=' + res.roles + ';path=/'
       navigate('/')
     },

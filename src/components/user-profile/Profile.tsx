@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
@@ -7,38 +8,76 @@ import { Input } from '@/components/ui/input'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { User } from 'lucide-react'
 import UserAvatar from '@/components/ui/user-avatar'
-
-const profileFormSchema = z.object({
-  idNumber: z.string().min(9, 'Số CCCD/Hộ chiếu không hợp lệ'),
-  studentMilitaryId: z.string().min(5, 'Số thẻ HSSV/Quân nhân không hợp lệ'),
-  fullName: z.string().min(2, 'Tên phải có ít nhất 2 ký tự'),
-  birthDate: z.string().min(10, 'Ngày sinh không hợp lệ'),
-  gender: z.string().min(2, 'Giới tính không hợp lệ'),
-  bloodType: z.string().optional(),
-  contactAddress: z.string().min(5, 'Địa chỉ liên lạc không hợp lệ'),
-  organization: z.string().min(2, 'Cơ quan/Trường lớp không hợp lệ'),
-  phone: z.string().min(10, 'Số điện thoại không hợp lệ'),
-  email: z.string().email('Email không hợp lệ'),
-  occupation: z.string().min(2, 'Nghề nghiệp không hợp lệ')
-})
+import { UserFullInfoResponseSchema } from '@/schema/user-schema'
+import { User as fetchUser } from '@/api/user'
 
 const Profile = () => {
-  const form = useForm<z.infer<typeof profileFormSchema>>({
-    resolver: zodResolver(profileFormSchema),
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const form = useForm<z.infer<typeof UserFullInfoResponseSchema>>({
+    resolver: zodResolver(UserFullInfoResponseSchema),
     defaultValues: {
-      idNumber: '123456789',
-      studentMilitaryId: 'SV123456',
-      fullName: 'Bế Minh',
-      birthDate: '01/01/2000',
-      gender: 'Nam',
-      bloodType: 'A+',
-      contactAddress: 'Hà Nội, Việt Nam',
-      organization: 'Đại học ABC',
-      phone: '0123456789',
-      email: 'be.minh@example.com',
-      occupation: 'Sinh viên'
+      user_id: 0,
+      username: '',
+      email: '',
+      mobile: '',
+      enable: false,
+      status: 0,
+      job_name: '',
+      student_id: '',
+      military_id: '',
+      address_contact: '',
+      time_donation: 0,
+      blood_group: '',
+      extract_id: '',
+      is_active: false,
+      extract_status: '',
+      card_id: '',
+      full_name: '',
+      dob: '',
+      gender: '',
+      national: '',
+      ethnicity: '',
+      home: '',
+      address: '',
+      doe: '',
+      issue_loc: '',
+      issue_date: ''
     }
   })
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await fetchUser()
+        console.log(response)
+        form.reset({
+          email: response.email || '',
+          mobile: response.mobile || '',
+          job_name: response.job_name || '',
+          student_id: response.student_id || '',
+          military_id: response.military_id || '',
+          address_contact: response.address_contact || '',
+          time_donation: response.time_donation || 0,
+          blood_group: response.blood_group || '-',
+          card_id: response.card_id || '',
+          full_name: response.full_name || '',
+          dob: response.dob || '',
+          gender: response.gender || '',
+          national: response.national || '',
+          address: response.address || ''
+        })
+      } catch (err) {
+        console.error('Error fetching user data:', err)
+        setError('Không thể tải thông tin người dùng')
+      } finally {
+        setLoading(false)
+      }
+    }
+  
+    fetchUserData()
+  }, [form])
+  
 
   const handleAvatarChange = async (file: File) => {
     try {
@@ -51,8 +90,16 @@ const Profile = () => {
     }
   }
 
-  const onSubmit = (values: z.infer<typeof profileFormSchema>) => {
+  const onSubmit = (values: z.infer<typeof UserFullInfoResponseSchema>) => {
     console.log(values)
+  }
+
+  if (loading) {
+    return <div>Loading...</div>
+  }
+
+  if (error) {
+    return <div>{error}</div>
   }
 
   return (
@@ -72,7 +119,7 @@ const Profile = () => {
                 <UserAvatar
                   size='lg'
                   user={{
-                    name: form.getValues('fullName'),
+                    name: form.getValues('full_name'),
                     image: undefined
                   }}
                   editable
@@ -84,17 +131,17 @@ const Profile = () => {
                 <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
                   {/* Phần 1: Thông tin cá nhân */}
                   <div>
-                    <h2 className="text-lg font-semibold mb-4">Thông tin cá nhân</h2>
+                    <h2 className='text-lg font-semibold mb-4'>Thông tin cá nhân</h2>
                     <div className='grid grid-cols-1 gap-6'>
                       <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
                         <FormField
                           control={form.control}
-                          name='idNumber'
+                          name='card_id'
                           render={({ field }) => (
                             <FormItem>
                               <FormLabel>Số CCCD</FormLabel>
                               <FormControl>
-                                <Input {...field} />
+                                <Input {...field} readOnly />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -103,42 +150,12 @@ const Profile = () => {
 
                         <FormField
                           control={form.control}
-                          name='studentMilitaryId'
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Số thẻ HSSV/Quân nhân</FormLabel>
-                              <FormControl>
-                                <Input {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-
-                      <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-                        <FormField
-                          control={form.control}
-                          name='fullName'
+                          name='full_name'
                           render={({ field }) => (
                             <FormItem>
                               <FormLabel>Họ và tên</FormLabel>
                               <FormControl>
-                                <Input {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-
-                        <FormField
-                          control={form.control}
-                          name='birthDate'
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Ngày sinh</FormLabel>
-                              <FormControl>
-                                <Input {...field} />
+                                <Input {...field} readOnly />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -147,6 +164,20 @@ const Profile = () => {
                       </div>
 
                       <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+                        <FormField
+                          control={form.control}
+                          name='dob'
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Ngày sinh</FormLabel>
+                              <FormControl>
+                                <Input {...field} readOnly />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+
                         <FormField
                           control={form.control}
                           name='gender'
@@ -154,19 +185,62 @@ const Profile = () => {
                             <FormItem>
                               <FormLabel>Giới tính</FormLabel>
                               <FormControl>
+                                <Input {...field} readOnly />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+
+                      <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+                        <FormField
+                          control={form.control}
+                          name='blood_group'
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Nhóm máu</FormLabel>
+                              <FormControl>
+                                <Input {...field} readOnly />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name='national'
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Quốc gia</FormLabel>
+                              <FormControl>
+                                <Input {...field} readOnly />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                      <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+                        <FormField
+                          control={form.control}
+                          name='address_contact'
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Địa chỉ hiện tại</FormLabel>
+                              <FormControl>
                                 <Input {...field} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
                           )}
                         />
-
                         <FormField
                           control={form.control}
-                          name='bloodType'
+                          name='time_donation'
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Nhóm máu</FormLabel>
+                              <FormLabel>Số lần hiến máu</FormLabel>
                               <FormControl>
                                 <Input {...field} />
                               </FormControl>
@@ -184,7 +258,7 @@ const Profile = () => {
                     <div className='grid grid-cols-1 gap-6'>
                       <FormField
                         control={form.control}
-                        name='contactAddress'
+                        name='address'
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Địa chỉ liên hệ</FormLabel>
@@ -199,7 +273,7 @@ const Profile = () => {
                       <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
                         <FormField
                           control={form.control}
-                          name='phone'
+                          name='mobile'
                           render={({ field }) => (
                             <FormItem>
                               <FormLabel>Điện thoại di động</FormLabel>
@@ -229,21 +303,7 @@ const Profile = () => {
                       <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
                         <FormField
                           control={form.control}
-                          name='organization'
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Đơn vị</FormLabel>
-                              <FormControl>
-                                <Input {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-
-                        <FormField
-                          control={form.control}
-                          name='occupation'
+                          name='job_name'
                           render={({ field }) => (
                             <FormItem>
                               <FormLabel>Nghề nghiệp</FormLabel>
@@ -254,6 +314,20 @@ const Profile = () => {
                             </FormItem>
                           )}
                         />
+
+                        {/* <FormField
+                          control={form.control}
+                          name='organization'
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Đơn vị</FormLabel>
+                              <FormControl>
+                                <Input {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        /> */}
                       </div>
                     </div>
                   </div>

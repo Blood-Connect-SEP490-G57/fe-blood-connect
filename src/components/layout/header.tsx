@@ -30,6 +30,7 @@ const Header: React.FC = () => {
   const handleLogout = () => {
     localStorage.clear()
     setIsLoggedIn(false)
+    setIsMobileNotiOpen(false)
     navigate('/login')
   }
 
@@ -46,7 +47,8 @@ const Header: React.FC = () => {
   ]
 
   const handleNotificationClick = () => {
-    navigate('/notifications')
+    navigate('/notifications') // Navigate to notifications page
+    // setIsMobileNotiOpen(false)
   }
 
   const handleLoginClick = () => {

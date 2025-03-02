@@ -11,13 +11,10 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   return (
     <>
       <AuthProvider>
-        {/* Header */}
         <Header></Header>
         <div className='flex flex-col min-h-screen'>
-          {/* Content */}
           <main className='flex-1 mt-6'>{children}</main>
         </div>
-        {/* Footer */}
         <Footer></Footer>
       </AuthProvider>
     </>
