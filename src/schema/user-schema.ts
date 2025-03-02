@@ -1,0 +1,38 @@
+import { z } from "zod";
+
+export const UserFullInfoResponseSchema = z.object({
+  user_id: z.number(),
+  username: z.string(),
+  email: z.string().email(),
+  mobile: z.string(),
+  enable: z.boolean(),
+  status: z.number(),
+
+  // User Detail info
+  job_name: z.string(),
+  student_id: z.string(),
+  military_id: z.string(),
+  address_contact: z.string(),
+  time_donation: z.number(),
+  blood_group: z.string(),
+
+  // Extract info
+  extract_id: z.string(),
+  is_active: z.boolean(),
+  extract_status: z.string(),
+
+  // User Card info 
+  card_id: z.string(),
+  full_name: z.string(),
+  dob: z.string(), // Date should be in ISO format
+  gender: z.string(),
+  national: z.string(),
+  ethnicity: z.string(),
+  home: z.string(),
+  address: z.string(),
+  doe: z.string(),
+  issue_loc: z.string(),
+  issue_date: z.string(),
+});
+
+export type UserFullInfoResponse = z.infer<typeof UserFullInfoResponseSchema>;
