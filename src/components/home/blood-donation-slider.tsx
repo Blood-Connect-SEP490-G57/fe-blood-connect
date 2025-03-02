@@ -8,7 +8,6 @@ const BloodDonationSlider: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState<number>(0)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-
   useEffect(() => {
     const fetchCampaignsData = async () => {
       try {
