@@ -131,18 +131,18 @@ const UserVerification = () => {
       const response = await extractBack(acceptedFiles[0], extractId)
       console.log('Back response:', response)
 
-      if (response.success) {
+      if (response.success && response.data) {
         const extractData = response.data
         setCardDetails({
           ...cardDetails!,
-          features: extractData.features,
-          issueDate: extractData.issue_date,
-          issueLoc: extractData.issue_loc,
-          scoreBack: extractData.score_back,
-          inputSource: 'BACK',
+          features: extractData.features || '',
+          issueDate: extractData.issue_date || '',
+          issueLoc: extractData.issue_loc || '',
+          scoreBack: extractData.score_back || 0,
+          inputSource: extractData.input_source || 'BACK',
           cardImages: {
-            ...cardDetails!.cardImages,
-            back: extractData.card_images.back
+            front: cardDetails?.cardImages?.front || '',
+            back: extractData.card_images?.back || ''
           }
         })
 
@@ -357,15 +357,6 @@ const UserVerification = () => {
     }
   }, [step, extractId])
 
-  useEffect(() => {
-    return () => {
-      // Cleanup if component unmounts during upload
-      if (isLoading) {
-        setError('Quá trình xử lý đã bị hủy')
-        setLoading(false)
-      }
-    }
-  }, [isLoading])
 
   useEffect(() => {
     console.log('cardDetails updated:', cardDetails)
