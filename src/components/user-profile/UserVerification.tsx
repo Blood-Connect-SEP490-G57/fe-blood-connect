@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { Upload, Check } from 'lucide-react'
 import { useDropzone } from 'react-dropzone'
 import { useExtractStore } from '@/hooks/stores/useExtractStore'
-import { extractFront, extractBack, getExtractById, updateExtractStatus } from '@/api/extract'
+import { extractFront, extractBack, getExtractById, updateExtractStatus} from '@/api/extract'
+import { createOrUpdateUserDetail, getCurrentUserDetail } from '@/api/user'
 
 interface FormData {
   frontImage: File | null
@@ -12,6 +13,12 @@ interface FormData {
   dateOfBirth: string
   email: string
   mobile: string
+  jobName: string
+  studentId: string  
+  militaryId: string
+  addressContact: string
+  timeDonation: number
+  bloodGroup: string
   extractedInfo?: any
 }
 
@@ -23,7 +30,13 @@ const UserVerification = () => {
     fullName: '',
     dateOfBirth: '',
     email: '',
-    mobile: ''
+    mobile: '',
+    jobName: '',
+    studentId: '',
+    militaryId: '',
+    addressContact: '',
+    timeDonation: 0,
+    bloodGroup: ''
   })
 
   const {
@@ -131,18 +144,18 @@ const UserVerification = () => {
       const response = await extractBack(acceptedFiles[0], extractId)
       console.log('Back response:', response)
 
-      if (response.success) {
+      if (response.success && response.data) {
         const extractData = response.data
         setCardDetails({
           ...cardDetails!,
-          features: extractData.features,
-          issueDate: extractData.issue_date,
-          issueLoc: extractData.issue_loc,
-          scoreBack: extractData.score_back,
-          inputSource: 'BACK',
+          features: extractData.features || '',
+          issueDate: extractData.issue_date || '',
+          issueLoc: extractData.issue_loc || '',
+          scoreBack: extractData.score_back || 0,
+          inputSource: extractData.input_source || 'BACK',
           cardImages: {
-            ...cardDetails!.cardImages,
-            back: extractData.card_images.back
+            front: cardDetails?.cardImages?.front || '',
+            back: extractData.card_images?.back || ''
           }
         })
 
@@ -168,7 +181,9 @@ const UserVerification = () => {
     }
   }
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ): void => {
     const { name, value } = e.target
     setFormData({ ...formData, [name]: value })
   }
@@ -225,8 +240,9 @@ const UserVerification = () => {
   }
 
   const validateContactInfo = () => {
-    if (!formData.email || !formData.mobile) {
-      setError('Vui lòng điền đầy đủ thông tin liên hệ')
+    if (!formData.email || !formData.mobile || !formData.jobName || 
+        !formData.addressContact || !formData.bloodGroup) {
+      setError('Vui lòng điền đầy đủ thông tin bắt buộc')
       return false
     }
 
@@ -250,20 +266,24 @@ const UserVerification = () => {
 
     try {
       setLoading(true)
-      const response = await updateExtractStatus({
-        extractId: extractId,
-        status: 'CONFIRMED',
-        contactInfo: {
-          email: formData.email,
-          phone: formData.mobile
-        }
-      })
+      
+      const userDetailData = {
+        email: formData.email,
+        job_name: formData.jobName,
+        student_id: formData.studentId,
+        military_id: formData.militaryId,
+        address_contact: formData.addressContact,
+        time_donation: Number(formData.timeDonation),
+        blood_group: formData.bloodGroup
+      }
 
-      if (response.success) {
+      const response = await createOrUpdateUserDetail(userDetailData)
+      
+      if (response) {
         setError(null)
         nextStep()
       } else {
-        setError(response.message || 'Lỗi khi xác nhận thông tin')
+        throw new Error('Lỗi khi cập nhật thông tin')
       }
     } catch (err) {
       console.error('Confirm error:', err)
@@ -271,6 +291,29 @@ const UserVerification = () => {
         setError(`Lỗi khi xác nhận thông tin: ${err.message}`)
       } else {
         setError('Lỗi không xác định khi xác nhận thông tin')
+      }
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleConfirmExtract = async () => {
+    try {
+      setLoading(true)
+      const response = await updateExtractStatus(extractId, "CONFIRM_MATCHED")
+      
+      if (response.success) {
+        setError(null)
+        nextStep()
+      } else {
+        setError(response.message || 'Lỗi khi xác nhận thông tin CCCD')
+      }
+    } catch (err) {
+      console.error('Confirm extract error:', err)
+      if (err instanceof Error) {
+        setError(`Lỗi khi xác nhận thông tin CCCD: ${err.message}`)
+      } else {
+        setError('Lỗi không xác định khi xác nhận thông tin CCCD')
       }
     } finally {
       setLoading(false)
@@ -358,18 +401,38 @@ const UserVerification = () => {
   }, [step, extractId])
 
   useEffect(() => {
-    return () => {
-      // Cleanup if component unmounts during upload
-      if (isLoading) {
-        setError('Quá trình xử lý đã bị hủy')
-        setLoading(false)
-      }
-    }
-  }, [isLoading])
-
-  useEffect(() => {
     console.log('cardDetails updated:', cardDetails)
   }, [cardDetails])
+
+  useEffect(() => {
+    const fetchUserDetail = async () => {
+      if (step === 3) {
+        try {
+          setLoading(true)
+          const response = await getCurrentUserDetail()
+          if (response) {
+            setFormData(prev => ({
+              ...prev,
+              email: response.email || '',
+              mobile: response.mobile || '',
+              jobName: response.job_name || '',
+              studentId: response.student_id || '',
+              militaryId: response.military_id || '',
+              addressContact: response.address_contact || '',
+              timeDonation: response.time_donation || 0,
+              bloodGroup: response.blood_group || ''
+            }))
+          }
+        } catch (err) {
+          console.error('Error fetching user detail:', err)
+        } finally {
+          setLoading(false)
+        }
+      }
+    }
+
+    fetchUserDetail()
+  }, [step])
 
   const renderStep2 = () => (
     <div className='space-y-6'>
@@ -436,6 +499,13 @@ const UserVerification = () => {
                 {storeError}
               </div>
             )}
+            <button
+              onClick={handleConfirmExtract}
+              className='w-full bg-primary text-white p-2 rounded mt-4'
+              disabled={isLoading}
+            >
+              {isLoading ? 'Đang xử lý...' : 'Xác nhận thông tin CCCD'}
+            </button>
           </div>
         ) : (
           <div className='p-4 bg-yellow-50 text-yellow-600 rounded-lg'>
@@ -466,7 +536,6 @@ const UserVerification = () => {
           <div className='space-y-6'>
             <h2 className='text-2xl font-heading font-semibold'>Xác nhận thông tin</h2>
             <div className='space-y-4'>
-              {/* Form nhập thông tin liên hệ */}
               <input
                 type='email'
                 name='email'
@@ -483,7 +552,67 @@ const UserVerification = () => {
                 placeholder='Số điện thoại'
                 className='w-full p-2 border rounded'
               />
-              <button onClick={handleConfirm} className='w-full bg-primary text-white p-2 rounded' disabled={isLoading}>
+              <input
+                type='text'
+                name='jobName'
+                value={formData.jobName}
+                onChange={handleInputChange}
+                placeholder='Nghề nghiệp'
+                className='w-full p-2 border rounded'
+              />
+              <input
+                type='text'
+                name='studentId'
+                value={formData.studentId}
+                onChange={handleInputChange}
+                placeholder='Mã sinh viên'
+                className='w-full p-2 border rounded'
+              />
+              <input
+                type='text'
+                name='militaryId'
+                value={formData.militaryId}
+                onChange={handleInputChange}
+                placeholder='Mã quân nhân'
+                className='w-full p-2 border rounded'
+              />
+              <input
+                type='text'
+                name='addressContact'
+                value={formData.addressContact}
+                onChange={handleInputChange}
+                placeholder='Địa chỉ liên hệ'
+                className='w-full p-2 border rounded'
+              />
+              <input
+                type='number'
+                name='timeDonation'
+                value={formData.timeDonation}
+                onChange={handleInputChange}
+                placeholder='Số lần hiến máu'
+                className='w-full p-2 border rounded'
+              />
+              <select
+                name='bloodGroup'
+                value={formData.bloodGroup}
+                onChange={handleInputChange}
+                className='w-full p-2 border rounded'
+              >
+                <option value=''>Chọn nhóm máu</option>
+                <option value='A+'>A+</option>
+                <option value='A-'>A-</option>
+                <option value='B+'>B+</option>
+                <option value='B-'>B-</option>
+                <option value='O+'>O+</option>
+                <option value='O-'>O-</option>
+                <option value='AB+'>AB+</option>
+                <option value='AB-'>AB-</option>
+              </select>
+              <button 
+                onClick={handleConfirm} 
+                className='w-full bg-primary text-white p-2 rounded' 
+                disabled={isLoading}
+              >
                 {isLoading ? 'Đang xử lý...' : 'Xác nhận thông tin'}
               </button>
             </div>
@@ -532,7 +661,7 @@ const UserVerification = () => {
       {renderStep()}
 
       <div className='mt-8 flex justify-between'>
-        {step > 1 && step < 4 && (
+        {step > 2 && step < 4 && (
           <button
             onClick={prevStep}
             className='px-6 py-2 bg-secondary text-accent rounded-lg hover:bg-opacity-90 transition-colors'
@@ -541,21 +670,21 @@ const UserVerification = () => {
           </button>
         )}
 
-        {step < 4 ? (
+        {step < 4 && step !== 1 && step !== 2 ? (
           <button
             onClick={nextStep}
             className='px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-opacity-90 transition-colors ml-auto'
           >
             Tiếp tục
           </button>
-        ) : (
+        ) : step === 4 ? (
           <button
             onClick={() => console.log('Verification completed', formData)}
             className='px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-opacity-90 transition-colors ml-auto'
           >
             Đăng kí hiến máu
           </button>
-        )}
+        ) : null}
       </div>
     </div>
   )

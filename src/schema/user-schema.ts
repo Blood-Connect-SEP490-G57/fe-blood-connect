@@ -36,3 +36,26 @@ export const UserFullInfoResponseSchema = z.object({
 });
 
 export type UserFullInfoResponse = z.infer<typeof UserFullInfoResponseSchema>;
+
+export const userDetailSchema = z.object({
+  email: z.string().email('Email không hợp lệ'),
+  job_name: z.string().min(1, 'Vui lòng chọn nghề nghiệp'),
+  student_id: z.string().optional(),
+  military_id: z.string().optional(),
+  address_contact: z.string().min(1, 'Vui lòng nhập địa chỉ liên hệ'),
+  time_donation: z.number().min(0, 'Số lần hiến máu không hợp lệ'),
+  blood_group: z.string().min(1, 'Vui lòng chọn nhóm máu')
+})
+
+export type UserDetailType = z.infer<typeof userDetailSchema>
+
+export interface UserDetailResponse {
+  mobile: string
+  email: string
+  job_name: string
+  student_id: string
+  military_id: string
+  address_contact: string
+  time_donation: number
+  blood_group: string
+} 
