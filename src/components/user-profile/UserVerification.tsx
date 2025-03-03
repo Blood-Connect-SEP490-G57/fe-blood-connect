@@ -4,6 +4,7 @@ import { useDropzone } from 'react-dropzone'
 import { useExtractStore } from '@/hooks/stores/useExtractStore'
 import { extractFront, extractBack, getExtractById, updateExtractStatus} from '@/api/extract'
 import { createOrUpdateUserDetail, getCurrentUserDetail } from '@/api/user'
+import { useNavigate } from 'react-router-dom'
 
 interface FormData {
   frontImage: File | null
@@ -49,6 +50,8 @@ const UserVerification = () => {
     setLoading,
     setError
   } = useExtractStore()
+
+  const navigate = useNavigate()
 
   const frontDropzone = useDropzone({
     accept: {
@@ -189,7 +192,7 @@ const UserVerification = () => {
   }
 
   const nextStep = (): void => setStep(step + 1)
-  const prevStep = (): void => setStep(step - 1)
+  // const prevStep = (): void => setStep(step - 1)
 
   const fetchExtractedInfo = async () => {
     if (!extractId) return
@@ -410,21 +413,28 @@ const UserVerification = () => {
         try {
           setLoading(true)
           const response = await getCurrentUserDetail()
-          if (response) {
+          console.log('User detail response:', response)
+          
+          if (response.success && response.data) {
+            const userData = response.data
             setFormData(prev => ({
               ...prev,
-              email: response.email || '',
-              mobile: response.mobile || '',
-              jobName: response.job_name || '',
-              studentId: response.student_id || '',
-              militaryId: response.military_id || '',
-              addressContact: response.address_contact || '',
-              timeDonation: response.time_donation || 0,
-              bloodGroup: response.blood_group || ''
+              email: userData.email || '',
+              mobile: userData.mobile || '',
+              jobName: userData.job_name || '',
+              studentId: userData.student_id || '',
+              militaryId: userData.military_id || '',
+              addressContact: userData.address_contact || '',
+              timeDonation: userData.time_donation || 0,
+              bloodGroup: userData.blood_group || ''
             }))
+          } else {
+            console.error('Invalid response format:', response)
+            setError('Không thể tải thông tin người dùng')
           }
         } catch (err) {
           console.error('Error fetching user detail:', err)
+          setError('Không thể tải thông tin người dùng')
         } finally {
           setLoading(false)
         }
@@ -626,6 +636,12 @@ const UserVerification = () => {
             </div>
             <h2 className='text-2xl font-heading font-semibold text-foreground'>Hoàn tất xác thực</h2>
             <p className='text-accent'>Bạn đã xác thực tài khoản thành công</p>
+            <button
+              onClick={() => navigate('/blood-donation-registration')}
+              className='w-full bg-primary text-white p-2 rounded'
+            >
+              Đăng kí hiến máu
+            </button>
           </div>
         )
       default:
@@ -659,33 +675,6 @@ const UserVerification = () => {
       </div>
 
       {renderStep()}
-
-      <div className='mt-8 flex justify-between'>
-        {step > 2 && step < 4 && (
-          <button
-            onClick={prevStep}
-            className='px-6 py-2 bg-secondary text-accent rounded-lg hover:bg-opacity-90 transition-colors'
-          >
-            Quay lại
-          </button>
-        )}
-
-        {step < 4 && step !== 1 && step !== 2 ? (
-          <button
-            onClick={nextStep}
-            className='px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-opacity-90 transition-colors ml-auto'
-          >
-            Tiếp tục
-          </button>
-        ) : step === 4 ? (
-          <button
-            onClick={() => console.log('Verification completed', formData)}
-            className='px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-opacity-90 transition-colors ml-auto'
-          >
-            Đăng kí hiến máu
-          </button>
-        ) : null}
-      </div>
     </div>
   )
 }
