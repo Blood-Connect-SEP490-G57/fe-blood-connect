@@ -50,12 +50,17 @@ export const userDetailSchema = z.object({
 export type UserDetailType = z.infer<typeof userDetailSchema>
 
 export interface UserDetailResponse {
-  mobile: string
-  email: string
-  job_name: string
-  student_id: string
-  military_id: string
-  address_contact: string
-  time_donation: number
-  blood_group: string
+    
+        success: boolean,
+        data: {
+          mobile: string,
+          email: string,
+          job_name: string,
+          student_id: string,
+          military_id: string,
+          address_contact: string,
+          time_donation: number,
+          blood_group: string
+        }
+      
 } 
