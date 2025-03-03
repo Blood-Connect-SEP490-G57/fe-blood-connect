@@ -34,7 +34,7 @@ export const getExtractById = async (extractId: string) => {
   return response.data
 }
 
-export const updateExtractStatus = async (extractStatusRequest: any) => {
-  const response = await apiPostCall('/status', extractStatusRequest)
+export const updateExtractStatus = async (extract_id: string, extract_status: string) => {
+  const response = await apiPostCall('/status', { extract_id, extract_status })
   return response.data
 }
