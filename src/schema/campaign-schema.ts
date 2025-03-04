@@ -5,10 +5,17 @@ export const CampaignResponseSchema = z.object({
   name: z.string(),
   description: z.string(),
   location: z.string(),
-  target_blood_units: z.number(),
+  startReceiveTime: z.string().datetime(),
+  endReceiveTime: z.string().datetime(),
+  organizeTime: z.string().datetime(),
+  officialDocumentUrl: z.string(),
+  targetBloodUnits: z.number(),
+  bloodGroup: z.number(),
   status: z.number(),
-  created_at: z.array(z.number()), // Assuming the date is an array of numbers
-  updated_at: z.array(z.number()), // Assuming the date is an array of numbers
+  organizationHoldId: z.number(),
+  bloodReceiveOrganizationId: z.number(),
+  createdAt: z.string().datetime(),
+  updatedAt: z.string().datetime(),
 });
 
 export type CampaignResponse = z.infer<typeof CampaignResponseSchema>;

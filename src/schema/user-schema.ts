@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod'
 
 export const UserFullInfoResponseSchema = z.object({
   user_id: z.number(),
@@ -21,7 +21,7 @@ export const UserFullInfoResponseSchema = z.object({
   is_active: z.boolean(),
   extract_status: z.string(),
 
-  // User Card info 
+  // User Card info
   card_id: z.string(),
   full_name: z.string(),
   dob: z.string(), // Date should be in ISO format
@@ -32,10 +32,10 @@ export const UserFullInfoResponseSchema = z.object({
   address: z.string(),
   doe: z.string(),
   issue_loc: z.string(),
-  issue_date: z.string(),
-});
+  issue_date: z.string()
+})
 
-export type UserFullInfoResponse = z.infer<typeof UserFullInfoResponseSchema>;
+export type UserFullInfoResponse = z.infer<typeof UserFullInfoResponseSchema>
 
 export const userDetailSchema = z.object({
   email: z.string().email('Email không hợp lệ'),
@@ -50,17 +50,15 @@ export const userDetailSchema = z.object({
 export type UserDetailType = z.infer<typeof userDetailSchema>
 
 export interface UserDetailResponse {
-    
-        success: boolean,
-        data: {
-          mobile: string,
-          email: string,
-          job_name: string,
-          student_id: string,
-          military_id: string,
-          address_contact: string,
-          time_donation: number,
-          blood_group: string
-        }
-      
-} 
+  success: boolean
+  data: {
+    mobile: string
+    email: string
+    job_name: string
+    student_id: string
+    military_id: string
+    address_contact: string
+    time_donation: number
+    blood_group: string
+  }
+}
