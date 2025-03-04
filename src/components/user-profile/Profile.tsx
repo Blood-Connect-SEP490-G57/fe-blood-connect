@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
@@ -14,6 +14,8 @@ import { User as fetchUser } from '@/api/user'
 const Profile = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const hasFetched = useRef(false)
+
   const form = useForm<z.infer<typeof UserFullInfoResponseSchema>>({
     resolver: zodResolver(UserFullInfoResponseSchema),
     defaultValues: {
@@ -47,6 +49,9 @@ const Profile = () => {
   })
 
   useEffect(() => {
+    if (hasFetched.current) return // Nếu đã fetch thì không gọi lại
+    hasFetched.current = true
+
     const fetchUserData = async () => {
       try {
         const response = await fetchUser()
@@ -74,10 +79,9 @@ const Profile = () => {
         setLoading(false)
       }
     }
-  
+
     fetchUserData()
   }, [form])
-  
 
   const handleAvatarChange = async (file: File) => {
     try {

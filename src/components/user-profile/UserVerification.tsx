@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Upload, Check } from 'lucide-react'
 import { useDropzone } from 'react-dropzone'
 import { useExtractStore } from '@/hooks/stores/useExtractStore'
-import { extractFront, extractBack, getExtractById, updateExtractStatus} from '@/api/extract'
+import { extractFront, extractBack, getExtractById, updateExtractStatus } from '@/api/extract'
 import { createOrUpdateUserDetail, getCurrentUserDetail } from '@/api/user'
 import { useNavigate } from 'react-router-dom'
 
@@ -15,7 +15,7 @@ interface FormData {
   email: string
   mobile: string
   jobName: string
-  studentId: string  
+  studentId: string
   militaryId: string
   addressContact: string
   timeDonation: number
@@ -112,7 +112,7 @@ const UserVerification = () => {
           cardImages: extractData.card_images
         })
 
-        setFormData(prev => ({
+        setFormData((prev) => ({
           ...prev,
           frontImage: acceptedFiles[0],
           extractId: extractData.extract_id,
@@ -162,7 +162,7 @@ const UserVerification = () => {
           }
         })
 
-        setFormData(prev => ({
+        setFormData((prev) => ({
           ...prev,
           backImage: acceptedFiles[0]
         }))
@@ -184,9 +184,7 @@ const UserVerification = () => {
     }
   }
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ): void => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>): void => {
     const { name, value } = e.target
     setFormData({ ...formData, [name]: value })
   }
@@ -243,8 +241,7 @@ const UserVerification = () => {
   }
 
   const validateContactInfo = () => {
-    if (!formData.email || !formData.mobile || !formData.jobName || 
-        !formData.addressContact || !formData.bloodGroup) {
+    if (!formData.email || !formData.mobile || !formData.jobName || !formData.addressContact || !formData.bloodGroup) {
       setError('Vui lòng điền đầy đủ thông tin bắt buộc')
       return false
     }
@@ -269,7 +266,7 @@ const UserVerification = () => {
 
     try {
       setLoading(true)
-      
+
       const userDetailData = {
         email: formData.email,
         job_name: formData.jobName,
@@ -281,7 +278,7 @@ const UserVerification = () => {
       }
 
       const response = await createOrUpdateUserDetail(userDetailData)
-      
+
       if (response) {
         setError(null)
         nextStep()
@@ -303,8 +300,8 @@ const UserVerification = () => {
   const handleConfirmExtract = async () => {
     try {
       setLoading(true)
-      const response = await updateExtractStatus(extractId, "CONFIRM_MATCHED")
-      
+      const response = await updateExtractStatus(extractId, 'CONFIRM_MATCHED')
+
       if (response.success) {
         setError(null)
         nextStep()
@@ -414,10 +411,10 @@ const UserVerification = () => {
           setLoading(true)
           const response = await getCurrentUserDetail()
           console.log('User detail response:', response)
-          
+
           if (response.success && response.data) {
             const userData = response.data
-            setFormData(prev => ({
+            setFormData((prev) => ({
               ...prev,
               email: userData.email || '',
               mobile: userData.mobile || '',
@@ -451,77 +448,69 @@ const UserVerification = () => {
         <div className='flex items-center justify-center py-8'>
           <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-primary'></div>
         </div>
-      ) : (
-        cardDetails ? (
-          <div className='space-y-4 p-6 border rounded-lg'>
-            <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-              <div className='space-y-2'>
-                <p className='text-sm text-gray-500'>Loại thẻ</p>
-                <p className='font-medium'>{cardDetails.cardType}</p>
-              </div>
-              <div className='space-y-2'>
-                <p className='text-sm text-gray-500'>Số CCCD</p>
-                <p className='font-medium'>{cardDetails.cardId}</p>
-              </div>
-              <div className='space-y-2'>
-                <p className='text-sm text-gray-500'>Họ và tên</p>
-                <p className='font-medium'>{cardDetails.name}</p>
-              </div>
-              <div className='space-y-2'>
-                <p className='text-sm text-gray-500'>Ngày sinh</p>
-                <p className='font-medium'>{cardDetails.dob}</p>
-              </div>
-              <div className='space-y-2'>
-                <p className='text-sm text-gray-500'>Giới tính</p>
-                <p className='font-medium'>{cardDetails.gender}</p>
-              </div>
-              <div className='space-y-2'>
-                <p className='text-sm text-gray-500'>Quốc tịch</p>
-                <p className='font-medium'>{cardDetails.national}</p>
-              </div>
-              <div className='space-y-2'>
-                <p className='text-sm text-gray-500'>Quê quán</p>
-                <p className='font-medium'>{cardDetails.home}</p>
-              </div>
-              <div className='space-y-2'>
-                <p className='text-sm text-gray-500'>Ngày hết hạn</p>
-                <p className='font-medium'>{cardDetails.doe}</p>
-              </div>
-              <div className='space-y-2'>
-                <p className='text-sm text-gray-500'>Nơi cấp</p>
-                <p className='font-medium'>{cardDetails.issueLoc}</p>
-              </div>
-              <div className='space-y-2'>
-                <p className='text-sm text-gray-500'>Ngày cấp</p>
-                <p className='font-medium'>{cardDetails.issueDate}</p>
-              </div>
-              <div className='space-y-2'>
-                <p className='text-sm text-gray-500'>Đặc điểm nhận dạng</p>
-                <p className='font-medium'>{cardDetails.features}</p>
-              </div>
-              <div className='space-y-2 col-span-2'>
-                <p className='text-sm text-gray-500'>Địa chỉ thường trú</p>
-                <p className='font-medium'>{cardDetails.address}</p>
-              </div>
+      ) : cardDetails ? (
+        <div className='space-y-4 p-6 border rounded-lg'>
+          <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+            <div className='space-y-2'>
+              <p className='text-sm text-gray-500'>Loại thẻ</p>
+              <p className='font-medium'>{cardDetails.cardType}</p>
             </div>
-            {storeError && (
-              <div className='p-4 bg-red-50 text-red-600 rounded-lg mt-4'>
-                {storeError}
-              </div>
-            )}
-            <button
-              onClick={handleConfirmExtract}
-              className='w-full bg-primary text-white p-2 rounded mt-4'
-              disabled={isLoading}
-            >
-              {isLoading ? 'Đang xử lý...' : 'Xác nhận thông tin CCCD'}
-            </button>
+            <div className='space-y-2'>
+              <p className='text-sm text-gray-500'>Số CCCD</p>
+              <p className='font-medium'>{cardDetails.cardId}</p>
+            </div>
+            <div className='space-y-2'>
+              <p className='text-sm text-gray-500'>Họ và tên</p>
+              <p className='font-medium'>{cardDetails.name}</p>
+            </div>
+            <div className='space-y-2'>
+              <p className='text-sm text-gray-500'>Ngày sinh</p>
+              <p className='font-medium'>{cardDetails.dob}</p>
+            </div>
+            <div className='space-y-2'>
+              <p className='text-sm text-gray-500'>Giới tính</p>
+              <p className='font-medium'>{cardDetails.gender}</p>
+            </div>
+            <div className='space-y-2'>
+              <p className='text-sm text-gray-500'>Quốc tịch</p>
+              <p className='font-medium'>{cardDetails.national}</p>
+            </div>
+            <div className='space-y-2'>
+              <p className='text-sm text-gray-500'>Quê quán</p>
+              <p className='font-medium'>{cardDetails.home}</p>
+            </div>
+            <div className='space-y-2'>
+              <p className='text-sm text-gray-500'>Ngày hết hạn</p>
+              <p className='font-medium'>{cardDetails.doe}</p>
+            </div>
+            <div className='space-y-2'>
+              <p className='text-sm text-gray-500'>Nơi cấp</p>
+              <p className='font-medium'>{cardDetails.issueLoc}</p>
+            </div>
+            <div className='space-y-2'>
+              <p className='text-sm text-gray-500'>Ngày cấp</p>
+              <p className='font-medium'>{cardDetails.issueDate}</p>
+            </div>
+            <div className='space-y-2'>
+              <p className='text-sm text-gray-500'>Đặc điểm nhận dạng</p>
+              <p className='font-medium'>{cardDetails.features}</p>
+            </div>
+            <div className='space-y-2 col-span-2'>
+              <p className='text-sm text-gray-500'>Địa chỉ thường trú</p>
+              <p className='font-medium'>{cardDetails.address}</p>
+            </div>
           </div>
-        ) : (
-          <div className='p-4 bg-yellow-50 text-yellow-600 rounded-lg'>
-            Không có thông tin thẻ
-          </div>
-        )
+          {storeError && <div className='p-4 bg-red-50 text-red-600 rounded-lg mt-4'>{storeError}</div>}
+          <button
+            onClick={handleConfirmExtract}
+            className='w-full bg-primary text-white p-2 rounded mt-4'
+            disabled={isLoading}
+          >
+            {isLoading ? 'Đang xử lý...' : 'Xác nhận thông tin CCCD'}
+          </button>
+        </div>
+      ) : (
+        <div className='p-4 bg-yellow-50 text-yellow-600 rounded-lg'>Không có thông tin thẻ</div>
       )}
     </div>
   )
@@ -618,11 +607,7 @@ const UserVerification = () => {
                 <option value='AB+'>AB+</option>
                 <option value='AB-'>AB-</option>
               </select>
-              <button 
-                onClick={handleConfirm} 
-                className='w-full bg-primary text-white p-2 rounded' 
-                disabled={isLoading}
-              >
+              <button onClick={handleConfirm} className='w-full bg-primary text-white p-2 rounded' disabled={isLoading}>
                 {isLoading ? 'Đang xử lý...' : 'Xác nhận thông tin'}
               </button>
             </div>

@@ -4,15 +4,15 @@ import { MapPin, Calendar, Clock, Users, Info } from 'lucide-react'
 
 interface CampaignDetailsProps {
   campaign: {
-    id: string
+    id: number
     name: string
     location: string
-    date: string
-    timeSlot: string
+    startReceiveTime: string
+    endReceiveTime: string
+    organizeTime: string
     description: string
-    currentDonors: number
-    maxDonors: number
-    requirements: string[]
+    targetBloodUnits: number
+    officialDocumentUrl: string
   }
 }
 
@@ -30,17 +30,18 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({ campaign }) => {
           </div>
           <div className='flex items-center gap-2 text-gray-600'>
             <Calendar className='h-5 w-5' />
-            <span>{campaign.date}</span>
+            <span>{new Date(campaign.organizeTime).toLocaleDateString()}</span>
           </div>
           <div className='flex items-center gap-2 text-gray-600'>
             <Clock className='h-5 w-5' />
-            <span>{campaign.timeSlot}</span>
+            <span>
+              {new Date(campaign.startReceiveTime).toLocaleTimeString()} -{' '}
+              {new Date(campaign.endReceiveTime).toLocaleTimeString()}
+            </span>
           </div>
           <div className='flex items-center gap-2 text-gray-600'>
             <Users className='h-5 w-5' />
-            <span>
-              {campaign.currentDonors}/{campaign.maxDonors} người đăng ký
-            </span>
+            <span>{campaign.targetBloodUnits} người đăng ký</span>
           </div>
         </div>
 
@@ -52,14 +53,12 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({ campaign }) => {
           <p className='text-gray-600'>{campaign.description}</p>
         </div>
 
-        <div className='space-y-2'>
-          <h3 className='font-medium'>Yêu cầu</h3>
-          <ul className='list-disc list-inside space-y-1 text-gray-600'>
-            {campaign.requirements.map((req, index) => (
-              <li key={index}>{req}</li>
-            ))}
-          </ul>
-        </div>
+        {/* <div className='space-y-2'>
+          <h3 className='font-medium'>Tài liệu chính thức</h3>
+          <a href={campaign.officialDocumentUrl} className='text-blue-600 underline'>
+            {campaign.officialDocumentUrl}
+          </a>
+        </div> */}
       </CardContent>
     </Card>
   )

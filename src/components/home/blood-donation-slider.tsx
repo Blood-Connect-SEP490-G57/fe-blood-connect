@@ -1,15 +1,20 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { MapPin, Calendar, Users, ChevronLeft, ChevronRight } from 'lucide-react'
 import { Campaign as fetchCampaigns } from '@/api/campaign'
 import { CampaignResponse } from '@/schema/campaign-schema'
-
+import { useNavigate } from 'react-router-dom'
 const BloodDonationSlider: React.FC = () => {
+  const navigate = useNavigate()
   const [campaigns, setCampaigns] = useState<CampaignResponse[]>([])
   const [currentSlide, setCurrentSlide] = useState<number>(0)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  
+  const hasFetched = useRef(false)
+
   useEffect(() => {
+    if (hasFetched.current) return // Nếu đã fetch thì không gọi lại
+    hasFetched.current = true
+    
     const fetchCampaignsData = async () => {
       try {
         const response = await fetchCampaigns()
@@ -48,26 +53,39 @@ const BloodDonationSlider: React.FC = () => {
     setCurrentSlide((prev) => (prev + 1) % campaigns.length)
   }
 
-  const formatDateTime = (dateArray: number[]): string => {
-    const [year, month, day, hour, minute, second, nanosecond] = dateArray
-    const date = new Date(Date.UTC(year, month - 1, day, hour, minute, second, nanosecond / 1000000))
+  const formatDateTime = (isoString: string): string => {
+    const date = new Date(isoString)
 
-    const dayStr = String(date.getUTCDate()).padStart(2, '0')
-    const monthStr = String(date.getUTCMonth() + 1).padStart(2, '0')
-    const yearStr = date.getUTCFullYear()
+    const dayStr = String(date.getDate()).padStart(2, '0')
+    const monthStr = String(date.getMonth() + 1).padStart(2, '0')
+    const yearStr = date.getFullYear()
 
-    const hoursStr = String(date.getUTCHours()).padStart(2, '0')
-    const minutesStr = String(date.getUTCMinutes()).padStart(2, '0')
+    const hoursStr = String(date.getHours()).padStart(2, '0')
+    const minutesStr = String(date.getMinutes()).padStart(2, '0')
 
-    return `${dayStr}/${monthStr}/${yearStr} (${hoursStr}:${minutesStr})`
+    return `${dayStr}/${monthStr}/${yearStr} - ${hoursStr}:${minutesStr}`
   }
 
   if (loading) {
-    return <div>Loading...</div>
+    return (
+      <div className='max-w-7xl mx-auto py-8'>
+        <div className='flex justify-center mt-4 mb-4'>Loading...</div>
+      </div>
+    )
   }
 
   if (error) {
-    return <div className='flex justify-center mt-4 mb-4'>{error}</div>
+    return (
+      <div className='max-w-7xl mx-auto py-8'>
+        <div className='flex justify-center mt-4 mb-4'>{error}</div>
+      </div>
+    )
+  }
+
+  const handleRegistedonate = (campaignId: number): void => {
+    console.log(`Registered for ${campaignId}`)
+    // get by id campaign
+    // navigate(`//${campaignId}`)
   }
 
   return (
@@ -98,22 +116,31 @@ const BloodDonationSlider: React.FC = () => {
                     <div className='space-y-4'>
                       <div className='flex items-center text-accent'>
                         <MapPin className='mr-2 text-gray-600' />
-                        <span className='text-gray-600'>{campaign.location}</span>
+                        <span className='text-gray-600'>Địa điểm: {campaign.location}</span>
                       </div>
                       <div className='flex items-center text-accent'>
                         <Calendar className='mr-2 text-gray-600' />
                         <span className='text-gray-600'>
-                          {formatDateTime(campaign.created_at)} -{' '}
-                          {campaign.updated_at ? formatDateTime(campaign.updated_at) : 'N/A'}
+                          Thời gian đăng ký: {formatDateTime(campaign.startReceiveTime)} -{' '}
+                          {formatDateTime(campaign.endReceiveTime)}
                         </span>
                       </div>
                       <div className='flex items-center text-accent'>
+                        <Calendar className='mr-2 text-gray-600' />
+                        <span className='text-gray-600'>
+                          Thời gian tổ chức: {formatDateTime(campaign.organizeTime)}
+                        </span>
+                      </div>
+
+                      <div className='flex items-center text-accent'>
                         <Users className='mr-2 text-gray-600' />
-                        <span className='text-gray-600'>{campaign.target_blood_units} Đã đăng ký</span>
+                        <span className='text-gray-600'>Số người: {campaign.targetBloodUnits} Đã đăng ký</span>
                       </div>
                       <button
                         className='mt-6 px-6 py-3 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors duration-400 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2'
-                        onClick={() => console.log(`Registered for ${campaign.name}`)}
+                        onClick={() => {
+                          handleRegistedonate(campaign.id)
+                        }}
                       >
                         Đăng ký Ngay
                       </button>

@@ -13,6 +13,8 @@ import {
   Droplet,
   Contact
 } from 'lucide-react'
+import { useEffect, useState, useRef } from 'react'
+import { User as fetchUser } from '@/api/user'
 
 interface PersonalInfo {
   fullName: string
@@ -30,59 +32,62 @@ interface PersonalInfo {
   bloodType: string
 }
 
-const RegistrationIcon = () => (
-  <svg
-    width='128'
-    height='128'
-    viewBox='0 0 128 128'
-    fill='none'
-    xmlns='http://www.w3.org/2000/svg'
-    className='text-red-600'
-  >
-    <rect x='24' y='16' width='80' height='96' rx='8' className='fill-red-50' stroke='currentColor' strokeWidth='4' />
-    <path d='M44 48H84' stroke='currentColor' strokeWidth='4' strokeLinecap='round' />
-    <path d='M44 64H84' stroke='currentColor' strokeWidth='4' strokeLinecap='round' />
-    <path d='M44 80H64' stroke='currentColor' strokeWidth='4' strokeLinecap='round' />
-    <circle cx='64' cy='32' r='4' fill='currentColor' />
-  </svg>
-)
-
-const InfoItem = ({ icon: Icon, label, value }: { icon: any; label: string; value: string }) => (
-  <div className='flex justify-between items-center'>
-    <div className='flex items-center gap-2 text-gray-600'>
-      <Icon className='w-4 h-4' />
-      <span>{label}:</span>
-    </div>
-    <span className='font-medium'>{value}</span>
-  </div>
-)
-
-const ContactItem = ({ icon: Icon, label, value }: { icon: any; label: string; value: string }) => (
-  <div className='flex items-start gap-2'>
-    <Icon className='w-5 h-5 text-gray-500 mt-1' />
-    <div>
-      <span className='text-gray-600'>{label}:</span>
-      <p className='font-medium'>{value || '-'}</p>
-    </div>
-  </div>
-)
-
 const AppointmentInfo = () => {
-  const personalInfo: PersonalInfo = {
-    fullName: 'Bế Minh',
-    birthDate: '01/01/2000',
-    gender: 'Nam',
-    occupation: 'Sinh viên',
-    organization: 'Đại học ABC',
-    contactAddress: 'Hà Nội, Việt Nam',
-    permanentAddress: 'Hà Nội, Việt Nam',
-    phone: '0123456789',
-    email: 'be.minh@example.com',
-    idNumber: '123456789',
-    idIssuePlace: 'Hà Nội',
-    studentMilitaryId: 'HS123456',
-    bloodType: 'A+'
-  }
+  const [personalInfo, setPersonalInfo] = useState<PersonalInfo>({
+    fullName: '',
+    idNumber: '',
+    birthDate: '',
+    gender: '',
+    occupation: '',
+    organization: '',
+    contactAddress: '',
+    permanentAddress: '',
+    phone: '',
+    email: '',
+    idIssuePlace: '',
+    studentMilitaryId: '',
+    bloodType: ''
+  })
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const hasFetched = useRef(false)
+
+
+  useEffect(() => {
+    if (hasFetched.current) return // Nếu đã fetch thì không gọi lại
+    hasFetched.current = true
+
+    const fetchUserData = async () => {
+      try {
+        const response = await fetchUser()
+
+        setPersonalInfo({
+          fullName: response.full_name || '',
+          idNumber: response.card_id || '',
+          birthDate: response.dob ? `${response.dob[2]}/${response.dob[1]}/${response.dob[0]}` : '',
+          gender: response.gender || '',
+          occupation: response.job_name || '',
+          organization: '', // Không có trường này trong API
+          contactAddress: response.address_contact || '',
+          permanentAddress: response.address || '',
+          phone: response.mobile || '',
+          email: response.email || '',
+          idIssuePlace: response.issue_loc || '',
+          studentMilitaryId: response.student_id || response.military_id || '',
+          bloodType: response.blood_group || ''
+        })
+
+        console.log(response)
+      } catch (err) {
+        console.error('Error fetching user data:', err)
+        setError('Không thể tải thông tin người dùng')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchUserData()
+  }, [])
 
   const personalInfoItems = [
     { icon: User, label: 'Họ và tên', value: personalInfo.fullName },
@@ -94,7 +99,7 @@ const AppointmentInfo = () => {
     { icon: Droplet, label: 'Nhóm máu', value: personalInfo.bloodType },
     { icon: MapPin, label: 'Địa chỉ thường trú', value: personalInfo.permanentAddress },
     { icon: CreditCard, label: 'Nơi cấp CCCD', value: personalInfo.idIssuePlace },
-    { icon: CreditCard, label: 'Mã số sinh viên/quân nhân', value: personalInfo.studentMilitaryId },
+    { icon: CreditCard, label: 'Mã số sinh viên/quân nhân', value: personalInfo.studentMilitaryId }
   ]
 
   const contactInfoItems = [
@@ -120,7 +125,13 @@ const AppointmentInfo = () => {
             <CardContent className='space-y-4'>
               <div className='grid grid-cols-1 gap-4'>
                 {personalInfoItems.map((item, index) => (
-                  <InfoItem key={index} {...item} />
+                  <div key={index} className='flex justify-between items-center'>
+                    <div className='flex items-center gap-2 text-gray-600'>
+                      <item.icon className='w-4 h-4' />
+                      <span>{item.label}:</span>
+                    </div>
+                    <span className='font-medium'>{item.value || '-'}</span>
+                  </div>
                 ))}
               </div>
             </CardContent>
@@ -136,7 +147,13 @@ const AppointmentInfo = () => {
             <CardContent>
               <div className='space-y-4'>
                 {contactInfoItems.map((item, index) => (
-                  <ContactItem key={index} {...item} />
+                  <div key={index} className='flex items-start gap-2'>
+                    <item.icon className='w-5 h-5 text-gray-500 mt-1' />
+                    <div>
+                      <span className='text-gray-600'>{item.label}:</span>
+                      <p className='font-medium'>{item.value || '-'}</p>
+                    </div>
+                  </div>
                 ))}
               </div>
             </CardContent>
@@ -150,9 +167,6 @@ const AppointmentInfo = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className='flex flex-col items-center justify-center space-y-6'>
-              <div className='w-32 h-32'>
-                <RegistrationIcon />
-              </div>
               <p className='text-lg text-gray-600 text-center'>Chưa có phiếu đăng ký hiến máu</p>
               <Button
                 className='bg-red-600 hover:bg-red-700 text-white'
