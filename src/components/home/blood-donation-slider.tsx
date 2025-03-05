@@ -3,6 +3,8 @@ import { MapPin, Calendar, Users, ChevronLeft, ChevronRight } from 'lucide-react
 import { Campaign as fetchCampaigns } from '@/api/campaign'
 import { CampaignResponse } from '@/schema/campaign-schema'
 import { useNavigate } from 'react-router-dom'
+import Loading from '../warnings/loading'
+import Empty from '../warnings/empty'
 const BloodDonationSlider: React.FC = () => {
   const navigate = useNavigate()
   const [campaigns, setCampaigns] = useState<CampaignResponse[]>([])
@@ -14,7 +16,7 @@ const BloodDonationSlider: React.FC = () => {
   useEffect(() => {
     if (hasFetched.current) return // Nếu đã fetch thì không gọi lại
     hasFetched.current = true
-    
+
     const fetchCampaignsData = async () => {
       try {
         const response = await fetchCampaigns()
@@ -67,23 +69,15 @@ const BloodDonationSlider: React.FC = () => {
   }
 
   if (loading) {
-    return (
-      <div className='max-w-7xl mx-auto py-8'>
-        <div className='flex justify-center mt-4 mb-4'>Loading...</div>
-      </div>
-    )
+    return <Loading />
   }
 
   if (error) {
-    return (
-      <div className='max-w-7xl mx-auto py-8'>
-        <div className='flex justify-center mt-4 mb-4'>{error}</div>
-      </div>
-    )
+    return <Empty />
   }
 
-  const handleRegistedonate = (campaignId: number): void => {
-    console.log(`Registered for ${campaignId}`)
+  const handleRegistedonate = (questionsetId: number): void => {
+    console.log(`Registered for ${questionsetId}`)
     // get by id campaign
     // navigate(`//${campaignId}`)
   }
@@ -139,7 +133,7 @@ const BloodDonationSlider: React.FC = () => {
                       <button
                         className='mt-6 px-6 py-3 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors duration-400 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2'
                         onClick={() => {
-                          handleRegistedonate(campaign.id)
+                          handleRegistedonate(campaign.questionSetId)
                         }}
                       >
                         Đăng ký Ngay

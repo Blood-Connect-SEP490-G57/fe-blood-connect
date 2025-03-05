@@ -108,6 +108,14 @@ const AppointmentInfo = () => {
     { icon: Mail, label: 'Email', value: personalInfo.email }
   ]
 
+  if (loading) {
+    return <div>Loading...</div>
+  }
+
+  if (error) {
+    return <div>{error}</div>
+  }
+
   return (
     <div className='min-h-screen bg-white py-12'>
       <div className='container mx-auto px-4'>

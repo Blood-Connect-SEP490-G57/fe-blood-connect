@@ -16,6 +16,7 @@ export const CampaignResponseSchema = z.object({
   bloodReceiveOrganizationId: z.number(),
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
+  questionSetId: z.number(),
 });
 
 export type CampaignResponse = z.infer<typeof CampaignResponseSchema>;

@@ -14,13 +14,15 @@ const SelectCampaignStep = ({
   setSearchQuery,
   selectedCampaign,
   setSelectedCampaign,
-  setCurrentStep
+  setCurrentStep,
+  setQuestionSetId
 }: {
   searchQuery: string
   setSearchQuery: (query: string) => void
   selectedCampaign: any
   setSelectedCampaign: (campaign: any) => void
   setCurrentStep: Dispatch<SetStateAction<Step>>
+  setQuestionSetId: (id: number) => void
 }) => {
   const [campaigns, setCampaigns] = useState<CampaignResponse[]>([])
   const [loading, setLoading] = useState(true)
@@ -128,7 +130,10 @@ const SelectCampaignStep = ({
           className='bg-red-600 text-white hover:bg-red-700'
           disabled={!selectedCampaign}
           onClick={() => {
-            console.log('Selected Campaign ID:', selectedCampaign.id)
+            console.log('Selected Campaign:', selectedCampaign.id)
+            setSelectedCampaign(selectedCampaign)
+            setQuestionSetId(selectedCampaign.questionSetId)
+            console.log('Selected Campaign:', selectedCampaign.questionSetId)
             setCurrentStep(1)
           }}
         >
