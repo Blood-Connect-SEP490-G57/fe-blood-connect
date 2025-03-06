@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import CampaignDetails from '@/components/blood-donation-registration/campaign-details'
-import { questions } from './questionnaire'
+// import { questions } from './questionnaire'
 import { STEPS } from '@/pages/BloodDonationRegistration'
 
 type Campaign = {
