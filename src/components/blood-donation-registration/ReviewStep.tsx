@@ -6,15 +6,18 @@ import CampaignDetails from '@/components/blood-donation-registration/campaign-d
 import { STEPS } from '@/pages/BloodDonationRegistration'
 
 type Campaign = {
-  id: string
+  id: number
   name: string
   location: string
-  date: string
-  timeSlot: string
+  startReceiveTime: string
+  endReceiveTime: string
+  organizeTime: string
   description: string
-  currentDonors: number
-  maxDonors: number
-  requirements: string[]
+  targetBloodUnits: number
+  officialDocumentUrl: string
+  currentDonors?: number
+  maxDonors?: number
+  requirements?: string[]
 }
 
 type Step = (typeof STEPS)[keyof typeof STEPS]
