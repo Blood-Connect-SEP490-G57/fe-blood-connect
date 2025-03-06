@@ -1,40 +1,34 @@
-import QuestionnaireStep from '@/components/blood-donation-registration/QuestionnaireStep'
-import ReviewStep from '@/components/blood-donation-registration/ReviewStep'
+import React, { useState } from 'react'
 import SelectCampaignStep from '@/components/blood-donation-registration/SelectCampaignStep'
+import Questionnaire from '@/components/blood-donation-registration/questionnaire'
+import ReviewStep from '@/components/blood-donation-registration/ReviewStep'
 import SuccessStep from '@/components/blood-donation-registration/SuccessStep'
-import React from 'react'
-import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 export enum STEPS {
-  SELECT_CAMPAIGN = 0,
-  QUESTIONNAIRE = 1,
-  REVIEW = 2,
-  SUCCESS = 3
+  SELECT_CAMPAIGN,
+  QUESTIONNAIRE,
+  REVIEW,
+  SUCCESS
 }
 
 export type Step = (typeof STEPS)[keyof typeof STEPS]
 
-// const stepTitles: Record<Step, string> = {
-//   [STEPS.SELECT_CAMPAIGN]: 'Chọn buổi hiến máu',
-//   [STEPS.QUESTIONNAIRE]: 'Khảo sát',
-//   [STEPS.REVIEW]: 'Xác nhận',
-//   [STEPS.SUCCESS]: 'Hoàn thành'
-// }
-
-const BloodDonationRegistration = () => {
+const BloodDonationRegistration: React.FC = () => {
   const navigate = useNavigate()
   const [currentStep, setCurrentStep] = useState<Step>(STEPS.SELECT_CAMPAIGN)
-  const [searchQuery, setSearchQuery] = useState('')
+  const [searchQuery, setSearchQuery] = useState<string>('')
   const [selectedCampaign, setSelectedCampaign] = useState<any>(null)
+  const [questionSetId, setQuestionSetId] = useState<number | null>(null)
   const [answers, setAnswers] = useState<Record<string, string>>({})
 
-  const handleAnswerChange = (questionId: string, answer: string) => {
+  const handleAnswerChange = (questionId: number, answer: string) => {
     setAnswers((prev) => ({
       ...prev,
       [questionId]: answer
     }))
   }
+
   const renderStepIndicator = () => {
     const stepsArray = Object.values(STEPS).filter((step) => typeof step === 'number') as number[]
 
@@ -69,6 +63,7 @@ const BloodDonationRegistration = () => {
       </div>
     )
   }
+
   const renderStep = () => {
     switch (currentStep) {
       case STEPS.SELECT_CAMPAIGN:
@@ -79,14 +74,15 @@ const BloodDonationRegistration = () => {
             selectedCampaign={selectedCampaign}
             setSelectedCampaign={setSelectedCampaign}
             setCurrentStep={setCurrentStep}
+            setQuestionSetId={setQuestionSetId}
           />
         )
       case STEPS.QUESTIONNAIRE:
         return (
-          <QuestionnaireStep
+          <Questionnaire
+            questionSetId={questionSetId ?? 0}
+            onAnswerChange={handleAnswerChange}
             answers={answers}
-            handleAnswerChange={handleAnswerChange}
-            setCurrentStep={(step: number) => setCurrentStep(step as Step)}
           />
         )
       case STEPS.REVIEW:

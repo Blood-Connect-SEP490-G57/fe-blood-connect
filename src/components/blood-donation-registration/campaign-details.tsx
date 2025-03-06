@@ -52,13 +52,7 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({ campaign }) => {
           </h3>
           <p className='text-gray-600'>{campaign.description}</p>
         </div>
-
-        {/* <div className='space-y-2'>
-          <h3 className='font-medium'>Tài liệu chính thức</h3>
-          <a href={campaign.officialDocumentUrl} className='text-blue-600 underline'>
-            {campaign.officialDocumentUrl}
-          </a>
-        </div> */}
+       
       </CardContent>
     </Card>
   )

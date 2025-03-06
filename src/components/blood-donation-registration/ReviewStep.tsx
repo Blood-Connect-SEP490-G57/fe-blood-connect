@@ -1,9 +1,17 @@
-import { Dispatch, SetStateAction } from 'react'
+import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import CampaignDetails from '@/components/blood-donation-registration/campaign-details'
-import { questions } from './questionnaire'
+import { Question as fetchQuestions } from '@/api/campaign'
 import { STEPS } from '@/pages/BloodDonationRegistration'
+
+interface Question {
+  id: number
+  content: string
+  type: 'SINGLE_CHOICE' | 'MULTIPLE_CHOICE'
+  subs: { content: string, has_description: boolean }[]
+  order: number
+}
 
 type Campaign = {
   id: number
@@ -24,13 +32,39 @@ type Step = (typeof STEPS)[keyof typeof STEPS]
 
 const ReviewStep = ({
   selectedCampaign,
+  questionSetId,
   answers,
   setCurrentStep
 }: {
   selectedCampaign: Campaign | null
-  answers: Record<string, string>
+  questionSetId: number
+  answers: Record<number, string>
   setCurrentStep: Dispatch<SetStateAction<Step>>
 }) => {
+  const [questions, setQuestions] = useState<Question[]>([])
+  const [loading, setLoading] = useState(true)
+
+  // useEffect(() => {
+  //   if (!questionSetId) return
+
+  //   const fetchQuestionData = async () => {
+  //     try {
+  //       const data = await fetchQuestions(questionSetId.toString())
+  //       setQuestions(data.data.questions)
+  //     } catch (err) {
+  //       console.error("Không thể lấy danh sách câu hỏi", err)
+  //     } finally {
+  //       setLoading(false)
+  //     }
+  //   }
+
+  //   fetchQuestionData()
+  // }, [questionSetId])
+
+  if (loading) {
+    return <p>Đang tải...</p>
+  }
+
   return (
     <Card className='border-none shadow-lg'>
       <CardHeader>
@@ -47,12 +81,15 @@ const ReviewStep = ({
         <div className='space-y-4'>
           <h3 className='font-medium text-lg'>Câu trả lời của bạn</h3>
           <div className='bg-gray-50 rounded-lg p-4 space-y-3'>
-            {Object.entries(answers).map(([questionId, answer]) => (
-              <div key={questionId} className='flex justify-between text-sm'>
-                <span className='text-gray-600'>{questions.find((q) => q.id === questionId)?.question}</span>
-                <span className='font-medium'>{answer}</span>
-              </div>
-            ))}
+            {Object.entries(answers).map(([questionId, answer]) => {
+              const questionObj = questions.find(q => q.id === parseInt(questionId));
+              return (
+                <div key={questionId} className='flex justify-between text-sm'>
+                  <span className='text-gray-600'>{questionObj?.content || `Câu hỏi ${questionId}`}</span>
+                  <span className='font-medium'>{answer}</span>
+                </div>
+              );
+            })}
           </div>
         </div>
 
