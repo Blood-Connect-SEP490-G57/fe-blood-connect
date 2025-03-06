@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import SelectCampaignStep from '@/components/blood-donation-registration/SelectCampaignStep'
-import Questionnaire from '@/components/blood-donation-registration/questionnaire'
 import ReviewStep from '@/components/blood-donation-registration/ReviewStep'
 import SuccessStep from '@/components/blood-donation-registration/SuccessStep'
 import { useNavigate } from 'react-router-dom'
+import QuestionnaireStep from '@/components/blood-donation-registration/QuestionnaireStep'
 
 export enum STEPS {
   SELECT_CAMPAIGN,
@@ -20,7 +20,7 @@ const BloodDonationRegistration: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [selectedCampaign, setSelectedCampaign] = useState<any>(null)
   const [questionSetId, setQuestionSetId] = useState<number | null>(null)
-  const [answers, setAnswers] = useState<Record<string, string>>({})
+  const [answers, setAnswers] = useState<Record<number, string>>({}) // Đổi string thành number
 
   const handleAnswerChange = (questionId: number, answer: string) => {
     setAnswers((prev) => ({
@@ -79,18 +79,26 @@ const BloodDonationRegistration: React.FC = () => {
         )
       case STEPS.QUESTIONNAIRE:
         return (
-          <Questionnaire
+          <QuestionnaireStep
             questionSetId={questionSetId ?? 0}
-            onAnswerChange={handleAnswerChange}
             answers={answers}
+            handleAnswerChange={handleAnswerChange} // Sửa lại đúng tên prop
+            setCurrentStep={setCurrentStep} // Thêm prop này
           />
         )
       case STEPS.REVIEW:
-        return <ReviewStep selectedCampaign={selectedCampaign} answers={answers} setCurrentStep={setCurrentStep} />
+        return (
+          <ReviewStep 
+            selectedCampaign={selectedCampaign} 
+            answers={answers} 
+            questionSetId={questionSetId ?? 0} // Thêm questionSetId
+            setCurrentStep={setCurrentStep} 
+          />
+        )
       case STEPS.SUCCESS:
         return <SuccessStep navigate={navigate} />
       default:
-        return null // Ensure nothing is rendered beyond the defined steps
+        return null
     }
   }
 

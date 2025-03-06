@@ -45,7 +45,10 @@ const ReviewStep = ({
   const [loading, setLoading] = useState(true)
 
   // useEffect(() => {
-  //   if (!questionSetId) return
+  //   if (!questionSetId) {
+  //     setLoading(false)
+  //     return
+  //   }
 
   //   const fetchQuestionData = async () => {
   //     try {
@@ -94,10 +97,10 @@ const ReviewStep = ({
         </div>
 
         <div className='flex justify-between'>
-          <Button variant='outline' onClick={() => setCurrentStep(1)}>
+          <Button variant='outline' onClick={() => setCurrentStep(STEPS.QUESTIONNAIRE)}>
             Quay lại
           </Button>
-          <Button className='bg-red-600 text-white hover:bg-red-700' onClick={() => setCurrentStep(3)}>
+          <Button className='bg-red-600 text-white hover:bg-red-700' onClick={() => setCurrentStep(STEPS.SUCCESS)}>
             Xác nhận đăng ký
           </Button>
         </div>
