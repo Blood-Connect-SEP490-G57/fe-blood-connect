@@ -1,33 +1,45 @@
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import Questionnaire from '@/components/blood-donation-registration/questionnaire'
-import PropTypes from 'prop-types'
 
 interface QuestionnaireStepProps {
-  answers: { [key: string]: any }
-  handleAnswerChange: (questionId: string, answer: any) => void
+  questionSetId: number 
+  answers: Record<number, string> 
+  handleAnswerChange: (questionId: number, answer: string) => void 
   setCurrentStep: (step: number) => void
 }
 
-const QuestionnaireStep: React.FC<QuestionnaireStepProps> = ({ answers, handleAnswerChange, setCurrentStep }) => {
-  QuestionnaireStep.propTypes = {
-    answers: PropTypes.object.isRequired,
-    handleAnswerChange: PropTypes.func.isRequired,
-    setCurrentStep: PropTypes.func.isRequired
-  }
+const QuestionnaireStep: React.FC<QuestionnaireStepProps> = ({
+  questionSetId,
+  answers,
+  handleAnswerChange,
+  setCurrentStep
+}) => {
+  // Log để debug
+  console.log(`Rendering QuestionnaireStep with ${Object.keys(answers).length} answers`);
+  
   return (
-    <div className='space-y-6'>
-      <Card className='border-none shadow-lg'>
+    <>
+      <Card className='border-none shadow-lg mb-20'> {/* Thêm margin-bottom lớn */}
         <CardHeader>
           <CardTitle>Bảng câu hỏi sức khỏe</CardTitle>
           <CardDescription>Vui lòng trả lời các câu hỏi sau để đảm bảo bạn đủ điều kiện hiến máu</CardDescription>
         </CardHeader>
         <CardContent>
-          <Questionnaire onAnswerChange={handleAnswerChange} answers={answers} />
+          <Questionnaire questionSetId={questionSetId} onAnswerChange={handleAnswerChange} answers={answers} />
         </CardContent>
       </Card>
+      
+      {/* Debugging section */}
+      <div className='border border-red-200 p-4 mb-4 rounded'>
+        <p>Debug info: {Object.keys(answers).length} answers</p>
+        <div className='flex space-x-2 mt-2'>
+          <Button size="sm" variant="outline">Debug Button</Button>
+        </div>
+      </div>
 
-      <div className='flex justify-between'>
+      {/* Nút điều hướng */}
+      <div className='w-full bg-white p-4 border-t border-gray-200 flex justify-between mt-4'>
         <Button variant='outline' onClick={() => setCurrentStep(0)}>
           Quay lại
         </Button>
@@ -36,10 +48,10 @@ const QuestionnaireStep: React.FC<QuestionnaireStepProps> = ({ answers, handleAn
           onClick={() => setCurrentStep(2)}
           disabled={Object.keys(answers).length < 3}
         >
-          Tiếp tục
+          Tiếp tục ({Object.keys(answers).length}/3)
         </Button>
       </div>
-    </div>
+    </>
   )
 }
 
