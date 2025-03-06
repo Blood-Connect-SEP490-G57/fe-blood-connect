@@ -25,6 +25,10 @@ const SuccessStep: FC<SuccessStepProps> = ({ navigate }) => {
           Xem lịch hẹn
           <ChevronRight className='ml-2 h-4 w-4' />
         </Button>
+        <Button className='bg-red-600 text-white hover:bg-red-700' onClick={() => navigate('/')}>
+          Trở lại trang chủ
+          <ChevronRight className='ml-2 h-4 w-4' />
+        </Button>
       </CardContent>
     </Card>
   )
