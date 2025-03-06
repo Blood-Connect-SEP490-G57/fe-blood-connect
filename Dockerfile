@@ -4,7 +4,7 @@ WORKDIR /app
 
 ENV PATH /app/node_modules/.bin:$PATH
 
-COPY package*.json .
+COPY package*.json /app/
 
 RUN npm install
 
@@ -16,4 +16,4 @@ FROM nginx:latest
 
 COPY ./nginx.conf /etc/nginx/nginx.conf
 
-COPY --from=builder /app/dist /usr/share/nginx/html
+COPY --from=builder /app/dist /usr/share/nginx/html/
