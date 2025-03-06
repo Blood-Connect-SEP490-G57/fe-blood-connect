@@ -52,9 +52,8 @@ const AppointmentInfo = () => {
   const [error, setError] = useState<string | null>(null)
   const hasFetched = useRef(false)
 
-
   useEffect(() => {
-    if (hasFetched.current) return // Nếu đã fetch thì không gọi lại
+    if (hasFetched.current) return
     hasFetched.current = true
 
     const fetchUserData = async () => {
@@ -107,6 +106,22 @@ const AppointmentInfo = () => {
     { icon: Phone, label: 'Số điện thoại', value: personalInfo.phone },
     { icon: Mail, label: 'Email', value: personalInfo.email }
   ]
+
+  if (loading) {
+    return (
+      <div className='min-h-screen bg-white py-12'>
+        <div className='container mx-auto px-4'>Loading...</div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className='min-h-screen bg-white py-12'>
+        <div className='container mx-auto px-4 text-red-600'>{error}</div>
+      </div>
+    )
+  }
 
   return (
     <div className='min-h-screen bg-white py-12'>
