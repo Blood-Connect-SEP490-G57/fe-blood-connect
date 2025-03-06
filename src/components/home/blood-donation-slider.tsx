@@ -83,9 +83,7 @@ const BloodDonationSlider: React.FC = () => {
   }
 
   const handleRegistedonate = (campaignId: number): void => {
-    console.log(`Registered for ${campaignId}`)
-    // get by id campaign
-    // navigate(`//${campaignId}`)
+    navigate(`/blood-donation-registration/${campaignId}`)
   }
 
   return (
