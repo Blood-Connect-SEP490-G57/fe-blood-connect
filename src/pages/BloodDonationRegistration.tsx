@@ -84,7 +84,7 @@ const BloodDonationRegistration: React.FC = () => {
             answers={answers}
             handleAnswerChange={handleAnswerChange} // Sửa lại đúng tên prop
             setCurrentStep={setCurrentStep} // Thêm prop này
-          />
+            campaignId={selectedCampaign.id}          />
         )
       case STEPS.REVIEW:
         return (
