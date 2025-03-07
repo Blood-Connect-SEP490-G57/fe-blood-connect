@@ -74,7 +74,6 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({ questionSetId, onAnswerCh
           <CardContent className='pt-6'>
             <div className='space-y-4'>
               <Label className='text-base font-medium'>{q.content}</Label>
-
               {q.type === 'SINGLE_CHOICE' ? (
                 <RadioGroup value={answers[q.id]} onValueChange={(value) => onAnswerChange(q.id, value)}>
                   {(q.subs || []).map((option, i) => (
