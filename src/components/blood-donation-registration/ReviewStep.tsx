@@ -1,8 +1,7 @@
-import { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import { Dispatch, SetStateAction, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import CampaignDetails from '@/components/blood-donation-registration/campaign-details'
-import { Question as fetchQuestions } from '@/api/campaign'
 import { STEPS } from '@/pages/BloodDonationRegistration'
 
 interface Question {
@@ -38,17 +37,14 @@ const ReviewStep = ({
 }: {
   selectedCampaign: Campaign | null
   questionSetId: number
-  answers: Record<number, string>
+  answers: Record<number, { value: string, description?: string }>
   setCurrentStep: Dispatch<SetStateAction<Step>>
 }) => {
   const [questions, setQuestions] = useState<Question[]>([])
   const [loading, setLoading] = useState(true)
 
   // useEffect(() => {
-  //   if (!questionSetId) {
-  //     setLoading(false)
-  //     return
-  //   }
+  //   if (!questionSetId) return
 
   //   const fetchQuestionData = async () => {
   //     try {
@@ -85,22 +81,29 @@ const ReviewStep = ({
           <h3 className='font-medium text-lg'>Câu trả lời của bạn</h3>
           <div className='bg-gray-50 rounded-lg p-4 space-y-3'>
             {Object.entries(answers).map(([questionId, answer]) => {
-              const questionObj = questions.find(q => q.id === parseInt(questionId));
+              const questionObj = questions.find((q) => q.id === parseInt(questionId))
               return (
-                <div key={questionId} className='flex justify-between text-sm'>
-                  <span className='text-gray-600'>{questionObj?.content || `Câu hỏi ${questionId}`}</span>
-                  <span className='font-medium'>{answer}</span>
+                <div key={questionId} className='flex flex-col space-y-1'>
+                  <div className='flex justify-between text-sm'>
+                    <span className='text-gray-600'>{questionObj?.content || `Câu hỏi ${questionId}`}</span>
+                    <span className='font-medium'>{answer.value}</span>
+                  </div>
+                  {answer.description && (
+                    <div className="text-sm text-gray-500 italic ml-4">
+                      Mô tả: {answer.description}
+                    </div>
+                  )}
                 </div>
-              );
+              )
             })}
           </div>
         </div>
 
         <div className='flex justify-between'>
-          <Button variant='outline' onClick={() => setCurrentStep(STEPS.QUESTIONNAIRE)}>
+          <Button variant='outline' onClick={() => setCurrentStep(1)}>
             Quay lại
           </Button>
-          <Button className='bg-red-600 text-white hover:bg-red-700' onClick={() => setCurrentStep(STEPS.SUCCESS)}>
+          <Button className='bg-red-600 text-white hover:bg-red-700' onClick={() => setCurrentStep(3)}>
             Xác nhận đăng ký
           </Button>
         </div>

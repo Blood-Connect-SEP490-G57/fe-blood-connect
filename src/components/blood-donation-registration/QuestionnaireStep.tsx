@@ -4,19 +4,20 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import Questionnaire from '@/components/blood-donation-registration/questionnaire'
 import { STEPS } from '@/pages/BloodDonationRegistration'
 import { submitAnswers } from '@/api/campaign'
-import { toast } from '@/components/ui/use-toast' // Thêm toast nếu có
+import { toast } from '@/components/ui/use-toast'
+import { AnswerType } from '@/schema/answer-schema'
 
 interface QuestionnaireStepProps {
   questionSetId: number
-  campaignId: number // Thêm campaignId
-  answers: Record<number, string>
-  handleAnswerChange: (questionId: number, answer: string) => void
+  campaignId: number
+  answers: Record<number, { value: string; description?: string }>
+  handleAnswerChange: (questionId: number, value: string, description?: string) => void
   setCurrentStep: (step: number) => void
 }
 
 const QuestionnaireStep: React.FC<QuestionnaireStepProps> = ({
   questionSetId,
-  campaignId,
+  // campaignId,
   answers,
   handleAnswerChange,
   setCurrentStep
@@ -26,20 +27,23 @@ const QuestionnaireStep: React.FC<QuestionnaireStepProps> = ({
   const handleContinue = async () => {
     try {
       setSubmitting(true)
-      // Log để debug
-      console.log('Sending answers:', {
-        campaign_id: campaignId,
-        question_set_id: questionSetId,
-        answer: answers
-      })
-      const result = await submitAnswers({
-        campaign_id: campaignId,
-        question_set_id: questionSetId,
-        answer: answers
-      })
-      console.log('API response:', result)
       
-      // Nếu thành công, chuyển sang bước Review
+      // Chuyển đổi câu trả lời từ Record<number, {value, description}> sang mảng AnswerType
+      const formattedAnswers: AnswerType[] = Object.entries(answers).map(([questionId, data]) => ({
+        subQuestionId: parseInt(questionId),
+        answerText: data.value,
+        description: data.description || ''
+      }));
+      
+      // Log để debug
+      console.log('Sending answers:', formattedAnswers);
+      
+      // Gọi API với mảng các câu trả lời
+      const result = await submitAnswers(formattedAnswers);
+      
+      console.log('API response:', result);
+      
+      // Xử lý kết quả API
       if (result.success) {
         toast?.({
           title: 'Thành công',
@@ -48,7 +52,6 @@ const QuestionnaireStep: React.FC<QuestionnaireStepProps> = ({
         })
         setCurrentStep(STEPS.REVIEW)
       } else {
-        // Hiển thị lỗi nếu server trả về
         toast?.({
           title: 'Có lỗi xảy ra',
           description: result.message || 'Không thể gửi câu trả lời',

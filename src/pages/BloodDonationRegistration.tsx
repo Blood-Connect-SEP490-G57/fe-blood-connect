@@ -20,12 +20,12 @@ const BloodDonationRegistration: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [selectedCampaign, setSelectedCampaign] = useState<any>(null)
   const [questionSetId, setQuestionSetId] = useState<number | null>(null)
-  const [answers, setAnswers] = useState<Record<number, string>>({}) // Đổi string thành number
+  const [answers, setAnswers] = useState<Record<number, { value: string; description?: string }>>({})
 
-  const handleAnswerChange = (questionId: number, answer: string) => {
+  const handleAnswerChange = (questionId: number, value: string, description?: string) => {
     setAnswers((prev) => ({
       ...prev,
-      [questionId]: answer
+      [questionId]: { value, description }
     }))
   }
 
@@ -81,17 +81,18 @@ const BloodDonationRegistration: React.FC = () => {
         return (
           <QuestionnaireStep
             questionSetId={questionSetId ?? 0}
+            campaignId={selectedCampaign?.id ?? 0}
             answers={answers}
-            handleAnswerChange={handleAnswerChange} // Sửa lại đúng tên prop
-            setCurrentStep={setCurrentStep} // Thêm prop này
-            campaignId={selectedCampaign.id}          />
+            handleAnswerChange={handleAnswerChange}
+            setCurrentStep={setCurrentStep}
+          />
         )
       case STEPS.REVIEW:
         return (
           <ReviewStep 
             selectedCampaign={selectedCampaign} 
             answers={answers} 
-            questionSetId={questionSetId ?? 0} // Thêm questionSetId
+            questionSetId={questionSetId ?? 0}
             setCurrentStep={setCurrentStep} 
           />
         )
