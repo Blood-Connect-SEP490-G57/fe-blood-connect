@@ -2,14 +2,12 @@ import axios from 'axios'
 import { refreshAccessToken } from './auth'
 
 // axios.defaults.baseURL = 'http://localhost:8080'
-// axios.defaults.baseURL = 'https://be-blood-connect-623385072086.asia-southeast1.run.app'
 axios.defaults.baseURL = 'https://api.user.giotmauhyvong.org'
 
 axios.defaults.headers.common['Content-Type'] = 'application/json'
 
 export const axiosPrivate = axios.create({
   // baseURL: 'http://localhost:8080',
-  // baseURL: 'https://be-blood-connect-623385072086.asia-southeast1.run.app',
   baseURL: 'https://api.user.giotmauhyvong.org',
 
   headers: {
