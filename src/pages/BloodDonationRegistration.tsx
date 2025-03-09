@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import SelectCampaignStep from '@/components/blood-donation-registration/SelectCampaignStep'
 import ReviewStep from '@/components/blood-donation-registration/ReviewStep'
 import SuccessStep from '@/components/blood-donation-registration/SuccessStep'
@@ -21,6 +21,26 @@ const BloodDonationRegistration: React.FC = () => {
   const [selectedCampaign, setSelectedCampaign] = useState<any>(null)
   const [questionSetId, setQuestionSetId] = useState<number | null>(null)
   const [answers, setAnswers] = useState<Record<number, { value: string; description?: string }>>({})
+
+  // Kiểm tra localStorage khi component được mount
+  useEffect(() => {
+    const savedCampaign = localStorage.getItem('selectedCampaign')
+    if (savedCampaign) {
+      try {
+        const campaignData = JSON.parse(savedCampaign)
+        setSelectedCampaign(campaignData)
+        setQuestionSetId(campaignData.questionSetId)
+        
+        // Chuyển đến bước tiếp theo
+        setCurrentStep(STEPS.QUESTIONNAIRE)
+        
+        // Xóa dữ liệu từ localStorage sau khi đã sử dụng
+        localStorage.removeItem('selectedCampaign')
+      } catch (error) {
+        console.error("Lỗi khi đọc thông tin chiến dịch:", error)
+      }
+    }
+  }, [])
 
   const handleAnswerChange = (questionId: number, value: string, description?: string) => {
     setAnswers((prev) => ({
@@ -89,11 +109,11 @@ const BloodDonationRegistration: React.FC = () => {
         )
       case STEPS.REVIEW:
         return (
-          <ReviewStep 
-            selectedCampaign={selectedCampaign} 
-            answers={answers} 
+          <ReviewStep
+            selectedCampaign={selectedCampaign}
+            answers={answers}
             questionSetId={questionSetId ?? 0}
-            setCurrentStep={setCurrentStep} 
+            setCurrentStep={setCurrentStep}
           />
         )
       case STEPS.SUCCESS:
