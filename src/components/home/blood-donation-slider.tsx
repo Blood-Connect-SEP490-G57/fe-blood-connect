@@ -76,8 +76,12 @@ const BloodDonationSlider: React.FC = () => {
     return <Empty />
   }
 
-  const handleRegistedonate = (campaignId: number): void => {
-    navigate(`/blood-donation-registration/${campaignId}`)
+  const handleRegistedonate = (campaign: CampaignResponse): void => {
+    // Lưu thông tin campaign vào localStorage
+    localStorage.setItem('selectedCampaign', JSON.stringify(campaign))
+
+    // Chuyển hướng đến trang đăng ký
+    navigate('/blood-donation-registration')
   }
 
   return (
@@ -131,7 +135,8 @@ const BloodDonationSlider: React.FC = () => {
                       <button
                         className='mt-6 px-6 py-3 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors duration-400 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2'
                         onClick={() => {
-                          handleRegistedonate(campaign.questionSetId)
+                          // Truyền toàn bộ campaign object
+                          handleRegistedonate(campaign)
                         }}
                       >
                         Đăng ký Ngay

@@ -1,6 +1,20 @@
+import React from 'react'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
+import { motion } from 'framer-motion'
+import { Heart, Droplet, Activity, Award, HelpCircle, Search, Gift } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { useNavigate } from 'react-router-dom'
 
 const FAQPage = () => {
+  const navigate = useNavigate()
+  // Icons for each category
+  const categoryIcons: Record<string, React.ReactNode> = {
+    'Thông tin chung về hiến máu': <Droplet className='w-6 h-6' />,
+    'Quy trình hiến máu': <Activity className='w-6 h-6' />,
+    'Sau khi hiến máu': <Heart className='w-6 h-6' />,
+    'Quyền lợi người hiến máu': <Gift className='w-6 h-6' />
+  }
+
   const faqs = [
     {
       category: 'Thông tin chung về hiến máu',
@@ -65,34 +79,131 @@ const FAQPage = () => {
   ]
 
   return (
-    <div className='min-h-screen bg-gray-50 py-12'>
-      <div className='container mx-auto px-4'>
-        {/* Header Section */}
-        <div className='text-center mb-16'>
-          <h1 className='text-4xl font-bold text-gray-900 mb-4'>Câu Hỏi Thường Gặp</h1>
-          <p className='text-lg text-gray-600 max-w-2xl mx-auto'>Những thông tin cần thiết về hiến máu nhân đạo</p>
+    <div className='min-h-screen bg-gradient-to-b from-red-50 to-white'>
+      {/* Banner hero */}
+      <section className='bg-gradient-to-r from-red-600 to-red-500 text-white py-16 sm:py-24'>
+        <div className='container mx-auto px-4 relative'>
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className='text-center relative z-10'
+          >
+            <h1 className='text-4xl sm:text-5xl lg:text-6xl font-bold mb-4 md:mb-6'>Câu Hỏi Thường Gặp</h1>
+            <p className='text-lg md:text-xl text-white/90 max-w-3xl mx-auto mb-8'>
+              Tìm hiểu thêm về quy trình hiến máu và giải đáp các thắc mắc của bạn
+            </p>
+            <div className='flex items-center justify-center mt-8'>
+              <div className='relative max-w-xl w-full'>
+                <input
+                  type='text'
+                  placeholder='Tìm kiếm câu hỏi...'
+                  className='w-full py-3 px-5 pr-12 rounded-full text-gray-700 focus:outline-none focus:ring-2 focus:ring-red-400 shadow-lg'
+                />
+                <Search className='absolute right-4 top-3.5 text-gray-400' />
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Decorative elements */}
+          <div className='absolute -bottom-10 left-1/4 w-20 h-20 bg-red-400 rounded-full opacity-20'></div>
+          <div className='absolute top-10 right-1/4 w-16 h-16 bg-white rounded-full opacity-10'></div>
+          <div className='absolute bottom-10 right-10 w-32 h-32 bg-red-300 rounded-full opacity-15'></div>
+        </div>
+      </section>
+
+      <div className='container mx-auto px-4 py-12 md:py-20'>
+        {/* Quick links to categories */}
+        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-16'>
+          {faqs.map((category, index) => (
+            <motion.a
+              key={index}
+              href={`#category-${index}`}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              className='bg-white rounded-xl shadow-md hover:shadow-lg transition-all p-6 flex flex-col items-center text-center group'
+            >
+              <div className='w-14 h-14 bg-red-100 rounded-full flex items-center justify-center mb-4 group-hover:bg-red-500 transition-all'>
+                <div className='text-red-500 group-hover:text-white transition-all'>
+                  {categoryIcons[category.category] || <HelpCircle className='w-6 h-6' />}
+                </div>
+              </div>
+              <h3 className='font-medium text-lg text-gray-800'>{category.category}</h3>
+              <p className='text-gray-500 mt-2 text-sm'>{category.questions.length} câu hỏi</p>
+            </motion.a>
+          ))}
         </div>
 
         {/* FAQ Categories */}
-        <div className='max-w-3xl mx-auto'>
+        <div className='max-w-4xl mx-auto'>
           {faqs.map((category, index) => (
-            <div key={index} className='mb-8'>
-              <h2 className='text-2xl font-semibold text-gray-900 mb-4'>{category.category}</h2>
-              <Accordion type='single' collapsible className='bg-white rounded-lg shadow-md'>
+            <motion.div
+              id={`category-${index}`}
+              key={index}
+              className='mb-12 scroll-mt-20'
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+            >
+              <div className='flex items-center mb-6'>
+                <div className='p-3 bg-red-100 rounded-lg mr-4'>
+                  {categoryIcons[category.category] || <HelpCircle className='w-5 h-5 text-red-500' />}
+                </div>
+                <h2 className='text-2xl sm:text-3xl font-semibold text-gray-900'>{category.category}</h2>
+              </div>
+
+              <Accordion type='single' collapsible className='bg-white rounded-2xl shadow-md border border-gray-100'>
                 {category.questions.map((faq, faqIndex) => (
-                  <AccordionItem key={faqIndex} value={`item-${index}-${faqIndex}`}>
-                    <AccordionTrigger className='hover:bg-red-50 px-6 py-4 text-left'>
-                      <span className='text-gray-900'>{faq.question}</span>
+                  <AccordionItem
+                    key={faqIndex}
+                    value={`item-${index}-${faqIndex}`}
+                    className={faqIndex !== category.questions.length - 1 ? 'border-b border-gray-100' : ''}
+                  >
+                    <AccordionTrigger className='hover:bg-red-50/60 px-6 py-5 text-left hover:no-underline group'>
+                      <div className='flex items-center'>
+                        <span className='w-6 h-6 rounded-full bg-red-100 text-red-500 flex items-center justify-center text-xs mr-3 font-medium'>
+                          {faqIndex + 1}
+                        </span>
+                        <span className='text-gray-800 group-hover:text-red-600 transition-colors font-medium'>
+                          {faq.question}
+                        </span>
+                      </div>
                     </AccordionTrigger>
-                    <AccordionContent className='px-6 py-4 text-gray-600 whitespace-pre-line'>
-                      {faq.answer}
+                    <AccordionContent className='px-6 py-5 text-gray-600 whitespace-pre-line bg-gray-50/60'>
+                      <div className='pl-9'>{faq.answer}</div>
                     </AccordionContent>
                   </AccordionItem>
                 ))}
               </Accordion>
-            </div>
+            </motion.div>
           ))}
         </div>
+
+        {/* CTA Section */}
+        <motion.div
+          className='mt-20 text-center bg-gradient-to-r from-red-500 to-red-600 p-10 rounded-3xl shadow-xl max-w-5xl mx-auto'
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+        >
+          <h3 className='text-3xl font-bold text-white mb-4'>Bạn vẫn còn thắc mắc?</h3>
+          <p className='text-white/90 mb-8 max-w-2xl mx-auto'>
+            Nếu bạn không tìm thấy câu trả lời cho thắc mắc của mình, hãy liên hệ với chúng tôi qua hotline hoặc email.
+          </p>
+          <div className='flex flex-col sm:flex-row justify-center gap-4'>
+            <Button onClick={() => navigate('/contact')}
+            variant='default' className='bg-white text-red-600 hover:bg-gray-100 py-6 px-8 text-lg'>
+              <Award className='mr-2 h-5 w-5' />
+              Liên hệ tư vấn
+            </Button>
+            <Button onClick={() => navigate('/blood-donation-registration')} variant='default' className='bg-white text-red-600 hover:bg-gray-100 py-6 px-8 text-lg'>
+              Đăng ký hiến máu
+            </Button>
+          </div>
+        </motion.div>
       </div>
     </div>
   )
