@@ -130,11 +130,8 @@ const SelectCampaignStep = ({
           className='bg-red-600 text-white hover:bg-red-700'
           disabled={!selectedCampaign}
           onClick={() => {
-            console.log('Selected Campaign:', selectedCampaign.id)
             setSelectedCampaign(selectedCampaign)
             setQuestionSetId(selectedCampaign.questionSetId)
-            console.log('Selected Campaign:', selectedCampaign.questionSetId)
-            // setQuestionSetId(502)
             setCurrentStep(1)
           }}
         >
