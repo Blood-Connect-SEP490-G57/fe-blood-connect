@@ -5,6 +5,7 @@ import { useExtractStore } from '@/hooks/stores/useExtractStore'
 import { extractFront, extractBack, getExtractById, updateExtractStatus } from '@/api/extract'
 import { createOrUpdateUserDetail, getCurrentUserDetail } from '@/api/user'
 import { useNavigate } from 'react-router-dom'
+import { getOrganizationsByType, Organization } from '@/api/organization'
 
 interface FormData {
   frontImage: File | null
@@ -21,6 +22,7 @@ interface FormData {
   timeDonation: number
   bloodGroup: string
   extractedInfo?: any
+  organizationId: number | ''
 }
 
 const UserVerification = () => {
@@ -37,7 +39,8 @@ const UserVerification = () => {
     militaryId: '',
     addressContact: '',
     timeDonation: 0,
-    bloodGroup: ''
+    bloodGroup: '',
+    organizationId: ''
   })
 
   const {
@@ -52,6 +55,8 @@ const UserVerification = () => {
   } = useExtractStore()
 
   const navigate = useNavigate()
+
+  const [organizations, setOrganizations] = useState<Organization[]>([])
 
   const frontDropzone = useDropzone({
     accept: {
@@ -266,7 +271,6 @@ const UserVerification = () => {
 
     try {
       setLoading(true)
-
       const userDetailData = {
         email: formData.email,
         job_name: formData.jobName,
@@ -274,7 +278,8 @@ const UserVerification = () => {
         military_id: formData.militaryId,
         address_contact: formData.addressContact,
         time_donation: Number(formData.timeDonation),
-        blood_group: formData.bloodGroup
+        blood_group: formData.bloodGroup,
+        organization_id: Number(formData.organizationId)
       }
 
       const response = await createOrUpdateUserDetail(userDetailData)
@@ -423,7 +428,8 @@ const UserVerification = () => {
               militaryId: userData.military_id || '',
               addressContact: userData.address_contact || '',
               timeDonation: userData.time_donation || 0,
-              bloodGroup: userData.blood_group || ''
+              bloodGroup: userData.blood_group || '',
+              organizationId: userData.organization_id ?? '',
             }))
           } else {
             console.error('Invalid response format:', response)
@@ -440,6 +446,21 @@ const UserVerification = () => {
 
     fetchUserDetail()
   }, [step])
+
+  useEffect(() => {
+    const fetchOrganizations = async () => {
+      try {
+        const response = await getOrganizationsByType(3)
+        setOrganizations(Array.isArray(response.data) ? response.data : [])
+      } catch (err) {
+        console.error('Error fetching organizations:', err)
+        setError('Không thể tải danh sách tổ chức')
+        setOrganizations([])
+      }
+    }
+
+    fetchOrganizations()
+  }, [])
 
   const renderStep2 = () => (
     <div className='space-y-6'>
@@ -559,6 +580,19 @@ const UserVerification = () => {
                 placeholder='Nghề nghiệp'
                 className='w-full p-2 border rounded'
               />
+              <select
+                name='organizationId'
+                value={formData.organizationId}
+                onChange={handleInputChange}
+                className='w-full p-2 border rounded'
+              >
+                <option value=''>Chọn đơn vị trực thuộc</option>
+                {Array.isArray(organizations) && organizations.map((org) => (
+                  <option key={org.id} value={org.id}>
+                    {org.name}
+                  </option>
+                ))}
+              </select>
               <input
                 type='text'
                 name='studentId'
@@ -586,7 +620,7 @@ const UserVerification = () => {
               <input
                 type='number'
                 name='timeDonation'
-                value={formData.timeDonation}
+                value={formData.timeDonation || ''}
                 onChange={handleInputChange}
                 placeholder='Số lần hiến máu'
                 className='w-full p-2 border rounded'
@@ -657,6 +691,25 @@ const UserVerification = () => {
             </React.Fragment>
           ))}
         </div>
+      </div>
+
+      <div className='flex justify-between mb-4'>
+        {step > 1 && (
+          <button
+            onClick={() => setStep(step - 1)}
+            className='px-4 py-2 bg-secondary text-accent rounded hover:bg-secondary/80'
+          >
+            Quay lại
+          </button>
+        )}
+        {step < 4 && (
+          <button
+            onClick={() => setStep(step + 1)}
+            className='px-4 py-2 bg-primary text-white rounded hover:bg-primary/80 ml-auto'
+          >
+            Tiếp tục
+          </button>
+        )}
       </div>
 
       {renderStep()}

@@ -27,32 +27,7 @@ const initialState: ExtractState = {
   error: null
 }
 
-// interface ExtractResponse {
-//   id: number
-//   extract_id: string
-//   card_type: string
-//   extract_status: string
-//   card_id: string
-//   name: string
-//   dob: string
-//   gender: string
-//   national: string
-//   home: string
-//   address: string
-//   doe: string
-//   issue_loc: string
-//   issue_date: string
-//   features: string
-//   data: CardData
-//   score_front: number
-//   score_back: number
-//   input_source: string
-//   is_active: boolean
-//   card_images: {
-//     front: string
-//     back: string
-//   }
-// }
+//
 
 export const useExtractStore = create<ExtractState & ExtractActions>()(
   devtools(

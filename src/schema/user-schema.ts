@@ -7,6 +7,7 @@ export const UserFullInfoResponseSchema = z.object({
   mobile: z.string(),
   enable: z.boolean(),
   status: z.number(),
+  organization_id: z.number(),
 
   // User Detail info
   job_name: z.string(),
@@ -44,7 +45,8 @@ export const userDetailSchema = z.object({
   military_id: z.string().optional(),
   address_contact: z.string().min(1, 'Vui lòng nhập địa chỉ liên hệ'),
   time_donation: z.number().min(0, 'Số lần hiến máu không hợp lệ'),
-  blood_group: z.string().min(1, 'Vui lòng chọn nhóm máu')
+  blood_group: z.string().min(1, 'Vui lòng chọn nhóm máu'),
+  organization_id: z.number().min(1, 'Vui lòng chọn tổ chức')
 })
 
 export type UserDetailType = z.infer<typeof userDetailSchema>
@@ -60,5 +62,6 @@ export interface UserDetailResponse {
     address_contact: string
     time_donation: number
     blood_group: string
+    organization_id: number
   }
 }
