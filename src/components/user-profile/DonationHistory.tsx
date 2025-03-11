@@ -1,8 +1,8 @@
 import { Calendar, MapPin, CheckCircle, XCircle, AlertCircle, Droplet, StickyNote, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { useEffect, useState } from 'react'
-import { getHistory } from '@/api/history'
+import { useEffect, useRef, useState } from 'react'
+import { getHistory } from '@/api/appointment'
 import { toast } from '@/components/ui/use-toast'
 
 interface DonationAppointment {
@@ -22,49 +22,53 @@ const DonationHistory = () => {
   const [appointments, setAppointments] = useState<DonationAppointment[]>([])
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
+  const hasFetched = useRef(false)
 
   useEffect(() => {
+    if (hasFetched.current) return
+    hasFetched.current = true
+    
     const fetchDonationHistory = async () => {
       try {
         setLoading(true)
         const response = await getHistory()
-        
+
         if (response.success && Array.isArray(response.data)) {
           // Map API response to our interface
           const formattedAppointments: DonationAppointment[] = response.data.map((item: any) => {
             // Chuyển đổi status sang định dạng frontend
-            let status: 'completed' | 'cancelled' | 'pending' | 'upcoming';
+            let status: 'completed' | 'cancelled' | 'pending' | 'upcoming'
             switch (item.status) {
               case 'BOOKING':
-                status = 'upcoming';
-                break;
+                status = 'upcoming'
+                break
               case 'COMPLETED':
-                status = 'completed';
-                break;
+                status = 'completed'
+                break
               case 'CANCELLED':
-                status = 'cancelled';
-                break;
+                status = 'cancelled'
+                break
               default:
-                status = 'pending';
+                status = 'pending'
             }
 
             // Xử lý định dạng ngày và giờ từ mảng
-            let date = '';
-            let time = '';
+            let date = ''
+            let time = ''
             if (Array.isArray(item.appointmentDate) && item.appointmentDate.length >= 3) {
-              const [year, month, day, hour, minute] = item.appointmentDate;
+              const [year, month, day, hour, minute] = item.appointmentDate
               // Tạo date string với định dạng YYYY-MM-DD
-              date = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
-              
+              date = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`
+
               // Tạo time string với định dạng HH:MM
               if (hour !== undefined && minute !== undefined) {
-                time = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+                time = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`
               }
             } else if (item.appointmentDate) {
               // Nếu appointmentDate là một string hoặc timestamp
-              const dateObj = new Date(item.appointmentDate);
-              date = dateObj.toISOString().split('T')[0];
-              time = dateObj.toTimeString().substring(0, 5);
+              const dateObj = new Date(item.appointmentDate)
+              date = dateObj.toISOString().split('T')[0]
+              time = dateObj.toTimeString().substring(0, 5)
             }
 
             // Định dạng dữ liệu để phù hợp với component
@@ -80,9 +84,9 @@ const DonationHistory = () => {
               bloodType: undefined,
               amount: undefined,
               notes: undefined
-            };
-          });
-          
+            }
+          })
+
           setAppointments(formattedAppointments)
         } else {
           setError('Không thể tải dữ liệu lịch sử hiến máu')
@@ -112,11 +116,9 @@ const DonationHistory = () => {
           description: 'Lịch hẹn của bạn đã được hủy thành công',
           variant: 'default'
         })
-        
+
         // Cập nhật state sau khi hủy thành công
-        setAppointments(prev => 
-          prev.map(app => app.id === appointmentId ? {...app, status: 'cancelled'} : app)
-        )
+        setAppointments((prev) => prev.map((app) => (app.id === appointmentId ? { ...app, status: 'cancelled' } : app)))
       } catch (error) {
         toast({
           title: 'Có lỗi xảy ra',
@@ -170,10 +172,7 @@ const DonationHistory = () => {
           <div className='bg-red-50 p-6 rounded-lg text-center'>
             <XCircle className='h-12 w-12 text-red-500 mx-auto mb-4' />
             <p className='text-red-700'>{error}</p>
-            <Button 
-              onClick={() => window.location.reload()} 
-              className='mt-4 bg-red-600 hover:bg-red-700 text-white'
-            >
+            <Button onClick={() => window.location.reload()} className='mt-4 bg-red-600 hover:bg-red-700 text-white'>
               Thử lại
             </Button>
           </div>
@@ -218,10 +217,12 @@ const DonationHistory = () => {
           <div className='bg-white rounded-lg shadow-md p-8 text-center'>
             <Calendar className='h-16 w-16 text-gray-400 mx-auto mb-4' />
             <h3 className='text-xl font-semibold text-gray-700 mb-2'>Chưa có lịch sử hiến máu</h3>
-            <p className='text-gray-500 mb-6'>Bạn chưa có lịch hẹn hiến máu nào. Hãy đăng ký hiến máu để cứu sống nhiều người!</p>
-            <Button 
+            <p className='text-gray-500 mb-6'>
+              Bạn chưa có lịch hẹn hiến máu nào. Hãy đăng ký hiến máu để cứu sống nhiều người!
+            </p>
+            <Button
               className='bg-red-600 hover:bg-red-700 text-white'
-              onClick={() => window.location.href = '/blood-donation-registration'}
+              onClick={() => (window.location.href = '/blood-donation-registration')}
             >
               Đăng ký hiến máu ngay
             </Button>
