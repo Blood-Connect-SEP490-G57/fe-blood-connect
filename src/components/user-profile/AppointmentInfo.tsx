@@ -30,9 +30,9 @@ interface UserInfo {
   dob: string
   gender: string
   jobName: string
-  organizationId: number
+  organizationName: number
   address: string
-  identityUnitNumber: string
+  issueLoc: string
   addressContact: string
   phoneNumber: string
   email: string
@@ -71,7 +71,6 @@ const AppointmentInfo = () => {
   useEffect(() => {
     if (hasFetched.current) return
     hasFetched.current = true
-    
     const fetchAppointmentInfo = async () => {
       try {
         setLoading(true)
@@ -202,10 +201,10 @@ const AppointmentInfo = () => {
     { icon: Calendar, label: 'Ngày sinh', value: formatDate(userInfo.dob) },
     { icon: Baby, label: 'Giới tính', value: userInfo.gender },
     { icon: Briefcase, label: 'Nghề nghiệp', value: userInfo.jobName },
-    { icon: Building, label: 'Đơn vị', value: userInfo.organizationId?.toString() },
+    { icon: Building, label: 'Đơn vị', value: userInfo.organizationName},
     { icon: Droplet, label: 'Nhóm máu', value: userInfo.bloodGroup },
     { icon: MapPin, label: 'Địa chỉ thường trú', value: userInfo.address },
-    { icon: CreditCard, label: 'Nơi cấp CCCD', value: userInfo.identityUnitNumber }
+    { icon: CreditCard, label: 'Nơi cấp CCCD', value: userInfo.issueLoc }
   ]
 
   const contactInfoItems = [
