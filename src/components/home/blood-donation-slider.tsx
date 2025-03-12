@@ -83,7 +83,7 @@ const BloodDonationSlider: React.FC = () => {
   }
 
   return (
-    <div className='max-w-7xl mx-auto py-8'>
+    <div className='max-w-7xl mx-auto py-8' id='blood-donation-slider'>
       {campaigns.length === 0 ? (
         <div className='text-center py-12'>
           <h2 className='text-2xl font-bold text-gray-700'>Không có sự kiện nào</h2>
