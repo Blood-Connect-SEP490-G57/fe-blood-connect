@@ -2,7 +2,7 @@ import React from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Bell, Shield, Lock, AlertTriangle } from 'lucide-react'
+import {  Shield, Lock, AlertTriangle } from 'lucide-react'
 import { Switch } from '@/components/ui/switch'
 import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
@@ -26,7 +26,7 @@ const Settings = () => {
 
         <div className='max-w-3xl mx-auto space-y-6'>
           {/* Notification Settings */}
-          <Card>
+          {/* <Card>
             <CardHeader>
               <CardTitle className='text-xl text-red-600 flex items-center gap-2'>
                 <Bell className='w-5 h-5' />
@@ -50,7 +50,7 @@ const Settings = () => {
                 <Switch />
               </div>
             </CardContent>
-          </Card>
+          </Card> */}
 
           {/* Security Settings */}
           <Card>
