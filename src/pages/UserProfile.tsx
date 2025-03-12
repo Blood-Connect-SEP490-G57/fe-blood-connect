@@ -1,15 +1,18 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
-import { Calendar, CheckCircle, History, Info, User } from 'lucide-react'
+import { Calendar, CheckCircle, History, Info, User, Loader2 } from 'lucide-react'
 import Profile from '@/components/user-profile/Profile'
 import AppointmentInfo from '@/components/user-profile/AppointmentInfo'
 import DonationHistory from '@/components/user-profile/DonationHistory'
 import UserVerification from '@/components/user-profile/UserVerification'
+import { CheckExtractStatus } from '@/api/extract'
+import { toast } from '@/components/ui/use-toast'
 
 const UserProfilePage: React.FC = () => {
   const [selectedOption, setSelectedOption] = useState<string>('profile')
-  // const [isMobileMenuOpen] = useState(false)
-
+  const [isCheckingStatus, setIsCheckingStatus] = useState(true)
+  const [isVerified, setIsVerified] = useState(false)
+  const hasFetched = useRef(false)
   // Effect to initialize state on mount from the URL hash
   useEffect(() => {
     const handleHashChange = () => {
@@ -18,7 +21,6 @@ const UserProfilePage: React.FC = () => {
         setSelectedOption(hash)
       }
     }
-
     // Set the initial option from URL
     handleHashChange()
 
@@ -36,7 +38,50 @@ const UserProfilePage: React.FC = () => {
     // Update the URL hash without reloading the page
     window.location.hash = option
   }
+
+  useEffect(() => {
+    if (hasFetched.current) return
+    hasFetched.current = true
+    const checkVerificationStatus = async () => {
+      try {
+        setIsCheckingStatus(true)
+        const response = await CheckExtractStatus()
+
+        if (response.success && response.data) {
+          // Status = 1 nghĩa là đã xác thực
+          setIsVerified(response.data.status === 1)
+
+          // Nếu người dùng đã xác thực nhưng đang ở tab verification, chuyển họ về profile
+          if (response.data.status === 1 && selectedOption === 'verification') {
+            setSelectedOption('profile')
+            window.location.hash = 'profile'
+          }
+        }
+      } catch (error) {
+        console.error('Error checking verification status:', error)
+        toast({
+          title: 'Lỗi kiểm tra trạng thái',
+          description: 'Không thể kiểm tra trạng thái xác thực',
+          variant: 'destructive'
+        })
+      } finally {
+        setIsCheckingStatus(false)
+      }
+    }
+
+    checkVerificationStatus()
+  }, [selectedOption])
+
   const renderContent = () => {
+    if (isCheckingStatus) {
+      return (
+        <div className='flex flex-col items-center justify-center h-full py-12'>
+          <Loader2 className='h-8 w-8 animate-spin text-red-600 mb-4' />
+          <p className='text-gray-600'>Đang tải thông tin...</p>
+        </div>
+      )
+    }
+
     switch (selectedOption) {
       case 'profile':
         return <Profile />
@@ -45,7 +90,8 @@ const UserProfilePage: React.FC = () => {
       case 'appointment-history':
         return <DonationHistory />
       case 'verification':
-        return <UserVerification />
+        // Chỉ hiển thị UserVerification nếu chưa xác thực
+        return isVerified ? <Profile /> : <UserVerification />
       default:
         return <Profile />
     }
@@ -54,8 +100,6 @@ const UserProfilePage: React.FC = () => {
   return (
     <div className='flex flex-col md:flex-row min-h-screen bg-gray-100'>
       <div className='hidden md:block w-full md:w-1/4 p-4 bg-white shadow-lg'>
-        {' '}
-        {/* Use hidden md:block */}
         <Card className='border-none'>
           <CardHeader>
             <CardTitle className='text-xl text-red-600 flex items-center gap-2'>
@@ -91,15 +135,19 @@ const UserProfilePage: React.FC = () => {
               <History className='w-5 h-5' />
               Lịch sử đặt hẹn
             </button>
-            <button
-              className={`w-full text-left p-2 rounded-md flex items-center gap-2 ${
-                selectedOption === 'verification' ? 'bg-red-100' : ''
-              }`}
-              onClick={() => handleOptionClick('verification')}
-            >
-              <CheckCircle className='w-5 h-5' />
-              Xác thực tài khoản
-            </button>
+
+            {/* Chỉ hiển thị nút Xác thực tài khoản nếu chưa xác thực */}
+            {!isVerified && (
+              <button
+                className={`w-full text-left p-2 rounded-md flex items-center gap-2 ${
+                  selectedOption === 'verification' ? 'bg-red-100' : ''
+                }`}
+                onClick={() => handleOptionClick('verification')}
+              >
+                <CheckCircle className='w-5 h-5' />
+                Xác thực tài khoản
+              </button>
+            )}
           </CardContent>
         </Card>
       </div>
