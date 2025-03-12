@@ -1,4 +1,4 @@
-import { Calendar, MapPin, CheckCircle, XCircle, AlertCircle, Droplet, StickyNote, Loader2 } from 'lucide-react'
+import { Calendar, MapPin, CheckCircle, XCircle, AlertCircle, Droplet, StickyNote } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { useEffect, useRef, useState } from 'react'
@@ -154,9 +154,9 @@ const DonationHistory = () => {
   // Trạng thái loading
   if (loading) {
     return (
-      <div className='flex flex-col items-center justify-center py-12 space-y-4'>
-        <Loader2 className='w-8 h-8 animate-spin text-red-600' />
-        <p className='text-gray-600'>Đang tải lịch sử hiến máu...</p>
+      <div className='flex items-center justify-center mt-12'>
+        <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-primary'></div>
+        <span className='ml-2'>Đang xử lý...</span>
       </div>
     )
   }

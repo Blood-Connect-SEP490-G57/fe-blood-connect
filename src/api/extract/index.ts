@@ -38,3 +38,12 @@ export const updateExtractStatus = async (extract_id: string, extract_status: st
   const response = await apiPostCall('/status', { extract_id, extract_status })
   return response.data
 }
+
+export const CheckExtractStatus = async () => {
+  const response = await axios.get('/api/users/user-status', {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('access_token')}`
+    }
+  })
+  return response.data
+}

@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { MapPin, Calendar, Users, ChevronLeft, ChevronRight } from 'lucide-react'
+import { MapPin, Calendar, Users, ChevronLeft, ChevronRight, Info } from 'lucide-react'
 import { Campaign as fetchCampaigns } from '@/api/campaign'
 import { CampaignResponse } from '@/schema/campaign-schema'
 import { useNavigate } from 'react-router-dom'
 import Loading from '../warnings/loading'
 import Empty from '../warnings/empty'
+
 const BloodDonationSlider: React.FC = () => {
   const navigate = useNavigate()
   const [campaigns, setCampaigns] = useState<CampaignResponse[]>([])
@@ -14,7 +15,7 @@ const BloodDonationSlider: React.FC = () => {
   const hasFetched = useRef(false)
 
   useEffect(() => {
-    if (hasFetched.current) return // Nếu đã fetch thì không gọi lại
+    if (hasFetched.current) return
     hasFetched.current = true
 
     const fetchCampaignsData = async () => {
@@ -77,10 +78,7 @@ const BloodDonationSlider: React.FC = () => {
   }
 
   const handleRegistedonate = (campaign: CampaignResponse): void => {
-    // Lưu thông tin campaign vào localStorage
     localStorage.setItem('selectedCampaign', JSON.stringify(campaign))
-
-    // Chuyển hướng đến trang đăng ký
     navigate('/blood-donation-registration')
   }
 
@@ -91,56 +89,73 @@ const BloodDonationSlider: React.FC = () => {
           <h2 className='text-2xl font-bold text-gray-700'>Không có sự kiện nào</h2>
         </div>
       ) : (
-        <div className='relative overflow-hidden rounded-lg shadow-lg max-w-7xl bg-card p-4 md:p-8'>
-          <h2 className='text-3xl font-bold mb-12 text-center'>Sự Kiện Sắp Diễn Ra</h2>
+        <div className='relative overflow-hidden rounded-lg shadow-lg max-w-7xl bg-white p-6 md:p-10 border'>
+          <h2 className='text-3xl font-bold text-red-600 mb-12 text-center'>SỰ KIỆN HIẾN MÁU</h2>
           <div
-            className='flex transition-transform duration-500 ease-in-out mb-4'
+            className='flex transition-transform duration-700 ease-in-out mb-6'
             style={{ transform: `translateX(-${currentSlide * 100}%)` }}
           >
             {campaigns.map((campaign) => (
               <div key={campaign.id} className='w-full flex-shrink-0 relative'>
-                <div className='flex flex-col md:flex-row'>
+                <div className='flex flex-col md:flex-row p-4'>
                   <div className='md:w-1/2 h-64 md:h-96 relative overflow-hidden'>
                     <img
                       src={'https://images.unsplash.com/photo-1615461066841-6116e61058f4'}
                       alt={campaign.name}
-                      className='w-full h-full object-cover'
+                      className='w-full h-full object-cover rounded-lg'
                     />
                   </div>
                   <div className='md:w-1/2 p-6 md:p-8 flex flex-col justify-center'>
-                    <h2 className='text-2xl font-heading text-foreground mb-4'>{campaign.name}</h2>
+                    <h2 className='text-2xl font-bold text-black mb-4'>{campaign.name}</h2>
+
                     <div className='space-y-4'>
-                      <div className='flex items-center text-accent'>
-                        <MapPin className='mr-2 text-gray-600' />
-                        <span className='text-gray-600'>Địa điểm: {campaign.location}</span>
+                      <div className='flex items-center text-black'>
+                        <MapPin className='mr-2 text-red-600' />
+                        <span>Địa điểm: {campaign.location}</span>
                       </div>
-                      <div className='flex items-center text-accent'>
-                        <Calendar className='mr-2 text-gray-600' />
-                        <span className='text-gray-600'>
+                      <div className='flex items-center text-black'>
+                        <Calendar className='mr-2 text-red-600' />
+                        <span>
                           Thời gian đăng ký: {formatDateTime(campaign.startReceiveTime)} -{' '}
                           {formatDateTime(campaign.endReceiveTime)}
                         </span>
                       </div>
-                      <div className='flex items-center text-accent'>
-                        <Calendar className='mr-2 text-gray-600' />
-                        <span className='text-gray-600'>
-                          Thời gian tổ chức: {formatDateTime(campaign.organizeTime)}
-                        </span>
+                      <div className='flex items-center text-black'>
+                        <Calendar className='mr-2 text-red-600' />
+                        <span>Thời gian tổ chức: {formatDateTime(campaign.organizeTime)}</span>
+                      </div>
+                      <div className='flex flex-col text-black'>
+                        <div className='flex items-center mb-1'>
+                          <Info className='mr-2 text-red-600 flex-shrink-0' />
+                          <span>Mô tả sự kiện:</span>
+                        </div>
+                        <span className='text-gray-700 pl-6 ml-4'>{campaign.description}</span>
                       </div>
 
-                      <div className='flex items-center text-accent'>
-                        <Users className='mr-2 text-gray-600' />
-                        <span className='text-gray-600'>Số người: {campaign.targetBloodUnits} Đã đăng ký</span>
+                      <div className='flex items-center text-black'>
+                        <Users className='mr-2 text-red-600' />
+                        <span>
+                          Số người: {campaign.appointmentCount} / {campaign.targetBloodUnits} Đã đăng ký
+                        </span>
                       </div>
-                      <button
-                        className='mt-6 px-6 py-3 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors duration-400 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2'
-                        onClick={() => {
-                          // Truyền toàn bộ campaign object
-                          handleRegistedonate(campaign)
-                        }}
-                      >
-                        Đăng ký Ngay
-                      </button>
+                      {/* Thanh Progress Bar Thu Nhỏ */}
+                      <div className='w-full bg-gray-200 rounded-full h-2 mt-2 overflow-hidden'>
+                        <div
+                          className='h-full bg-red-600 transition-all duration-500'
+                          style={{
+                            width: `${Math.min((campaign.appointmentCount / campaign.targetBloodUnits) * 100, 100)}%`
+                          }}
+                        />
+                      </div>
+
+                      <div className='flex justify-end mt-6'>
+                        <button
+                          className='px-6 py-3 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors duration-300'
+                          onClick={() => handleRegistedonate(campaign)}
+                        >
+                          Đăng ký ngay
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -152,32 +167,17 @@ const BloodDonationSlider: React.FC = () => {
             <>
               <button
                 onClick={handlePrevious}
-                className='absolute left-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/80 text-foreground hover:bg-white transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary'
-                aria-label='Previous slide'
+                className='absolute left-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-red-600 text-white hover:bg-red-700 transition-colors duration-200'
               >
                 <ChevronLeft className='w-6 h-6' />
               </button>
 
               <button
                 onClick={handleNext}
-                className='absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/80 text-foreground hover:bg-white transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary'
-                aria-label='Next slide'
+                className='absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-red-600 text-white hover:bg-red-700 transition-colors duration-200'
               >
                 <ChevronRight className='w-6 h-6' />
               </button>
-
-              <div className='absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2'>
-                {campaigns.map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setCurrentSlide(index)}
-                    className={`w-3 h-3 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary ${
-                      currentSlide === index ? 'bg-primary' : 'bg-gray-300'
-                    }`}
-                    aria-label={`Go to slide ${index + 1}`}
-                  />
-                ))}
-              </div>
             </>
           )}
         </div>

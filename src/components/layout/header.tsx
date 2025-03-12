@@ -5,7 +5,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
@@ -107,21 +106,11 @@ const Header: React.FC = () => {
                     <Button variant='ghost' className='relative h-8 w-8 rounded-full'>
                       <UserAvatar
                         size='sm'
-                        user={{
-                          name: 'Be Minh',
-                          image: undefined
-                        }}
+                       
                       />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className='w-56' align='end' forceMount>
-                    <DropdownMenuLabel className='font-normal'>
-                      <div className='flex flex-col space-y-1'>
-                        <p className='text-sm font-medium leading-none'>{'Be Minh'}</p>
-                        <p className='text-xs leading-none text-muted-foreground'>{'be.minh@example.com'}</p>
-                      </div>
-                    </DropdownMenuLabel>
-                    <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={() => navigate('/user-profile-page')}>
                       <User className='mr-2 h-4 w-4' />
                       <span>Hồ sơ cá nhân</span>

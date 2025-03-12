@@ -70,7 +70,8 @@ const Profile = () => {
           dob: response.dob || '',
           gender: response.gender || '',
           national: response.national || '',
-          address: response.address || ''
+          address: response.address || '',
+          home: response.home || ''
         })
       } catch (err) {
         console.error('Error fetching user data:', err)
@@ -99,7 +100,12 @@ const Profile = () => {
   }
 
   if (loading) {
-    return <div>Loading...</div>
+    return (
+      <div className='flex items-center justify-center mt-12'>
+        <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-primary'></div>
+        <span className='ml-2'>Đang xử lý...</span>
+      </div>
+    )
   }
 
   if (error) {
@@ -225,20 +231,8 @@ const Profile = () => {
                           )}
                         />
                       </div>
+
                       <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-                        <FormField
-                          control={form.control}
-                          name='address_contact'
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Địa chỉ hiện tại</FormLabel>
-                              <FormControl>
-                                <Input {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
                         <FormField
                           control={form.control}
                           name='time_donation'
@@ -246,13 +240,40 @@ const Profile = () => {
                             <FormItem>
                               <FormLabel>Số lần hiến máu</FormLabel>
                               <FormControl>
-                                <Input {...field} />
+                                <Input {...field} readOnly/>
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={form.control}
+                          name='home'
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Nơi thường trú</FormLabel>
+                              <FormControl>
+                                <Input {...field} readOnly/>
                               </FormControl>
                               <FormMessage />
                             </FormItem>
                           )}
                         />
                       </div>
+                      <FormField
+                        control={form.control}
+                        name='address'
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Quê quán</FormLabel>
+                            <FormControl>
+                              <Input {...field} readOnly/>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
                     </div>
                   </div>
 
@@ -260,21 +281,20 @@ const Profile = () => {
                   <div>
                     <h2 className='text-lg font-semibold mb-4'>Thông tin liên hệ</h2>
                     <div className='grid grid-cols-1 gap-6'>
-                      <FormField
-                        control={form.control}
-                        name='address'
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Địa chỉ liên hệ</FormLabel>
-                            <FormControl>
-                              <Input {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
                       <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+                        <FormField
+                          control={form.control}
+                          name='address_contact'
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Địa chỉ liên hệ</FormLabel>
+                              <FormControl>
+                                <Input {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
                         <FormField
                           control={form.control}
                           name='mobile'
@@ -288,7 +308,9 @@ const Profile = () => {
                             </FormItem>
                           )}
                         />
+                      </div>
 
+                      <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
                         <FormField
                           control={form.control}
                           name='email'
@@ -302,9 +324,6 @@ const Profile = () => {
                             </FormItem>
                           )}
                         />
-                      </div>
-
-                      <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
                         <FormField
                           control={form.control}
                           name='job_name'
@@ -318,20 +337,6 @@ const Profile = () => {
                             </FormItem>
                           )}
                         />
-
-                        {/* <FormField
-                          control={form.control}
-                          name='organization'
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Đơn vị</FormLabel>
-                              <FormControl>
-                                <Input {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        /> */}
                       </div>
                     </div>
                   </div>
