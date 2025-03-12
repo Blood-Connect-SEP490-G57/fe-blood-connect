@@ -48,10 +48,7 @@ const UserProfilePage: React.FC = () => {
         const response = await CheckExtractStatus()
 
         if (response.success && response.data) {
-          // Status = 1 nghĩa là đã xác thực
           setIsVerified(response.data.status === 1)
-
-          // Nếu người dùng đã xác thực nhưng đang ở tab verification, chuyển họ về profile
           if (response.data.status === 1 && selectedOption === 'verification') {
             setSelectedOption('profile')
             window.location.hash = 'profile'
@@ -99,7 +96,7 @@ const UserProfilePage: React.FC = () => {
 
   return (
     <div className='flex flex-col md:flex-row min-h-screen bg-gray-100'>
-      <div className='hidden md:block w-full md:w-1/4 p-4 bg-white shadow-lg'>
+      <div className='hidden md:block w-1/5 p-4 bg-white shadow-lg sticky top-0 h-screen overflow-y-auto'>
         <Card className='border-none'>
           <CardHeader>
             <CardTitle className='text-xl text-red-600 flex items-center gap-2'>
@@ -136,7 +133,6 @@ const UserProfilePage: React.FC = () => {
               Lịch sử đặt hẹn
             </button>
 
-            {/* Chỉ hiển thị nút Xác thực tài khoản nếu chưa xác thực */}
             {!isVerified && (
               <button
                 className={`w-full text-left p-2 rounded-md flex items-center gap-2 ${
@@ -151,7 +147,7 @@ const UserProfilePage: React.FC = () => {
           </CardContent>
         </Card>
       </div>
-      <div className='w-full md:w-3/4 p-4'>{renderContent()}</div>
+      <div className='w-4/5 p-6'>{renderContent()}</div>
     </div>
   )
 }
