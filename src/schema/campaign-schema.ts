@@ -10,6 +10,7 @@ export const CampaignResponseSchema = z.object({
   organizeTime: z.string().datetime(),
   officialDocumentUrl: z.string(),
   targetBloodUnits: z.number(),
+  appointmentCount: z.number(),
   bloodGroup: z.number(),
   status: z.number(),
   organizationHoldId: z.number(),
