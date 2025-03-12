@@ -105,3 +105,13 @@ export const cancelAppointment = async (id: string): Promise<any> => {
   })
   return response.data
 }
+
+export const ValidRegisterDonate = async (): Promise<any> => {
+  const response = await axios.get('/api/campaigns/validationregister', {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${localStorage.getItem('access_token')}`
+    }
+  })
+  return response.data
+}

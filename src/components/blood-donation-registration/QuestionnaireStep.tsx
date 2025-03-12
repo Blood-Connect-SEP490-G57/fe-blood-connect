@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog'
 import { useNavigate } from 'react-router-dom'
 import { AlertTriangle } from 'lucide-react'
-import { CheckExtractStatus } from '@/api/extract'
+import { ValidRegisterDonate } from '@/api/campaign'
 
 interface QuestionnaireStepProps {
   questionSetId: number
@@ -23,6 +23,8 @@ const QuestionnaireStep: React.FC<QuestionnaireStepProps> = ({
   setCurrentStep
 }) => {
   const [showVerificationDialog, setShowVerificationDialog] = useState(false)
+  const [dialogMessage, setDialogMessage] = useState<string>('')
+  const [statusType, setStatusType] = useState<string>('')
   const [isCheckingStatus, setIsCheckingStatus] = useState(true)
   const navigate = useNavigate()
   const hasFetched = useRef(false)
@@ -31,13 +33,18 @@ const QuestionnaireStep: React.FC<QuestionnaireStepProps> = ({
   useEffect(() => {
     if (hasFetched.current) return
     hasFetched.current = true
+
     const checkVerificationStatus = async () => {
       try {
         setIsCheckingStatus(true)
-        const response = await CheckExtractStatus()
-        
+        const response = await ValidRegisterDonate()
+
         if (response.success && response.data) {
-          if (response.data.status === 0) {
+          const { status, message } = response.data
+
+          if (status !== 'SUCCESS') {
+            setStatusType(status)
+            setDialogMessage(message)
             setShowVerificationDialog(true)
           }
         }
@@ -47,7 +54,7 @@ const QuestionnaireStep: React.FC<QuestionnaireStepProps> = ({
         setIsCheckingStatus(false)
       }
     }
-    
+
     checkVerificationStatus()
   }, [])
 
@@ -55,52 +62,54 @@ const QuestionnaireStep: React.FC<QuestionnaireStepProps> = ({
     setCurrentStep(STEPS.REVIEW)
   }
 
-  const handleRedirectToVerification = () => {
-    navigate('/verification/user-profile-page#verification')
+  const handleRedirect = () => {
+    switch (statusType) {
+      case 'NOT_VERIFIED':
+        navigate('/verification/user-profile-page#verification')
+        break
+      case 'ALREADY_REGISTERED':
+        navigate('/blood-donation-history')
+        break
+      default:
+        setShowVerificationDialog(false)
+    }
   }
 
   return (
     <>
-      {/* Dialog xác thực danh tính */}
+      {/* Dialog thông báo trạng thái đăng ký */}
       <Dialog open={showVerificationDialog} onOpenChange={setShowVerificationDialog}>
         <DialogContent className="sm:max-w-md">
-          <div className="flex items-center gap-3 mb-2 text-amber-500">
+          <div className="flex items-center gap-3 mb-2 text-red-600">
             <AlertTriangle className="h-6 w-6" />
-            <DialogTitle>Yêu cầu xác thực danh tính</DialogTitle>
+            <DialogTitle>Thông báo đăng ký</DialogTitle>
           </div>
           <DialogDescription className="text-gray-600">
-            Để đăng ký hiến máu, bạn cần xác thực danh tính bằng CCCD/CMND. Vui lòng hoàn thành bước xác thực trước khi tiếp tục.
+            {dialogMessage}
           </DialogDescription>
-          
-          <div className="bg-amber-50 border border-amber-100 rounded p-3 my-4">
-            <p className="text-sm text-amber-700">
-              <span className="font-medium">Lưu ý:</span> Quá trình xác thực chỉ diễn ra một lần và cần hình ảnh chụp mặt trước và sau của CCCD/CMND.
-            </p>
-          </div>
-          
+
           <DialogFooter className="flex flex-col sm:flex-row gap-2 sm:gap-0">
             <Button
               variant="outline"
               className="w-full sm:w-auto"
-              onClick={() => {
-                setShowVerificationDialog(false)
-                navigate('/')
-              }}
+              onClick={() => setShowVerificationDialog(false)}
             >
-              Để sau
+              Đóng
             </Button>
-            <Button 
-              className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white" 
-              onClick={handleRedirectToVerification}
-            >
-              Đến trang xác thực
-            </Button>
+            {(statusType === 'NOT_VERIFIED' || statusType === 'ALREADY_REGISTERED') && (
+              <Button
+                className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white"
+                onClick={handleRedirect}
+              >
+                {statusType === 'NOT_VERIFIED' ? 'Xác thực ngay' : 'Xem lịch sử'}
+              </Button>
+            )}
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
-      <div className='space-y-6'>
-        <Card className='border-none shadow-lg mb-6'>
+      <div className="space-y-6">
+        <Card className="border-none shadow-lg mb-6">
           <CardHeader>
             <CardTitle>Bảng câu hỏi sức khỏe</CardTitle>
             <CardDescription>Vui lòng trả lời các câu hỏi sau để đảm bảo bạn đủ điều kiện hiến máu</CardDescription>
@@ -110,13 +119,13 @@ const QuestionnaireStep: React.FC<QuestionnaireStepProps> = ({
           </CardContent>
         </Card>
 
-        <div className='flex justify-between py-4 border-t'>
-          <Button variant='outline' onClick={() => setCurrentStep(STEPS.SELECT_CAMPAIGN)}>
+        <div className="flex justify-between py-4 border-t">
+          <Button variant="outline" onClick={() => setCurrentStep(STEPS.SELECT_CAMPAIGN)}>
             Quay lại
           </Button>
-          <Button 
-            className='bg-blue-600 text-white hover:bg-blue-700' 
-            onClick={handleContinue} 
+          <Button
+            className="bg-blue-600 text-white hover:bg-blue-700"
+            onClick={handleContinue}
             disabled={!hasValidAnswers || isCheckingStatus}
           >
             Tiếp tục
