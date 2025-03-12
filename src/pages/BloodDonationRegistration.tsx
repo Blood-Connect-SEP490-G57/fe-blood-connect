@@ -30,14 +30,14 @@ const BloodDonationRegistration: React.FC = () => {
         const campaignData = JSON.parse(savedCampaign)
         setSelectedCampaign(campaignData)
         setQuestionSetId(campaignData.questionSetId)
-        
+
         // Chuyển đến bước tiếp theo
         setCurrentStep(STEPS.QUESTIONNAIRE)
-        
+
         // Xóa dữ liệu từ localStorage sau khi đã sử dụng
         localStorage.removeItem('selectedCampaign')
       } catch (error) {
-        console.error("Lỗi khi đọc thông tin chiến dịch:", error)
+        console.error('Lỗi khi đọc thông tin chiến dịch:', error)
       }
     }
   }, [])

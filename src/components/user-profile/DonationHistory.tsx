@@ -27,7 +27,7 @@ const DonationHistory = () => {
   useEffect(() => {
     if (hasFetched.current) return
     hasFetched.current = true
-    
+
     const fetchDonationHistory = async () => {
       try {
         setLoading(true)

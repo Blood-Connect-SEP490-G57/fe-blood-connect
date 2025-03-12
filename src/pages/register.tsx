@@ -25,27 +25,24 @@ export default function Register() {
     }
   })
 
-  const { mutate: register, isLoading } = useMutation(
-    (data: RegisterType) => registerUser(data),
-    {
-      onSuccess: () => {
+  const { mutate: register, isLoading } = useMutation((data: RegisterType) => registerUser(data), {
+    onSuccess: () => {
+      toast({
+        title: 'Đăng ký thành công',
+        description: 'Vui lòng đăng nhập để tiếp tục'
+      })
+      navigate('/login')
+    },
+    onError: (error: Error) => {
+      if (isAxiosError(error)) {
         toast({
-          title: 'Đăng ký thành công',
-          description: 'Vui lòng đăng nhập để tiếp tục'
+          variant: 'destructive',
+          title: 'Đã có lỗi xảy ra',
+          description: error.response?.data?.message
         })
-        navigate('/login')
-      },
-      onError: (error: Error) => {
-        if (isAxiosError(error)) {
-          toast({
-            variant: 'destructive',
-            title: 'Đã có lỗi xảy ra',
-            description: error.response?.data?.message
-          })
-        }
       }
     }
-  )
+  })
 
   const onSubmit = (data: RegisterType) => {
     register(data)

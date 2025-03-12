@@ -194,12 +194,19 @@ const FAQPage = () => {
             Nếu bạn không tìm thấy câu trả lời cho thắc mắc của mình, hãy liên hệ với chúng tôi qua hotline hoặc email.
           </p>
           <div className='flex flex-col sm:flex-row justify-center gap-4'>
-            <Button onClick={() => navigate('/contact')}
-            variant='default' className='bg-white text-red-600 hover:bg-gray-100 py-6 px-8 text-lg'>
+            <Button
+              onClick={() => navigate('/contact')}
+              variant='default'
+              className='bg-white text-red-600 hover:bg-gray-100 py-6 px-8 text-lg'
+            >
               <Award className='mr-2 h-5 w-5' />
               Liên hệ tư vấn
             </Button>
-            <Button onClick={() => navigate('/blood-donation-registration')} variant='default' className='bg-white text-red-600 hover:bg-gray-100 py-6 px-8 text-lg'>
+            <Button
+              onClick={() => navigate('/blood-donation-registration')}
+              variant='default'
+              className='bg-white text-red-600 hover:bg-gray-100 py-6 px-8 text-lg'
+            >
               Đăng ký hiến máu
             </Button>
           </div>

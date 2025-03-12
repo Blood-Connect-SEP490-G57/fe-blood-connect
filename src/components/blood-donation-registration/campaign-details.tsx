@@ -52,7 +52,6 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({ campaign }) => {
           </h3>
           <p className='text-gray-600'>{campaign.description}</p>
         </div>
-       
       </CardContent>
     </Card>
   )

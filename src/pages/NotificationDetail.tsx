@@ -95,11 +95,7 @@ const NotificationDetail = () => {
               <div className='flex gap-2 min-w-max'>
                 <TabsList className='bg-white border border-gray-200'>
                   {tabs.map((tabs) => (
-                    <TabsTrigger
-                      key={tabs.value}
-                      value={tabs.value}
-                      className='whitespace-nowrap'
-                    >
+                    <TabsTrigger key={tabs.value} value={tabs.value} className='whitespace-nowrap'>
                       {tabs.title}
                     </TabsTrigger>
                   ))}

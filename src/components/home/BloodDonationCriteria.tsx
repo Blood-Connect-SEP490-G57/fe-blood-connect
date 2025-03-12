@@ -77,16 +77,16 @@ const BloodDonationCriteria = () => {
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.2, duration: 0.5 }}
                     viewport={{ once: true }}
-                    className="mb-4 sm:mb-6 md:mb-8"
+                    className='mb-4 sm:mb-6 md:mb-8'
                   >
                     <h3 className='text-xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-2 sm:mb-4 md:mb-6 text-white leading-tight'>
-                      Cứu người thật <span className="text-red-400">dễ dàng</span>
+                      Cứu người thật <span className='text-red-400'>dễ dàng</span>
                     </h3>
                     {/* Phiên bản rút gọn cho mobile */}
                     <p className='text-white/90 mb-4 text-xs leading-tight block sm:hidden'>
                       Mỗi đơn vị máu hiến tặng có thể cứu sống tới 3 người.
                     </p>
-                    
+
                     {/* Phiên bản đầy đủ cho tablet trở lên */}
                     <p className='text-white/90 mb-4 sm:mb-6 md:mb-8 text-sm sm:text-lg md:text-xl max-w-4xl leading-normal sm:leading-relaxed hidden sm:block'>
                       Mỗi đơn vị máu hiến tặng có thể cứu sống tới 3 người. Hành động nhỏ của bạn hôm nay có thể tạo nên
@@ -101,7 +101,7 @@ const BloodDonationCriteria = () => {
                   >
                     <Link to='/blood-donation-registration'>
                       <Button className='bg-red-600 hover:bg-red-700 hover:scale-105 transform transition-all text-white flex items-center text-xs sm:text-base md:text-lg py-1.5 sm:py-2.5 md:py-4 px-3 sm:px-5 md:px-8 rounded-md sm:rounded-lg md:rounded-xl touch-manipulation'>
-                        <span className="mr-1 sm:mr-2">Đăng ký ngay</span>
+                        <span className='mr-1 sm:mr-2'>Đăng ký ngay</span>
                         <ArrowRight className='h-3 w-3 sm:h-5 sm:w-5 md:h-6 md:w-6' />
                       </Button>
                     </Link>
@@ -124,9 +124,7 @@ const BloodDonationCriteria = () => {
               whileHover={{ y: -5 }}
             >
               <CardContent className='flex items-start gap-3 sm:gap-4 p-4 sm:p-5 md:p-6'>
-                <div className='p-2 sm:p-3 bg-red-50 rounded-full shrink-0'>
-                  {criterion.icon}
-                </div>
+                <div className='p-2 sm:p-3 bg-red-50 rounded-full shrink-0'>{criterion.icon}</div>
                 <p className='text-gray-700 leading-relaxed text-sm sm:text-base'>{criterion.text}</p>
               </CardContent>
             </MotionCard>

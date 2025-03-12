@@ -47,13 +47,17 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
               element={
                 <Protected tokenRequired={true} destination='/login'>
                   <BloodDonationRegistration />
-                </Protected>} />
+                </Protected>
+              }
+            />
             <Route
-              path='/user-profile-page' element={
+              path='/user-profile-page'
+              element={
                 <Protected tokenRequired={true} destination='/login'>
                   <UserProfilePage />
                 </Protected>
-              } />
+              }
+            />
             <Route
               path='/settings'
               element={
@@ -64,11 +68,13 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
             />
             <Route path='/forgot-password' element={<ForgotPassword />} />
             <Route
-              path='/notifications' element={
+              path='/notifications'
+              element={
                 <Protected tokenRequired={true} destination='/login'>
                   <NotificationDetail />
                 </Protected>
-              } />
+              }
+            />
             <Route path='*' element={<Navigate to='/' />} />
           </Routes>
         </MainLayout>

@@ -50,12 +50,7 @@ interface ReviewStepProps {
   setCurrentStep: Dispatch<SetStateAction<Step>>
 }
 
-const ReviewStep: React.FC<ReviewStepProps> = ({
-  selectedCampaign,
-  questionSetId,
-  answers,
-  setCurrentStep
-}) => {
+const ReviewStep: React.FC<ReviewStepProps> = ({ selectedCampaign, questionSetId, answers, setCurrentStep }) => {
   // State hooks
   const [questions, setQuestions] = useState<Question[]>([])
   const [loading, setLoading] = useState(true)
@@ -68,7 +63,7 @@ const ReviewStep: React.FC<ReviewStepProps> = ({
   useEffect(() => {
     if (!questionSetId || hasFetched.current) return
     hasFetched.current = true
-    
+
     const fetchData = async () => {
       setLoading(true)
 
@@ -78,7 +73,7 @@ const ReviewStep: React.FC<ReviewStepProps> = ({
           try {
             const response = await getAnswersByCampaignId(selectedCampaign.id)
             const hasAnswers = response.success && Array.isArray(response.data) && response.data.length > 0
-            
+
             if (hasAnswers) {
               const formattedAnswers: ApiAnswer[] = response.data.answers.map((answer: any) => ({
                 id: answer.id,
@@ -136,38 +131,38 @@ const ReviewStep: React.FC<ReviewStepProps> = ({
 
     try {
       setSubmitting(true)
-      
+
       // Lọc ra những câu trả lời có giá trị (không rỗng)
       const validAnswers = Object.entries(answers).filter(([_, data]) => data.value.trim() !== '')
-      
+
       // Chuyển đổi câu trả lời thành định dạng API yêu cầu
       const formattedAnswers: AnswerType[] = validAnswers.map(([sub_question_id, data]) => ({
         subQuestionId: parseInt(sub_question_id),
         answerText: data.value,
         description: data.description || ''
       }))
-      
+
       // Tạo payload
       const payload = {
         answers: formattedAnswers,
         campaignId: selectedCampaign?.id || 0
       }
-      
+
       // Gọi API để lưu câu trả lời
       const result = await submitAnswers(payload)
-      
+
       if (result.success) {
         toast({
           title: 'Đăng ký thành công',
           description: 'Đăng ký hiến máu của bạn đã được ghi nhận',
-          variant: 'default',
+          variant: 'default'
         })
         setCurrentStep(STEPS.SUCCESS)
       } else {
         toast({
           title: 'Có lỗi xảy ra',
           description: result.message || 'Không thể đăng ký hiến máu',
-          variant: 'destructive',
+          variant: 'destructive'
         })
       }
     } catch (error) {
@@ -175,7 +170,7 @@ const ReviewStep: React.FC<ReviewStepProps> = ({
       toast({
         title: 'Có lỗi xảy ra',
         description: 'Không thể đăng ký hiến máu. Vui lòng thử lại sau.',
-        variant: 'destructive',
+        variant: 'destructive'
       })
     } finally {
       setSubmitting(false)
@@ -202,12 +197,12 @@ const ReviewStep: React.FC<ReviewStepProps> = ({
             questionText: answer.questionText,
             questionOrder: answer.questionOrder,
             answers: []
-          };
+          }
         }
-        acc[answer.questionText].answers.push(answer);
-        return acc;
-      }, {} as Record<string, { questionText: string, questionOrder: number, answers: ApiAnswer[] }>);
-      
+        acc[answer.questionText].answers.push(answer)
+        return acc
+      }, {} as Record<string, { questionText: string; questionOrder: number; answers: ApiAnswer[] }>)
+
       // Chuyển đổi từ object sang array và sắp xếp theo questionOrder
       return Object.values(groupedAnswers)
         .sort((a, b) => a.questionOrder - b.questionOrder)
@@ -224,15 +219,13 @@ const ReviewStep: React.FC<ReviewStepProps> = ({
                     <span className='font-medium'>{answer.subQuestionContent}</span>
                   </div>
                   {answer.description && (
-                    <div className='text-gray-500 italic ml-4 mt-1'>
-                      Mô tả: {answer.description}
-                    </div>
+                    <div className='text-gray-500 italic ml-4 mt-1'>Mô tả: {answer.description}</div>
                   )}
                 </div>
               ))}
             </div>
           </div>
-        ));
+        ))
     }
 
     if (Object.keys(answers).length === 0) {
@@ -240,55 +233,59 @@ const ReviewStep: React.FC<ReviewStepProps> = ({
         <div className='bg-yellow-50 p-4 rounded-lg'>
           <p className='text-yellow-800'>Chưa có câu trả lời nào</p>
         </div>
-      );
+      )
     }
 
     // Nhóm các câu trả lời theo câu hỏi chính
     const groupedAnswers = Object.entries(answers)
       .filter(([_, data]) => data.value.trim() !== '')
-      .reduce((groups, [subQuestionId, answer]) => {
-        // Tìm câu hỏi chứa subQuestionId này
-        const questionWithSub = questions.find((q) => 
-          q.subs.some((s) => s.sub_question_id === parseInt(subQuestionId))
-        );
-        
-        if (!questionWithSub) return groups;
-        
-        const questionId = questionWithSub.id;
-        
-        // Khởi tạo nhóm nếu chưa có
-        if (!groups[questionId]) {
-          groups[questionId] = {
-            question: questionWithSub,
-            subAnswers: []
-          };
-        }
-        
-        // Tìm sub question cụ thể
-        const subQuestion = questionWithSub.subs.find(
-          (s) => s.sub_question_id === parseInt(subQuestionId)
-        );
-        
-        if (subQuestion) {
-          groups[questionId].subAnswers.push({
-            subQuestionId: parseInt(subQuestionId),
-            subContent: subQuestion.content,
-            value: answer.value,
-            description: answer.description
-          });
-        }
-        
-        return groups;
-      }, {} as Record<number, {
-        question: Question;
-        subAnswers: Array<{
-          subQuestionId: number;
-          subContent: string;
-          value: string;
-          description?: string;
-        }>;
-      }>);
-    
+      .reduce(
+        (groups, [subQuestionId, answer]) => {
+          // Tìm câu hỏi chứa subQuestionId này
+          const questionWithSub = questions.find((q) =>
+            q.subs.some((s) => s.sub_question_id === parseInt(subQuestionId))
+          )
+
+          if (!questionWithSub) return groups
+
+          const questionId = questionWithSub.id
+
+          // Khởi tạo nhóm nếu chưa có
+          if (!groups[questionId]) {
+            groups[questionId] = {
+              question: questionWithSub,
+              subAnswers: []
+            }
+          }
+
+          // Tìm sub question cụ thể
+          const subQuestion = questionWithSub.subs.find((s) => s.sub_question_id === parseInt(subQuestionId))
+
+          if (subQuestion) {
+            groups[questionId].subAnswers.push({
+              subQuestionId: parseInt(subQuestionId),
+              subContent: subQuestion.content,
+              value: answer.value,
+              description: answer.description
+            })
+          }
+
+          return groups
+        },
+        {} as Record<
+          number,
+          {
+            question: Question
+            subAnswers: Array<{
+              subQuestionId: number
+              subContent: string
+              value: string
+              description?: string
+            }>
+          }
+        >
+      )
+
     // Chuyển đổi từ object sang array và sắp xếp theo order
     return Object.values(groupedAnswers)
       .sort((a, b) => a.question.order - b.question.order)
@@ -305,16 +302,14 @@ const ReviewStep: React.FC<ReviewStepProps> = ({
                   <span className='font-medium'>{subAnswer.subContent}</span>
                 </div>
                 {subAnswer.description && (
-                  <div className='text-gray-500 italic ml-4 mt-1'>
-                    Mô tả: {subAnswer.description}
-                  </div>
+                  <div className='text-gray-500 italic ml-4 mt-1'>Mô tả: {subAnswer.description}</div>
                 )}
               </div>
             ))}
           </div>
         </div>
-      ));
-  };
+      ))
+  }
 
   return (
     <Card className='border-none shadow-lg'>
@@ -344,9 +339,7 @@ const ReviewStep: React.FC<ReviewStepProps> = ({
         {/* Answers display */}
         <div className='space-y-4'>
           <h3 className='font-medium text-lg'>Câu trả lời của bạn</h3>
-          <div className='bg-gray-50 rounded-lg p-4 space-y-3'>
-            {renderAnswers()}
-          </div>
+          <div className='bg-gray-50 rounded-lg p-4 space-y-3'>{renderAnswers()}</div>
         </div>
 
         {/* Navigation buttons */}
@@ -363,10 +356,14 @@ const ReviewStep: React.FC<ReviewStepProps> = ({
           >
             {submitting ? (
               <>
-                <span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></span>
+                <span className='mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent'></span>
                 Đang xử lý...
               </>
-            ) : hasApiData ? 'Đóng' : 'Xác nhận đăng ký'}
+            ) : hasApiData ? (
+              'Đóng'
+            ) : (
+              'Xác nhận đăng ký'
+            )}
           </Button>
         </div>
       </CardContent>

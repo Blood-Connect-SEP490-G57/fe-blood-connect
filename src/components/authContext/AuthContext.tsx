@@ -19,11 +19,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setIsLoggedIn(!!token)
   }, [])
 
-  return (
-    <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn }}>
-      {children}
-    </AuthContext.Provider>
-  )
+  return <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn }}>{children}</AuthContext.Provider>
 }
 
 export const useAuth = () => {

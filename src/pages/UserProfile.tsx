@@ -53,7 +53,9 @@ const UserProfilePage: React.FC = () => {
 
   return (
     <div className='flex flex-col md:flex-row min-h-screen bg-gray-100'>
-      <div className='hidden md:block w-full md:w-1/4 p-4 bg-white shadow-lg'> {/* Use hidden md:block */}
+      <div className='hidden md:block w-full md:w-1/4 p-4 bg-white shadow-lg'>
+        {' '}
+        {/* Use hidden md:block */}
         <Card className='border-none'>
           <CardHeader>
             <CardTitle className='text-xl text-red-600 flex items-center gap-2'>
