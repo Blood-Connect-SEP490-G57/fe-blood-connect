@@ -1,8 +1,6 @@
 import { Card, CardContent } from '@/components/ui/card'
-import { CreditCard, User, Heart, Scale, Calendar, TestTube, ChevronRight, ArrowRight } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { CreditCard, User, Heart, Scale, Calendar, TestTube } from 'lucide-react'
 import { motion } from 'framer-motion'
-import { Link } from 'react-router-dom'
 
 // Sử dụng framer-motion để tạo hiệu ứng
 const MotionCard = motion(Card)
@@ -42,7 +40,10 @@ const BloodDonationCriteria = () => {
   ]
 
   return (
-    <section className='py-16 sm:py-24 md:py-32 bg-gradient-to-br from-red-600 via-red-500 to-red-400'>
+    <section
+      className='py-16 sm:py-24 md:py-32 bg-gradient-to-br from-red-600 via-red-500 to-red-400'
+      id='blood-donation-criteria'
+    >
       <div className='container mx-auto px-4'>
         <div className='text-center mb-12 sm:mb-16 md:mb-20'>
           <h2 className='text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-3 md:mb-4'>
@@ -67,7 +68,7 @@ const BloodDonationCriteria = () => {
             <CardContent className='p-0'>
               <div className='relative h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px] overflow-hidden'>
                 <img
-                  src='/images/img1.jpg'
+                  src='/images/landing/hm4.jpg'
                   alt='Blood Donation'
                   className='w-full h-full object-cover transition-transform duration-700 hover:scale-105'
                 />
@@ -98,14 +99,7 @@ const BloodDonationCriteria = () => {
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.4, duration: 0.5 }}
                     viewport={{ once: true }}
-                  >
-                    <Link to='/blood-donation-registration'>
-                      <Button className='bg-red-600 hover:bg-red-700 hover:scale-105 transform transition-all text-white flex items-center text-xs sm:text-base md:text-lg py-1.5 sm:py-2.5 md:py-4 px-3 sm:px-5 md:px-8 rounded-md sm:rounded-lg md:rounded-xl touch-manipulation'>
-                        <span className='mr-1 sm:mr-2'>Đăng ký ngay</span>
-                        <ArrowRight className='h-3 w-3 sm:h-5 sm:w-5 md:h-6 md:w-6' />
-                      </Button>
-                    </Link>
-                  </motion.div>
+                  ></motion.div>
                 </div>
               </div>
             </CardContent>
@@ -131,14 +125,14 @@ const BloodDonationCriteria = () => {
           ))}
         </div>
 
-        <div className='text-center mt-10 sm:mt-12 md:mt-16'>
+        {/* <div className='text-center mt-10 sm:mt-12 md:mt-16'>
           <Link to='/blood-donation-registration'>
             <Button className='bg-white hover:bg-gray-100 text-red-600 font-medium px-4 sm:px-8 md:px-10 py-2 sm:py-5 md:py-6 text-sm sm:text-lg md:text-xl rounded-lg sm:rounded-xl shadow-lg hover:shadow-xl transition-all hover:scale-105 touch-manipulation'>
               Đăng ký hiến máu ngay
               <ChevronRight className='ml-1 sm:ml-2 h-3 w-3 sm:h-5 sm:w-5 md:h-6 md:w-6' />
             </Button>
           </Link>
-        </div>
+        </div> */}
       </div>
     </section>
   )
