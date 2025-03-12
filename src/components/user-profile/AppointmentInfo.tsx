@@ -14,7 +14,6 @@ import {
   Contact,
   Clock,
   AlertCircle,
-  Loader2,
   ClipboardList
 } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
@@ -169,11 +168,9 @@ const AppointmentInfo = () => {
 
   if (loading) {
     return (
-      <div className='min-h-screen bg-white py-12'>
-        <div className='container mx-auto px-4 flex flex-col items-center justify-center'>
-          <Loader2 className='w-8 h-8 animate-spin text-red-600 mb-4' />
-          <p>Đang tải thông tin...</p>
-        </div>
+      <div className='flex items-center justify-center mt-12'>
+        <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-primary'></div>
+        <span className='ml-2'>Đang xử lý...</span>
       </div>
     )
   }

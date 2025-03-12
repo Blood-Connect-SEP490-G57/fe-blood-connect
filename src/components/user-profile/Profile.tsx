@@ -101,7 +101,7 @@ const Profile = () => {
 
   if (loading) {
     return (
-      <div className='flex items-center justify-center'>
+      <div className='flex items-center justify-center mt-12'>
         <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-primary'></div>
         <span className='ml-2'>Đang xử lý...</span>
       </div>
