@@ -100,7 +100,12 @@ const Profile = () => {
   }
 
   if (loading) {
-    return <div>Loading...</div>
+    return (
+      <div className='flex items-center justify-center'>
+        <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-primary'></div>
+        <span className='ml-2'>Đang xử lý...</span>
+      </div>
+    )
   }
 
   if (error) {
@@ -235,7 +240,7 @@ const Profile = () => {
                             <FormItem>
                               <FormLabel>Số lần hiến máu</FormLabel>
                               <FormControl>
-                                <Input {...field} />
+                                <Input {...field} readOnly/>
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -249,7 +254,7 @@ const Profile = () => {
                             <FormItem>
                               <FormLabel>Nơi thường trú</FormLabel>
                               <FormControl>
-                                <Input {...field} />
+                                <Input {...field} readOnly/>
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -263,7 +268,7 @@ const Profile = () => {
                           <FormItem>
                             <FormLabel>Quê quán</FormLabel>
                             <FormControl>
-                              <Input {...field} />
+                              <Input {...field} readOnly/>
                             </FormControl>
                             <FormMessage />
                           </FormItem>
