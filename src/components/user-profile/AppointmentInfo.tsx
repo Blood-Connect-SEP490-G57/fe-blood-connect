@@ -201,7 +201,7 @@ const AppointmentInfo = () => {
     { icon: Calendar, label: 'Ngày sinh', value: formatDate(userInfo.dob) },
     { icon: Baby, label: 'Giới tính', value: userInfo.gender },
     { icon: Briefcase, label: 'Nghề nghiệp', value: userInfo.jobName },
-    { icon: Building, label: 'Đơn vị', value: userInfo.organizationName},
+    { icon: Building, label: 'Đơn vị', value: userInfo.organizationName },
     { icon: Droplet, label: 'Nhóm máu', value: userInfo.bloodGroup },
     { icon: MapPin, label: 'Địa chỉ thường trú', value: userInfo.address },
     { icon: CreditCard, label: 'Nơi cấp CCCD', value: userInfo.issueLoc }

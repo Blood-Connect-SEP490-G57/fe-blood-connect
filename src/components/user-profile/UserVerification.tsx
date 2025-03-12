@@ -429,7 +429,7 @@ const UserVerification = () => {
               addressContact: userData.address_contact || '',
               timeDonation: userData.time_donation || 0,
               bloodGroup: userData.blood_group || '',
-              organizationId: userData.organization_id ?? '',
+              organizationId: userData.organization_id ?? ''
             }))
           } else {
             console.error('Invalid response format:', response)
@@ -587,11 +587,12 @@ const UserVerification = () => {
                 className='w-full p-2 border rounded'
               >
                 <option value=''>Chọn đơn vị trực thuộc</option>
-                {Array.isArray(organizations) && organizations.map((org) => (
-                  <option key={org.id} value={org.id}>
-                    {org.name}
-                  </option>
-                ))}
+                {Array.isArray(organizations) &&
+                  organizations.map((org) => (
+                    <option key={org.id} value={org.id}>
+                      {org.name}
+                    </option>
+                  ))}
               </select>
               <input
                 type='text'

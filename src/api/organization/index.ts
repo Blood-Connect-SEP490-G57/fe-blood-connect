@@ -11,4 +11,4 @@ export interface Organization {
 export const getOrganizationsByType = async (type: number) => {
   const response = await apiGetCall(`/organizations/by-type/${type}`)
   return response.data
-} 
+}

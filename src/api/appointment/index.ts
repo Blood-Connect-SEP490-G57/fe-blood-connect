@@ -1,4 +1,4 @@
-import axios from "axios"
+import axios from 'axios'
 
 export const getCurrent = async (): Promise<any> => {
   const response = await axios.get('/api/appointments/current', {
@@ -8,7 +8,7 @@ export const getCurrent = async (): Promise<any> => {
     }
   })
   return response.data
-}   
+}
 
 export const getHistory = async (): Promise<any> => {
   const response = await axios.get('/api/appointments/history', {
@@ -18,4 +18,4 @@ export const getHistory = async (): Promise<any> => {
     }
   })
   return response.data
-}  
+}

@@ -75,14 +75,15 @@ const Header: React.FC = () => {
                 if (!isLoggedIn && (item.name === 'LỊCH HẸN CỦA TÔI' || item.name === 'LỊCH SỬ ĐẶT HẸN')) {
                   return false
                 }
-                return item.name !== 'THÔNG TIN CÁ NHÂN' && item.name !== 'XÁC THỰC TÀI KHOẢN' && item.name !== 'TRANG CHỦ'
+                return (
+                  item.name !== 'THÔNG TIN CÁ NHÂN' && item.name !== 'XÁC THỰC TÀI KHOẢN' && item.name !== 'TRANG CHỦ'
+                )
               }) // Exclude these items from desktop
               .map((item) => (
                 <a key={item.name} href={item.href} className='text-gray-700 hover:text-primary transition-colors'>
                   {item.name}
                 </a>
               ))}
-
           </div>
           <div className='hidden xl:flex items-center space-x-4'>
             {isLoggedIn ? (
@@ -116,7 +117,7 @@ const Header: React.FC = () => {
                   <DropdownMenuContent className='w-56' align='end' forceMount>
                     <DropdownMenuLabel className='font-normal'>
                       <div className='flex flex-col space-y-1'>
-                        <p className='text-sm font-medium leading-none'>{"Be Minh"}</p>
+                        <p className='text-sm font-medium leading-none'>{'Be Minh'}</p>
                         <p className='text-xs leading-none text-muted-foreground'>{'be.minh@example.com'}</p>
                       </div>
                     </DropdownMenuLabel>
@@ -161,22 +162,24 @@ const Header: React.FC = () => {
 
           {/* Mobile menu button */}
           <div className='xl:hidden flex items-center space-x-2'>
-            {isLoggedIn && location.pathname !== '/login' && location.pathname !== '/register' && ( // Check if not on login page
-              <Button
-                variant='ghost'
-                onClick={() => {
-                  setIsMobileNotiOpen((prev) => !prev)
-                }}
-                className='group p-inherit text-red-600 hover:text-white hover:bg-red-600 relative'
-              >
-                <div className='relative w-full h-full'>
-                  <Bell className='group-hover:text-white text-red-600 hover:text-white' />
-                  <span className='absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full px-2 hover:bg-red-700 group-hover:bg-red-700'>
-                    1
-                  </span>
-                </div>
-              </Button>
-            )}
+            {isLoggedIn &&
+              location.pathname !== '/login' &&
+              location.pathname !== '/register' && ( // Check if not on login page
+                <Button
+                  variant='ghost'
+                  onClick={() => {
+                    setIsMobileNotiOpen((prev) => !prev)
+                  }}
+                  className='group p-inherit text-red-600 hover:text-white hover:bg-red-600 relative'
+                >
+                  <div className='relative w-full h-full'>
+                    <Bell className='group-hover:text-white text-red-600 hover:text-white' />
+                    <span className='absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full px-2 hover:bg-red-700 group-hover:bg-red-700'>
+                      1
+                    </span>
+                  </div>
+                </Button>
+              )}
             <Button
               variant='ghost'
               size='sm'
@@ -197,8 +200,7 @@ const Header: React.FC = () => {
           }}
           className={`xl:hidden fixed top-0 right-0 h-full w-64 
             bg-white shadow-lg transform transition-transform duration-300 ease-in-out z-50 
-            ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
-            }`}
+            ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}
         >
           <div className='flex flex-col space-y-4 p-4 h-full'>
             <Button
@@ -213,9 +215,13 @@ const Header: React.FC = () => {
             </Button>
             {navigation
               .filter((item) => {
-                if (!isLoggedIn && (item.name === 'LỊCH HẸN CỦA TÔI' || item.name === 'LỊCH SỬ ĐẶT HẸN' ||
-                  item.name === 'THÔNG TIN CÁ NHÂN' || item.name === 'XÁC THỰC TÀI KHOẢN'
-                )) {
+                if (
+                  !isLoggedIn &&
+                  (item.name === 'LỊCH HẸN CỦA TÔI' ||
+                    item.name === 'LỊCH SỬ ĐẶT HẸN' ||
+                    item.name === 'THÔNG TIN CÁ NHÂN' ||
+                    item.name === 'XÁC THỰC TÀI KHOẢN')
+                ) {
                   return false
                 }
                 return true
@@ -237,8 +243,8 @@ const Header: React.FC = () => {
                   variant='outline'
                   className='border-red-600 text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors'
                   onClick={() => {
-                    handleLogout();
-                    setIsMobileMenuOpen(false); // Close menu on click
+                    handleLogout()
+                    setIsMobileMenuOpen(false) // Close menu on click
                   }}
                 >
                   Đăng xuất
@@ -249,8 +255,8 @@ const Header: React.FC = () => {
                     variant='outline'
                     className='border-red-600 text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors'
                     onClick={() => {
-                      handleLoginClick();
-                      setIsMobileMenuOpen(false); // Close menu on click
+                      handleLoginClick()
+                      setIsMobileMenuOpen(false) // Close menu on click
                     }}
                   >
                     Đăng nhập
@@ -259,8 +265,8 @@ const Header: React.FC = () => {
                     variant='default'
                     className='bg-red-600 text-white hover:bg-red-700 transition-colors'
                     onClick={() => {
-                      handleRegisterClick();
-                      setIsMobileMenuOpen(false); // Close menu on click
+                      handleRegisterClick()
+                      setIsMobileMenuOpen(false) // Close menu on click
                     }}
                   >
                     Đăng ký
@@ -288,7 +294,7 @@ const Header: React.FC = () => {
           )}
         </div>
       </nav>
-    </header >
+    </header>
   )
 }
 

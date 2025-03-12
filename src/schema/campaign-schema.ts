@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod'
 
 export const CampaignResponseSchema = z.object({
   id: z.number(),
@@ -16,7 +16,7 @@ export const CampaignResponseSchema = z.object({
   bloodReceiveOrganizationId: z.number(),
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
-  questionSetId: z.number(),
-});
+  questionSetId: z.number()
+})
 
-export type CampaignResponse = z.infer<typeof CampaignResponseSchema>;
+export type CampaignResponse = z.infer<typeof CampaignResponseSchema>

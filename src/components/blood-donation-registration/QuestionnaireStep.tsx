@@ -18,7 +18,7 @@ const QuestionnaireStep: React.FC<QuestionnaireStepProps> = ({
   setCurrentStep
 }) => {
   // Kiểm tra xem có ít nhất một câu trả lời không rỗng
-  const hasValidAnswers = Object.values(answers).some(answer => answer.value.trim() !== '')
+  const hasValidAnswers = Object.values(answers).some((answer) => answer.value.trim() !== '')
 
   const handleContinue = () => {
     // Chuyển đến bước xem lại mà không gọi API
@@ -41,11 +41,7 @@ const QuestionnaireStep: React.FC<QuestionnaireStepProps> = ({
         <Button variant='outline' onClick={() => setCurrentStep(STEPS.SELECT_CAMPAIGN)}>
           Quay lại
         </Button>
-        <Button
-          className='bg-red-600 text-white hover:bg-red-700'
-          onClick={handleContinue}
-          disabled={!hasValidAnswers}
-        >
+        <Button className='bg-red-600 text-white hover:bg-red-700' onClick={handleContinue} disabled={!hasValidAnswers}>
           Tiếp tục
         </Button>
       </div>
