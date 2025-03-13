@@ -337,7 +337,7 @@ const AppointmentInfo = () => {
                     <Button
                       variant='outline'
                       className='border-blue-200 text-red-600 hover:bg-blue-50'
-                      onClick={() => navigate('/history')}
+                      onClick={() => navigate('/')}
                     >
                       Xem lịch sử
                     </Button>
@@ -347,7 +347,6 @@ const AppointmentInfo = () => {
                         variant='outline'
                         className='border-red-200 text-red-600 hover:bg-red-50'
                         onClick={() => {
-                          // TODO: Implement cancel appointment API
                           alert('Chức năng hủy lịch hẹn sẽ được cập nhật sớm')
                         }}
                       >

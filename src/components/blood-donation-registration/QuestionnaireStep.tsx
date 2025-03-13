@@ -92,7 +92,10 @@ const QuestionnaireStep: React.FC<QuestionnaireStepProps> = ({
             <Button
               variant="outline"
               className="w-full sm:w-auto"
-              onClick={() => setShowVerificationDialog(false)}
+              onClick={() => {
+                setShowVerificationDialog(false)
+                navigate('/')
+              }}
             >
               Đóng
             </Button>
