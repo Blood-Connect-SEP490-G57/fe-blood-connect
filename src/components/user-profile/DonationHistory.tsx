@@ -265,7 +265,7 @@ const DonationHistory = () => {
 
                 {appointment.bloodType && (
                   <p className='text-gray-700 flex items-center mb-2 justify-between'>
-                    <div className='flex'>
+                    <div className='flex'> 
                       <Droplet className='h-5 w-5 text-gray-500 mr-2 ' />
                       <strong>Nhóm máu:</strong>
                     </div>
