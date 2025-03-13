@@ -65,7 +65,7 @@ const QuestionnaireStep: React.FC<QuestionnaireStepProps> = ({
   const handleRedirect = () => {
     switch (statusType) {
       case 'NOT_VERIFIED':
-        navigate('/verification/user-profile-page#verification')
+        navigate('/user-profile-page#verification')
         break
       case 'ALREADY_REGISTERED':
         navigate('/blood-donation-history')
