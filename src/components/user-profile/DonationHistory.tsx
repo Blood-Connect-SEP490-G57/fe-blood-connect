@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge'
 import { useEffect, useRef, useState } from 'react'
 import { getHistory } from '@/api/appointment'
 import { toast } from '@/components/ui/use-toast'
+import { cancelAppointment } from '@/api/campaign'
 
 interface DonationAppointment {
   id: number
@@ -11,7 +12,7 @@ interface DonationAppointment {
   time: string
   location: string
   status: 'completed' | 'cancelled' | 'pending' | 'upcoming'
-  campaignId?: number
+  campaignId: number
   campaignName?: string
   bloodType?: string
   amount?: number
@@ -107,10 +108,11 @@ const DonationHistory = () => {
     fetchDonationHistory()
   }, [])
 
-  const handleCancelAppointment = async (appointmentId: number) => {
+  const handleCancelAppointment = async (appointments: DonationAppointment) => {
     if (window.confirm('Bạn có chắc chắn muốn hủy lịch hẹn này không?')) {
       try {
         // TODO: Add API call to cancel appointment
+        await  cancelAppointment(appointments.campaignId)
         toast({
           title: 'Đã hủy lịch hẹn',
           description: 'Lịch hẹn của bạn đã được hủy thành công',
@@ -118,7 +120,7 @@ const DonationHistory = () => {
         })
 
         // Cập nhật state sau khi hủy thành công
-        setAppointments((prev) => prev.map((app) => (app.id === appointmentId ? { ...app, status: 'cancelled' } : app)))
+        setAppointments((prev) => prev.map((app) => (app.id === appointments.id ? { ...app, status: 'cancelled' } : app)))
       } catch (error) {
         toast({
           title: 'Có lỗi xảy ra',
@@ -297,7 +299,7 @@ const DonationHistory = () => {
                       variant='outline'
                       size='sm'
                       className='text-red-600 border-red-600 hover:bg-red-500 hover:text-white'
-                      onClick={() => handleCancelAppointment(appointment.id)}
+                      onClick={() => handleCancelAppointment(appointment)}
                     >
                       Hủy lịch hẹn
                     </Button>
