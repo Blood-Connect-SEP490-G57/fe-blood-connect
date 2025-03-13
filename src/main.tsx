@@ -17,6 +17,7 @@ import Settings from './pages/Settings'
 import UserProfilePage from './pages/UserProfile'
 import ForgotPassword from './pages/ForgotPassword'
 import NotificationDetail from './pages/NotificationDetail.tsx'
+import ScrollToTop from './components/scrollToTop/index.tsx'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -35,6 +36,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <MainLayout>
+          <ScrollToTop />
           <Routes>
             <Route path='/' element={<Home />} />
             <Route path='/register' element={<RegistrationPage />} />

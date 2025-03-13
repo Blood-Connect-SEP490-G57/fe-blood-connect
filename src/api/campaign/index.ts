@@ -96,7 +96,7 @@ export const history = async (): Promise<any> => {
   return response.data
 }
 
-export const cancelAppointment = async (id: string): Promise<any> => {
+export const cancelAppointment = async (id: number): Promise<any> => {
   const response = await axios.delete(`/answer/${id}`, {
     headers: {
       'Content-Type': 'application/json',

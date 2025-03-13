@@ -1,13 +1,13 @@
 import axios from 'axios'
 import { refreshAccessToken } from './auth'
 
-// axios.defaults.baseURL = 'http://localhost:8080'
+// saxios.defaults.baseURL = 'http://localhost:8080'
 axios.defaults.baseURL = 'https://api.user.giotmauhyvong.org'
 
 axios.defaults.headers.common['Content-Type'] = 'application/json'
 
 export const axiosPrivate = axios.create({
-  // baseURL: 'http://localhost:8080',
+// baseURL: 'http://localhost:8080',
   baseURL: 'https://api.user.giotmauhyvong.org',
 
   headers: {

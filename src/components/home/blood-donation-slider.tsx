@@ -89,8 +89,8 @@ const BloodDonationSlider: React.FC = () => {
           <h2 className='text-2xl font-bold text-gray-700'>Không có sự kiện nào</h2>
         </div>
       ) : (
-        <div className='relative overflow-hidden rounded-lg shadow-lg max-w-7xl bg-white p-6 md:p-10 border'>
-          <h2 className='text-3xl font-bold text-red-600 mb-12 text-center'>SỰ KIỆN HIẾN MÁU</h2>
+        <div className='relative overflow-hidden rounded-lg shadow-lg max-w-7xl bg-white border'>
+          <h2 className='text-3xl mt-6 font-bold text-red-600 mb-12 text-center'>SỰ KIỆN HIẾN MÁU</h2>
           <div
             className='flex transition-transform duration-700 ease-in-out mb-6'
             style={{ transform: `translateX(-${currentSlide * 100}%)` }}
