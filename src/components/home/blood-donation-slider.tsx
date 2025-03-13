@@ -109,27 +109,25 @@ const BloodDonationSlider: React.FC = () => {
                     <h2 className='text-2xl font-bold text-black mb-4'>{campaign.name}</h2>
 
                     <div className='space-y-4'>
-                      <div className='flex items-center text-black'>
-                        <MapPin className='mr-2 text-red-600' />
-                        <span>Địa điểm: {campaign.location}</span>
+                      <div className='flex items-start text-black'>
+                        <MapPin className='mr-2 text-red-600 flex-shrink-0' />
+                        <span className='whitespace-normal'>Địa điểm: {campaign.location}</span>
                       </div>
                       <div className='flex items-center text-black'>
                         <Calendar className='mr-2 text-red-600' />
-                        <span>
-                          Thời gian đăng ký: {formatDateTime(campaign.startReceiveTime)} -{' '}
-                          {formatDateTime(campaign.endReceiveTime)}
-                        </span>
+                        <span>Mở đăng ký: {formatDateTime(campaign.startReceiveTime)}</span>
+                      </div>
+                      <div className='flex items-center text-black'>
+                        <Calendar className='mr-2 text-red-600' />
+                        <span>Kết thúc đăng ký: {formatDateTime(campaign.endReceiveTime)}</span>
                       </div>
                       <div className='flex items-center text-black'>
                         <Calendar className='mr-2 text-red-600' />
                         <span>Thời gian tổ chức: {formatDateTime(campaign.organizeTime)}</span>
                       </div>
-                      <div className='flex flex-col text-black'>
-                        <div className='flex items-center mb-1'>
-                          <Info className='mr-2 text-red-600 flex-shrink-0' />
-                          <span>Mô tả sự kiện:</span>
-                        </div>
-                        <span className='text-gray-700 pl-6 ml-4'>{campaign.description}</span>
+                      <div className='flex items-center text-black'>
+                        <Info className='mr-2 text-red-600 flex-shrink-0' />
+                        <span>Mô tả sự kiện: {campaign.description}</span>
                       </div>
 
                       <div className='flex items-center text-black'>
