@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { refreshAccessToken } from './auth'
 
-// saxios.defaults.baseURL = 'http://localhost:8080'
+// axios.defaults.baseURL = 'http://localhost:8080'
 axios.defaults.baseURL = 'https://api.user.giotmauhyvong.org'
 
 axios.defaults.headers.common['Content-Type'] = 'application/json'

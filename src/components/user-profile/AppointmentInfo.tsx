@@ -359,7 +359,7 @@ const AppointmentInfo = () => {
                 <>
                   <p className='text-lg text-gray-600 text-center'>Chưa có phiếu đăng ký hiến máu</p>
                   <Button
-                    className='bg-blue-600 hover:bg-blue-700 text-white'
+                    className='bg-red-600 hover:bg-red-700 text-white'
                     onClick={() => navigate('/blood-donation-registration')}
                   >
                     Đăng ký hiến máu

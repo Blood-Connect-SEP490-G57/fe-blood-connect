@@ -78,20 +78,26 @@ const QuestionnaireStep: React.FC<QuestionnaireStepProps> = ({
   return (
     <>
       {/* Dialog thông báo trạng thái đăng ký */}
-      <Dialog open={showVerificationDialog} onOpenChange={setShowVerificationDialog}>
-        <DialogContent className="sm:max-w-md">
-          <div className="flex items-center gap-3 mb-2 text-red-600">
-            <AlertTriangle className="h-6 w-6" />
+      <Dialog
+        open={showVerificationDialog}
+        onOpenChange={(open) => {
+          setShowVerificationDialog(open)
+          if (!open) {
+            setCurrentStep(STEPS.SELECT_CAMPAIGN)
+          }
+        }}
+      >
+        <DialogContent className='sm:max-w-md'>
+          <div className='flex items-center gap-3 mb-2 text-red-600'>
+            <AlertTriangle className='h-6 w-6' />
             <DialogTitle>Thông báo đăng ký</DialogTitle>
           </div>
-          <DialogDescription className="text-gray-600">
-            {dialogMessage}
-          </DialogDescription>
+          <DialogDescription className='text-gray-600'>{dialogMessage}</DialogDescription>
 
-          <DialogFooter className="flex flex-col sm:flex-row gap-2 sm:gap-0">
+          <DialogFooter className='flex flex-col sm:flex-row gap-2 sm:gap-0'>
             <Button
-              variant="outline"
-              className="w-full sm:w-auto"
+              variant='outline'
+              className='w-full sm:w-auto'
               onClick={() => {
                 setShowVerificationDialog(false)
                 navigate('/')
@@ -100,10 +106,7 @@ const QuestionnaireStep: React.FC<QuestionnaireStepProps> = ({
               Đóng
             </Button>
             {(statusType === 'NOT_VERIFIED' || statusType === 'ALREADY_REGISTERED') && (
-              <Button
-                className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white"
-                onClick={handleRedirect}
-              >
+              <Button className='w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white' onClick={handleRedirect}>
                 {statusType === 'NOT_VERIFIED' ? 'Xác thực ngay' : 'Xem lịch sử'}
               </Button>
             )}
@@ -111,8 +114,8 @@ const QuestionnaireStep: React.FC<QuestionnaireStepProps> = ({
         </DialogContent>
       </Dialog>
 
-      <div className="space-y-6">
-        <Card className="border-none shadow-lg mb-6">
+      <div className='space-y-6'>
+        <Card className='border-none shadow-lg mb-6'>
           <CardHeader>
             <CardTitle>Bảng câu hỏi sức khỏe</CardTitle>
             <CardDescription>Vui lòng trả lời các câu hỏi sau để đảm bảo bạn đủ điều kiện hiến máu</CardDescription>
@@ -122,12 +125,12 @@ const QuestionnaireStep: React.FC<QuestionnaireStepProps> = ({
           </CardContent>
         </Card>
 
-        <div className="flex justify-between py-4 border-t">
-          <Button variant="outline" onClick={() => setCurrentStep(STEPS.SELECT_CAMPAIGN)}>
+        <div className='flex justify-between py-4 border-t'>
+          <Button variant='outline' onClick={() => setCurrentStep(STEPS.SELECT_CAMPAIGN)}>
             Quay lại
           </Button>
           <Button
-            className="bg-blue-600 text-white hover:bg-blue-700"
+            className='bg-blue-600 text-white hover:bg-blue-700'
             onClick={handleContinue}
             disabled={!hasValidAnswers || isCheckingStatus}
           >
