@@ -106,7 +106,6 @@ const Header: React.FC = () => {
                     <Button variant='ghost' className='relative h-8 w-8 rounded-full'>
                       <UserAvatar
                         size='sm'
-                       
                       />
                     </Button>
                   </DropdownMenuTrigger>

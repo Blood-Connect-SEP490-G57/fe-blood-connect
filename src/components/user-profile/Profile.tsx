@@ -2,12 +2,10 @@ import { useEffect, useState, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
-import { User } from 'lucide-react'
-import UserAvatar from '@/components/ui/user-avatar'
 import { UserFullInfoResponseSchema } from '@/schema/user-schema'
 import { User as fetchUser } from '@/api/user'
 
@@ -84,16 +82,6 @@ const Profile = () => {
     fetchUserData()
   }, [form])
 
-  const handleAvatarChange = async (file: File) => {
-    try {
-      // TODO: Implement actual file upload to server
-      console.log('Uploading file:', file)
-      await new Promise((resolve) => setTimeout(resolve, 1000)) // Simulate upload
-    } catch (error) {
-      console.error('Error uploading avatar:', error)
-      throw error
-    }
-  }
 
   const onSubmit = (values: z.infer<typeof UserFullInfoResponseSchema>) => {
     console.log(values)
@@ -115,33 +103,15 @@ const Profile = () => {
   return (
     <div className='min-h-screen bg-white py-12'>
       <div className='container mx-auto px-4'>
-        <h1 className='text-2xl font-bold text-gray-900 mb-8'>Hồ sơ cá nhân</h1>
+        <h2 className='text-2xl font-semibold mb-8'>Thông tin cá nhân</h2>
         <div className='max-w-6xl mx-auto'>
           <Card>
-            <CardHeader>
-              <CardTitle className='text-xl text-red-600 flex items-center gap-2'>
-                <User className='w-5 h-5' />
-                Thông tin cá nhân
-              </CardTitle>
-            </CardHeader>
             <CardContent>
-              <div className='flex flex-col items-center mb-8'>
-                <UserAvatar
-                  size='lg'
-                  user={{
-                    name: form.getValues('full_name'),
-                    image: undefined
-                  }}
-                  editable
-                  onImageChange={handleAvatarChange}
-                />
-              </div>
-
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
                   {/* Phần 1: Thông tin cá nhân */}
                   <div>
-                    <h2 className='text-lg font-semibold mb-4'>Thông tin cá nhân</h2>
+                    <h2 className='text-lg font-semibold mb-4 mt-4'>Thông tin cá nhân</h2>
                     <div className='grid grid-cols-1 gap-6'>
                       <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
                         <FormField
