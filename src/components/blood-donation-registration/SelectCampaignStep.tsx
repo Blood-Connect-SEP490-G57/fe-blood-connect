@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Search, ChevronRight } from 'lucide-react'
+// import { Input } from '@/components/ui/input'
+import {  ChevronRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import CampaignDetails from '@/components/blood-donation-registration/campaign-details'
@@ -11,14 +11,12 @@ import { CampaignResponse } from '@/schema/campaign-schema'
 
 const SelectCampaignStep = ({
   searchQuery,
-  setSearchQuery,
   selectedCampaign,
   setSelectedCampaign,
   setCurrentStep,
   setQuestionSetId
 }: {
   searchQuery: string
-  setSearchQuery: (query: string) => void
   selectedCampaign: any
   setSelectedCampaign: (campaign: any) => void
   setCurrentStep: Dispatch<SetStateAction<Step>>
@@ -69,7 +67,7 @@ const SelectCampaignStep = ({
           <CardDescription>Chọn buổi hiến máu phù hợp với lịch của bạn</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className='relative mb-6'>
+          {/* <div className='relative mb-6'>
             <Search className='absolute left-3 top-3 h-4 w-4 text-gray-400' />
             <Input
               placeholder='Tìm kiếm buổi hiến máu...'
@@ -77,7 +75,7 @@ const SelectCampaignStep = ({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
-          </div>
+          </div> */}
           <div className='relative mb-6'>
             <label htmlFor='district' className='block text-sm font-medium text-gray-700'>
               Chọn Huyện

@@ -93,16 +93,6 @@ const FAQPage = () => {
             <p className='text-lg md:text-xl text-white/90 max-w-3xl mx-auto mb-8'>
               Tìm hiểu thêm về quy trình hiến máu và giải đáp các thắc mắc của bạn
             </p>
-            <div className='flex items-center justify-center mt-8'>
-              <div className='relative max-w-xl w-full'>
-                <input
-                  type='text'
-                  placeholder='Tìm kiếm câu hỏi...'
-                  className='w-full py-3 px-5 pr-12 rounded-full text-gray-700 focus:outline-none focus:ring-2 focus:ring-red-400 shadow-lg'
-                />
-                <Search className='absolute right-4 top-3.5 text-gray-400' />
-              </div>
-            </div>
           </motion.div>
 
           {/* Decorative elements */}
@@ -183,7 +173,7 @@ const FAQPage = () => {
 
         {/* CTA Section */}
         <motion.div
-          className='mt-20 text-center bg-gradient-to-r from-red-500 to-red-600 p-10 rounded-3xl shadow-xl max-w-5xl mx-auto'
+          className='mt-20 text-center bg-gradient-to-r from-red-500 to-red-600 p-10 rounded-3xl shadow-xl max-w-4xl mx-auto'
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
