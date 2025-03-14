@@ -1,7 +1,7 @@
 import React from 'react'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { motion } from 'framer-motion'
-import { Heart, Droplet, Activity, Award, HelpCircle, Search, Gift } from 'lucide-react'
+import { Heart, Droplet, Activity, Award, HelpCircle, Gift } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useNavigate } from 'react-router-dom'
 

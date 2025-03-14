@@ -96,8 +96,9 @@ const UserProfilePage: React.FC = () => {
 
   return (
     <div className='flex flex-col md:flex-row min-h-screen bg-gray-100'>
-      <div className='hidden md:block w-1/5 p-4 bg-white shadow-lg sticky top-0 h-screen overflow-y-auto'>
-        <Card className='border-none'>
+      {/* Sidebar */}
+      <div className='hidden md:flex md:w-1/4 p-4 bg-white shadow-lg sticky top-0 h-screen overflow-y-auto'>
+        <Card className='border-none w-full'>
           <CardHeader>
             <CardTitle className='text-xl text-red-600 flex items-center gap-2'>
               <User className='w-5 h-5' />
@@ -106,7 +107,7 @@ const UserProfilePage: React.FC = () => {
           </CardHeader>
           <CardContent className='space-y-4'>
             <button
-              className={`w-full text-left p-2 rounded-md flex items-center gap-2 ${
+              className={`w-full text-left p-3 rounded-md flex items-center gap-2 ${
                 selectedOption === 'profile' ? 'bg-red-100' : ''
               }`}
               onClick={() => handleOptionClick('profile')}
@@ -115,7 +116,7 @@ const UserProfilePage: React.FC = () => {
               Thông tin cá nhân
             </button>
             <button
-              className={`w-full text-left p-2 rounded-md flex items-center gap-2 ${
+              className={`w-full text-left p-3 rounded-md flex items-center gap-2 ${
                 selectedOption === 'appointment-info' ? 'bg-red-100' : ''
               }`}
               onClick={() => handleOptionClick('appointment-info')}
@@ -124,7 +125,7 @@ const UserProfilePage: React.FC = () => {
               Lịch Hẹn của Tôi
             </button>
             <button
-              className={`w-full text-left p-2 rounded-md flex items-center gap-2 ${
+              className={`w-full text-left p-3 rounded-md flex items-center gap-2 ${
                 selectedOption === 'appointment-history' ? 'bg-red-100' : ''
               }`}
               onClick={() => handleOptionClick('appointment-history')}
@@ -135,7 +136,7 @@ const UserProfilePage: React.FC = () => {
 
             {!isVerified && (
               <button
-                className={`w-full text-left p-2 rounded-md flex items-center gap-2 ${
+                className={`w-full text-left p-3 rounded-md flex items-center gap-2 ${
                   selectedOption === 'verification' ? 'bg-red-100' : ''
                 }`}
                 onClick={() => handleOptionClick('verification')}
@@ -147,7 +148,9 @@ const UserProfilePage: React.FC = () => {
           </CardContent>
         </Card>
       </div>
-      <div className='w-4/5 p-6'>{renderContent()}</div>
+
+      {/* Main Content */}
+      <div className='w-full md:w-3/4 p-6 md:p-8 lg:p-10'>{renderContent()}</div>
     </div>
   )
 }
