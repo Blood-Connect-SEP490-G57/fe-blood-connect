@@ -57,7 +57,7 @@ export const apiDeleteCall = async (url: string, isPrivate?: boolean) => {
   return response
 }
 
-export const apiGetCall = async (url: string, isPrivate?: boolean) => {
+export const apiGetCall = async (url: string, isPrivate?: boolean, p0?: { params: any }) => {
   const response = isPrivate ? await axiosPrivate.get(url) : await axios.get(url)
   return response
 }
