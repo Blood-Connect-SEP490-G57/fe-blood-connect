@@ -40,22 +40,19 @@ const BloodDonationCriteria = () => {
   ]
 
   return (
-    <section
-      className='py-16 sm:py-24 md:py-32 bg-gradient-to-br from-red-600 via-red-500 to-red-400'
-      id='blood-donation-criteria'
-    >
-      <div className='container mx-auto px-4'>
-        <div className='text-center mb-12 sm:mb-16 md:mb-20'>
-          <h2 className='text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-3 md:mb-4'>
+    <div className='pt-8 pb-8 bg-gradient-to-br from-red-600 via-red-500 to-red-400' id='blood-donation-criteria'>
+      <div className='max-w-7xl mx-auto px-4 sm:px-6'>
+        <div className='text-center mb-8 sm:mb-12 lg:mb-16'>
+          <h2 className='text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-white mb-4 tracking-tight'>
             Tiêu chuẩn tham gia hiến máu
           </h2>
-          <p className='text-white/90 max-w-3xl mx-auto text-base sm:text-lg'>
+          <p className='text-white/90 max-w-2xl mx-auto text-sm sm:text-base lg:text-lg leading-relaxed'>
             Để đảm bảo an toàn cho cả người hiến máu và người nhận máu, vui lòng kiểm tra các tiêu chí sau trước khi
             đăng ký hiến máu.
           </p>
         </div>
 
-        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 max-w-7xl mx-auto'>
+        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 '>
           {/* Card hình ảnh - KÍCH THƯỚC LỚN HƠN với responsive */}
           <MotionCard
             className='col-span-1 sm:col-span-2 lg:col-span-3 bg-white overflow-hidden border-none shadow-lg sm:shadow-xl md:shadow-2xl rounded-xl sm:rounded-2xl md:rounded-3xl mb-6 sm:mb-8 md:mb-12'
@@ -124,17 +121,8 @@ const BloodDonationCriteria = () => {
             </MotionCard>
           ))}
         </div>
-
-        {/* <div className='text-center mt-10 sm:mt-12 md:mt-16'>
-          <Link to='/blood-donation-registration'>
-            <Button className='bg-white hover:bg-gray-100 text-red-600 font-medium px-4 sm:px-8 md:px-10 py-2 sm:py-5 md:py-6 text-sm sm:text-lg md:text-xl rounded-lg sm:rounded-xl shadow-lg hover:shadow-xl transition-all hover:scale-105 touch-manipulation'>
-              Đăng ký hiến máu ngay
-              <ChevronRight className='ml-1 sm:ml-2 h-3 w-3 sm:h-5 sm:w-5 md:h-6 md:w-6' />
-            </Button>
-          </Link>
-        </div> */}
       </div>
-    </section>
+    </div>
   )
 }
 
