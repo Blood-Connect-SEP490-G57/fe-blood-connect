@@ -87,7 +87,6 @@ const Profile = () => {
     fetchUserData()
   }, [form])
 
-
   const onSubmit = (values: z.infer<typeof UserFullInfoResponseSchema>) => {
     console.log(values)
   }
@@ -215,7 +214,7 @@ const Profile = () => {
                             <FormItem>
                               <FormLabel>Số lần hiến máu</FormLabel>
                               <FormControl>
-                                <Input {...field} readOnly/>
+                                <Input {...field} readOnly />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -229,7 +228,7 @@ const Profile = () => {
                             <FormItem>
                               <FormLabel>Nơi thường trú</FormLabel>
                               <FormControl>
-                                <Input {...field} readOnly/>
+                                <Input {...field} readOnly />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -243,7 +242,7 @@ const Profile = () => {
                           <FormItem>
                             <FormLabel>Quê quán</FormLabel>
                             <FormControl>
-                              <Input {...field} readOnly/>
+                              <Input {...field} readOnly />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
