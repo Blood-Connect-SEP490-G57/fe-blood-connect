@@ -17,7 +17,6 @@ export type Step = (typeof STEPS)[keyof typeof STEPS]
 const BloodDonationRegistration: React.FC = () => {
   const navigate = useNavigate()
   const [currentStep, setCurrentStep] = useState<Step>(STEPS.SELECT_CAMPAIGN)
-  const [searchQuery, setSearchQuery] = useState<string>('')
   const [selectedCampaign, setSelectedCampaign] = useState<any>(null)
   const [questionSetId, setQuestionSetId] = useState<number | null>(null)
   const [answers, setAnswers] = useState<Record<number, { value: string; description?: string }>>({})
@@ -89,8 +88,7 @@ const BloodDonationRegistration: React.FC = () => {
       case STEPS.SELECT_CAMPAIGN:
         return (
           <SelectCampaignStep
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
+            searchQuery={''}
             selectedCampaign={selectedCampaign}
             setSelectedCampaign={setSelectedCampaign}
             setCurrentStep={setCurrentStep}
