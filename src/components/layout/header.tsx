@@ -24,10 +24,11 @@ const Header: React.FC = () => {
   // Close mobile menus when navigating to appointment info
   useEffect(() => {
     if (
-      (location.pathname === '/user-profile-page' && location.hash === '#appointment-info') ||
-      location.hash === '#appointment-history' ||
-      location.hash === '#profile' ||
-      location.hash === '#verification'
+      location.pathname === '/user-profile-page' &&
+      (location.hash === '#appointment-info' ||
+        location.hash === '#profile' ||
+        location.hash === '#appointment-history' ||
+        location.hash === '#verification')
     ) {
       setIsMobileMenuOpen(false)
       setIsMobileNotiOpen(false)
@@ -73,7 +74,7 @@ const Header: React.FC = () => {
 
   return (
     <header className='bg-white shadow-sm fixed top-0 left-0 right-0 z-50'>
-      <nav className='container mx-auto px-4'>
+      <div className='mx-auto px-4'>
         <div className='flex items-center justify-between h-16'>
           <div className='flex items-center'>
             <a href='/' className='text-primary font-bold text-xl'>
@@ -194,10 +195,7 @@ const Header: React.FC = () => {
         </div>
         {/* Mobile Navigation */}
         <div
-          style={{
-            minWidth: window.innerWidth < 1025 ? '250px' : '300px'
-          }}
-          className={`xl:hidden fixed top-0 right-0 h-full w-64 
+          className={`xl:hidden fixed top-0 right-0 h-full min-w-[250px] lg:min-w-[300px] w-64 
             bg-white shadow-lg transform transition-transform duration-300 ease-in-out z-50 
             ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}
         >
@@ -292,7 +290,7 @@ const Header: React.FC = () => {
             </div>
           )}
         </div>
-      </nav>
+      </div>
     </header>
   )
 }
