@@ -36,6 +36,38 @@ const getFilterParams = (tab: string) => {
   return { typeParam, unreadParam }
 }
 
+/**
+ * Hàm mapping từ số type sang nhãn văn bản.
+ */
+const getTypeLabel = (type: number): string => {
+  switch (type) {
+    case 1:
+      return 'Nhắc nhở'
+    case 2:
+      return 'Sự kiện'
+    case 3:
+      return 'Tin tức'
+    default:
+      return ''
+  }
+}
+
+/**
+ * Hàm trả về các lớp CSS cho badge dựa trên type.
+ */
+const getTypeBadgeClasses = (type: number): string => {
+  switch (type) {
+    case 1:
+      return 'bg-yellow-500 text-white' // Nhắc nhở: màu vàng
+    case 2:
+      return 'bg-blue-500 text-white' // Sự kiện: màu xanh lam
+    case 3:
+      return 'bg-green-500 text-white' // Tin tức: màu xanh lá
+    default:
+      return 'bg-gray-500 text-white'
+  }
+}
+
 const NotificationDetail = () => {
   const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState<string>('all')
@@ -125,7 +157,16 @@ interface NotificationCardProps {
 
 const NotificationCard = ({ notification }: NotificationCardProps) => {
   return (
-    <Card className={`transition-colors ${notification.status ? 'bg-white' : 'bg-red-50'}`}>
+    <Card
+      className={`transition-colors ${
+        notification.status ? 'bg-white' : 'bg-red-50'
+      } mb-2 border hover:bg-gray-100 cursor-pointer`}
+      onClick={() => {
+        if (notification.link && notification.link.trim() !== '') {
+          window.location.href = notification.link
+        }
+      }}
+    >
       <CardContent className='p-6'>
         <div className='flex items-center gap-2 text-sm text-gray-500'>
           <Calendar className='h-4 w-4' />
@@ -133,8 +174,17 @@ const NotificationCard = ({ notification }: NotificationCardProps) => {
           <span>•</span>
           <span>{formatRelativeTime(notification.created)}</span>
         </div>
-        <h3 className='text-lg font-semibold text-gray-900'>{notification.title}</h3>
-        <p className='text-gray-600'>{notification.content}</p>
+        <div className='flex items-center justify-between mt-2'>
+          <h3 className='text-lg font-semibold text-gray-900 truncate'>{notification.title}</h3>
+          {notification.type !== undefined && notification.type !== null && (
+            <span
+              className={`inline-block text-xs font-medium rounded-full px-2 ${getTypeBadgeClasses(notification.type)}`}
+            >
+              {getTypeLabel(notification.type)}
+            </span>
+          )}
+        </div>
+        <p className='text-gray-600 line-clamp-1'>{notification.content}</p>
       </CardContent>
     </Card>
   )

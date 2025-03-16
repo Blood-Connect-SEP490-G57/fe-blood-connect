@@ -32,6 +32,39 @@ function useOnClickOutside(ref: React.RefObject<HTMLElement>, handler: (event: E
   }, [ref, handler])
 }
 
+/**
+ * Hàm mapping từ số type sang nhãn văn bản.
+ */
+const getTypeLabel = (type: number): string => {
+  switch (type) {
+    case 1:
+      return 'Nhắc nhở'
+    case 2:
+      return 'Sự kiện'
+    case 3:
+      return 'Tin tức'
+    default:
+      return ''
+  }
+}
+
+/**
+ * Hàm trả về các lớp CSS cho badge dựa trên type.
+ * Bạn có thể điều chỉnh màu sắc theo yêu cầu.
+ */
+const getTypeBadgeClasses = (type: number): string => {
+  switch (type) {
+    case 1:
+      return 'bg-yellow-500 text-white' // Nhắc nhở: màu vàng
+    case 2:
+      return 'bg-blue-500 text-white' // Sự kiện: màu xanh lam
+    case 3:
+      return 'bg-green-500 text-white' // Tin tức: màu xanh lá
+    default:
+      return 'bg-gray-500 text-white'
+  }
+}
+
 const Notifications: React.FC<NotificationsProps> = ({ onClose }) => {
   const containerRef = useRef<HTMLDivElement>(null)
   useOnClickOutside(containerRef, onClose)
@@ -60,9 +93,7 @@ const Notifications: React.FC<NotificationsProps> = ({ onClose }) => {
 
   // Mutation đánh dấu tất cả đã đọc
   const { mutate: markAllRead } = useMutation(markAllAsRead, {
-    onSuccess: () => {
-      refetch()
-    }
+    onSuccess: () => refetch()
   })
 
   return (
@@ -123,7 +154,18 @@ const Notifications: React.FC<NotificationsProps> = ({ onClose }) => {
                   <span>•</span>
                   <span>{formatRelativeTime(notif.created)}</span>
                 </div>
-                <h3 className='text-lg font-bold text-red-500 truncate'>{notif.title}</h3>
+                <div className='flex items-center justify-between mt-1'>
+                  <h3 className='text-lg font-bold text-red-500 truncate'>{notif.title}</h3>
+                  {notif.type !== null && notif.type !== undefined && (
+                    <span
+                      className={`inline-block text-xs font-medium rounded-full px-2 ${getTypeBadgeClasses(
+                        notif.type
+                      )}`}
+                    >
+                      {getTypeLabel(notif.type)}
+                    </span>
+                  )}
+                </div>
                 <p className='text-gray-500 line-clamp-1'>{notif.content}</p>
               </CardContent>
             </Card>
