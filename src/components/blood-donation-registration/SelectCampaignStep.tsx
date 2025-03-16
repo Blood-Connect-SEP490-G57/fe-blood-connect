@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button'
 // import { Input } from '@/components/ui/input'
-import {  ChevronRight } from 'lucide-react'
+import { ChevronRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import CampaignDetails from '@/components/blood-donation-registration/campaign-details'
@@ -10,13 +10,13 @@ import { Campaign as fetchCampaigns } from '@/api/campaign'
 import { CampaignResponse } from '@/schema/campaign-schema'
 
 const SelectCampaignStep = ({
-  searchQuery,
+  // searchQuery,
   selectedCampaign,
   setSelectedCampaign,
   setCurrentStep,
   setQuestionSetId
 }: {
-  searchQuery: string
+  // searchQuery: string
   selectedCampaign: any
   setSelectedCampaign: (campaign: any) => void
   setCurrentStep: Dispatch<SetStateAction<Step>>
@@ -52,8 +52,7 @@ const SelectCampaignStep = ({
   }, [])
 
   const filteredCampaigns = campaigns.filter(
-    (campaign) =>
-      campaign.location.includes(selectedDistrict) && campaign.name.toLowerCase().includes(searchQuery.toLowerCase())
+    (campaign) => campaign.location.includes(selectedDistrict) && campaign.name.toLowerCase()
   )
 
   if (loading) return <div>Loading...</div>
