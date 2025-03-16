@@ -207,7 +207,84 @@ const Header: React.FC = () => {
             >
               <X className='w-6 h-6' />
             </Button>
-            {/* Render mobile navigation items here */}
+            <div className='flex flex-col space-y-2'>
+              {navigation
+                .filter((item) => {
+                  if (!isLoggedIn && (item.name === 'LỊCH HẸN CỦA TÔI' || item.name === 'LỊCH SỬ ĐẶT HẸN')) {
+                    return false
+                  }
+                  return item.name !== 'THÔNG TIN CÁ NHÂN' && item.name !== 'XÁC THỰC TÀI KHOẢN'
+                })
+                .map((item) => (
+                  <a
+                    key={item.name}
+                    href={item.href}
+                    className='text-gray-700 hover:text-primary transition-colors py-2 px-4 rounded-md hover:bg-gray-50'
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    {item.name}
+                  </a>
+                ))}
+            </div>
+            <div className='mt-auto'>
+              {isLoggedIn ? (
+                <div className='flex flex-col space-y-2'>
+                  <Button
+                    variant='ghost'
+                    className='w-full justify-start'
+                    onClick={() => {
+                      navigate('/user-profile-page')
+                      setIsMobileMenuOpen(false)
+                    }}
+                  >
+                    <span>HỒ SƠ CÁ NHÂN</span>
+                  </Button>
+                  <Button
+                    variant='ghost'
+                    className='w-full justify-start'
+                    onClick={() => {
+                      navigate('/settings')
+                      setIsMobileMenuOpen(false)
+                    }}
+                  >
+                    <span>CÀI ĐẶT</span>
+                  </Button>
+                  <Button
+                    variant='ghost'
+                    className='w-full justify-start text-red-600 hover:text-red-700'
+                    onClick={() => {
+                      handleLogout()
+                      setIsMobileMenuOpen(false)
+                    }}
+                  >
+                    <span>ĐĂNG XUẤT</span>
+                  </Button>
+                </div>
+              ) : (
+                <div className='flex flex-col space-y-2'>
+                  <Button
+                    variant='outline'
+                    className='w-full border-red-600 text-red-600 hover:bg-red-50 hover:text-red-700'
+                    onClick={() => {
+                      handleLoginClick()
+                      setIsMobileMenuOpen(false)
+                    }}
+                  >
+                    <span>ĐĂNG NHẬP</span>
+                  </Button>
+                  <Button
+                    variant='default'
+                    className='w-full bg-red-600 text-white hover:bg-red-700'
+                    onClick={() => {
+                      handleRegisterClick()
+                      setIsMobileMenuOpen(false)
+                    }}
+                  >
+                    <span>ĐĂNG KÝ</span>
+                  </Button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
         {/* Mobile Notification */}
@@ -223,7 +300,6 @@ const Header: React.FC = () => {
               <Notifications
                 onClose={() => {
                   setIsMobileNotiOpen(false)
-                  // Khi đóng, gọi lại API đếm để cập nhật header
                   refetchUnreadCount()
                 }}
               />
