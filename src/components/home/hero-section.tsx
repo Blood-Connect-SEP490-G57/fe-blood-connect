@@ -3,13 +3,12 @@ import { Button } from '@/components/ui/button'
 import { ArrowRight, Heart, Users } from 'lucide-react'
 
 const HeroSection: React.FC = () => {
-
   const stats = [
     { value: '1,234+', label: 'Người hiến máu' },
     { value: '98%', label: 'Độ an toàn' },
     { value: '5,670', label: 'Người được cứu' }
   ]
-  
+
   // Thêm các hàm xử lý cuộn trang
   const scrollToRegister = () => {
     const element = document.getElementById('blood-donation-slider')
@@ -17,7 +16,7 @@ const HeroSection: React.FC = () => {
       element.scrollIntoView({ behavior: 'smooth' })
     }
   }
-  
+
   const scrollToLearnMore = () => {
     const element = document.getElementById('blood-donation-criteria')
     if (element) {
@@ -60,20 +59,20 @@ const HeroSection: React.FC = () => {
             </p>
 
             <div className='flex flex-wrap gap-4'>
-              <Button 
-                size='lg' 
-                variant='secondary' 
+              <Button
+                size='lg'
+                variant='secondary'
                 className='group font-semibold'
-                onClick={scrollToRegister}  // Thêm sự kiện click
+                onClick={scrollToRegister} // Thêm sự kiện click
               >
                 Đăng Ký Ngay
                 <ArrowRight className='ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform' />
               </Button>
-              <Button 
-                size='lg' 
-                variant='outline' 
+              <Button
+                size='lg'
+                variant='outline'
                 className='bg-transparent border-white text-white hover:bg-white/10'
-                onClick={scrollToLearnMore}  // Thêm sự kiện click
+                onClick={scrollToLearnMore} // Thêm sự kiện click
               >
                 Tìm Hiểu Thêm
               </Button>

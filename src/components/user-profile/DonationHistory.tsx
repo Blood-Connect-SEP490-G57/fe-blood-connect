@@ -214,7 +214,10 @@ const DonationHistory = () => {
         ) : (
           <div className='flex flex-col items-center justify-center space-y-4 p-6 bg-white border shadow-sm rounded-lg'>
             <h3 className='text-gray-500 text-lg font-medium text-center'>Chưa có lịch sử hiến máu</h3>
-            <Button onClick={() => navigate('/blood-donation-registration')} className='w-full max-w-xs bg-red-600 text-white hover:bg-red-700 py-3 text-lg rounded-lg shadow-md transition-all'>
+            <Button
+              onClick={() => navigate('/blood-donation-registration')}
+              className='w-full max-w-xs bg-red-600 text-white hover:bg-red-700 py-3 text-lg rounded-lg shadow-md transition-all'
+            >
               Đặt lịch hiến máu
             </Button>
           </div>
