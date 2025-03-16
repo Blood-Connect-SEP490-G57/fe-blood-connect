@@ -1,4 +1,4 @@
-import { apiGetCall, apiPostCall, apiPutCall, apiDeleteCall } from '..'
+import { apiGetCall, apiPutCall } from '..'
 import { PaginatedResponse } from '../../schema/paginated-response-schema'
 
 export interface NotificationListResponse {
