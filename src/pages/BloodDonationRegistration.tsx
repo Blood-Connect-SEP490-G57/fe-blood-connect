@@ -90,7 +90,6 @@ const BloodDonationRegistration: React.FC = () => {
         return (
           <SelectCampaignStep
             searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
             selectedCampaign={selectedCampaign}
             setSelectedCampaign={setSelectedCampaign}
             setCurrentStep={setCurrentStep}
