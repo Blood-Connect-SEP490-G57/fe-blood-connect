@@ -69,7 +69,6 @@ const getTypeBadgeClasses = (type: number): string => {
 }
 
 const NotificationDetail = () => {
-  const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState<string>('all')
   const { typeParam, unreadParam } = getFilterParams(activeTab)
 
