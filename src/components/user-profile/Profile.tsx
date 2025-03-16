@@ -10,6 +10,11 @@ import { UserFullInfoResponseSchema } from '@/schema/user-schema'
 import { User as fetchUser } from '@/api/user'
 
 const Profile = () => {
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
+
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const hasFetched = useRef(false)

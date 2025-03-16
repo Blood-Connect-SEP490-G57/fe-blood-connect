@@ -669,6 +669,11 @@ const UserVerification = () => {
     }
   }
 
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
+
   return (
     <div className='min-h-screen bg-white py-12 px-4 sm:px-6 lg:px-8'>
       <div className='mb-8'>
