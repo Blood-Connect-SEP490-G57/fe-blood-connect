@@ -21,6 +21,19 @@ const Header: React.FC = () => {
   const [isMobileNotiOpen, setIsMobileNotiOpen] = useState(false)
   const { isLoggedIn, setIsLoggedIn } = useAuth()
 
+  // Close mobile menus when navigating to appointment info
+  useEffect(() => {
+    if (
+      (location.pathname === '/user-profile-page' && location.hash === '#appointment-info') ||
+      location.hash === '#appointment-history' ||
+      location.hash === '#profile' ||
+      location.hash === '#verification'
+    ) {
+      setIsMobileMenuOpen(false)
+      setIsMobileNotiOpen(false)
+    }
+  }, [location])
+
   useEffect(() => {
     const token = localStorage.getItem('access_token')
     setIsLoggedIn(!!token)
@@ -104,9 +117,7 @@ const Header: React.FC = () => {
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant='ghost' className='relative h-8 w-8 rounded-full'>
-                      <UserAvatar
-                        size='sm'
-                      />
+                      <UserAvatar size='sm' />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className='w-56' align='end' forceMount>
