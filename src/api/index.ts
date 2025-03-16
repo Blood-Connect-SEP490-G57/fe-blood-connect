@@ -1,14 +1,14 @@
 import axios from 'axios'
 import { refreshAccessToken } from './auth'
 
-// axios.defaults.baseURL = 'http://localhost:8080'
-axios.defaults.baseURL = 'https://api.user.giotmauhyvong.org'
+axios.defaults.baseURL = 'http://localhost:8080'
+// axios.defaults.baseURL = 'https://api.user.giotmauhyvong.org'
 
 axios.defaults.headers.common['Content-Type'] = 'application/json'
 
 export const axiosPrivate = axios.create({
-// baseURL: 'http://localhost:8080',
-  baseURL: 'https://api.user.giotmauhyvong.org',
+baseURL: 'http://localhost:8080',
+  // baseURL: 'https://api.user.giotmauhyvong.org',
 
   headers: {
     'Content-Type': 'application/json'
@@ -57,7 +57,7 @@ export const apiDeleteCall = async (url: string, isPrivate?: boolean) => {
   return response
 }
 
-export const apiGetCall = async (url: string, isPrivate?: boolean) => {
+export const apiGetCall = async (url: string, isPrivate?: boolean, p0?: { params: any }) => {
   const response = isPrivate ? await axiosPrivate.get(url) : await axios.get(url)
   return response
 }
