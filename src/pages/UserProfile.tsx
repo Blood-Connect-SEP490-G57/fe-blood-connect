@@ -36,7 +36,7 @@ const UserProfilePage: React.FC = () => {
   const handleOptionClick = (option: string) => {
     setSelectedOption(option)
     // Update the URL hash without reloading the page
-    window.location.hash = option
+    window.location.hash = option 
   }
 
   useEffect(() => {

@@ -25,7 +25,7 @@ const HeroSection: React.FC = () => {
   }
 
   return (
-    <section className='relative py-24 overflow-hidden bg-gradient-to-br from-red-600 via-red-500 to-red-400'>
+    <section className='relative py-16 sm:py-24 overflow-hidden bg-gradient-to-br from-red-600 via-red-500 to-red-400'>
       {/* Background Pattern */}
       <div className='absolute inset-0 opacity-10'>
         <div
@@ -37,7 +37,7 @@ const HeroSection: React.FC = () => {
         />
       </div>
 
-      <div className='container mx-auto px-4 relative'>
+      <div className='max-w-7xl mx-auto px-4 sm:px-6 relative'>
         <div className='flex flex-col lg:flex-row items-center justify-between gap-12'>
           {/* Left Content */}
           <div className='lg:w-1/2 text-white z-10'>

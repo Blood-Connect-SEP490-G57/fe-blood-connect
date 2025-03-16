@@ -118,8 +118,8 @@ const BloodDonationBenefits: React.FC = () => {
   }, [])
 
   return (
-    <div className='bg-gradient-to-b from-white to-gray-100 py-16 sm:py-24'>
-      <div className='max-w-7xl mx-auto px-4 sm:px-6'>
+    <div className='py-16 sm:py-24 bg-gradient-to-b from-white to-gray-100'>
+      <div className='max-w-7xl mx-auto px-2 sm:px-6'>
         <motion.h2
           className='text-3xl sm:text-4xl md:text-5xl font-bold text-center text-red-600 mb-8 sm:mb-12'
           initial={{ opacity: 0, y: -20 }}

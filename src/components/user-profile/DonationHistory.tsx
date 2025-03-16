@@ -29,6 +29,11 @@ const DonationHistory = () => {
   const hasFetched = useRef(false)
   const navigate = useNavigate()
 
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
+
   useEffect(() => {
     if (hasFetched.current) return
     hasFetched.current = true

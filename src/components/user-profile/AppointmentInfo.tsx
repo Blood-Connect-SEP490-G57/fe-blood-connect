@@ -52,6 +52,10 @@ const AppointmentInfo = () => {
   const [error, setError] = useState<string | null>(null)
   const navigate = useNavigate()
   const hasFetched = useRef(false)
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
 
   useEffect(() => {
     if (hasFetched.current) return
@@ -200,7 +204,7 @@ const AppointmentInfo = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className='space-y-4 pt-4'>
-              <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+              <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
                 {[
                   { label: 'Họ và tên', value: userInfo.fullName },
                   { label: 'Ngày sinh', value: formatDate(userInfo.dob) },
@@ -213,13 +217,9 @@ const AppointmentInfo = () => {
                   { label: 'Điện thoại', value: userInfo.phoneNumber },
                   { label: 'Email', value: userInfo.email, fullWidth: true }
                 ].map((item, index) => (
-                  <div>
-                    <span className='font-medium w-48 text-gray-700'>{item.label}:</span>
-                    <div
-                      key={index}
-                      className={`flex items-center p-3 border rounded-lg bg-gray-50 
-                    }`}
-                    >
+                  <div key={index} className={item.fullWidth ? 'col-span-1 md:col-span-2' : ''}>
+                    <span className='font-medium text-gray-700 block mb-1'>{item.label}:</span>
+                    <div className='flex items-center p-3 border rounded-lg bg-gray-50 w-full'>
                       <input
                         type='text'
                         value={item.value}
@@ -229,9 +229,9 @@ const AppointmentInfo = () => {
                     </div>
                   </div>
                 ))}
-                <div className='col-span-2'>
-                  <span className='font-medium w-48 text-gray-700'>Địa chỉ thường trú (CMND):</span>
-                  <div className='flex items-center p-3 border rounded-lg bg-gray-50 mb-4'>
+                <div className='col-span-1 md:col-span-2'>
+                  <span className='font-medium text-gray-700 block mb-1'>Địa chỉ thường trú (CMND):</span>
+                  <div className='flex items-center p-3 border rounded-lg bg-gray-50'>
                     <input
                       type='text'
                       value={userInfo.address}
@@ -239,7 +239,9 @@ const AppointmentInfo = () => {
                       className='w-full bg-transparent border-none focus:outline-none text-gray-900'
                     />
                   </div>
-                  <span className='font-medium w-48 text-gray-700'>Nơi cấp:</span>
+                </div>
+                <div className='col-span-1 md:col-span-2'>
+                  <span className='font-medium text-gray-700 block mb-1'>Nơi cấp:</span>
                   <div className='flex items-center p-3 border rounded-lg bg-gray-50'>
                     <input
                       type='text'
