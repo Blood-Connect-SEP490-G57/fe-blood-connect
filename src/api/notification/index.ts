@@ -20,18 +20,16 @@ export const getNotifications = async (
   type?: number,
   unread?: boolean
 ): Promise<PaginatedResponse<NotificationListResponse>> => {
-  // Xây dựng đối tượng query params
+  // Xây dựng params
   const params: any = { page, size, sortBy, sortDir }
   if (search) params.search = search
   if (type !== undefined) params.type = type
   if (unread !== undefined) params.unread = unread
 
-  // Chuyển đổi params thành query string
+  // Tạo query string
   const queryString = new URLSearchParams(params).toString()
-  // Nối query string vào URL
   const url = `/api/notifications/user?${queryString}`
 
-  // Gọi API với URL đã có query string
   const response = await apiGetCall(url, true)
   return response.data.data
 }
@@ -45,7 +43,6 @@ export const markAllAsRead = async (): Promise<string> => {
   const response = await apiPutCall('/api/notifications/user/readAll', null, true)
   return response.data.data
 }
-
 
 export function parseCustomDate(dateString: string): Date {
   const [timePart, datePart] = dateString.split(' ')
