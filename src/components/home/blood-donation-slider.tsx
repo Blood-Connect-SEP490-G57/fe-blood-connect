@@ -5,6 +5,7 @@ import { CampaignResponse } from '@/schema/campaign-schema'
 import { useNavigate } from 'react-router-dom'
 import Loading from '../warnings/loading'
 import Empty from '../warnings/empty'
+import ShareLink from '../sharelink'
 
 const BloodDonationSlider: React.FC = () => {
   const navigate = useNavigate()
@@ -149,6 +150,7 @@ const BloodDonationSlider: React.FC = () => {
                           </div>
 
                           <div className='flex justify-end mt-6'>
+                            <ShareLink campaign={JSON.stringify(campaign)}/>
                             <button
                               className='px-6 py-3 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors duration-300'
                               onClick={() => handleRegistedonate(campaign)}
