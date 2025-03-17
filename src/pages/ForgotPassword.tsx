@@ -30,7 +30,7 @@ const ForgotPassword: React.FC = () => {
     // Giả lập gửi email thành công
     setTimeout(() => {
       alert('Đã gửi email đặt lại mật khẩu')
-      navigate('/login')
+      navigate('/dang-nhap')
     }, 2000)
   }
 

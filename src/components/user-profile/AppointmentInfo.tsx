@@ -288,7 +288,7 @@ const AppointmentInfo = () => {
                       className='border-red-200 text-red-600 hover:bg-red-50 text-sm py-1 h-9'
                       onClick={() => {
                         window.scrollTo(0, 0)
-                        navigate('/history')
+                        navigate('/trang-ca-nhan#lich-su-hien-mau')
                       }}
                     >
                       Xem lịch sử
@@ -314,7 +314,7 @@ const AppointmentInfo = () => {
                     className='bg-red-600 hover:bg-red-700 text-white'
                     onClick={() => {
                       window.scrollTo(0, 0)
-                      navigate('/blood-donation-registration')
+                      navigate('/dang-ky-hien-mau')
                     }}
                   >
                     Đăng ký hiến máu

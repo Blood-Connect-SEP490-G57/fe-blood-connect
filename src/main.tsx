@@ -39,40 +39,40 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
           <ScrollToTop />
           <Routes>
             <Route path='/' element={<Home />} />
-            <Route path='/register' element={<RegistrationPage />} />
-            <Route path='/login' element={<Login />} />
-            <Route path='/contact' element={<ContactPage />} />
-            <Route path='/faq' element={<FAQPage />} />
-            <Route path='/news' element={<NewsPage />} />
+            <Route path='/dang-ky' element={<RegistrationPage />} />
+            <Route path='/dang-nhap' element={<Login />} />
+            <Route path='/lien-he' element={<ContactPage />} />
+            <Route path='/cau-hoi-thuong-gap' element={<FAQPage />} />
+            <Route path='/tin-tuc' element={<NewsPage />} />
             <Route
-              path='/blood-donation-registration'
+              path='/dang-ky-hien-mau'
               element={
-                <Protected tokenRequired={true} destination='/login'>
+                <Protected tokenRequired={true} destination='/dang-nhap'>
                   <BloodDonationRegistration />
                 </Protected>
               }
             />
             <Route
-              path='/user-profile-page'
+              path='/trang-ca-nhan'
               element={
-                <Protected tokenRequired={true} destination='/login'>
+                <Protected tokenRequired={true} destination='/dang-nhap'>
                   <UserProfilePage />
                 </Protected>
               }
             />
             <Route
-              path='/settings'
+              path='/cai-dat'
               element={
-                <Protected tokenRequired={true} destination='/login'>
+                <Protected tokenRequired={true} destination='/dang-nhap'>
                   <Settings />
                 </Protected>
               }
             />
-            <Route path='/forgot-password' element={<ForgotPassword />} />
+            <Route path='/quen-mat-khau' element={<ForgotPassword />} />
             <Route
-              path='/notifications'
+              path='/thong-bao'
               element={
-                <Protected tokenRequired={true} destination='/login'>
+                <Protected tokenRequired={true} destination='/dang-nhap'>
                   <NotificationDetail />
                 </Protected>
               }

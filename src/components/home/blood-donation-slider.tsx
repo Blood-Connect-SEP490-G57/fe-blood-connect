@@ -5,6 +5,7 @@ import { CampaignResponse } from '@/schema/campaign-schema'
 import { useNavigate } from 'react-router-dom'
 import Loading from '../warnings/loading'
 import Empty from '../warnings/empty'
+import ShareLink from '../sharelink'
 
 const BloodDonationSlider: React.FC = () => {
   const navigate = useNavigate()
@@ -79,11 +80,11 @@ const BloodDonationSlider: React.FC = () => {
 
   const handleRegistedonate = (campaign: CampaignResponse): void => {
     localStorage.setItem('selectedCampaign', JSON.stringify(campaign))
-    navigate('/blood-donation-registration')
+    navigate('/dang-ky-hien-mau')
   }
 
   return (
-    <div className='py-16 sm:py-24' id='blood-donation-slider'>
+    <div className='py-12 sm:py-12' id='blood-donation-slider'>
       {campaigns.length === 0 ? (
         <div className='text-center py-12'>
           <h2 className='text-2xl font-bold text-gray-700'>Không có sự kiện nào</h2>
@@ -149,6 +150,7 @@ const BloodDonationSlider: React.FC = () => {
                           </div>
 
                           <div className='flex justify-end mt-6'>
+                            <ShareLink campaign={JSON.stringify(campaign)}/>
                             <button
                               className='px-6 py-3 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors duration-300'
                               onClick={() => handleRegistedonate(campaign)}

@@ -185,7 +185,7 @@ const FAQPage = () => {
           </p>
           <div className='flex flex-col sm:flex-row justify-center gap-4'>
             <Button
-              onClick={() => navigate('/contact')}
+              onClick={() => navigate('/lien-he')}
               variant='default'
               className='bg-white text-red-600 hover:bg-gray-100 py-6 px-8 text-lg'
             >
@@ -193,7 +193,7 @@ const FAQPage = () => {
               Liên hệ tư vấn
             </Button>
             <Button
-              onClick={() => navigate('/blood-donation-registration')}
+              onClick={() => navigate('/dang-ky-hien-mau')}
               variant='default'
               className='bg-white text-red-600 hover:bg-gray-100 py-6 px-8 text-lg'
             >

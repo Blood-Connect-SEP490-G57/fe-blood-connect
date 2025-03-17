@@ -8,7 +8,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
-import { User, Settings, LogOut, Menu, Bell, X } from 'lucide-react'
+import { User, Settings, LogOut, Menu, Bell, X, LogOutIcon, LogInIcon, UserPlusIcon } from 'lucide-react'
 import UserAvatar from '@/components/ui/user-avatar'
 import Notifications from '@/components/notification/Notifications'
 import { useAuth } from '@/components/authContext/AuthContext'
@@ -22,19 +22,23 @@ const Header: React.FC = () => {
   const [isMobileNotiOpen, setIsMobileNotiOpen] = useState(false)
   const { isLoggedIn, setIsLoggedIn } = useAuth()
 
-  // Close mobile menus when navigating to appointment info
   useEffect(() => {
     if (
       location.pathname === '/user-profile-page' &&
-      (location.hash === '#appointment-info' ||
-        location.hash === '#profile' ||
-        location.hash === '#appointment-history' ||
-        location.hash === '#verification')
+      (location.hash === '#lich-hen' ||
+        location.hash === '#thong-tin-ca-nhan' ||
+        location.hash === '#lich-su-hien-mau' ||
+        location.hash === '#xac-thuc-tai-khoan')
     ) {
       setIsMobileMenuOpen(false)
       setIsMobileNotiOpen(false)
     }
   }, [location])
+
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [location]);
+
   const { data: unreadCount, refetch: refetchUnreadCount } = useQuery({
     queryKey: ['unreadCount'],
     queryFn: () => getUnreadCount(),
@@ -50,27 +54,28 @@ const Header: React.FC = () => {
     localStorage.clear()
     setIsLoggedIn(false)
     setIsMobileNotiOpen(false)
-    navigate('/login')
+    navigate('/dang-nhap')
   }
 
   const navigation = [
     { name: 'TRANG CHỦ', href: '/' },
-    { name: 'TIN TỨC', href: '/news' },
-    { name: 'HỎI ĐÁP', href: '/faq' },
-    { name: 'LIÊN HỆ', href: '/contact' },
-    { name: 'ĐĂNG KÝ HIẾN MÁU', href: '/blood-donation-registration' },
-    { name: 'LỊCH HẸN CỦA TÔI', href: '/user-profile-page#appointment-info' },
-    { name: 'LỊCH SỬ ĐẶT HẸN', href: '/user-profile-page#appointment-history' },
-    { name: 'THÔNG TIN CÁ NHÂN', href: '/user-profile-page#profile' },
-    { name: 'XÁC THỰC TÀI KHOẢN', href: '/user-profile-page#verification' }
+    { name: 'TIN TỨC', href: '/tin-tuc' },
+    { name: 'HỎI ĐÁP', href: '/cau-hoi-thuong-gap' },
+    { name: 'LIÊN HỆ', href: '/lien-he' },
+    { name: 'ĐĂNG KÝ HIẾN MÁU', href: '/dang-ky-hien-mau' },
+    { name: 'LỊCH HẸN CỦA TÔI', href: '/trang-ca-nhan#lich-hen' },
+    { name: 'LỊCH SỬ ĐẶT HẸN', href: '/trang-ca-nhan#lich-su-hien-mau' },
+    { name: 'THÔNG TIN CÁ NHÂN', href: '/trang-ca-nhan#thong-tin-ca-nhan' },
+    { name: 'XÁC THỰC TÀI KHOẢN', href: '/trang-ca-nhan#xac-thuc-tai-khoan' },
+    { name: 'CÀI ĐẶT', href: '/cai-dat' }
   ]
 
   const handleLoginClick = () => {
-    navigate('/login')
+    navigate('/dang-nhap')
   }
 
   const handleRegisterClick = () => {
-    navigate('/register')
+    navigate('/dang-ky')
   }
 
   return (
@@ -90,7 +95,7 @@ const Header: React.FC = () => {
                   return false
                 }
                 return (
-                  item.name !== 'THÔNG TIN CÁ NHÂN' && item.name !== 'XÁC THỰC TÀI KHOẢN' && item.name !== 'TRANG CHỦ'
+                  item.name !== 'THÔNG TIN CÁ NHÂN' && item.name !== 'XÁC THỰC TÀI KHOẢN' && item.name !== 'TRANG CHỦ' && item.name !== 'CÀI ĐẶT'
                 )
               })
               .map((item) => (
@@ -123,11 +128,11 @@ const Header: React.FC = () => {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className='w-56' align='end' forceMount>
-                    <DropdownMenuItem onClick={() => navigate('/user-profile-page')}>
+                    <DropdownMenuItem onClick={() => navigate('/trang-ca-nhan#thong-tin-ca-nhan')}>
                       <User className='mr-2 h-4 w-4' />
                       <span>Hồ sơ cá nhân</span>
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => navigate('/settings')}>
+                    <DropdownMenuItem onClick={() => navigate('/cai-dat')}>
                       <Settings className='mr-2 h-4 w-4' />
                       <span>Cài đặt</span>
                     </DropdownMenuItem>
@@ -161,7 +166,7 @@ const Header: React.FC = () => {
 
           {/* Mobile menu button */}
           <div className='xl:hidden flex items-center space-x-2'>
-            {isLoggedIn && location.pathname !== '/login' && location.pathname !== '/register' && (
+            {isLoggedIn && location.pathname !== '/dang-nhap' && location.pathname !== '/dang-ky' && (
               <Button
                 variant='ghost'
                 onClick={() => {
@@ -213,7 +218,7 @@ const Header: React.FC = () => {
                   if (!isLoggedIn && (item.name === 'LỊCH HẸN CỦA TÔI' || item.name === 'LỊCH SỬ ĐẶT HẸN')) {
                     return false
                   }
-                  return item.name !== 'THÔNG TIN CÁ NHÂN' && item.name !== 'XÁC THỰC TÀI KHOẢN'
+                  return item.name !== 'XÁC THỰC TÀI KHOẢN'
                 })
                 .map((item) => (
                   <a
@@ -231,33 +236,14 @@ const Header: React.FC = () => {
                 <div className='flex flex-col space-y-2'>
                   <Button
                     variant='ghost'
-                    className='w-full justify-start'
-                    onClick={() => {
-                      navigate('/user-profile-page')
-                      setIsMobileMenuOpen(false)
-                    }}
-                  >
-                    <span>HỒ SƠ CÁ NHÂN</span>
-                  </Button>
-                  <Button
-                    variant='ghost'
-                    className='w-full justify-start'
-                    onClick={() => {
-                      navigate('/settings')
-                      setIsMobileMenuOpen(false)
-                    }}
-                  >
-                    <span>CÀI ĐẶT</span>
-                  </Button>
-                  <Button
-                    variant='ghost'
-                    className='w-full justify-start text-red-600 hover:text-red-700'
+                    className='w-full border border-red-600 justify-start text-red-600 hover:text-white'
                     onClick={() => {
                       handleLogout()
                       setIsMobileMenuOpen(false)
                     }}
                   >
-                    <span>ĐĂNG XUẤT</span>
+                    <LogOutIcon className='mr-2 h-4 w-4' />
+                    <span className='text-center'>ĐĂNG XUẤT</span>
                   </Button>
                 </div>
               ) : (
@@ -270,6 +256,7 @@ const Header: React.FC = () => {
                       setIsMobileMenuOpen(false)
                     }}
                   >
+                    <LogInIcon className='mr-2 h-4 w-4' />
                     <span>ĐĂNG NHẬP</span>
                   </Button>
                   <Button
@@ -280,6 +267,7 @@ const Header: React.FC = () => {
                       setIsMobileMenuOpen(false)
                     }}
                   >
+                    <UserPlusIcon className='mr-2 h-4 w-4' />
                     <span>ĐĂNG KÝ</span>
                   </Button>
                 </div>

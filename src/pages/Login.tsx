@@ -50,7 +50,7 @@ export default function Login() {
   }
 
   const handleRegisterClick = () => {
-    navigate('/register')
+    navigate('/dang-ky')
   }
 
   return (

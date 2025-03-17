@@ -65,10 +65,10 @@ const QuestionnaireStep: React.FC<QuestionnaireStepProps> = ({
   const handleRedirect = () => {
     switch (statusType) {
       case 'NOT_VERIFIED':
-        navigate('/user-profile-page#verification')
+        navigate('/trang-ca-nhan#xac-thuc-tai-khoan')
         break
       case 'ALREADY_REGISTERED':
-        navigate('/blood-donation-history')
+        navigate('/lich-su-hien-mau')
         break
       default:
         setShowVerificationDialog(false)
