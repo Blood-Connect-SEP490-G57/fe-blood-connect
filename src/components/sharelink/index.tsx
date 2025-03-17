@@ -54,6 +54,7 @@ export default function ShareLink({ campaign }: { campaign: string }) {
         >
           <button
             onClick={shareToFacebook}
+            title='Chia sẻ lên Facebook'
             className='p-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-transform transform hover:scale-110 shadow-md'
             aria-label='Chia sẻ lên Facebook'
           >
@@ -61,6 +62,7 @@ export default function ShareLink({ campaign }: { campaign: string }) {
           </button>
           <button
             onClick={shareToZalo}
+            title='Chia sẻ lên Zalo'
             className='p-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-transform transform hover:scale-110 shadow-md'
             aria-label='Chia sẻ lên Zalo'
           >
@@ -68,6 +70,7 @@ export default function ShareLink({ campaign }: { campaign: string }) {
           </button>
           <button
             onClick={copyToClipboard}
+            title='Sao chép liên kết'
             className='p-2 bg-gray-300 text-black rounded-full hover:bg-gray-400 transition-transform transform hover:scale-110 shadow-md'
             aria-label='Sao chép liên kết'
           >
