@@ -99,46 +99,43 @@ const Notifications: React.FC<NotificationsProps> = ({ onClose }) => {
   return (
     <div
       ref={containerRef}
-      className='max-w-full w-full mx-auto p-4 bg-white rounded-2xl shadow-lg border overflow-y-auto'
-      style={{ maxHeight: '90vh' }}
+      className='h-full min-w-[250px] lg:min-w-[300px] w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg px-4 py-3 bg-white rounded-2xl shadow-lg border overflow-y-auto'
     >
-      {/* Header: hiển thị tiêu đề và nút "Đánh dấu đã đọc tất cả" */}
+      {/* Header */}
       <div className='flex justify-between items-center border-b pb-2'>
-        <h2 className='text-xl font-bold'>Thông báo</h2>
+        <h2 className='text-lg font-bold'>Thông báo</h2>
         <Button
           variant='outline'
           onClick={() => markAllRead()}
-          className='text-red-600 border-red-500 hover:text-white hover:bg-red-600'
+          className='text-red-600 border-red-500 hover:text-white hover:bg-red-600 text-xs sm:text-sm'
         >
           Đánh dấu đã đọc tất cả
         </Button>
       </div>
 
       {/* Thanh lọc */}
-      <div className='flex flex-wrap gap-2 my-2'>
-        <div className='w-full overflow-x-auto pb-2 scrollbar-hide'>
-          <div className='flex gap-2 min-w-max'>
-            {['Tất cả', 'Chưa đọc', 'Nhắc nhở', 'Sự kiện', 'Tin tức'].map((item) => (
-              <Button
-                key={item}
-                variant={filter === item ? 'default' : 'outline'}
-                className={`text-red-600 ${filter === item ? 'bg-red-500 text-white' : 'hover:bg-red-100'}`}
-                onClick={() => setFilter(item)}
-              >
-                {item}
-              </Button>
-            ))}
-          </div>
-        </div>
+      <div className='inline-flex w-full gap-1 my-2 justify-start overflow-x-auto'>
+        {['Tất cả', 'Chưa đọc', 'Nhắc nhở', 'Sự kiện', 'Tin tức'].map((item) => (
+          <Button
+            key={item}
+            variant={filter === item ? 'default' : 'outline'}
+            className={`text-red-600 text-xs sm:text-sm ${
+              filter === item ? 'bg-red-500 text-white' : 'hover:bg-red-100'
+            }`}
+            onClick={() => setFilter(item)}
+          >
+            {item}
+          </Button>
+        ))}
       </div>
 
       {/* Danh sách thông báo */}
-      <div className='mt-2'>
+      <div className='mt-2 space-y-2'>
         {notifications.length > 0 ? (
           notifications.map((notif) => (
             <Card
               key={notif.id}
-              className={`mb-2 border hover:bg-gray-100 cursor-pointer transition-colors ${
+              className={`border hover:bg-gray-100 cursor-pointer transition-colors ${
                 notif.status ? 'bg-white' : 'bg-red-50'
               }`}
               onClick={() => {
@@ -147,15 +144,15 @@ const Notifications: React.FC<NotificationsProps> = ({ onClose }) => {
                 }
               }}
             >
-              <CardContent className='p-4'>
-                <div className='flex items-center gap-2 text-sm text-gray-500'>
-                  <Calendar className='h-4 w-4' />
+              <CardContent className='p-3'>
+                <div className='flex items-center gap-2 text-xs text-gray-500'>
+                  <Calendar className='h-3 w-3' />
                   <span>{formatExactDate(notif.created)}</span>
                   <span>•</span>
                   <span>{formatRelativeTime(notif.created)}</span>
                 </div>
                 <div className='flex items-center justify-between mt-1'>
-                  <h3 className='text-lg font-bold text-red-500 truncate'>{notif.title}</h3>
+                  <h3 className='text-sm sm:text-lg font-bold text-red-500 truncate'>{notif.title}</h3>
                   {notif.type !== null && notif.type !== undefined && (
                     <span
                       className={`inline-block text-xs font-medium rounded-full px-2 ${getTypeBadgeClasses(
@@ -166,21 +163,21 @@ const Notifications: React.FC<NotificationsProps> = ({ onClose }) => {
                     </span>
                   )}
                 </div>
-                <p className='text-gray-500 line-clamp-1'>{notif.content}</p>
+                <p className='text-xs sm:text-sm text-gray-500 line-clamp-2 sm:line-clamp-1'>{notif.content}</p>
               </CardContent>
             </Card>
           ))
         ) : (
-          <p className='text-center text-gray-500'>Không có thông báo nào</p>
+          <p className='text-center text-sm text-gray-500'>Không có thông báo nào</p>
         )}
       </div>
 
-      {/* Footer: nút "Xem thêm" chuyển đến trang chi tiết */}
-      <div className='mt-4 flex justify-between'>
+      {/* Footer */}
+      <div className='mt-4'>
         <Button
           variant='outline'
           onClick={() => navigate('/thong-bao')}
-          className='w-full text-red-600 border-red-500 hover:text-white hover:bg-red-600'
+          className='w-full text-red-600 border-red-500 hover:text-white hover:bg-red-600 text-sm sm:text-base'
         >
           Xem thêm
         </Button>
