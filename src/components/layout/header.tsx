@@ -8,7 +8,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
-import { User, Settings, LogOut, Menu, Bell, X } from 'lucide-react'
+import { User, Settings, LogOut, Menu, Bell, X, LogOutIcon, LogInIcon, UserPlusIcon } from 'lucide-react'
 import UserAvatar from '@/components/ui/user-avatar'
 import Notifications from '@/components/notification/Notifications'
 import { useAuth } from '@/components/authContext/AuthContext'
@@ -22,7 +22,6 @@ const Header: React.FC = () => {
   const [isMobileNotiOpen, setIsMobileNotiOpen] = useState(false)
   const { isLoggedIn, setIsLoggedIn } = useAuth()
 
-  // Close mobile menus when navigating to appointment info
   useEffect(() => {
     if (
       location.pathname === '/user-profile-page' &&
@@ -35,6 +34,11 @@ const Header: React.FC = () => {
       setIsMobileNotiOpen(false)
     }
   }, [location])
+
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [location]);
+
   const { data: unreadCount, refetch: refetchUnreadCount } = useQuery({
     queryKey: ['unreadCount'],
     queryFn: () => getUnreadCount(),
@@ -238,20 +242,21 @@ const Header: React.FC = () => {
                       setIsMobileMenuOpen(false)
                     }}
                   >
-                    
-                    <span>ĐĂNG XUẤT</span>
+                    <LogOutIcon className='mr-2 h-4 w-4' />
+                    <span className='text-center'>ĐĂNG XUẤT</span>
                   </Button>
                 </div>
               ) : (
                 <div className='flex flex-col space-y-2'>
                   <Button
                     variant='outline'
-                    className='w-full border-red-600 text-red-600 hover:bg-red-50 hover:text-white'
+                    className='w-full border-red-600 text-red-600 hover:bg-red-50 hover:text-red-700'
                     onClick={() => {
                       handleLoginClick()
                       setIsMobileMenuOpen(false)
                     }}
                   >
+                    <LogInIcon className='mr-2 h-4 w-4' />
                     <span>ĐĂNG NHẬP</span>
                   </Button>
                   <Button
@@ -262,6 +267,7 @@ const Header: React.FC = () => {
                       setIsMobileMenuOpen(false)
                     }}
                   >
+                    <UserPlusIcon className='mr-2 h-4 w-4' />
                     <span>ĐĂNG KÝ</span>
                   </Button>
                 </div>

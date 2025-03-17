@@ -151,23 +151,19 @@ const DonationHistory = () => {
 
         {/* Statistics Cards */}
         <div className='grid grid-cols-1 md:grid-cols-3 gap-6 mb-8'>
-          <div className='bg-white p-6 rounded-lg border shadow-sm'>
-            <h3 className='text-lg font-semibold text-gray-900 mb-2'>Tổng lượt hiến máu</h3>
-            <p className='text-3xl font-bold text-red-600'>
-              {appointments.filter((a) => a.status === 'completed').length}
-            </p>
+          <div className='bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-lg border shadow-sm text-white'>
+            <h3 className='text-lg font-semibold mb-2 text-blue-600'>Tổng lượt hiến máu</h3>
+            <p className='text-3xl font-bold text-blue-700'>{appointments.filter((a) => a.status === 'completed').length}</p>
           </div>
-          <div className='bg-white p-6 rounded-lg border shadow-sm'>
-            <h3 className='text-lg font-semibold text-gray-900 mb-2'>Lịch hẹn sắp tới</h3>
-            <p className='text-3xl font-bold text-red-600'>
-              {appointments.filter((a) => a.status === 'upcoming').length}
-            </p>
+
+          <div className='bg-gradient-to-br from-yellow-50 to-yellow-100 p-6 rounded-lg border shadow-sm text-blue-800'>
+            <h3 className='text-lg font-semibold mb-2 text-yellow-600'>Lịch hẹn sắp tới</h3>
+            <p className='text-3xl font-bold text-yellow-700'>{appointments.filter((a) => a.status === 'upcoming').length}</p>
           </div>
-          <div className='bg-white p-6 rounded-lg border shadow-sm'>
-            <h3 className='text-lg font-semibold text-gray-900 mb-2'>Lịch hẹn đã hủy</h3>
-            <p className='text-3xl font-bold text-red-600'>
-              {appointments.filter((a) => a.status === 'cancelled').length}
-            </p>
+
+          <div className='bg-gradient-to-br from-red-50 to-red-100 p-6 rounded-lg border shadow-sm text-gray-800'>
+            <h3 className='text-lg font-semibold mb-2 text-red-600'>Lịch hẹn đã hủy</h3>
+            <p className='text-3xl font-bold text-red-700'>{appointments.filter((a) => a.status === 'cancelled').length}</p>
           </div>
         </div>
 
