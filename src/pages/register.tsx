@@ -31,7 +31,7 @@ export default function Register() {
         title: 'Đăng ký thành công',
         description: 'Vui lòng đăng nhập để tiếp tục'
       })
-      navigate('/login')
+      navigate('/dang-nhap')
     },
     onError: (error: Error) => {
       if (isAxiosError(error)) {
@@ -152,7 +152,7 @@ export default function Register() {
 
           <p className='mt-8 text-center text-sm text-gray-600'>
             Đã có tài khoản?{' '}
-            <button onClick={() => navigate('/login')} className='font-medium text-red-600 hover:text-red-500'>
+            <button onClick={() => navigate('/dang-nhap')} className='font-medium text-red-600 hover:text-red-500'>
               Đăng nhập ngay
             </button>
           </p>

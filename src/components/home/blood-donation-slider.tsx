@@ -79,11 +79,11 @@ const BloodDonationSlider: React.FC = () => {
 
   const handleRegistedonate = (campaign: CampaignResponse): void => {
     localStorage.setItem('selectedCampaign', JSON.stringify(campaign))
-    navigate('/blood-donation-registration')
+    navigate('/dang-ky-hien-mau')
   }
 
   return (
-    <div className='py-16 sm:py-24' id='blood-donation-slider'>
+    <div className='py-12 sm:py-12' id='blood-donation-slider'>
       {campaigns.length === 0 ? (
         <div className='text-center py-12'>
           <h2 className='text-2xl font-bold text-gray-700'>Không có sự kiện nào</h2>

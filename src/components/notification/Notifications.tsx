@@ -179,7 +179,7 @@ const Notifications: React.FC<NotificationsProps> = ({ onClose }) => {
       <div className='mt-4 flex justify-between'>
         <Button
           variant='outline'
-          onClick={() => navigate('/notifications')}
+          onClick={() => navigate('/thong-bao')}
           className='w-full text-red-600 border-red-500 hover:text-white hover:bg-red-600'
         >
           Xem thêm

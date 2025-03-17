@@ -9,7 +9,7 @@ import { CheckExtractStatus } from '@/api/extract'
 import { toast } from '@/components/ui/use-toast'
 
 const UserProfilePage: React.FC = () => {
-  const [selectedOption, setSelectedOption] = useState<string>('profile')
+  const [selectedOption, setSelectedOption] = useState<string>('thong-tin-ca-nhan')
   const [isCheckingStatus, setIsCheckingStatus] = useState(true)
   const [isVerified, setIsVerified] = useState(false)
   const hasFetched = useRef(false)
@@ -17,7 +17,7 @@ const UserProfilePage: React.FC = () => {
   useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash.slice(1)
-      if (hash && ['profile', 'appointment-info', 'appointment-history', 'verification'].includes(hash)) {
+      if (hash && ['thong-tin-ca-nhan', 'lich-hen', 'lich-su-hien-mau', 'xac-thuc-tai-khoan'].includes(hash)) {
         setSelectedOption(hash)
       }
     }
@@ -80,13 +80,13 @@ const UserProfilePage: React.FC = () => {
     }
 
     switch (selectedOption) {
-      case 'profile':
+      case 'thong-tin-ca-nhan':
         return <Profile />
-      case 'appointment-info':
+      case 'lich-hen':
         return <AppointmentInfo />
-      case 'appointment-history':
+      case 'lich-su-hien-mau':
         return <DonationHistory />
-      case 'verification':
+      case 'xac-thuc-tai-khoan':
         // Chỉ hiển thị UserVerification nếu chưa xác thực
         return isVerified ? <Profile /> : <UserVerification />
       default:
@@ -108,27 +108,27 @@ const UserProfilePage: React.FC = () => {
           <CardContent className='space-y-4'>
             <button
               className={`w-full text-left p-3 rounded-md flex items-center gap-2 ${
-                selectedOption === 'profile' ? 'bg-red-100' : ''
+                selectedOption === 'thong-tin-ca-nhan' ? 'bg-red-100' : ''
               }`}
-              onClick={() => handleOptionClick('profile')}
+              onClick={() => handleOptionClick('thong-tin-ca-nhan')}
             >
               <Info className='w-5 h-5' />
               Thông tin cá nhân
             </button>
             <button
               className={`w-full text-left p-3 rounded-md flex items-center gap-2 ${
-                selectedOption === 'appointment-info' ? 'bg-red-100' : ''
+                selectedOption === 'lich-hen' ? 'bg-red-100' : ''
               }`}
-              onClick={() => handleOptionClick('appointment-info')}
+              onClick={() => handleOptionClick('lich-hen')}
             >
               <Calendar className='w-5 h-5' />
               Lịch Hẹn của Tôi
             </button>
             <button
               className={`w-full text-left p-3 rounded-md flex items-center gap-2 ${
-                selectedOption === 'appointment-history' ? 'bg-red-100' : ''
+                selectedOption === 'lich-su-hien-mau' ? 'bg-red-100' : ''
               }`}
-              onClick={() => handleOptionClick('appointment-history')}
+              onClick={() => handleOptionClick('lich-su-hien-mau')}
             >
               <History className='w-5 h-5' />
               Lịch sử đặt hẹn
@@ -137,9 +137,9 @@ const UserProfilePage: React.FC = () => {
             {!isVerified && (
               <button
                 className={`w-full text-left p-3 rounded-md flex items-center gap-2 ${
-                  selectedOption === 'verification' ? 'bg-red-100' : ''
+                  selectedOption === 'xac-thuc-tai-khoan' ? 'bg-red-100' : ''
                 }`}
-                onClick={() => handleOptionClick('verification')}
+                onClick={() => handleOptionClick('xac-thuc-tai-khoan')}
               >
                 <CheckCircle className='w-5 h-5' />
                 Xác thực tài khoản
