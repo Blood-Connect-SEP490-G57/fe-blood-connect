@@ -122,7 +122,7 @@ const UserProfilePage: React.FC = () => {
               onClick={() => handleOptionClick('lich-hen')}
             >
               <Calendar className='w-5 h-5' />
-              Lịch Hẹn của Tôi
+              Lịch hẹn của tôi
             </button>
             <button
               className={`w-full text-left p-3 rounded-md flex items-center gap-2 ${

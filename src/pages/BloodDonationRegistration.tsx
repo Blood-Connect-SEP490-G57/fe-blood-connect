@@ -21,22 +21,33 @@ const BloodDonationRegistration: React.FC = () => {
   const [questionSetId, setQuestionSetId] = useState<number | null>(null)
   const [answers, setAnswers] = useState<Record<number, { value: string; description?: string }>>({})
 
-  // Kiểm tra localStorage khi component được mount
   useEffect(() => {
-    const savedCampaign = localStorage.getItem('selectedCampaign')
-    if (savedCampaign) {
+    const urlParams = new URLSearchParams(window.location.search)
+    const campaignId = urlParams.get('campaignId')
+    const questionSet = urlParams.get('questionset')
+
+    if (campaignId && questionSet) {
+      // Nếu có dữ liệu từ URL, sử dụng nó
       try {
-        const campaignData = JSON.parse(savedCampaign)
-        setSelectedCampaign(campaignData)
-        setQuestionSetId(campaignData.questionSetId)
-
-        // Chuyển đến bước tiếp theo
+        setSelectedCampaign(JSON.parse(campaignId))
+        setQuestionSetId(parseInt(questionSet))
         setCurrentStep(STEPS.QUESTIONNAIRE)
-
-        // Xóa dữ liệu từ localStorage sau khi đã sử dụng
-        localStorage.removeItem('selectedCampaign')
       } catch (error) {
-        console.error('Lỗi khi đọc thông tin chiến dịch:', error)
+        console.error('Lỗi khi đọc thông tin chiến dịch từ URL:', error)
+      }
+    } else {
+      // Nếu không có dữ liệu từ URL, kiểm tra localStorage
+      const savedCampaign = localStorage.getItem('selectedCampaign')
+      if (savedCampaign) {
+        try {
+          const campaignData = JSON.parse(savedCampaign)
+          setSelectedCampaign(campaignData)
+          setQuestionSetId(campaignData.questionSetId)
+          setCurrentStep(STEPS.QUESTIONNAIRE)
+          localStorage.removeItem('selectedCampaign')
+        } catch (error) {
+          console.error('Lỗi khi đọc thông tin chiến dịch từ localStorage:', error)
+        }
       }
     }
   }, [])
