@@ -1,4 +1,4 @@
-import { Calendar, MapPin, Droplet } from 'lucide-react'
+import { Calendar, MapPin, Info } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { useEffect, useRef, useState } from 'react'
@@ -7,29 +7,44 @@ import { toast } from '@/components/ui/use-toast'
 import { cancelAppointment } from '@/api/campaign'
 import Loading from '../warnings/loading'
 import Empty from '../warnings/empty'
-import { useNavigate } from 'react-router-dom'
+import { AppointmentType } from '@/schema/appointment-schema'
 
-interface DonationAppointment {
-  id: number
-  date: string
-  time: string
-  location: string
-  status: 'completed' | 'cancelled' | 'pending' | 'upcoming'
-  campaignId: number
-  campaignName?: string
-  bloodType?: string
-  amount?: number
-  notes?: string
+function CancelAppointmentModal({
+  isOpen,
+  onClose,
+  onConfirm
+}: {
+  isOpen: boolean
+  onClose: () => void
+  onConfirm: () => void
+}) {
+  if (!isOpen) return null
+
+  return (
+    <div className='fixed inset-0 flex items-center justify-center bg-black bg-opacity-50'>
+      <div className='bg-white p-6 rounded shadow-lg'>
+        <h2 className='text-lg font-bold mb-4'>Xác nhận hủy lịch hẹn</h2>
+        <p className='mb-4'>Bạn có chắc chắn muốn hủy lịch hẹn này không?</p>
+        <div className='flex justify-end space-x-2'>
+          <button onClick={onClose} className='px-4 py-2 bg-gray-300 rounded hover:bg-gray-400'>
+            Hủy bỏ
+          </button>
+          <button onClick={onConfirm} className='px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700'>
+            Xác nhận
+          </button>
+        </div>
+      </div>
+    </div>
+  )
 }
 
 const DonationHistory = () => {
-  const [appointments, setAppointments] = useState<DonationAppointment[]>([])
+  const [appointments, setAppointments] = useState<AppointmentType[]>([])
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
   const hasFetched = useRef(false)
-  const navigate = useNavigate()
+  const [isModalOpen, setModalOpen] = useState(false)
 
-  // Scroll to top when component mounts
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [])
@@ -43,52 +58,8 @@ const DonationHistory = () => {
         setLoading(true)
         const response = await getHistory()
 
-        if (response.success && Array.isArray(response.data)) {
-          const formattedAppointments: DonationAppointment[] = response.data.map((item: any) => {
-            let status: 'completed' | 'cancelled' | 'pending' | 'upcoming'
-            switch (item.status) {
-              case 'BOOKING':
-                status = 'upcoming'
-                break
-              case 'COMPLETED':
-                status = 'completed'
-                break
-              case 'CANCELLED':
-                status = 'cancelled'
-                break
-              default:
-                status = 'pending'
-            }
-
-            let date = ''
-            let time = ''
-            if (Array.isArray(item.appointmentDate) && item.appointmentDate.length >= 3) {
-              const [year, month, day, hour, minute] = item.appointmentDate
-              date = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`
-              if (hour !== undefined && minute !== undefined) {
-                time = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`
-              }
-            } else if (item.appointmentDate) {
-              const dateObj = new Date(item.appointmentDate)
-              date = dateObj.toISOString().split('T')[0]
-              time = dateObj.toTimeString().substring(0, 5)
-            }
-
-            return {
-              id: item.id,
-              campaignId: item.campaignId,
-              campaignName: item.campaignName,
-              date,
-              time,
-              location: item.location || item.campaignName || 'Không có thông tin',
-              status,
-              bloodType: undefined,
-              amount: undefined,
-              notes: undefined
-            }
-          })
-
-          setAppointments(formattedAppointments)
+        if (Array.isArray(response.data)) {
+          setAppointments(response.data)
         } else {
           setError('Không thể tải dữ liệu lịch sử hiến máu')
         }
@@ -108,122 +79,108 @@ const DonationHistory = () => {
     fetchDonationHistory()
   }, [])
 
-  const handleCancelAppointment = async (appointments: DonationAppointment) => {
-    if (window.confirm('Bạn có chắc chắn muốn hủy lịch hẹn này không?')) {
-      try {
-        // TODO: Add API call to cancel appointment
-        await cancelAppointment(appointments.campaignId)
-        toast({
-          title: 'Đã hủy lịch hẹn',
-          description: 'Lịch hẹn của bạn đã được hủy thành công',
-          variant: 'default'
-        })
-
-        // Cập nhật state sau khi hủy thành công
-        setAppointments((prev) =>
-          prev.map((app) => (app.id === appointments.id ? { ...app, status: 'cancelled' } : app))
-        )
-      } catch (error) {
-        toast({
-          title: 'Có lỗi xảy ra',
-          description: 'Không thể hủy lịch hẹn. Vui lòng thử lại sau.',
-          variant: 'destructive'
-        })
-      }
+  const handleCancelAppointment = async (appointment: AppointmentType) => {
+    try {
+      await cancelAppointment(appointment.campaignId)
+      toast({
+        title: 'Đã hủy lịch hẹn',
+        description: 'Lịch hẹn của bạn đã được hủy thành công',
+        variant: 'default'
+      })
+    } catch (error) {
+      toast({
+        title: 'Có lỗi xảy ra',
+        description: 'Không thể hủy lịch hẹn. Vui lòng thử lại sau.',
+        variant: 'destructive'
+      })
     }
+    setModalOpen(false)
   }
 
-  if (loading) {
-    return <Loading />
-  }
-
-  if (error) {
-    return <Empty />
-  }
+  if (loading) return <Loading />
+  if (error) return <Empty />
 
   return (
-    <div className='min-h-screen bg-white py-12'>
-      <div className='container mx-auto px-4'>
-        <div className='text-center mb-12'>
-          <h1 className='text-4xl font-bold text-gray-900 mb-4'>Lịch Sử Hiến Máu</h1>
-          <p className='text-lg text-gray-600 max-w-2xl mx-auto'>Theo dõi lịch sử đặt hẹn và hiến máu của bạn</p>
-        </div>
-
-        {/* Statistics Cards */}
-        <div className='grid grid-cols-1 md:grid-cols-3 gap-6 mb-8'>
-          <div className='bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-lg border shadow-sm text-white'>
-            <h3 className='text-lg font-semibold mb-2 text-blue-600'>Tổng lượt hiến máu</h3>
-            <p className='text-3xl font-bold text-blue-700'>{appointments.filter((a) => a.status === 'completed').length}</p>
-          </div>
-
-          <div className='bg-gradient-to-br from-yellow-50 to-yellow-100 p-6 rounded-lg border shadow-sm text-blue-800'>
-            <h3 className='text-lg font-semibold mb-2 text-yellow-600'>Lịch hẹn sắp tới</h3>
-            <p className='text-3xl font-bold text-yellow-700'>{appointments.filter((a) => a.status === 'upcoming').length}</p>
-          </div>
-
-          <div className='bg-gradient-to-br from-red-50 to-red-100 p-6 rounded-lg border shadow-sm text-gray-800'>
-            <h3 className='text-lg font-semibold mb-2 text-red-600'>Lịch hẹn đã hủy</h3>
-            <p className='text-3xl font-bold text-red-700'>{appointments.filter((a) => a.status === 'cancelled').length}</p>
-          </div>
-        </div>
-
-        {appointments.length > 0 ? (
-          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
-            {appointments.map((appointment) => (
-              <Card key={appointment.id} className='p-6 shadow-md rounded-lg'>
-                <h3 className='text-xl font-semibold text-gray-900 flex items-center mb-2'>
-                  <Calendar className='h-5 w-5 text-gray-500 mr-2' />
-                  {appointment.date} {appointment.time && `- ${appointment.time}`}
-                </h3>
-                <p className='text-gray-700 flex items-center mb-2'>
-                  <MapPin className='h-5 w-5 text-gray-500 mr-2' />
-                  <strong>Địa điểm:</strong> {appointment.location}
-                </p>
-                {appointment.campaignName && (
-                  <p className='text-gray-700 flex items-center mb-2'>
-                    <Calendar className='h-5 w-5 text-gray-500 mr-2' />
-                    <strong>Chiến dịch:</strong> {appointment.campaignName}
-                  </p>
-                )}
-                {appointment.bloodType && (
-                  <p className='text-gray-700 flex items-center mb-2'>
-                    <Droplet className='h-5 w-5 text-gray-500 mr-2' />
-                    <strong>Nhóm máu:</strong> {appointment.bloodType}
-                  </p>
-                )}
-                {appointment.amount && (
-                  <p className='text-gray-700 flex items-center mb-2'>
-                    <Droplet className='h-5 w-5 text-gray-500 mr-2' />
-                    <strong>Lượng máu:</strong> {appointment.amount}ml
-                  </p>
-                )}
-                {appointment.status === 'upcoming' && (
-                  <div className='mt-4 flex justify-end'>
-                    <Button
-                      variant='outline'
-                      size='sm'
-                      className='text-red-600 border-red-600 hover:bg-red-500 hover:text-white'
-                      onClick={() => handleCancelAppointment(appointment)}
-                    >
-                      Hủy lịch hẹn
-                    </Button>
-                  </div>
-                )}
-              </Card>
-            ))}
-          </div>
-        ) : (
-          <div className='flex flex-col items-center justify-center space-y-4 p-6 bg-white border shadow-sm rounded-lg'>
-            <h3 className='text-gray-500 text-lg font-medium text-center'>Chưa có lịch sử hiến máu</h3>
-            <Button
-              onClick={() => navigate('/dang-ky-hien-mau')}
-              className='w-full max-w-xs bg-red-600 text-white hover:bg-red-700 py-3 text-lg rounded-lg shadow-md transition-all'
-            >
-              Đặt lịch hiến máu
-            </Button>
-          </div>
-        )}
+    <div className='min-h-screen py-12 px-4 container mx-auto bg-white'>
+      <div className='text-center mb-8'>
+        <h1 className='text-4xl font-bold text-gray-900'>Lịch Sử Hiến Máu</h1>
+        <p className='text-lg text-gray-600'>Theo dõi lịch sử đặt hẹn và hiến máu của bạn</p>
       </div>
+
+      <div className='grid grid-cols-1 md:grid-cols-3 gap-6 mb-8'>
+        <div className='p-6 bg-blue-100 rounded-lg shadow-sm text-blue-800'>
+          <h3 className='text-lg font-semibold'>Tổng lượt hiến máu</h3>
+          <p className='text-3xl font-bold'>{appointments.filter((a) => a.status === 'DONE').length}</p>
+        </div>
+
+        <div className='p-6 bg-yellow-100 rounded-lg shadow-sm text-yellow-800'>
+          <h3 className='text-lg font-semibold'>Lịch hẹn sắp tới</h3>
+          <p className='text-3xl font-bold'>{appointments.filter((a) => a.status === 'BOOKING').length}</p>
+        </div>
+
+        <div className='p-6 bg-red-100 rounded-lg shadow-sm text-red-800'>
+          <h3 className='text-lg font-semibold'>Lịch hẹn đã hủy</h3>
+          <p className='text-3xl font-bold'>{appointments.filter((a) => a.status === 'CANCELLED').length}</p>
+        </div>
+      </div>
+
+      <div className='grid grid-cols-1 gap-6'>
+        {appointments.map((appointment) => (
+          <Card key={appointment.id} className='p-6 shadow-md rounded-lg border'>
+            <div className='flex justify-end items-center'>
+              <span
+                className={`px-3 py-1 rounded-full text-sm font-semibold  
+                  ${
+                    appointment.status === 'DONE'
+                      ? 'bg-green-100 text-green-700'
+                      : appointment.status === 'BOOKING'
+                      ? 'bg-yellow-100 text-yellow-700'
+                      : appointment.status === 'CANCELLED'
+                      ? 'bg-red-100 text-red-700'
+                      : 'bg-gray-100 text-gray-700'
+                  }`}
+              >
+                {appointment.status === 'DONE'
+                  ? 'Hoàn thành'
+                  : appointment.status === 'BOOKING'
+                  ? 'Đã đặt lịch'
+                  : 'Đã hủy'}
+              </span>
+            </div>
+            <h3 className='text-xl font-semibold text-gray-900 flex items-center mt-3'>
+              <Calendar className='h-5 w-5 text-gray-500 mr-2' /> {appointment.appointmentDate}
+            </h3>
+
+            <p className='text-gray-700 flex items-center mt-2'>
+              <MapPin className='h-5 w-5 text-gray-500 mr-2' />
+              <span className='font-bold'>Địa điểm:</span> {appointment.location || 'Không có thông tin'}
+            </p>
+            {appointment.campaignName && (
+              <p className='text-gray-700 flex items-center mt-2'>
+                <Info className='h-5 w-5 text-gray-500 mr-2' />
+                <span className='font-bold'>Chiến dịch:</span> {appointment.campaignName}
+              </p>
+            )}
+            <div className='mt-4 flex justify-end space-x-2'>
+              {appointment.status === 'BOOKING' && (
+                <Button
+                  variant='outline'
+                  size='sm'
+                  className='text-red-600 border-red-600 hover:bg-red-500 hover:text-white'
+                  onClick={() => setModalOpen(true)}
+                >
+                  Hủy lịch hẹn
+                </Button>
+              )}
+            </div>
+          </Card>
+        ))}
+      </div>
+      <CancelAppointmentModal
+        isOpen={isModalOpen}
+        onClose={() => setModalOpen(false)}
+        onConfirm={() => handleCancelAppointment(appointments[0])}
+      />
     </div>
   )
 }

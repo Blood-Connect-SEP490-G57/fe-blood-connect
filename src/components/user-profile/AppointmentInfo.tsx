@@ -207,15 +207,15 @@ const AppointmentInfo = () => {
               <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
                 {[
                   { label: 'Họ và tên', value: userInfo.fullName },
+                  { label: 'Số CMND/Hộ chiếu', value: userInfo.identityNumber },
                   { label: 'Ngày sinh', value: formatDate(userInfo.dob) },
                   { label: 'Giới tính', value: userInfo.gender },
                   { label: 'Nghề nghiệp', value: userInfo.jobName },
                   { label: 'Cơ quan/Trường, Lớp', value: userInfo.organizationName },
-                  { label: 'Địa chỉ liên lạc', value: userInfo.addressContact, fullWidth: true },
-                  { label: 'Số CMND/Hộ chiếu', value: userInfo.identityNumber },
                   { label: 'Số thẻ HS/SV/Quân nhân', value: userInfo.student_id || '-' },
                   { label: 'Điện thoại', value: userInfo.phoneNumber },
-                  { label: 'Email', value: userInfo.email, fullWidth: true }
+                  { label: 'Email', value: userInfo.email, fullWidth: true },
+                  { label: 'Địa chỉ liên lạc', value: userInfo.addressContact, fullWidth: true }
                 ].map((item, index) => (
                   <div key={index} className={item.fullWidth ? 'col-span-1 md:col-span-2' : ''}>
                     <span className='font-medium text-gray-700 block mb-1'>{item.label}:</span>
