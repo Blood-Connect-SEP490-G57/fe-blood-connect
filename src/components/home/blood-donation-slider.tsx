@@ -43,7 +43,7 @@ const BloodDonationSlider: React.FC = () => {
     if (campaigns.length > 1) {
       const timer = setInterval(() => {
         setCurrentSlide((prev) => (prev + 1) % campaigns.length)
-      }, 5000)
+      }, 10000)
 
       return () => clearInterval(timer)
     }
@@ -144,15 +144,18 @@ const BloodDonationSlider: React.FC = () => {
                             <div
                               className='h-full bg-red-600 transition-all duration-500'
                               style={{
-                                width: `${Math.min((campaign.appointmentCount / campaign.targetBloodUnits) * 100, 100)}%`
+                                width: `${Math.min(
+                                  (campaign.appointmentCount / campaign.targetBloodUnits) * 100,
+                                  100
+                                )}%`
                               }}
                             />
                           </div>
 
                           <div className='flex justify-end mt-6'>
-                            <ShareLink campaign={JSON.stringify(campaign)}/>
+                            <ShareLink selectedCampaign={campaign} />
                             <button
-                              className='px-6 py-3 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors duration-300'
+                              className='px-6 py-3 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors transition-transform transform hover:scale-110 shadow-lg focus:outline-none duration-300'
                               onClick={() => handleRegistedonate(campaign)}
                             >
                               Đăng ký ngay

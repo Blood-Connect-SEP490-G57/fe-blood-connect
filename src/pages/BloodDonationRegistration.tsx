@@ -29,15 +29,22 @@ const BloodDonationRegistration: React.FC = () => {
         const campaignData = JSON.parse(savedCampaign)
         setSelectedCampaign(campaignData)
         setQuestionSetId(campaignData.questionSetId)
-
-        // Chuyển đến bước tiếp theo
         setCurrentStep(STEPS.QUESTIONNAIRE)
-
-        // Xóa dữ liệu từ localStorage sau khi đã sử dụng
         localStorage.removeItem('selectedCampaign')
       } catch (error) {
         console.error('Lỗi khi đọc thông tin chiến dịch:', error)
       }
+    }
+  }, [])
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search)
+    try {
+      setSelectedCampaign(JSON.parse(urlParams.get('campaignId') ?? '{}'))
+      setQuestionSetId(parseInt(urlParams.get('questionset') ?? '0'))
+      setCurrentStep(STEPS.QUESTIONNAIRE)
+    } catch (error) {
+      console.error('Lỗi khi đọc thông tin chiến dịch:', error)
     }
   }, [])
 
@@ -101,8 +108,8 @@ const BloodDonationRegistration: React.FC = () => {
             campaignId={selectedCampaign?.id ?? 0}
             answers={answers}
             handleAnswerChange={handleAnswerChange}
-            setCurrentStep={setCurrentStep}
-          />
+              setCurrentStep={setCurrentStep}
+            />
         )
       case STEPS.REVIEW:
         return (

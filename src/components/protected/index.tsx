@@ -1,4 +1,4 @@
-import { Navigate } from 'react-router-dom'
+import { Navigate, useLocation } from 'react-router-dom'
 
 export default function Protected({
   children,
@@ -10,9 +10,10 @@ export default function Protected({
   destination: string
 }) {
   const isAuthenticated = localStorage.getItem('access_token')
+  const location = useLocation()
 
-  if (!!isAuthenticated != tokenRequired) {
-    return <Navigate replace to={`${destination}`} />
+  if (!!isAuthenticated !== tokenRequired) {
+    return <Navigate replace to={`${destination}?redirect=${encodeURIComponent(location.pathname)}`} />
   }
   return children
 }
