@@ -92,7 +92,8 @@ const BloodDonationSlider: React.FC = () => {
       ) : (
         <div className='max-w-7xl mx-auto px-4 sm:px-6'>
           <div className='relative overflow-hidden rounded-lg shadow-lg max-w-7xl mx-auto px-4 sm:px-6 bg-white border'>
-            <h2 className='text-3xl mt-6 font-bold text-red-600 mb-12 text-center'>SỰ KIỆN HIẾN MÁU</h2>
+            <h2 className='text-2xl sm:text-3xl mt-6 font-bold text-red-600 mb-8 text-center'>SỰ KIỆN HIẾN MÁU</h2>
+
             <div className='overflow-hidden'>
               <div
                 className='flex transition-transform duration-700 ease-in-out mb-6 w-full'
@@ -101,17 +102,20 @@ const BloodDonationSlider: React.FC = () => {
                 {campaigns.map((campaign) => (
                   <div key={campaign.id} className='w-full flex-shrink-0 flex-grow-0 basis-full'>
                     <div className='flex flex-col md:flex-row p-4'>
-                      <div className='md:w-1/2 h-64 md:h-96 relative overflow-hidden'>
+                      {/* Hình ảnh */}
+                      <div className='w-full md:w-1/2 h-48 sm:h-64 md:h-96 relative overflow-hidden'>
                         <img
                           src={'https://images.unsplash.com/photo-1615461066841-6116e61058f4'}
                           alt={campaign.name}
                           className='w-full h-full object-cover rounded-lg'
                         />
                       </div>
-                      <div className='md:w-1/2 p-6 md:p-8 flex flex-col justify-center'>
-                        <h2 className='text-2xl font-bold text-black mb-4'>{campaign.name}</h2>
 
-                        <div className='space-y-4'>
+                      {/* Nội dung */}
+                      <div className='w-full md:w-1/2 p-4 sm:p-6 flex flex-col justify-center'>
+                        <h2 className='text-xl sm:text-2xl font-bold text-black mb-4'>{campaign.name}</h2>
+
+                        <div className='space-y-3 sm:space-y-4 text-sm sm:text-base'>
                           <div className='flex items-start text-black'>
                             <MapPin className='mr-2 text-red-600 flex-shrink-0' />
                             <span className='whitespace-normal'>Địa điểm: {campaign.location}</span>
@@ -128,19 +132,19 @@ const BloodDonationSlider: React.FC = () => {
                             <Calendar className='mr-2 text-red-600' />
                             <span>Thời gian tổ chức: {formatDateTime(campaign.organizeTime)}</span>
                           </div>
-                          <div className='flex items-center text-black'>
+                          <div className='flex items-start text-black'>
                             <Info className='mr-2 text-red-600 flex-shrink-0' />
-                            <span>Mô tả sự kiện: {campaign.description}</span>
+                            <span>Mô tả: {campaign.description}</span>
                           </div>
-
                           <div className='flex items-center text-black'>
                             <Users className='mr-2 text-red-600' />
                             <span>
-                              Số người: {campaign.appointmentCount} / {campaign.targetBloodUnits} Đã đăng ký
+                              Số người: {campaign.appointmentCount} / {campaign.targetBloodUnits}
                             </span>
                           </div>
+
                           {/* Thanh Progress Bar Thu Nhỏ */}
-                          <div className='w-full bg-gray-200 rounded-full h-2 mt-2 overflow-hidden'>
+                          <div className='w-full bg-gray-200 rounded-full h-1.5 sm:h-2 mt-2 overflow-hidden'>
                             <div
                               className='h-full bg-red-600 transition-all duration-500'
                               style={{
@@ -152,10 +156,10 @@ const BloodDonationSlider: React.FC = () => {
                             />
                           </div>
 
-                          <div className='flex justify-end mt-6'>
+                          <div className='flex justify-end mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4'>
                             <ShareLink selectedCampaign={campaign} />
                             <button
-                              className='px-6 py-3 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors transition-transform transform hover:scale-110 shadow-lg focus:outline-none duration-300'
+                              className='px-5 py-2 sm:px-6 sm:py-3 bg-red-600 text-white rounded-md hover:bg-red-700 transition-transform transform hover:scale-105 shadow-lg focus:outline-none duration-300'
                               onClick={() => handleRegistedonate(campaign)}
                             >
                               Đăng ký ngay
@@ -173,14 +177,14 @@ const BloodDonationSlider: React.FC = () => {
               <>
                 <button
                   onClick={handlePrevious}
-                  className='absolute left-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-red-600 text-white hover:bg-red-700 transition-colors duration-200'
+                  className=' sm:block absolute left-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-red-600 text-white hover:bg-red-700 transition-colors duration-200'
                 >
                   <ChevronLeft className='w-6 h-6' />
                 </button>
 
                 <button
                   onClick={handleNext}
-                  className='absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-red-600 text-white hover:bg-red-700 transition-colors duration-200'
+                  className=' sm:block absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-red-600 text-white hover:bg-red-700 transition-colors duration-200'
                 >
                   <ChevronRight className='w-6 h-6' />
                 </button>
