@@ -64,7 +64,7 @@ const SuccessStep: FC<SuccessStepProps> = ({ navigate }) => {
             >
               <Button
                 className='bg-red-600 hover:bg-red-700 text-white shadow transition-all duration-200 hover:shadow-lg flex items-center justify-center'
-                onClick={() => navigate('/lich-su-hien-mau')}
+                onClick={() => navigate('/trang-ca-nhan#lich-hen')}
               >
                 <Calendar className='mr-2 h-4 w-4' />
                 Xem lịch hẹn
