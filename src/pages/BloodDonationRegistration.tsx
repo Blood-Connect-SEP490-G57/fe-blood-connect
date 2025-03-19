@@ -21,30 +21,34 @@ const BloodDonationRegistration: React.FC = () => {
   const [questionSetId, setQuestionSetId] = useState<number | null>(null)
   const [answers, setAnswers] = useState<Record<number, { value: string; description?: string }>>({})
 
-  // Kiểm tra localStorage khi component được mount
-  useEffect(() => {
-    const savedCampaign = localStorage.getItem('selectedCampaign')
-    if (savedCampaign) {
-      try {
-        const campaignData = JSON.parse(savedCampaign)
-        setSelectedCampaign(campaignData)
-        setQuestionSetId(campaignData.questionSetId)
-        setCurrentStep(STEPS.QUESTIONNAIRE)
-        localStorage.removeItem('selectedCampaign')
-      } catch (error) {
-        console.error('Lỗi khi đọc thông tin chiến dịch:', error)
-      }
-    }
-  }, [])
-
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search)
-    try {
-      setSelectedCampaign(JSON.parse(urlParams.get('campaignId') ?? '{}'))
-      setQuestionSetId(parseInt(urlParams.get('questionset') ?? '0'))
-      setCurrentStep(STEPS.QUESTIONNAIRE)
-    } catch (error) {
-      console.error('Lỗi khi đọc thông tin chiến dịch:', error)
+    const campaignId = urlParams.get('campaignId')
+    const questionSet = urlParams.get('questionset')
+
+    if (campaignId && questionSet) {
+      // Nếu có dữ liệu từ URL, sử dụng nó
+      try {
+        setSelectedCampaign(JSON.parse(campaignId))
+        setQuestionSetId(parseInt(questionSet))
+        setCurrentStep(STEPS.QUESTIONNAIRE)
+      } catch (error) {
+        console.error('Lỗi khi đọc thông tin chiến dịch từ URL:', error)
+      }
+    } else {
+      // Nếu không có dữ liệu từ URL, kiểm tra localStorage
+      const savedCampaign = localStorage.getItem('selectedCampaign')
+      if (savedCampaign) {
+        try {
+          const campaignData = JSON.parse(savedCampaign)
+          setSelectedCampaign(campaignData)
+          setQuestionSetId(campaignData.questionSetId)
+          setCurrentStep(STEPS.QUESTIONNAIRE)
+          localStorage.removeItem('selectedCampaign')
+        } catch (error) {
+          console.error('Lỗi khi đọc thông tin chiến dịch từ localStorage:', error)
+        }
+      }
     }
   }, [])
 
@@ -108,8 +112,8 @@ const BloodDonationRegistration: React.FC = () => {
             campaignId={selectedCampaign?.id ?? 0}
             answers={answers}
             handleAnswerChange={handleAnswerChange}
-              setCurrentStep={setCurrentStep}
-            />
+            setCurrentStep={setCurrentStep}
+          />
         )
       case STEPS.REVIEW:
         return (

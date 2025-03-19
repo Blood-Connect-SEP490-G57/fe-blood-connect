@@ -6,7 +6,9 @@ export default function ShareLink({ selectedCampaign }: { selectedCampaign: Camp
   const [showIcons, setShowIcons] = useState(false)
   const dropdownRef = useRef<HTMLDivElement | null>(null)
 
-  const baseUrl = `http://localhost:3000/dang-ky-hien-mau`
+  // const baseUrl = `http://localhost:3000/dang-ky-hien-mau`
+  const baseUrl = `https://giotmauhyvong.org/dang-ky-hien-mau`
+
   const urlToShare = `${baseUrl}?campaignId=${selectedCampaign?.id}&questionset=${selectedCampaign?.questionSetId}`
 
   function shareToFacebook() {
