@@ -13,6 +13,7 @@ export default function ShareLink({ selectedCampaign }: { selectedCampaign: Camp
 
   function shareToFacebook() {
     const fbUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(urlToShare)}`
+    console.log(fbUrl)
     window.open(fbUrl, '_blank')
     localStorage.removeItem('selectedCampaign')
   }
@@ -20,6 +21,7 @@ export default function ShareLink({ selectedCampaign }: { selectedCampaign: Camp
   function shareToZalo() {
     const zaloUrl = `https://zalo.me/share?url=${encodeURIComponent(urlToShare)}`
     window.open(zaloUrl, '_blank')
+    console.log(zaloUrl)
     localStorage.removeItem('selectedCampaign')
   }
 
