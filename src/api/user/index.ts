@@ -37,3 +37,12 @@ export const createOrUpdateUserDetail = async (request: UserDetailType) => {
   )
   return response.data
 }
+
+export const updateUserDetail = async (data: any) => {
+  const response = await axios.put('/api/users/update-detail', data, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('access_token')}`
+    }
+  })
+  return response.data
+}
