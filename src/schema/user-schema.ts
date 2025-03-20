@@ -11,8 +11,8 @@ export const UserFullInfoResponseSchema = z.object({
 
   // User Detail info
   job_name: z.string(),
-  student_id: z.string(),
-  military_id: z.string(),
+  student_id: z.string().optional(),
+  military_id: z.string().optional(),
   address_contact: z.string(),
   time_donation: z.number(),
   blood_group: z.string(),
@@ -39,14 +39,15 @@ export const UserFullInfoResponseSchema = z.object({
 export type UserFullInfoResponse = z.infer<typeof UserFullInfoResponseSchema>
 
 export const userDetailSchema = z.object({
-  email: z.string().email('Email không hợp lệ'),
-  job_name: z.string().min(1, 'Vui lòng chọn nghề nghiệp'),
+  email: z.string().email('Email không hợp lệ').optional(),
+  job_name: z.string().min(1, 'Vui lòng chọn nghề nghiệp').optional(),
   student_id: z.string().optional(),
   military_id: z.string().optional(),
-  address_contact: z.string().min(1, 'Vui lòng nhập địa chỉ liên hệ'),
-  time_donation: z.number().min(0, 'Số lần hiến máu không hợp lệ'),
-  blood_group: z.string().min(1, 'Vui lòng chọn nhóm máu'),
-  organization_id: z.number().min(1, 'Vui lòng chọn tổ chức')
+  address_contact: z.string().min(1, 'Vui lòng nhập địa chỉ liên hệ').optional(),
+  time_donation: z.number().min(0, 'Số lần hiến máu không hợp lệ').optional(),
+  blood_group: z.string().min(1, 'Vui lòng chọn nhóm máu').optional(),
+  organization_id: z.number().min(1, 'Vui lòng chọn tổ chức').optional(),
+  mobile: z.string().min(10, 'Vui lòng nhập số điện thoại').max(11, 'Số điện thoại không quá 11 số').optional()
 })
 
 export type UserDetailType = z.infer<typeof userDetailSchema>

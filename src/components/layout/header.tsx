@@ -84,7 +84,7 @@ const Header: React.FC = () => {
         <div className='flex items-center justify-between h-16'>
           <div className='flex items-center'>
             <a href='/' className='text-primary font-bold text-xl'>
-              Giọt Máu Hi Vọng
+              Giọt Máu Hy Vọng
             </a>
           </div>
           {/* Desktop and Tablet Navigation */}

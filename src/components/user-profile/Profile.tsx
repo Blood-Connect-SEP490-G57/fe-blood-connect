@@ -6,8 +6,9 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
-import { UserFullInfoResponseSchema } from '@/schema/user-schema'
-import { User as fetchUser } from '@/api/user'
+import { userDetailSchema, UserFullInfoResponseSchema } from '@/schema/user-schema'
+import { User as fetchUser, updateUserDetail } from '@/api/user'
+import { toast } from '../ui/use-toast'
 
 const Profile = () => {
   // Scroll to top when component mounts
@@ -51,6 +52,18 @@ const Profile = () => {
     }
   })
 
+  const form2 = useForm<z.infer<typeof userDetailSchema>>({
+    resolver: zodResolver(userDetailSchema),
+    defaultValues: {
+      email: '',
+      mobile: '',
+      job_name: '',
+      student_id: '',
+      military_id: '',
+      address_contact: ''
+    }
+  })
+
   useEffect(() => {
     if (hasFetched.current) return // Nếu đã fetch thì không gọi lại
     hasFetched.current = true
@@ -58,14 +71,8 @@ const Profile = () => {
     const fetchUserData = async () => {
       try {
         const response = await fetchUser()
-        console.log(response)
         form.reset({
-          email: response.email || '',
-          mobile: response.mobile || '',
           job_name: response.job_name || '',
-          student_id: response.student_id || '',
-          military_id: response.military_id || '',
-          address_contact: response.address_contact || '',
           time_donation: response.time_donation || 0,
           blood_group: response.blood_group || '-',
           card_id: response.card_id || '',
@@ -75,6 +82,14 @@ const Profile = () => {
           national: response.national || '',
           address: response.address || '',
           home: response.home || ''
+        })
+        form2.reset({
+          email: response.email || '',
+          mobile: response.mobile || '',
+          job_name: response.job_name || '',
+          student_id: response.student_id || '',
+          military_id: response.military_id || '',
+          address_contact: response.address_contact || ''
         })
       } catch (err) {
         console.error('Error fetching user data:', err)
@@ -87,8 +102,43 @@ const Profile = () => {
     fetchUserData()
   }, [form])
 
-  const onSubmit = (values: z.infer<typeof UserFullInfoResponseSchema>) => {
-    console.log(values)
+  const updateProfile = async (value: any) => {
+    try {
+      const response = await updateUserDetail(value)
+      if (response.success) {
+        toast({
+          title: 'Cập nhật thành công',
+          description: response.message || 'Thông tin cá nhân đã được cập nhật.',
+          variant: 'default'
+        })
+      } else {
+        toast({
+          title: 'Lỗi',
+          description: response.message || 'Không thể cập nhật thông tin cá nhân.',
+          variant: 'destructive'
+        })
+      }
+    } catch (error) {
+      console.error('Error updating profile:', error)
+      toast({
+        title: 'Lỗi',
+        description: 'Không thể cập nhật thông tin cá nhân.',
+        variant: 'destructive'
+      })
+    }
+  }
+
+  const onSubmit = async () => {
+    const formattedValues = {
+      mobile: form2.getValues('mobile'),
+      email: form2.getValues('email'),
+      jobName: form2.getValues('job_name'),
+      studentId: form2.getValues('student_id'),
+      militaryId: form2.getValues('military_id'),
+      addressContact: form2.getValues('address_contact')
+    }
+    console.log(formattedValues)
+    await updateProfile(formattedValues)
   }
 
   if (loading) {
@@ -101,8 +151,13 @@ const Profile = () => {
   }
 
   if (error) {
-    return <div>{error}</div>
+    return (
+      <div className='flex items-center justify-center mt-12'>
+        <div className='text-red-500'>{error}</div>
+      </div>
+    )
   }
+  // console.log(form2.formState.errors)
 
   return (
     <div className='min-h-screen bg-white py-12'>
@@ -112,135 +167,31 @@ const Profile = () => {
           <Card>
             <CardContent>
               <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
-                  {/* Phần 1: Thông tin cá nhân */}
-                  <div>
-                    <h2 className='text-lg font-semibold mb-4 mt-4'>Thông tin cá nhân</h2>
-                    <div className='grid grid-cols-1 gap-6'>
-                      <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-                        <FormField
-                          control={form.control}
-                          name='card_id'
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Số CCCD</FormLabel>
-                              <FormControl>
-                                <Input {...field} readOnly />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-
-                        <FormField
-                          control={form.control}
-                          name='full_name'
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Họ và tên</FormLabel>
-                              <FormControl>
-                                <Input {...field} readOnly />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-
-                      <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-                        <FormField
-                          control={form.control}
-                          name='dob'
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Ngày sinh</FormLabel>
-                              <FormControl>
-                                <Input {...field} readOnly />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-
-                        <FormField
-                          control={form.control}
-                          name='gender'
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Giới tính</FormLabel>
-                              <FormControl>
-                                <Input {...field} readOnly />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-
-                      <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-                        <FormField
-                          control={form.control}
-                          name='blood_group'
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Nhóm máu</FormLabel>
-                              <FormControl>
-                                <Input {...field} readOnly />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <FormField
-                          control={form.control}
-                          name='national'
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Quốc gia</FormLabel>
-                              <FormControl>
-                                <Input {...field} readOnly />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-
-                      <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-                        <FormField
-                          control={form.control}
-                          name='time_donation'
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Số lần hiến máu</FormLabel>
-                              <FormControl>
-                                <Input {...field} readOnly />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-
-                        <FormField
-                          control={form.control}
-                          name='home'
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Nơi thường trú</FormLabel>
-                              <FormControl>
-                                <Input {...field} readOnly />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
+                {/* Phần 1: Thông tin cá nhân */}
+                <div>
+                  <h2 className='text-lg font-semibold mb-4 mt-4'>Thông tin cá nhân</h2>
+                  <div className='grid grid-cols-1 gap-6'>
+                    <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
                       <FormField
                         control={form.control}
-                        name='address'
+                        name='card_id'
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Quê quán</FormLabel>
+                            <FormLabel>Số CCCD</FormLabel>
+                            <FormControl>
+                              <Input {...field} readOnly />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name='full_name'
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Họ và tên</FormLabel>
                             <FormControl>
                               <Input {...field} readOnly />
                             </FormControl>
@@ -249,34 +200,151 @@ const Profile = () => {
                         )}
                       />
                     </div>
-                  </div>
 
+                    <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+                      <FormField
+                        control={form.control}
+                        name='dob'
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Ngày sinh</FormLabel>
+                            <FormControl>
+                              <Input {...field} readOnly />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name='gender'
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Giới tính</FormLabel>
+                            <FormControl>
+                              <Input {...field} readOnly />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+
+                    <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+                      <FormField
+                        control={form.control}
+                        name='blood_group'
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Nhóm máu</FormLabel>
+                            <FormControl>
+                              <Input {...field} readOnly />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name='national'
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Quốc gia</FormLabel>
+                            <FormControl>
+                              <Input {...field} readOnly />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+
+                    <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+                      <FormField
+                        control={form.control}
+                        name='time_donation'
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Số lần hiến máu</FormLabel>
+                            <FormControl>
+                              <Input {...field} readOnly />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name='home'
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Nơi thường trú</FormLabel>
+                            <FormControl>
+                              <Input {...field} readOnly />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    <FormField
+                      control={form.control}
+                      name='address'
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Quê quán</FormLabel>
+                          <FormControl>
+                            <Input {...field} readOnly />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </div>
+              </Form>
+              <Form {...form2}>
+                <form onSubmit={form2.handleSubmit(onSubmit)} className='space-y-8'>
                   {/* Phần 2: Thông tin liên hệ */}
                   <div>
-                    <h2 className='text-lg font-semibold mb-4'>Thông tin liên hệ</h2>
+                    <h2 className='text-lg font-semibold mb-4 mt-4'>Thông tin liên hệ</h2>
                     <div className='grid grid-cols-1 gap-6'>
                       <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
                         <FormField
-                          control={form.control}
+                          control={form2.control}
                           name='address_contact'
                           render={({ field }) => (
                             <FormItem>
                               <FormLabel>Địa chỉ liên hệ</FormLabel>
                               <FormControl>
-                                <Input {...field} />
+                                <Input
+                                  {...field}
+                                  onChange={(e) => {
+                                    field.onChange(e)
+                                    form2.setValue('address_contact', e.target.value)
+                                  }}
+                                />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
                           )}
                         />
                         <FormField
-                          control={form.control}
+                          control={form2.control}
                           name='mobile'
                           render={({ field }) => (
                             <FormItem>
                               <FormLabel>Điện thoại di động</FormLabel>
                               <FormControl>
-                                <Input {...field} />
+                                <Input
+                                  {...field}
+                                  onChange={(e) => {
+                                    field.onChange(e)
+                                    form2.setValue('mobile', e.target.value)
+                                  }}
+                                />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -286,26 +354,80 @@ const Profile = () => {
 
                       <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
                         <FormField
-                          control={form.control}
+                          control={form2.control}
+                          name='student_id'
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Mã sinh viên</FormLabel>
+                              <FormControl>
+                                <Input
+                                  {...field}
+                                  onChange={(e) => {
+                                    field.onChange(e)
+                                    form2.setValue('student_id', e.target.value)
+                                  }}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={form2.control}
+                          name='military_id'
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Mã quân nhân</FormLabel>
+                              <FormControl>
+                                <Input
+                                  {...field}
+                                  onChange={(e) => {
+                                    field.onChange(e)
+                                    form2.setValue('military_id', e.target.value)
+                                  }}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                      <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+                        <FormField
+                          control={form2.control}
                           name='email'
                           render={({ field }) => (
                             <FormItem>
                               <FormLabel>Email</FormLabel>
                               <FormControl>
-                                <Input {...field} type='email' />
+                                <Input
+                                  {...field}
+                                  type='email'
+                                  onChange={(e) => {
+                                    field.onChange(e)
+                                    form2.setValue('email', e.target.value)
+                                  }}
+                                />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
                           )}
                         />
                         <FormField
-                          control={form.control}
+                          control={form2.control}
                           name='job_name'
                           render={({ field }) => (
                             <FormItem>
                               <FormLabel>Nghề nghiệp</FormLabel>
                               <FormControl>
-                                <Input {...field} />
+                                <Input
+                                  {...field}
+                                  onChange={(e) => {
+                                    field.onChange(e)
+                                    form2.setValue('job_name', e.target.value)
+                                  }}
+                                />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -316,9 +438,6 @@ const Profile = () => {
                   </div>
 
                   <div className='flex justify-end space-x-4'>
-                    <Button type='button' variant='outline' className='border-red-600 text-red-600 hover:bg-red-50'>
-                      Hủy
-                    </Button>
                     <Button type='submit' className='bg-red-600 text-white hover:bg-red-700'>
                       Lưu thay đổi
                     </Button>
