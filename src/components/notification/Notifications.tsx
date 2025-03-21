@@ -10,6 +10,7 @@ import {
   markAllAsRead,
   NotificationListResponse,
   formatExactDate,
+  formatRelativeTime
 } from '@/api/notification/index'
 
 interface NotificationsProps {
@@ -196,6 +197,8 @@ const Notifications: React.FC<NotificationsProps> = ({ onClose }) => {
                   {notification.created && (
                     <>
                       <span>{formatExactDate(notification.created)}</span>
+                      <span>•</span>
+                      <span>{formatRelativeTime(notification.created)}</span>
                     </>
                   )}
                 </div>

@@ -2,16 +2,10 @@ import { ArrowLeft, Calendar } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import {
-  formatExactDate,
-  getNotificationById,
-  markAsRead
-} from '@/api/notification/index'
+import { formatExactDate, getNotificationById, markAsRead } from '@/api/notification/index'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useToast } from '@/components/ui/use-toast'
-
-
 
 /**
  * Hàm mapping từ số type sang nhãn văn bản.

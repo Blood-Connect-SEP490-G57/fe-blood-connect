@@ -117,29 +117,6 @@ const NotificationList = () => {
     return data.pages.flatMap((page) => page.data.data)
   }, [data])
 
-  // Add loading skeletons
-  if (isLoading) {
-    return (
-      <div className='min-h-screen bg-white py-12'>
-        <div className='container mx-auto px-4 max-w-4xl'>
-          <div className='flex items-center gap-3 mb-8'>
-            <div className='w-8 h-8 rounded-full bg-gray-200 animate-pulse' />
-            <div className='h-8 w-48 bg-gray-200 rounded animate-pulse' />
-          </div>
-          <div className='space-y-4'>
-            {[1, 2, 3].map((i) => (
-              <div key={i} className='p-6 border rounded-lg bg-gray-50 animate-pulse'>
-                <div className='h-4 w-32 bg-gray-200 rounded mb-4' />
-                <div className='h-6 w-3/4 bg-gray-200 rounded mb-2' />
-                <div className='h-4 w-1/2 bg-gray-200 rounded' />
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    )
-  }
-
   return (
     <div className='min-h-screen bg-white py-12'>
       <div className='container mx-auto px-4 max-w-4xl'>
@@ -173,7 +150,25 @@ const NotificationList = () => {
           </div>
 
           <TabsContent value={activeTab} className='space-y-4'>
-            {notifications && notifications.length > 0 ? (
+            {isLoading ? (
+              <div className='space-y-4'>
+                {[1, 2, 3].map((i) => (
+                  <Card key={i} className='border'>
+                    <CardContent className='p-6 space-y-4'>
+                      <div className='flex items-center gap-2'>
+                        <div className='h-4 w-4 bg-gray-200 rounded-full'></div>
+                        <div className='h-4 w-32 bg-gray-200 rounded'></div>
+                      </div>
+                      <div className='flex items-center justify-between'>
+                        <div className='h-6 w-64 bg-gray-200 rounded'></div>
+                        <div className='h-6 w-20 bg-gray-200 rounded-full'></div>
+                      </div>
+                      <div className='h-4 w-full bg-gray-200 rounded'></div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            ) : notifications && notifications.length > 0 ? (
               <>
                 {notifications.map((notification) => (
                   <NotificationCard key={notification.id} notification={notification} />
