@@ -4,14 +4,22 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
-import { Calendar } from 'lucide-react'
+import { Calendar, MoreVertical } from 'lucide-react'
 import {
   getNotifications,
   markAllAsRead,
   NotificationListResponse,
   formatExactDate,
-  formatRelativeTime
+  formatRelativeTime,
+  markAsRead,
+  toggleNotificationStatus
 } from '@/api/notification/index'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu'
 
 interface NotificationsProps {
   onClose: () => void
@@ -121,6 +129,18 @@ const Notifications: React.FC<NotificationsProps> = ({ onClose }) => {
     }
   })
 
+  const handleNotificationClick = (notification: NotificationListResponse) => {
+    if (!notification.status) {
+      markAsRead(notification.id.toString()).then(() => {
+        queryClient.invalidateQueries(['notifications-preview'])
+        queryClient.invalidateQueries(['notifications'])
+        queryClient.invalidateQueries(['unread-count'])
+      })
+    }
+    onClose()
+    navigate(`/notifications/${notification.id}`)
+  }
+
   // Safe access to notifications data
   const notifications: NotificationListResponse[] = data?.data.data || []
 
@@ -186,21 +206,41 @@ const Notifications: React.FC<NotificationsProps> = ({ onClose }) => {
               className={`border hover:bg-gray-100 cursor-pointer transition-colors ${
                 notification.status ? 'bg-white' : 'bg-red-50'
               }`}
-              onClick={() => {
-                onClose()
-                navigate(`/notifications/${notification.id}`)
-              }}
+              onClick={() => handleNotificationClick(notification)}
             >
               <CardContent className='p-3'>
-                <div className='flex items-center gap-2 text-xs text-gray-500'>
-                  <Calendar className='h-3 w-3' />
-                  {notification.created && (
-                    <>
-                      <span>{formatExactDate(notification.created)}</span>
-                      <span>•</span>
-                      <span>{formatRelativeTime(notification.created)}</span>
-                    </>
-                  )}
+                <div className='flex items-center justify-between'>
+                  <div className='flex items-center gap-2 text-xs text-gray-500'>
+                    <Calendar className='h-3 w-3' />
+                    {notification.created && (
+                      <>
+                        <span>{formatExactDate(notification.created)}</span>
+                        <span>•</span>
+                        <span>{formatRelativeTime(notification.created)}</span>
+                      </>
+                    )}
+                  </div>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
+                      <Button variant="ghost" className="h-8 w-8 p-0">
+                        <MoreVertical className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          toggleNotificationStatus(notification.id.toString(), !notification.status).then(() => {
+                            queryClient.invalidateQueries(['notifications-preview'])
+                            queryClient.invalidateQueries(['notifications'])
+                            queryClient.invalidateQueries(['unread-count'])
+                          })
+                        }}
+                      >
+                        {notification.status ? 'Đánh dấu chưa đọc' : 'Đánh dấu đã đọc'}
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
                 <div className='flex items-center justify-between mt-1'>
                   <h3 className='text-sm sm:text-lg font-bold text-red-500 truncate'>{notification.title}</h3>

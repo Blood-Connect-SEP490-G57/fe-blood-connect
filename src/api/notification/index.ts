@@ -70,6 +70,10 @@ export const getNotificationById = async (id: string) => {
   return response.data.data
 }
 
+export const toggleNotificationStatus = async (id: string, status: boolean) => {
+  return axiosPrivate.put(`/api/notifications/user/${id}/toggle?status=${status}`)
+}
+
 export const formatExactDate = (dateString: string) => {
   try {
     if (!dateString) return ''

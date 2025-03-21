@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react'
-import { Bell, Calendar } from 'lucide-react'
+import { Bell, Calendar, MoreVertical } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -9,10 +9,18 @@ import {
   markAllAsRead,
   NotificationListResponse,
   formatExactDate,
-  formatRelativeTime
+  formatRelativeTime,
+  markAsRead,
+  toggleNotificationStatus
 } from '@/api/notification'
 import { useNavigate } from 'react-router-dom'
 import { useToast } from '@/components/ui/use-toast'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu'
 
 const tabs = [
   { title: 'Tất cả', value: 'all' },
@@ -202,20 +210,56 @@ interface NotificationCardProps {
 
 const NotificationCard = ({ notification }: NotificationCardProps) => {
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
+
+  const handleClick = () => {
+    if (!notification.status) {
+      // Mark as read when clicking unread notification
+      markAsRead(notification.id.toString()).then(() => {
+        queryClient.invalidateQueries(['notifications'])
+        queryClient.invalidateQueries(['notifications-preview'])
+        queryClient.invalidateQueries(['unread-count'])
+      })
+    }
+    navigate(`/notifications/${notification.id}`)
+  }
 
   return (
     <Card
       className={`transition-colors ${
         notification.status ? 'bg-white' : 'bg-red-50'
-      } mb-2 border hover:bg-gray-100 cursor-pointer`}
-      onClick={() => navigate(`/notifications/${notification.id}`)}
+      } mb-2 border hover:bg-gray-100 cursor-pointer relative`}
+      onClick={handleClick}
     >
       <CardContent className='p-6'>
-        <div className='flex items-center gap-2 text-sm text-gray-500'>
-          <Calendar className='h-4 w-4' />
-          <span>{formatExactDate(notification.created)}</span>
-          <span>•</span>
-          <span>{formatRelativeTime(notification.created)}</span>
+        <div className='flex items-center justify-between'>
+          <div className='flex items-center gap-2 text-sm text-gray-500'>
+            <Calendar className='h-4 w-4' />
+            <span>{formatExactDate(notification.created)}</span>
+            <span>•</span>
+            <span>{formatRelativeTime(notification.created)}</span>
+          </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <MoreVertical className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem
+                onClick={(e) => {
+                  e.stopPropagation()
+                  toggleNotificationStatus(notification.id.toString(), !notification.status).then(() => {
+                    queryClient.invalidateQueries(['notifications'])
+                    queryClient.invalidateQueries(['notifications-preview'])
+                    queryClient.invalidateQueries(['unread-count'])
+                  })
+                }}
+              >
+                {notification.status ? 'Đánh dấu chưa đọc' : 'Đánh dấu đã đọc'}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
         <div className='flex items-center justify-between mt-2'>
           <h3 className='text-lg font-semibold text-gray-900 truncate'>{notification.title}</h3>
