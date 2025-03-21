@@ -213,9 +213,7 @@ const NotificationCard = ({ notification }: NotificationCardProps) => {
       className={`transition-colors ${
         notification.status ? 'bg-white' : 'bg-red-50'
       } mb-2 border hover:bg-gray-100 cursor-pointer`}
-      onClick={() => {
-        navigate(`/notifications/${notification.id}`)
-      }}
+      onClick={() => navigate(`/notifications/${notification.id}`)}
     >
       <CardContent className='p-6'>
         <div className='flex items-center gap-2 text-sm text-gray-500'>

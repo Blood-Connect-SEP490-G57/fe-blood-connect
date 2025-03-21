@@ -18,6 +18,7 @@ import UserProfilePage from './pages/UserProfile'
 import ForgotPassword from './pages/ForgotPassword'
 import NotificationDetail from './pages/NotificationDetail.tsx'
 import ScrollToTop from './components/scrollToTop/index.tsx'
+import NotificationList from './pages/NotificationList.tsx'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -71,6 +72,22 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
             <Route path='/quen-mat-khau' element={<ForgotPassword />} />
             <Route
               path='/thong-bao'
+              element={
+                <Protected tokenRequired={true} destination='/dang-nhap'>
+                  <NotificationDetail />
+                </Protected>
+              }
+            />
+            <Route
+              path='/notifications'
+              element={
+                <Protected tokenRequired={true} destination='/dang-nhap'>
+                  <NotificationList />
+                </Protected>
+              }
+            />
+            <Route
+              path='/notifications/:id'
               element={
                 <Protected tokenRequired={true} destination='/dang-nhap'>
                   <NotificationDetail />
