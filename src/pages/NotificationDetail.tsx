@@ -1,15 +1,9 @@
-import { useState } from 'react'
-import { ArrowLeft, Bell, Calendar } from 'lucide-react'
+import { ArrowLeft, Calendar } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import {
-  getNotifications,
-  markAllAsRead,
-  NotificationListResponse,
   formatExactDate,
-  formatRelativeTime,
   getNotificationById,
   markAsRead
 } from '@/api/notification/index'
@@ -17,28 +11,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useToast } from '@/components/ui/use-toast'
 
-const tabs = [
-  { title: 'Tất cả', value: 'all' },
-  { title: 'Chưa đọc', value: 'unread' },
-  { title: 'Nhắc nhở', value: 'reminders' },
-  { title: 'Sự kiện', value: 'events' },
-  { title: 'Tin tức', value: 'news' }
-]
 
-const getFilterParams = (tab: string) => {
-  let typeParam: number | undefined = undefined
-  let unreadParam: boolean | undefined = undefined
-  if (tab === 'unread') {
-    unreadParam = true
-  } else if (tab === 'reminders') {
-    typeParam = 1
-  } else if (tab === 'events') {
-    typeParam = 2
-  } else if (tab === 'news') {
-    typeParam = 3
-  }
-  return { typeParam, unreadParam }
-}
 
 /**
  * Hàm mapping từ số type sang nhãn văn bản.
