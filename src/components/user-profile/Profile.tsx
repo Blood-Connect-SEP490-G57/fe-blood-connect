@@ -130,12 +130,11 @@ const Profile = () => {
 
   const onSubmit = async () => {
     const formattedValues = {
-      mobile: form2.getValues('mobile'),
       email: form2.getValues('email'),
-      jobName: form2.getValues('job_name'),
-      studentId: form2.getValues('student_id'),
-      militaryId: form2.getValues('military_id'),
-      addressContact: form2.getValues('address_contact')
+      job: form2.getValues('job_name'),
+      student: form2.getValues('student_id'),
+      military: form2.getValues('military_id'),
+      address: form2.getValues('address_contact')
     }
     console.log(formattedValues)
     await updateProfile(formattedValues)
