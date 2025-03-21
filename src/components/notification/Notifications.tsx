@@ -229,12 +229,12 @@ const Notifications: React.FC<NotificationsProps> = ({ onClose }) => {
                     <DropdownMenuContent align="end">
                       <DropdownMenuItem
                         onClick={(e) => {
-                          e.stopPropagation()
                           toggleNotificationStatus(notification.id.toString(), !notification.status).then(() => {
                             queryClient.invalidateQueries(['notifications-preview'])
                             queryClient.invalidateQueries(['notifications'])
                             queryClient.invalidateQueries(['unread-count'])
                           })
+                          e.stopPropagation()
                         }}
                       >
                         {notification.status ? 'Đánh dấu chưa đọc' : 'Đánh dấu đã đọc'}

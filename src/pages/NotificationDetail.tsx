@@ -53,6 +53,7 @@ const NotificationDetail = () => {
   } = useQuery(['notification', id], () => getNotificationById(id as string), {
     enabled: !!id,
     onSuccess: (data) => {
+      // Gọi API markAsRead ngay khi load notification thành công
       if (!data.status) {
         markNotificationRead.mutate(id as string)
       }
