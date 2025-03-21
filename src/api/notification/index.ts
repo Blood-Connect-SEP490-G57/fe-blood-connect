@@ -58,7 +58,7 @@ export const getUnreadCount = async (): Promise<number> => {
 }
 
 export const markAllAsRead = async () => {
-  return axiosPrivate.put('/api/notifications/user/readAll')
+  return axiosPrivate.put('/api/notifications/user/read-all')
 }
 
 export const markAsRead = async (id: string) => {
