@@ -95,9 +95,9 @@ const UserProfilePage: React.FC = () => {
   }
 
   return (
-    <div className='flex flex-col md:flex-row bg-gray-100'>
+    <div className='flex flex-col md:flex-row min-h-screen bg-gray-100'>
       {/* Sidebar */}
-      <div className='hidden md:flex md:w-1/4 p-4 bg-white shadow-lg sticky top-0 overflow-y-auto'>
+      <div className='hidden md:flex md:w-1/4 p-4 bg-white shadow-lg sticky top-0 h-screen overflow-y-auto'>
         <Card className='border-none w-full'>
           <CardHeader>
             <CardTitle className='text-xl text-red-600 flex items-center gap-2'>
