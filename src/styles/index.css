@@ -159,3 +159,7 @@
   scrollbar-width: thin;
   scrollbar-color: #f87171 #f1f1f1;
 }
+
+html, body {
+  overflow: hidden auto;
+}
