@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { useQuery, useMutation } from '@tanstack/react-query'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 import { Calendar } from 'lucide-react'
 import {
@@ -69,32 +69,74 @@ const Notifications: React.FC<NotificationsProps> = ({ onClose }) => {
   const containerRef = useRef<HTMLDivElement>(null)
   useOnClickOutside(containerRef, onClose)
   const navigate = useNavigate()
-
-  // State filter, mặc định là "Tất cả"
   const [filter, setFilter] = useState<string>('Tất cả')
+  const queryClient = useQueryClient()
 
-  // Xác định tham số type/unread khi gọi API dựa trên filter
-  const getTypeParam = (): number | undefined => {
-    if (filter === 'Nhắc nhở') return 1
-    if (filter === 'Sự kiện') return 2
-    if (filter === 'Tin tức') return 3
-    return undefined
-  }
-  const getUnreadParam = (): boolean | undefined => {
-    if (filter === 'Chưa đọc') return true
-    return undefined
+  // Fixed query parameters logic
+  const getParams = () => {
+    let type: number | undefined
+    let unread: boolean | undefined
+
+    switch (filter) {
+      case 'Nhắc nhở':
+        type = 1
+        break
+      case 'Sự kiện':
+        type = 2
+        break
+      case 'Tin tức':
+        type = 3
+        break
+      case 'Chưa đọc':
+        unread = true
+        break
+    }
+
+    return { type, unread }
   }
 
-  // Sử dụng useQuery để load danh sách thông báo (page 0, 5 bản ghi)
-  const { data, refetch } = useQuery(['notifications', filter], () =>
-    getNotifications(0, 5, 'created', 'desc', undefined, getTypeParam(), getUnreadParam())
+  const { data, isLoading } = useQuery(
+    ['notifications-preview', filter],
+    async () => {
+      const { type, unread } = getParams()
+      return getNotifications({
+        page: 0,
+        size: 5,
+        type,
+        unread,
+      })
+    },
+    {
+      refetchOnWindowFocus: false,
+      staleTime: 30000 // Cache for 30 seconds
+    }
   )
-  const notifications: NotificationListResponse[] = data?.data ?? []
 
-  // Mutation đánh dấu tất cả đã đọc
-  const { mutate: markAllRead } = useMutation(markAllAsRead, {
-    onSuccess: () => refetch()
+  const markAllReadMutation = useMutation(markAllAsRead, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['notifications-preview'])
+      queryClient.invalidateQueries(['unread-count'])
+    }
   })
+
+  // Add loading state
+  if (isLoading) {
+    return (
+      <div ref={containerRef} className='h-full min-w-[250px] lg:min-w-[300px] w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg px-4 py-3 bg-white rounded-2xl shadow-lg border overflow-y-auto'>
+        <div className='space-y-4'>
+          {[1, 2, 3].map((i) => (
+            <div key={i} className='animate-pulse'>
+              <div className='h-4 bg-gray-200 rounded w-3/4 mb-2'></div>
+              <div className='h-8 bg-gray-200 rounded w-full'></div>
+            </div>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
+  // Safe access to notifications data
+  const notifications = data?.data?.items || []
 
   return (
     <div
@@ -106,14 +148,14 @@ const Notifications: React.FC<NotificationsProps> = ({ onClose }) => {
         <h2 className='text-lg font-bold'>Thông báo</h2>
         <Button
           variant='outline'
-          onClick={() => markAllRead()}
+          onClick={() => markAllReadMutation.mutate()}
           className='text-red-600 border-red-500 hover:text-white hover:bg-red-600 text-xs sm:text-sm'
         >
           Đánh dấu đã đọc tất cả
         </Button>
       </div>
 
-      {/* Thanh lọc */}
+      {/* Filter buttons */}
       <div className='inline-flex w-full gap-1 my-2 justify-start overflow-x-auto'>
         {['Tất cả', 'Chưa đọc', 'Nhắc nhở', 'Sự kiện', 'Tin tức'].map((item) => (
           <Button
@@ -129,41 +171,43 @@ const Notifications: React.FC<NotificationsProps> = ({ onClose }) => {
         ))}
       </div>
 
-      {/* Danh sách thông báo */}
+      {/* Notification list */}
       <div className='mt-2 space-y-2'>
         {notifications.length > 0 ? (
-          notifications.map((notif) => (
+          notifications.map((notification) => (
             <Card
-              key={notif.id}
+              key={notification.id}
               className={`border hover:bg-gray-100 cursor-pointer transition-colors ${
-                notif.status ? 'bg-white' : 'bg-red-50'
+                notification.status ? 'bg-white' : 'bg-red-50'
               }`}
               onClick={() => {
-                if (notif.link && notif.link.trim() !== '') {
-                  window.location.href = notif.link
-                }
+                onClose()
+                navigate(`/notifications/${notification.id}`)
               }}
             >
               <CardContent className='p-3'>
                 <div className='flex items-center gap-2 text-xs text-gray-500'>
                   <Calendar className='h-3 w-3' />
-                  <span>{formatExactDate(notif.created)}</span>
+                  <span>{formatExactDate(notification.created)}</span>
                   <span>•</span>
-                  <span>{formatRelativeTime(notif.created)}</span>
+                  <span>{formatRelativeTime(notification.created)}</span>
                 </div>
                 <div className='flex items-center justify-between mt-1'>
-                  <h3 className='text-sm sm:text-lg font-bold text-red-500 truncate'>{notif.title}</h3>
-                  {notif.type !== null && notif.type !== undefined && (
+                  <h3 className='text-sm sm:text-lg font-bold text-red-500 truncate'>{notification.title}</h3>
+                  {notification.type !== null && notification.type !== undefined && (
                     <span
                       className={`inline-block text-xs font-medium rounded-full px-2 ${getTypeBadgeClasses(
-                        notif.type
+                        notification.type
                       )}`}
                     >
-                      {getTypeLabel(notif.type)}
+                      {getTypeLabel(notification.type)}
                     </span>
                   )}
                 </div>
-                <p className='text-xs sm:text-sm text-gray-500 line-clamp-2 sm:line-clamp-1'>{notif.content}</p>
+                <div
+                  className='text-gray-600 line-clamp-1'
+                  dangerouslySetInnerHTML={{ __html: notification.content }}
+                />
               </CardContent>
             </Card>
           ))
@@ -176,7 +220,10 @@ const Notifications: React.FC<NotificationsProps> = ({ onClose }) => {
       <div className='mt-4'>
         <Button
           variant='outline'
-          onClick={() => navigate('/thong-bao')}
+          onClick={() => {
+            onClose()
+            navigate('/notifications')
+          }}
           className='w-full text-red-600 border-red-500 hover:text-white hover:bg-red-600 text-sm sm:text-base'
         >
           Xem thêm
