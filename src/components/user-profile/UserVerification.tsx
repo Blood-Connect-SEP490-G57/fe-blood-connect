@@ -656,9 +656,20 @@ const UserVerification = () => {
             </div>
             <h2 className='text-2xl font-heading font-semibold text-foreground'>Hoàn tất xác thực</h2>
             <p className='text-accent'>Bạn đã xác thực tài khoản thành công</p>
-            <button onClick={() => navigate('/dang-ky-hien-mau')} className='w-full bg-primary text-white p-2 rounded'>
-              Đăng kí hiến máu
-            </button>
+            <div className='flex justify-center'>
+              <button
+                onClick={() => navigate('/')}
+                className='w-full bg-primary text-white p-2 rounded'
+              >
+                Trở lại trang chủ
+              </button>
+              <button
+                onClick={() => navigate('/dang-ky-hien-mau')}
+                className='w-full bg-primary text-white p-2 rounded'
+              >
+                Đăng kí hiến máu
+              </button>
+            </div>
           </div>
         )
       default:
