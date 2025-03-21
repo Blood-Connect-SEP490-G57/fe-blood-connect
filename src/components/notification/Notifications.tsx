@@ -99,12 +99,14 @@ const Notifications: React.FC<NotificationsProps> = ({ onClose }) => {
     ['notifications-preview', filter],
     async () => {
       const { type, unread } = getParams()
-      return getNotifications({
+      const response = await getNotifications({
         page: 0,
         size: 5,
         type,
-        unread,
+        unread
       })
+      console.log('API Response:', response) // Debug logging
+      return response
     },
     {
       refetchOnWindowFocus: false,
@@ -122,7 +124,10 @@ const Notifications: React.FC<NotificationsProps> = ({ onClose }) => {
   // Add loading state
   if (isLoading) {
     return (
-      <div ref={containerRef} className='h-full min-w-[250px] lg:min-w-[300px] w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg px-4 py-3 bg-white rounded-2xl shadow-lg border overflow-y-auto'>
+      <div
+        ref={containerRef}
+        className='h-full min-w-[250px] lg:min-w-[300px] w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg px-4 py-3 bg-white rounded-2xl shadow-lg border overflow-y-auto'
+      >
         <div className='space-y-4'>
           {[1, 2, 3].map((i) => (
             <div key={i} className='animate-pulse'>
@@ -136,7 +141,8 @@ const Notifications: React.FC<NotificationsProps> = ({ onClose }) => {
   }
 
   // Safe access to notifications data
-  const notifications = data?.data?.items || []
+  const notifications: NotificationListResponse[] = data?.data.data|| []
+  console.log('Parsed notifications:', notifications) // Debug logging
 
   return (
     <div
@@ -188,9 +194,11 @@ const Notifications: React.FC<NotificationsProps> = ({ onClose }) => {
               <CardContent className='p-3'>
                 <div className='flex items-center gap-2 text-xs text-gray-500'>
                   <Calendar className='h-3 w-3' />
-                  <span>{formatExactDate(notification.created)}</span>
-                  <span>•</span>
-                  <span>{formatRelativeTime(notification.created)}</span>
+                  {notification.created && (
+                    <>
+                      <span>{formatExactDate(notification.created)}</span>
+                    </>
+                  )}
                 </div>
                 <div className='flex items-center justify-between mt-1'>
                   <h3 className='text-sm sm:text-lg font-bold text-red-500 truncate'>{notification.title}</h3>

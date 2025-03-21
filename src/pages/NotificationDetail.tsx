@@ -62,11 +62,11 @@ const getTypeLabel = (type: number): string => {
 const getTypeBadgeClasses = (type: number): string => {
   switch (type) {
     case 1:
-      return 'bg-yellow-500 text-white' // Nhắc nhở: màu vàng
+      return 'bg-yellow-500 text-white'
     case 2:
-      return 'bg-blue-500 text-white' // Sự kiện: màu xanh lam
+      return 'bg-blue-500 text-white'
     case 3:
-      return 'bg-green-500 text-white' // Tin tức: màu xanh lá
+      return 'bg-green-500 text-white'
     default:
       return 'bg-gray-500 text-white'
   }
@@ -153,9 +153,13 @@ const NotificationDetail = () => {
             <div className='flex items-center justify-between mb-4'>
               <div className='flex items-center gap-2 text-sm text-gray-500'>
                 <Calendar className='h-4 w-4' />
-                <span>{formatExactDate(notification.created)}</span>
-                <span>•</span>
-                <span>{formatRelativeTime(notification.created)}</span>
+                {notification.created && (
+                  <>
+                    <span>{formatExactDate(notification.created)}</span>
+                    <span>•</span>
+                    {/* <span>{formatRelativeTime(notification.created)}</span> */}
+                  </>
+                )}
               </div>
               {notification.type !== undefined && notification.type !== null && (
                 <span

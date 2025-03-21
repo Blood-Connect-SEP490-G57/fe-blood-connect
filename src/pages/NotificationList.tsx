@@ -114,7 +114,7 @@ const NotificationList = () => {
 
   const notifications = useMemo(() => {
     if (!data) return []
-    return data.pages.flatMap((page) => page.data.items)
+    return data.pages.flatMap((page) => page.data.data)
   }, [data])
 
   // Add loading skeletons
