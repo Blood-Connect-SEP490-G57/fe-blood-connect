@@ -63,7 +63,7 @@ export default function ShareLink({ selectedCampaign }: { selectedCampaign: Camp
         aria-label='Chia sẻ'
       >
         <Share2 size={24} />
-        <p >Chia sẻ ngay</p>
+        <p>Chia sẻ ngay</p>
       </button>
 
       {showIcons && (
