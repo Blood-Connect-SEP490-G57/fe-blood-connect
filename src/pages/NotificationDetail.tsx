@@ -1,7 +1,7 @@
 import { ArrowLeft, Calendar } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'  // Add useQueryClient
 import { formatExactDate, getNotificationById, markAsRead } from '@/api/notification/index'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -43,6 +43,7 @@ const NotificationDetail = () => {
   const { id } = useParams()
   const navigate = useNavigate()
   const { toast } = useToast()
+  const queryClient = useQueryClient()  // Add this line
 
   const {
     data: notification,
@@ -66,7 +67,11 @@ const NotificationDetail = () => {
   })
 
   const markNotificationRead = useMutation(markAsRead, {
-    onSuccess: () => refetch()
+    onSuccess: () => {
+      queryClient.invalidateQueries(['notifications'])
+      queryClient.invalidateQueries(['notifications-preview'])
+      queryClient.invalidateQueries(['unread-count'])
+    }
   })
 
   if (isError) {
