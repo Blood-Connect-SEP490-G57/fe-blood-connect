@@ -47,7 +47,6 @@ const NotificationDetail = () => {
 
   const {
     data: notification,
-    refetch,
     isLoading,
     isError
   } = useQuery(['notification', id], () => getNotificationById(id as string), {
