@@ -37,7 +37,18 @@ const Header: React.FC = () => {
 
   useEffect(() => {
     setIsMobileMenuOpen(false)
+    setIsMobileNotiOpen(false)
   }, [location])
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (event.target instanceof Element && !event.target.closest('.mobile-menu') && isMobileMenuOpen) {
+        setIsMobileMenuOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [isMobileMenuOpen])
 
   const { data: unreadCount, refetch: refetchUnreadCount } = useQuery({
     queryKey: ['unreadCount'],
