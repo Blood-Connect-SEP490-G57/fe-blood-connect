@@ -82,7 +82,7 @@ export default function EventDonationSlider() {
       </div>
       {/* Slider Container */}
       <div className='max-w-7xl mx-auto px-4 sm:px-6'>
-        <div className='relative h-96 py-8 mb-4 rounded-xl overflow-hidden shadow-lg'>
+        <div className='relative min-h-96 py-8 mb-4 rounded-xl overflow-hidden shadow-lg'>
           {events.map((event, index) => (
             <div
               key={event.id}
@@ -94,15 +94,15 @@ export default function EventDonationSlider() {
                   : '-translate-x-full'
               }`}
             >
-              <div className={`h-full ${index === activeIndex ? 'bg-red-600' : 'bg-white'} p-8`}>
-                <div className='grid grid-cols-4 grid-rows-2 h-full gap-4'>
+              <div className={`h-full ${index === activeIndex ? 'bg-red-600' : 'bg-white'} p-6 lg:p-8`}>
+                <div className='flex lg:flex-row flex-col h-full gap-4'>
                   {/* Event Info */}
                   <div
-                    className={`row-span-2 flex flex-col justify-center ${
+                    className={`lg:w-[20%] flex flex-col justify-center ${
                       index === activeIndex ? 'text-white' : 'text-red-600'
                     }`}
                   >
-                    <h2 className='text-2xl font-bold mb-4'>{event.title}</h2>
+                    <h2 className='text-xl lg:text-2xl font-bold mb-4'>{event.title}</h2>
                     <p className='flex items-center gap-2'>
                       <CalendarIcon className='w-5 h-5' />
                       {event.date}
@@ -110,18 +110,20 @@ export default function EventDonationSlider() {
                   </div>
 
                   {/* Images */}
-                  {event.images.map((image, imgIndex) => (
-                    <div
-                      key={imgIndex}
-                      className='bg-white/20 rounded-lg shadow-md p-4 flex items-center justify-center'
-                    >
-                      <img
-                        src={image}
-                        alt={`Event ${event.id} ${imgIndex + 1}`}
-                        className='w-full h-full object-cover rounded-lg'
-                      />
-                    </div>
-                  ))}
+                  <div className="flex-1 h-[70%] lg:h-full grid grid-cols-3 grid-rows-2 gap-4">
+                    {event.images.map((image, imgIndex) => (
+                      <div
+                        key={imgIndex}
+                        className='row-span-1 col-span-1 bg-white/20 rounded-lg shadow-md p-2 lg:p-4 flex items-center justify-center'
+                      >
+                        <img
+                          src={image}
+                          alt={`Event ${event.id} ${imgIndex + 1}`}
+                          className='w-full h-full object-cover rounded-lg'
+                        />
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
