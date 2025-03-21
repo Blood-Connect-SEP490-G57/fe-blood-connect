@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod'
 
 export const appointmentSchema = z.object({
   id: z.number(),
@@ -7,7 +7,7 @@ export const appointmentSchema = z.object({
   campaignId: z.number(),
   campaignName: z.string(),
   appointmentDate: z.string(),
-  createdAt: z.string(),
+  createdAt: z.string()
 })
 
 export type AppointmentType = z.infer<typeof appointmentSchema>

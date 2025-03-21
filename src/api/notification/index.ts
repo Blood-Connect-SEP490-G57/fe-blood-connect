@@ -1,87 +1,131 @@
-import { apiGetCall, apiPutCall } from '..'
-import { PaginatedResponse } from '../../schema/paginated-response-schema'
+import { format, formatDistanceToNow } from 'date-fns'
+import { vi } from 'date-fns/locale'
+import { axiosPrivate } from '..'
 
 export interface NotificationListResponse {
   id: number
   title: string
   content: string
+  link?: string
   status: boolean
-  link: string
   type: number
   created: string
 }
 
-export const getNotifications = async (
-  page = 0,
-  size = 10,
-  sortBy = 'created',
-  sortDir = 'desc',
-  search?: string,
-  type?: number,
+interface NotificationParams {
+  page?: number
+  size?: number
+  sortBy?: string
+  sortDir?: string
+  type?: number
   unread?: boolean
-): Promise<PaginatedResponse<NotificationListResponse>> => {
-  // Xây dựng params
-  const params: any = { page, size, sortBy, sortDir }
-  if (search) params.search = search
-  if (type !== undefined) params.type = type
-  if (unread !== undefined) params.unread = unread
+}
 
-  // Tạo query string
-  const queryString = new URLSearchParams(params).toString()
-  const url = `/api/notifications/user?${queryString}`
+interface PaginatedResponse<T> {
+  currentPage: number
+  totalPages: number
+  totalItems: number
+  data: T[]
+  hasNext: boolean
+}
 
-  const response = await apiGetCall(url, true)
-  return response.data.data
+interface ApiResponse<T> {
+  success: boolean
+  data: PaginatedResponse<T>
+  message?: string
+}
+
+export const getNotifications = async (params: NotificationParams): Promise<ApiResponse<NotificationListResponse>> => {
+  const response = await axiosPrivate.get('/api/notifications/user', {
+    params: {
+      ...params,
+      sortBy: params.sortBy || 'created',
+      sortDir: params.sortDir || 'desc'
+    }
+  })
+
+  // Add error handling
+  if (!response.data.success) {
+    throw new Error(response.data.message || 'Failed to fetch notifications')
+  }
+
+  return response.data
 }
 
 export const getUnreadCount = async (): Promise<number> => {
-  const response = await apiGetCall('/api/notifications/user/unread', true)
+  const response = await axiosPrivate.get('/api/notifications/user/unread')
   return response.data.data
 }
 
-export const markAllAsRead = async (): Promise<string> => {
-  const response = await apiPutCall('/api/notifications/user/readAll', null, true)
+export const markAllAsRead = async () => {
+  return axiosPrivate.put('/api/notifications/user/read-all')
+}
+
+export const markAsRead = async (id: string) => {
+  return axiosPrivate.post(`/api/notifications/user/${id}/read`)
+}
+
+export const getNotificationById = async (id: string) => {
+  const response = await axiosPrivate.get(`/api/notifications/user/${id}`)
   return response.data.data
 }
 
-export function parseCustomDate(dateString: string): Date {
-  const [timePart, datePart] = dateString.split(' ')
-  const [hour, minute, second] = timePart.split(':').map(Number)
-  const [day, month, year] = datePart.split('/').map(Number)
-  return new Date(year, month - 1, day, hour, minute, second)
+export const toggleNotificationStatus = async (id: string, status: boolean) => {
+  return axiosPrivate.put(`/api/notifications/user/${id}/toggle?status=${status}`)
 }
 
-export function formatExactDate(dateString: string): string {
-  const date = parseCustomDate(dateString)
-  const day = String(date.getDate()).padStart(2, '0')
-  const month = String(date.getMonth() + 1).padStart(2, '0')
-  const year = date.getFullYear()
-  const hours = String(date.getHours()).padStart(2, '0')
-  const minutes = String(date.getMinutes()).padStart(2, '0')
-  const seconds = String(date.getSeconds()).padStart(2, '0')
-  return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`
+export const formatExactDate = (dateString: string) => {
+  try {
+    if (!dateString) return ''
+
+    // Check if date is in backend format (HH:mm:ss dd/MM/yyyy)
+    if (dateString.includes('/')) {
+      const [time, date] = dateString.split(' ')
+      const [day, month, year] = date.split('/')
+      const [hours, minutes, seconds] = time.split(':')
+      const parsedDate = new Date(+year, +month - 1, +day, +hours, +minutes, +seconds)
+      if (!isNaN(parsedDate.getTime())) {
+        return format(parsedDate, 'dd/MM/yyyy HH:mm', { locale: vi })
+      }
+    }
+
+    // Fallback to regular date parsing
+    const date = new Date(dateString)
+    if (isNaN(date.getTime())) {
+      console.error('Invalid date:', dateString)
+      return dateString // Return original string if parsing fails
+    }
+    return format(date, 'dd/MM/yyyy HH:mm', { locale: vi })
+  } catch (error) {
+    console.error('Error formatting date:', error)
+    return dateString // Return original string on error
+  }
 }
 
-/**
- * Hàm định dạng thời gian tương đối, ví dụ “5 phút trước”, “2 ngày trước”...
- */
-export function formatRelativeTime(dateString: string): string {
-  const createdDate = parseCustomDate(dateString)
-  const now = new Date()
-  const diff = now.getTime() - createdDate.getTime()
+export const formatRelativeTime = (dateString: string) => {
+  try {
+    if (!dateString) return ''
 
-  const seconds = Math.floor(diff / 1000)
-  if (seconds < 60) return `${seconds} giây trước`
-  const minutes = Math.floor(seconds / 60)
-  if (minutes < 60) return `${minutes} phút trước`
-  const hours = Math.floor(minutes / 60)
-  if (hours < 24) return `${hours} tiếng trước`
-  const days = Math.floor(hours / 24)
-  if (days < 7) return `${days} ngày trước`
-  const weeks = Math.floor(days / 7)
-  if (weeks < 4) return `${weeks} tuần trước`
-  const months = Math.floor(days / 30)
-  if (months < 12) return `${months} tháng trước`
-  const years = Math.floor(days / 365)
-  return `${years} năm trước`
+    // Check if date is in backend format (HH:mm:ss dd/MM/yyyy)
+    if (dateString.includes('/')) {
+      const [time, date] = dateString.split(' ')
+      const [day, month, year] = date.split('/')
+      const [hours, minutes, seconds] = time.split(':')
+      const parsedDate = new Date(+year, +month - 1, +day, +hours, +minutes, +seconds)
+      if (!isNaN(parsedDate.getTime())) {
+        return formatDistanceToNow(parsedDate, { addSuffix: true, locale: vi })
+      }
+    }
+
+    // Fallback to regular date parsing
+    const date = new Date(dateString)
+    if (isNaN(date.getTime())) {
+      console.error('Invalid date:', dateString)
+      return ''
+    }
+    return formatDistanceToNow(date, { addSuffix: true, locale: vi })
+  } catch (error) {
+    console.error('Error formatting relative time:', error)
+    return ''
+  }
 }

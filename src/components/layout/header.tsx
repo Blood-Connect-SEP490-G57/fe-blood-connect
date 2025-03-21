@@ -36,8 +36,8 @@ const Header: React.FC = () => {
   }, [location])
 
   useEffect(() => {
-    setIsMobileMenuOpen(false);
-  }, [location]);
+    setIsMobileMenuOpen(false)
+  }, [location])
 
   const { data: unreadCount, refetch: refetchUnreadCount } = useQuery({
     queryKey: ['unreadCount'],
@@ -95,7 +95,10 @@ const Header: React.FC = () => {
                   return false
                 }
                 return (
-                  item.name !== 'THÔNG TIN CÁ NHÂN' && item.name !== 'XÁC THỰC TÀI KHOẢN' && item.name !== 'TRANG CHỦ' && item.name !== 'CÀI ĐẶT'
+                  item.name !== 'THÔNG TIN CÁ NHÂN' &&
+                  item.name !== 'XÁC THỰC TÀI KHOẢN' &&
+                  item.name !== 'TRANG CHỦ' &&
+                  item.name !== 'CÀI ĐẶT'
                 )
               })
               .map((item) => (

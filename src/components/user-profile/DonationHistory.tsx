@@ -8,6 +8,7 @@ import { cancelAppointment } from '@/api/campaign'
 import Loading from '../warnings/loading'
 import Empty from '../warnings/empty'
 import { AppointmentType } from '@/schema/appointment-schema'
+import { formatExactDate } from '@/api/notification'
 
 function CancelAppointmentModal({
   isOpen,
@@ -148,7 +149,7 @@ const DonationHistory = () => {
               </span>
             </div>
             <h3 className='text-xl font-semibold text-gray-900 flex items-center mt-3'>
-              <Calendar className='h-5 w-5 text-gray-500 mr-2' /> {appointment.appointmentDate}
+              <Calendar className='h-5 w-5 text-gray-500 mr-2' /> {formatExactDate(appointment.appointmentDate)}
             </h3>
 
             <p className='text-gray-700 flex items-center mt-2'>
