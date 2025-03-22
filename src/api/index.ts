@@ -1,15 +1,13 @@
 import axios from 'axios'
 import { refreshAccessToken } from './auth'
 
-// axios.defaults.baseURL = 'http://localhost:8080'
-axios.defaults.baseURL = 'https://api.user.giotmauhyvong.org'
+const apiUrl = import.meta.env.VITE_API_URL
 
+axios.defaults.baseURL = apiUrl
 axios.defaults.headers.common['Content-Type'] = 'application/json'
 
 export const axiosPrivate = axios.create({
-  // baseURL: 'http://localhost:8080',
-  baseURL: 'https://api.user.giotmauhyvong.org',
-
+  baseURL: apiUrl,
   headers: {
     'Content-Type': 'application/json'
   }
