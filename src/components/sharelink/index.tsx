@@ -2,6 +2,7 @@ import { FacebookIcon, CopyIcon, ShareIcon, Share2 } from 'lucide-react'
 import { useState, useRef } from 'react'
 import { toast } from '../ui/use-toast'
 import { CampaignResponse } from '@/schema/campaign-schema'
+import { shortenUrl } from '@/api/sharelink'
 export default function ShareLink({ selectedCampaign }: { selectedCampaign: CampaignResponse }) {
   const [showIcons, setShowIcons] = useState(false)
   const dropdownRef = useRef<HTMLDivElement | null>(null)
@@ -11,17 +12,17 @@ export default function ShareLink({ selectedCampaign }: { selectedCampaign: Camp
 
   const urlToShare = `${baseUrl}?campaignId=${selectedCampaign?.id}&questionset=${selectedCampaign?.questionSetId}`
 
-  function shareToFacebook() {
-    const fbUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(urlToShare)}`
-    console.log(fbUrl)
+  async function shareToFacebook() {
+    const shortUrl = await shortenUrl(urlToShare)
+    const fbUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shortUrl)}`
     window.open(fbUrl, '_blank')
     localStorage.removeItem('selectedCampaign')
   }
 
-  function shareToZalo() {
-    const zaloUrl = `https://zalo.me/share?url=${encodeURIComponent(urlToShare)}`
+  async function shareToZalo() {
+    const shortUrl = await shortenUrl(urlToShare)
+    const zaloUrl = `https://zalo.me/share?url=${encodeURIComponent(shortUrl)}`
     window.open(zaloUrl, '_blank')
-    console.log(zaloUrl)
     localStorage.removeItem('selectedCampaign')
   }
 
