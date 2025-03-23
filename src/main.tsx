@@ -19,6 +19,7 @@ import ForgotPassword from './pages/ForgotPassword'
 import NotificationDetail from './pages/NotificationDetail.tsx'
 import ScrollToTop from './components/scrollToTop/index.tsx'
 import NotificationList from './pages/NotificationList.tsx'
+// import NotFoundPage from '@/pages/404'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -95,6 +96,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
               }
             />
             <Route path='*' element={<Navigate to='/' />} />
+            {/* <Route path='*' element={<NotFoundPage />} /> */}
           </Routes>
         </MainLayout>
       </BrowserRouter>

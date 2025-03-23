@@ -450,7 +450,7 @@ const UserVerification = () => {
   useEffect(() => {
     const fetchOrganizations = async () => {
       try {
-        const response = await getOrganizationsByType(3)
+        const response = await getOrganizationsByType()
         setOrganizations(Array.isArray(response.data) ? response.data : [])
       } catch (err) {
         console.error('Error fetching organizations:', err)
@@ -656,7 +656,7 @@ const UserVerification = () => {
             </div>
             <h2 className='text-2xl font-heading font-semibold text-foreground'>Hoàn tất xác thực</h2>
             <p className='text-accent'>Bạn đã xác thực tài khoản thành công</p>
-            <div className='flex justify-center'>
+            <div className='flex justify-center gap-4'>
               <button
                 onClick={() => navigate('/')}
                 className='w-full bg-primary text-white p-2 rounded'

@@ -8,7 +8,7 @@ export interface Organization {
   phone: string
 }
 
-export const getOrganizationsByType = async (type: number) => {
-  const response = await apiGetCall(`/organizations/by-type/${type}`)
+export const getOrganizationsByType = async () => {
+  const response = await apiGetCall('/api/organization/by-type/other')
   return response.data
 }
