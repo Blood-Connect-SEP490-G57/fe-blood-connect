@@ -3,7 +3,7 @@ import { apiGetCall } from '..'
 import { BloodDonationSchema } from '@/schema/question-schema'
 import { z } from 'zod'
 import axios from 'axios'
-import { AnswerType } from '@/schema/answer-schema'
+import { AnswerType, ApiAnswerType } from '@/schema/answer-schema'
 
 export const Campaign = async (): Promise<CampaignResponse[]> => {
   const response = await apiGetCall('/api/campaigns', false)
@@ -39,44 +39,7 @@ export const submitAnswers = async (payload: AnswerPayload): Promise<any> => {
   return response.data
 }
 
-// Thêm interface cho response của API get answer
-interface AnswerApiResponse {
-  success: boolean
-  data: {
-    campaignInfo: {
-      id: number
-      name: string
-      location: string
-      startReceiveTime: string
-      endReceiveTime: string
-      organizeTime: string
-      description: string
-      targetBloodUnits: number
-      officialDocumentUrl: string
-      // và các trường khác
-    }
-    answers: Array<{
-      id: number
-      subQuestionId: number
-      answerText: string
-      description: string
-      questionInfo: {
-        id: number
-        content: string
-        type: string
-        order: number
-      }
-      subQuestionInfo: {
-        id: number
-        content: string
-        has_description: boolean
-      }
-    }>
-  }
-}
-
-// Function để lấy thông tin câu trả lời cho một campaign
-export const getAnswersByCampaignId = async (campaignId: number): Promise<AnswerApiResponse> => {
+export const getAnswersByCampaignId = async (campaignId: number): Promise<ApiAnswerType[]> => {
   const response = await axios.get(`/answer/${campaignId}`, {
     headers: {
       'Content-Type': 'application/json',
