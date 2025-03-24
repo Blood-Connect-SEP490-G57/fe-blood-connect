@@ -275,9 +275,21 @@ const UserVerification = () => {
 
   const handleConfirm = async () => {
     if (!validateContactInfo()) return
-
+    if (!extractId) {
+      setError('Không tìm thấy thông tin CCCD')
+      return
+    }
+  
     try {
       setLoading(true)
+      
+      // First update extract status
+      const extractResponse = await updateExtractStatus(extractId, 'CONFIRM_MATCHED')
+      if (!extractResponse.success) {
+        throw new Error(extractResponse.message || 'Lỗi khi xác nhận thông tin CCCD')
+      }
+  
+      // Then create/update user detail
       const userDetailData = {
         email: formData.email,
         job_name: formData.jobName,
@@ -288,44 +300,20 @@ const UserVerification = () => {
         blood_group: formData.bloodGroup,
         organization_id: Number(formData.organizationId)
       }
-
-      const response = await createOrUpdateUserDetail(userDetailData)
-
-      if (response) {
-        setError(null)
-        nextStep()
-      } else {
-        throw new Error('Lỗi khi cập nhật thông tin')
+  
+      const userResponse = await createOrUpdateUserDetail(userDetailData)
+      if (!userResponse) {
+        throw new Error('Lỗi khi cập nhật thông tin người dùng')
       }
+  
+      setError(null)
+      nextStep()
     } catch (err) {
       console.error('Confirm error:', err)
       if (err instanceof Error) {
-        setError(`Lỗi khi xác nhận thông tin: ${err.message}`)
+        setError(err.message)
       } else {
         setError('Lỗi không xác định khi xác nhận thông tin')
-      }
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const handleConfirmExtract = async () => {
-    try {
-      setLoading(true)
-      const response = await updateExtractStatus(extractId, 'CONFIRM_MATCHED')
-
-      if (response.success) {
-        setError(null)
-        nextStep()
-      } else {
-        setError(response.message || 'Lỗi khi xác nhận thông tin CCCD')
-      }
-    } catch (err) {
-      console.error('Confirm extract error:', err)
-      if (err instanceof Error) {
-        setError(`Lỗi khi xác nhận thông tin CCCD: ${err.message}`)
-      } else {
-        setError('Lỗi không xác định khi xác nhận thông tin CCCD')
       }
     } finally {
       setLoading(false)
@@ -529,13 +517,6 @@ const UserVerification = () => {
             </div>
           </div>
           {storeError && <div className='p-4 bg-red-50 text-red-600 rounded-lg mt-4'>{storeError}</div>}
-          <button
-            onClick={handleConfirmExtract}
-            className='w-full bg-primary text-white p-2 rounded mt-4'
-            disabled={isLoading}
-          >
-            {isLoading ? 'Đang xử lý...' : 'Xác nhận thông tin CCCD'}
-          </button>
         </div>
       ) : (
         <div className='p-4 bg-yellow-50 text-yellow-600 rounded-lg'>Không có thông tin thẻ</div>
