@@ -53,7 +53,8 @@ const Header: React.FC = () => {
   const { data: unreadCount, refetch: refetchUnreadCount } = useQuery({
     queryKey: ['unreadCount'],
     queryFn: () => getUnreadCount(),
-    refetchOnWindowFocus: true
+    refetchOnWindowFocus: true,
+    enabled: isLoggedIn // Only run query when user is logged in
   })
 
   useEffect(() => {
