@@ -8,12 +8,14 @@ import { useNavigate } from 'react-router-dom'
 import { AlertTriangle } from 'lucide-react'
 import { ValidRegisterDonate } from '@/api/campaign'
 
+type VerificationStatus = 'NOT_VERIFIED' | 'ALREADY_REGISTERED' | 'SUCCESS' | ''
+
 interface QuestionnaireStepProps {
   questionSetId: number
   campaignId: number
   answers: Record<number, { value: string; description?: string }>
   handleAnswerChange: (questionId: number, value: string, description?: string) => void
-  setCurrentStep: (step: number) => void
+  setCurrentStep: (step: typeof STEPS[keyof typeof STEPS]) => void
 }
 
 const QuestionnaireStep: React.FC<QuestionnaireStepProps> = ({
@@ -23,11 +25,12 @@ const QuestionnaireStep: React.FC<QuestionnaireStepProps> = ({
   setCurrentStep
 }) => {
   const [showVerificationDialog, setShowVerificationDialog] = useState(false)
-  const [dialogMessage, setDialogMessage] = useState<string>('')
-  const [statusType, setStatusType] = useState<string>('')
+  const [dialogMessage, setDialogMessage] = useState('')
+  const [statusType, setStatusType] = useState<VerificationStatus>('')
   const [isCheckingStatus, setIsCheckingStatus] = useState(true)
   const navigate = useNavigate()
   const hasFetched = useRef(false)
+
   const hasValidAnswers = Object.values(answers).some((answer) => answer.value.trim() !== '')
 
   useEffect(() => {
@@ -43,7 +46,7 @@ const QuestionnaireStep: React.FC<QuestionnaireStepProps> = ({
           const { status, message } = response.data
 
           if (status !== 'SUCCESS') {
-            setStatusType(status)
+            setStatusType(status as VerificationStatus)
             setDialogMessage(message)
             setShowVerificationDialog(true)
           }
@@ -75,18 +78,14 @@ const QuestionnaireStep: React.FC<QuestionnaireStepProps> = ({
     }
   }
 
+  const handleCloseDialog = () => {
+    setShowVerificationDialog(false)
+    setCurrentStep(STEPS.SELECT_CAMPAIGN)
+  }
+
   return (
     <>
-      {/* Dialog thông báo trạng thái đăng ký */}
-      <Dialog
-        open={showVerificationDialog}
-        onOpenChange={(open) => {
-          setShowVerificationDialog(open)
-          if (!open) {
-            setCurrentStep(STEPS.SELECT_CAMPAIGN)
-          }
-        }}
-      >
+      <Dialog open={showVerificationDialog} onOpenChange={handleCloseDialog}>
         <DialogContent className='sm:max-w-md'>
           <div className='flex items-center gap-3 mb-2 text-red-600'>
             <AlertTriangle className='h-6 w-6' />
@@ -99,7 +98,7 @@ const QuestionnaireStep: React.FC<QuestionnaireStepProps> = ({
               variant='outline'
               className='w-full sm:w-auto'
               onClick={() => {
-                setShowVerificationDialog(false)
+                handleCloseDialog()
                 navigate('/')
               }}
             >

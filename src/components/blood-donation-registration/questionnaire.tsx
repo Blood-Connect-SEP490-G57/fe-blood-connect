@@ -4,6 +4,8 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
 import { Question as fetchQuestions } from '@/api/campaign'
 import { Loader2 } from 'lucide-react'
+import { QuestionSet, Section, Question } from '@/schema/question-schema'
+import { Input } from '@/components/ui/input'
 
 interface QuestionnaireProps {
   questionSetId: number
@@ -11,48 +13,22 @@ interface QuestionnaireProps {
   answers: Record<number, { value: string; description?: string }>
 }
 
-interface QuestionOption {
-  sub_question_id: number
-  content: string
-  has_description: boolean
-}
-
-interface Question {
-  id: number
-  content: string
-  type: 'SINGLE_CHOICE' | 'MULTIPLE_CHOICE'
-  subs: QuestionOption[]
-  order: number
-}
-
 const Questionnaire: React.FC<QuestionnaireProps> = ({ questionSetId, onAnswerChange, answers }) => {
-  const [questions, setQuestions] = useState<Question[]>([])
+  const [questionSet, setQuestionSet] = useState<QuestionSet | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const hasFetched = useRef(false)
 
   useEffect(() => {
-    if (!questionSetId) return
-
-    if (hasFetched.current) return // Nếu đã fetch thì không gọi lại
+    if (!questionSetId || hasFetched.current) return
     hasFetched.current = true
 
     const fetchQuestionsData = async () => {
       try {
         const response = await fetchQuestions(questionSetId.toString())
 
-        if (response.success && response.data && Array.isArray(response.data.questions)) {
-          const formattedQuestions = response.data.questions.map((item: any) => ({
-            id: item.id,
-            content: item.content,
-            type: item.type,
-            subs: item.subs || [],
-            order: item.order
-          }))
-
-          // Sắp xếp câu hỏi theo thứ tự
-          formattedQuestions.sort((a, b) => a.order - b.order)
-          setQuestions(formattedQuestions)
+        if (response.success && response.data) {
+          setQuestionSet(response.data)
         } else {
           setError('Cấu trúc dữ liệu không hợp lệ')
         }
@@ -67,37 +43,84 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({ questionSetId, onAnswerCh
     fetchQuestionsData()
   }, [questionSetId])
 
-  // Tìm sub question ID đã chọn cho một câu hỏi
-  const getSelectedSubIdForQuestion = (question: Question): number | undefined => {
-    for (const sub of question.subs) {
-      if (answers[sub.sub_question_id]?.value === sub.content) {
-        return sub.sub_question_id
-      }
-    }
-    return undefined
+  const handleAnswerChange = (questionId: number, value: string, description?: string) => {
+    onAnswerChange(questionId, value, description)
   }
 
-  // Xử lý khi chọn câu trả lời cho SINGLE_CHOICE
-  const handleSingleChoiceChange = (question: Question, selectedOption: QuestionOption) => {
-    // Xóa câu trả lời cũ
-    for (const sub of question.subs) {
-      if (sub.sub_question_id !== selectedOption.sub_question_id && answers[sub.sub_question_id]) {
-        onAnswerChange(sub.sub_question_id, '')
-      }
-    }
+  const renderQuestion = (question: Question) => {
+    const currentAnswer = answers[question.id]
 
-    // Thêm câu trả lời mới
-    onAnswerChange(
-      selectedOption.sub_question_id,
-      selectedOption.content,
-      selectedOption.has_description ? '' : undefined
+    return (
+      <Card key={question.id} className='overflow-hidden'>
+        <CardContent className='pt-6'>
+          <div className='space-y-4'>
+            <Label className='text-base font-medium'>
+              Câu {question.order}: {question.content}
+            </Label>
+
+            <div className='flex items-center space-x-4'>
+              <div className='flex items-center space-x-2'>
+                <Checkbox
+                  id={`question-${question.id}-co`}
+                  checked={currentAnswer?.value === 'Có'}
+                  onCheckedChange={(checked) => {
+                    if (checked) {
+                      handleAnswerChange(question.id, 'Có')
+                    } else if (currentAnswer?.value === 'Có') {
+                      handleAnswerChange(question.id, '')
+                    }
+                  }}
+                  className='text-red-600 border-black data-[state=checked]:bg-red-600 data-[state=checked]:border-red-600 focus:ring-red-600'
+                />
+                <Label htmlFor={`question-${question.id}-co`} className='cursor-pointer'>
+                  Có
+                </Label>
+              </div>
+
+              <div className='flex items-center space-x-2'>
+                <Checkbox
+                  id={`question-${question.id}-khong`}
+                  checked={currentAnswer?.value === 'Không'}
+                  onCheckedChange={(checked) => {
+                    if (checked) {
+                      handleAnswerChange(question.id, 'Không')
+                    } else if (currentAnswer?.value === 'Không') {
+                      handleAnswerChange(question.id, '')
+                    }
+                  }}
+                  className='text-red-600 border-black data-[state=checked]:bg-red-600 data-[state=checked]:border-red-600 focus:ring-red-600'
+                />
+                <Label htmlFor={`question-${question.id}-khong`} className='cursor-pointer'>
+                  Không
+                </Label>
+              </div>
+            </div>
+
+            {question.hasDetail && currentAnswer?.value === 'Có' && (
+              <div className='mt-2 ml-6'>
+                <Input
+                  type='text'
+                  className='border border-gray-300 rounded-md p-2 w-full'
+                  placeholder='Nhập thông tin chi tiết...'
+                  value={currentAnswer?.description || ''}
+                  onChange={(e) => handleAnswerChange(question.id, 'Có', e.target.value)}
+                />
+              </div>
+            )}
+          </div>
+        </CardContent>
+      </Card>
     )
   }
 
-  // Xử lý khi thay đổi mô tả
-  const handleDescriptionChange = (subQuestionId: number, content: string, description: string) => {
-    onAnswerChange(subQuestionId, content, description)
-  }
+  const renderSection = (section: Section) => (
+    <div key={section.id} className='space-y-4'>
+      <h3 className='text-lg font-semibold text-gray-900'>{section.name}</h3>
+      <div className='space-y-4'>
+        {section.questions.sort((a, b) => a.order - b.order).map(renderQuestion)}
+      </div>
+    </div>
+  )
 
   if (loading) {
     return (
@@ -116,110 +139,16 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({ questionSetId, onAnswerCh
     )
   }
 
+  if (!questionSet) {
+    return null
+  }
+
   return (
-    <div className='space-y-6'>
-      {questions.map((q) => (
-        <Card key={q.id} className='overflow-hidden'>
-          <CardContent className='pt-6'>
-            <div className='space-y-4'>
-              <Label className='text-base font-medium'>
-                Câu {q.order}: {q.content}
-              </Label>
-
-              {q.type === 'SINGLE_CHOICE' ? (
-                <div className='space-y-2'>
-                  {q.subs.map((option, i) => {
-                    // Dùng selectedId để kiểm tra active
-                    const selectedId = getSelectedSubIdForQuestion(q)
-                    const isSelected = selectedId === option.sub_question_id
-
-                    return (
-                      <div key={i} className='flex flex-col'>
-                        <div className='flex items-center space-x-2'>
-                          <input
-                            type='radio'
-                            id={`${q.id}-${i}`}
-                            name={`question-${q.id}`}
-                            checked={isSelected}
-                            className='h-4 w-4 text-red-600 focus:ring-red-600'
-                            onChange={() => handleSingleChoiceChange(q, option)}
-                          />
-                          <Label htmlFor={`${q.id}-${i}`} className='cursor-pointer'>
-                            {option.content}
-                          </Label>
-                        </div>
-
-                        {/* Luôn dành chỗ cho input description để tránh nhảy layout */}
-                        <div
-                          className={`w-full mt-2 ml-6 ${
-                            isSelected && option.has_description ? 'block' : 'hidden'
-                          } h-[44px]`}
-                        >
-                          <input
-                            type='text'
-                            className='border border-gray-300 rounded-md p-2 w-full'
-                            placeholder='Nhập thông tin khác...'
-                            value={answers[option.sub_question_id]?.description || ''}
-                            onChange={(e) =>
-                              handleDescriptionChange(option.sub_question_id, option.content, e.target.value)
-                            }
-                          />
-                        </div>
-                      </div>
-                    )
-                  })}
-                </div>
-              ) : (
-                <div className='space-y-2'>
-                  {(q.subs || []).map((option, i) => {
-                    const isChecked =
-                      answers[option.sub_question_id] !== undefined &&
-                      answers[option.sub_question_id].value.trim() !== ''
-
-                    return (
-                      <div key={i} className='flex flex-col'>
-                        <div className='flex items-center space-x-2'>
-                          <Checkbox
-                            id={`${q.id}-${i}`}
-                            checked={isChecked}
-                            onCheckedChange={(checked) => {
-                              if (checked) {
-                                onAnswerChange(option.sub_question_id, option.content)
-                              } else {
-                                onAnswerChange(option.sub_question_id, '')
-                              }
-                            }}
-                            className='text-blue-600 border-black data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600 focus:ring-blue-600'
-                          />
-                          <Label htmlFor={`${q.id}-${i}`} className='cursor-pointer'>
-                            {option.content}
-                          </Label>
-                        </div>
-
-                        <div
-                          className={`w-full mt-2 ml-6 ${
-                            isChecked && option.has_description ? 'block' : 'hidden'
-                          } h-[44px]`}
-                        >
-                          <input
-                            type='text'
-                            className='border border-gray-300 rounded-md p-2 w-full'
-                            placeholder='Nhập thông tin khác...'
-                            value={answers[option.sub_question_id]?.description || ''}
-                            onChange={(e) =>
-                              handleDescriptionChange(option.sub_question_id, option.content, e.target.value)
-                            }
-                          />
-                        </div>
-                      </div>
-                    )
-                  })}
-                </div>
-              )}
-            </div>
-          </CardContent>
-        </Card>
-      ))}
+    <div className='space-y-8'>
+      {questionSet.sections
+        .filter(section => !section.hidden)
+        .sort((a, b) => a.order - b.order)
+        .map(renderSection)}
     </div>
   )
 }
