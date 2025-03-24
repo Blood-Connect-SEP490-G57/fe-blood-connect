@@ -13,17 +13,29 @@ export default function ShareLink({ selectedCampaign }: { selectedCampaign: Camp
   const urlToShare = `${baseUrl}?campaignId=${selectedCampaign?.id}&questionset=${selectedCampaign?.questionSetId}`
 
   async function shareToFacebook() {
-    const shortUrl = await shortenUrl(urlToShare)
-    const fbUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shortUrl)}`
-    window.open(fbUrl, '_blank')
-    localStorage.removeItem('selectedCampaign')
+    try {
+      const shortUrl = await shortenUrl(urlToShare)
+      const fbUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shortUrl)}`
+      window.open(fbUrl, '_blank')?.focus()
+      localStorage.removeItem('selectedCampaign')
+      // console.log('shareToFacebook', fbUrl)
+    } catch (error) {
+      console.error('Lỗi khi chia sẻ:', error)
+      window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(urlToShare)}`, '_blank')?.focus()
+    }
   }
 
   async function shareToZalo() {
-    const shortUrl = await shortenUrl(urlToShare)
-    const zaloUrl = `https://zalo.me/share?url=${encodeURIComponent(shortUrl)}`
-    window.open(zaloUrl, '_blank')
-    localStorage.removeItem('selectedCampaign')
+    try {
+      const shortUrl = await shortenUrl(urlToShare)
+      const zaloUrl = `https://zalo.me/share?url=${encodeURIComponent(shortUrl)}`
+      window.open(zaloUrl, '_blank')?.focus()
+      localStorage.removeItem('selectedCampaign')
+      console.log('shareToZalo', zaloUrl)
+    } catch (error) {
+      console.error('Lỗi khi chia sẻ:', error)
+      window.open(`https://zalo.me/share?url=${encodeURIComponent(urlToShare)}`, '_blank')?.focus()
+    }
   }
 
   function copyToClipboard() {
