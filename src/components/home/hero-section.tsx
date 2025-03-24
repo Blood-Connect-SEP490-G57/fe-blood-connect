@@ -13,14 +13,28 @@ const HeroSection: React.FC = () => {
   const scrollToRegister = () => {
     const element = document.getElementById('blood-donation-slider')
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth' })
+      const offset = 80 // Điều chỉnh offset tùy theo chiều cao của header
+      const elementPosition = element.getBoundingClientRect().top
+      const offsetPosition = elementPosition + window.pageYOffset - offset
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      })
     }
   }
 
   const scrollToLearnMore = () => {
     const element = document.getElementById('blood-donation-criteria')
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth' })
+      const offset = 80 // Điều chỉnh offset tùy theo chiều cao của header
+      const elementPosition = element.getBoundingClientRect().top
+      const offsetPosition = elementPosition + window.pageYOffset - offset
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      })
     }
   }
 
