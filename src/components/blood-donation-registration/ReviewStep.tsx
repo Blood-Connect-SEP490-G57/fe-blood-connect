@@ -6,25 +6,10 @@ import { STEPS } from '@/pages/BloodDonationRegistration'
 import { Question as fetchQuestions, getAnswersByCampaignId, submitAnswers } from '@/api/campaign'
 import { toast } from '@/components/ui/use-toast'
 import { Loader2 } from 'lucide-react'
-import { AnswerType } from '@/schema/answer-schema'
+import { Question, QuestionSet, Section } from '@/schema/question-schema'
+import { AnswerType, ApiAnswerType } from '@/schema/answer-schema'
 
-// Các interfaces
-interface Question {
-  id: number
-  content: string
-  type: 'SINGLE_CHOICE' | 'MULTIPLE_CHOICE'
-  subs: { sub_question_id: number; content: string; has_description: boolean }[]
-  order: number
-}
-
-interface ApiAnswer {
-  id: number
-  questionText: string
-  subQuestionContent: string
-  answerText: string
-  questionOrder: number
-  description?: string
-}
+// Interfaces
 
 type Campaign = {
   id: number
@@ -50,16 +35,19 @@ interface ReviewStepProps {
   setCurrentStep: Dispatch<SetStateAction<Step>>
 }
 
+interface SubmitAnswerPayload {
+  campaignId: number
+  answers: AnswerType[]
+}
+
 const ReviewStep: React.FC<ReviewStepProps> = ({ selectedCampaign, questionSetId, answers, setCurrentStep }) => {
-  // State hooks
-  const [questions, setQuestions] = useState<Question[]>([])
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
-  const [apiAnswers, setApiAnswers] = useState<ApiAnswer[]>([])
+  const [apiAnswers, setApiAnswers] = useState<ApiAnswerType[]>([])
   const [hasApiData, setHasApiData] = useState(false)
+  const [questionSet, setQuestionSet] = useState<QuestionSet | null>(null)
   const hasFetched = useRef(false)
 
-  // Fetch data effect
   useEffect(() => {
     if (!questionSetId || hasFetched.current) return
     hasFetched.current = true
@@ -72,18 +60,10 @@ const ReviewStep: React.FC<ReviewStepProps> = ({ selectedCampaign, questionSetId
         if (selectedCampaign) {
           try {
             const response = await getAnswersByCampaignId(selectedCampaign.id)
-            const hasAnswers = response.success && Array.isArray(response.data) && response.data.length > 0
+            const hasAnswers = response.success && Array.isArray(response.data?.answers) && response.data.answers.length > 0
 
             if (hasAnswers) {
-              const formattedAnswers: ApiAnswer[] = response.data.answers.map((answer: any) => ({
-                id: answer.id,
-                questionText: answer.questionText,
-                subQuestionContent: answer.subQuestionContent,
-                answerText: answer.answerText,
-                questionOrder: answer.questionOrder,
-                description: answer.description
-              }))
-              setApiAnswers(formattedAnswers)
+              setApiAnswers(response.data.answers)
               setHasApiData(true)
               setLoading(false)
               return
@@ -95,16 +75,8 @@ const ReviewStep: React.FC<ReviewStepProps> = ({ selectedCampaign, questionSetId
 
         // If no existing answers, get questions to display current form answers
         const questionsResponse = await fetchQuestions(questionSetId.toString())
-        if (questionsResponse.success && questionsResponse.data?.questions) {
-          setQuestions(
-            questionsResponse.data.questions.map((q: any) => ({
-              id: q.id,
-              content: q.content,
-              type: q.type,
-              subs: q.subs || [],
-              order: q.order
-            }))
-          )
+        if (questionsResponse.success && questionsResponse.data) {
+          setQuestionSet(questionsResponse.data)
         }
       } catch (error) {
         console.error('Error fetching data:', error)
@@ -121,10 +93,8 @@ const ReviewStep: React.FC<ReviewStepProps> = ({ selectedCampaign, questionSetId
     fetchData()
   }, [questionSetId, selectedCampaign])
 
-  // Xử lý nút xác nhận đăng ký - Gửi API ở đây
   const handleConfirm = async () => {
     if (hasApiData) {
-      // Nếu đã có dữ liệu từ API, chỉ cần chuyển sang trang Success
       setCurrentStep(STEPS.SUCCESS)
       return
     }
@@ -132,23 +102,23 @@ const ReviewStep: React.FC<ReviewStepProps> = ({ selectedCampaign, questionSetId
     try {
       setSubmitting(true)
 
-      // Lọc ra những câu trả lời có giá trị (không rỗng)
+      // Filter valid answers
       const validAnswers = Object.entries(answers).filter(([_, data]) => data.value.trim() !== '')
 
-      // Chuyển đổi câu trả lời thành định dạng API yêu cầu
-      const formattedAnswers: AnswerType[] = validAnswers.map(([sub_question_id, data]) => ({
-        subQuestionId: parseInt(sub_question_id),
-        answerText: data.value,
+      // Format answers for API
+      const formattedAnswers: AnswerType[] = validAnswers.map(([questionId, data]) => ({
+        subQuestionId: parseInt(questionId),
+        answerText: data.value === 'Có' ? 'true' : 'false',
         description: data.description || ''
       }))
 
-      // Tạo payload
-      const payload = {
-        answers: formattedAnswers,
-        campaignId: selectedCampaign?.id || 0
+      // Create payload
+      const payload: SubmitAnswerPayload = {
+        campaignId: selectedCampaign?.id || 0,
+        answers: formattedAnswers
       }
 
-      // Gọi API để lưu câu trả lời
+      // Submit answers
       const result = await submitAnswers(payload)
 
       if (result.success) {
@@ -177,46 +147,34 @@ const ReviewStep: React.FC<ReviewStepProps> = ({ selectedCampaign, questionSetId
     }
   }
 
-  // Loading state
-  if (loading) {
-    return (
-      <div className='flex flex-col items-center justify-center py-12 space-y-4'>
-        <Loader2 className='w-8 h-8 animate-spin text-red-600' />
-        <p className='text-gray-600'>Đang tải thông tin...</p>
-      </div>
-    )
-  }
-
-  // Render function for answer list
   const renderAnswers = () => {
     if (hasApiData) {
-      // Nhóm câu trả lời theo questionText (câu hỏi)
+      // Group answers by questionId
       const groupedAnswers = apiAnswers.reduce((acc, answer) => {
-        if (!acc[answer.questionText]) {
-          acc[answer.questionText] = {
-            questionText: answer.questionText,
-            questionOrder: answer.questionOrder,
+        const questionId = answer.questionInfo.id
+        if (!acc[questionId]) {
+          acc[questionId] = {
+            questionInfo: answer.questionInfo,
             answers: []
           }
         }
-        acc[answer.questionText].answers.push(answer)
+        acc[questionId].answers.push(answer)
         return acc
-      }, {} as Record<string, { questionText: string; questionOrder: number; answers: ApiAnswer[] }>)
+      }, {} as Record<number, { questionInfo: ApiAnswerType['questionInfo']; answers: ApiAnswerType[] }>)
 
-      // Chuyển đổi từ object sang array và sắp xếp theo questionOrder
       return Object.values(groupedAnswers)
-        .sort((a, b) => a.questionOrder - b.questionOrder)
-        .map((group) => (
-          <div key={group.questionText} className='flex flex-col space-y-2 border-b pb-3 last:border-b-0'>
+        .sort((a, b) => a.questionInfo.order - b.questionInfo.order)
+        .map(({ questionInfo, answers }) => (
+          <div key={questionInfo.id} className='flex flex-col space-y-2 border-b pb-3 last:border-b-0'>
             <div className='text-sm text-gray-800 font-medium'>
-              Câu {group.questionOrder}: {group.questionText}
+              Câu {questionInfo.order}: {questionInfo.content}
             </div>
             <div className='pl-4 space-y-2'>
-              {group.answers.map((answer, idx) => (
-                <div key={`${answer.id}-${idx}`} className='text-sm'>
+              {answers.map((answer) => (
+                <div key={answer.subQuestionId} className='text-sm'>
                   <div className='flex items-start'>
                     <div className='mt-0.5 mr-2 h-2 w-2 rounded-full bg-red-500'></div>
-                    <span className='font-medium'>{answer.subQuestionContent}</span>
+                    <span className='font-medium'>{answer.subQuestionInfo.content}</span>
                   </div>
                   {answer.description && (
                     <div className='text-gray-500 italic ml-4 mt-1'>Mô tả: {answer.description}</div>
@@ -228,7 +186,7 @@ const ReviewStep: React.FC<ReviewStepProps> = ({ selectedCampaign, questionSetId
         ))
     }
 
-    if (Object.keys(answers).length === 0) {
+    if (!questionSet || Object.keys(answers).length === 0) {
       return (
         <div className='bg-yellow-50 p-4 rounded-lg'>
           <p className='text-yellow-800'>Chưa có câu trả lời nào</p>
@@ -236,79 +194,91 @@ const ReviewStep: React.FC<ReviewStepProps> = ({ selectedCampaign, questionSetId
       )
     }
 
-    // Nhóm các câu trả lời theo câu hỏi chính
-    const groupedAnswers = Object.entries(answers)
-      .filter(([_, data]) => data.value.trim() !== '')
-      .reduce(
-        (groups, [subQuestionId, answer]) => {
-          // Tìm câu hỏi chứa subQuestionId này
-          const questionWithSub = questions.find((q) =>
-            q.subs.some((s) => s.sub_question_id === parseInt(subQuestionId))
-          )
+    // Group answers by section
+    type GroupedAnswer = {
+      question: Question;
+      apiAnswer: ApiAnswerType;
+    }
 
-          if (!questionWithSub) return groups
+    type SectionGroup = {
+      section: Section;
+      answers: GroupedAnswer[];
+    }
 
-          const questionId = questionWithSub.id
+    const groupedBySection = questionSet.sections
+      .filter(section => !section.hidden)
+      .sort((a, b) => a.order - b.order)
+      .map(section => {
+        const sectionAnswers = section.questions
+          .sort((a, b) => a.order - b.order)
+          .map(question => {
+            const answer = answers[question.id]
+            if (!answer || answer.value.trim() === '') return null
 
-          // Khởi tạo nhóm nếu chưa có
-          if (!groups[questionId]) {
-            groups[questionId] = {
-              question: questionWithSub,
-              subAnswers: []
-            }
-          }
+            return {
+              question,
+              apiAnswer: {
+                id: 0,
+                subQuestionId: question.id,
+                answerText: answer.value === 'Có' ? 'true' : 'false',
+                description: answer.description || '',
+                questionInfo: {
+                  id: question.id,
+                  content: question.content,
+                  type: 'BOOLEAN',
+                  order: question.order
+                },
+                subQuestionInfo: {
+                  id: question.id,
+                  content: question.content,
+                  has_description: question.hasDetail
+                }
+              }
+            } as GroupedAnswer
+          })
+          .filter((answer): answer is GroupedAnswer => answer !== null)
 
-          // Tìm sub question cụ thể
-          const subQuestion = questionWithSub.subs.find((s) => s.sub_question_id === parseInt(subQuestionId))
+        if (sectionAnswers.length === 0) return null
 
-          if (subQuestion) {
-            groups[questionId].subAnswers.push({
-              subQuestionId: parseInt(subQuestionId),
-              subContent: subQuestion.content,
-              value: answer.value,
-              description: answer.description
-            })
-          }
+        return {
+          section,
+          answers: sectionAnswers
+        } as SectionGroup
+      })
+      .filter((group): group is SectionGroup => group !== null)
 
-          return groups
-        },
-        {} as Record<
-          number,
-          {
-            question: Question
-            subAnswers: Array<{
-              subQuestionId: number
-              subContent: string
-              value: string
-              description?: string
-            }>
-          }
-        >
-      )
-
-    // Chuyển đổi từ object sang array và sắp xếp theo order
-    return Object.values(groupedAnswers)
-      .sort((a, b) => a.question.order - b.question.order)
-      .map((group) => (
-        <div key={group.question.id} className='flex flex-col space-y-2 border-b pb-3 last:border-b-0'>
-          <div className='text-md text-gray-800 font-bold'>
-            Câu {group.question.order}: {group.question.content}
-          </div>
-          <div className='pl-4 space-y-2'>
-            {group.subAnswers.map((subAnswer) => (
-              <div key={subAnswer.subQuestionId} className='text-sm'>
+    return groupedBySection.map(({ section, answers }) => (
+      <div key={section.id} className='space-y-4 border-b pb-4 last:border-b-0'>
+        <h4 className='font-semibold text-gray-900'>{section.name}</h4>
+        <div className='space-y-4'>
+          {answers.map(({ question, apiAnswer }) => (
+            <div key={question.id} className='pl-4'>
+              <div className='text-sm text-gray-800'>
+                Câu {question.order}: {question.content}
+              </div>
+              <div className='mt-2 pl-4'>
                 <div className='flex items-start'>
                   <div className='mt-0.5 mr-2 h-2 w-2 rounded-full bg-red-500'></div>
-                  <span className='font-medium'>{subAnswer.subContent}</span>
+                  <span className='font-medium text-sm'>{apiAnswer.answerText === 'true' ? 'Có' : 'Không'}</span>
                 </div>
-                {subAnswer.description && (
-                  <div className='text-gray-500 italic ml-4 mt-1'>Mô tả: {subAnswer.description}</div>
+                {apiAnswer.description && (
+                  <div className='text-gray-500 italic ml-4 mt-1 text-sm'>Mô tả: {apiAnswer.description}</div>
                 )}
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
-      ))
+      </div>
+    ))
+  }
+
+  if (loading) {
+    return (
+      <div className='flex flex-col items-center justify-center py-12 space-y-4'>
+        <Loader2 className='w-8 h-8 animate-spin text-red-600' />
+        <p className='text-gray-600'>Đang tải thông tin...</p>
+      </div>
+    )
   }
 
   return (
