@@ -6,6 +6,7 @@ import { extractFront, extractBack, getExtractById, updateExtractStatus } from '
 import { createOrUpdateUserDetail, getCurrentUserDetail } from '@/api/user'
 import { useNavigate } from 'react-router-dom'
 import { getOrganizationsByType, Organization } from '@/api/organization'
+import { toast } from '../ui/use-toast'
 
 interface FormData {
   frontImage: File | null
@@ -246,23 +247,29 @@ const UserVerification = () => {
   }
 
   const validateContactInfo = () => {
-    if (!formData.email || !formData.mobile || !formData.jobName || !formData.addressContact || !formData.bloodGroup) {
+    if (!formData.mobile) {
       setError('Vui lòng điền đầy đủ thông tin bắt buộc')
+      toast({
+        title: 'Lỗi',
+        description: 'Vui lòng điền đầy đủ thông tin số điện thoại',
+        variant: 'destructive'
+      })
       return false
     }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!emailRegex.test(formData.email)) {
-      setError('Email không hợp lệ')
+    if (!formData.addressContact) {
+      setError('Vui lòng điền đầy đủ thông tin bắt buộc')
+      toast({
+        title: 'Lỗi',
+        description: 'Vui lòng điền đầy đủ thông tin địa chỉ liên hệ',
+        variant: 'destructive'
+      })
       return false
     }
-
     const phoneRegex = /^[0-9]{10}$/
     if (!phoneRegex.test(formData.mobile)) {
       setError('Số điện thoại không hợp lệ')
       return false
     }
-
     return true
   }
 
@@ -657,10 +664,7 @@ const UserVerification = () => {
             <h2 className='text-2xl font-heading font-semibold text-foreground'>Hoàn tất xác thực</h2>
             <p className='text-accent'>Bạn đã xác thực tài khoản thành công</p>
             <div className='flex justify-center gap-4'>
-              <button
-                onClick={() => navigate('/')}
-                className='w-full bg-primary text-white p-2 rounded'
-              >
+              <button onClick={() => navigate('/')} className='w-full bg-primary text-white p-2 rounded'>
                 Trở lại trang chủ
               </button>
               <button
@@ -718,7 +722,13 @@ const UserVerification = () => {
         )}
         {step < 4 && (
           <button
-            onClick={() => setStep(step + 1)}
+            onClick={() => {
+              if (step === 1 && (!formData.frontImage || !formData.backImage)) {
+                setError('Vui lòng tải lên cả mặt trước và mặt sau CCCD')
+                return
+              }
+              setStep(step + 1)
+            }}
             className='px-4 py-2 bg-primary text-white rounded hover:bg-primary/80 ml-auto'
           >
             Tiếp tục
