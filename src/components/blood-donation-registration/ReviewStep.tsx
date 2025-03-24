@@ -60,10 +60,10 @@ const ReviewStep: React.FC<ReviewStepProps> = ({ selectedCampaign, questionSetId
         if (selectedCampaign) {
           try {
             const response = await getAnswersByCampaignId(selectedCampaign.id)
-            const hasAnswers = response.success && Array.isArray(response.data?.answers) && response.data.answers.length > 0
+            const hasAnswers = response.length > 0
 
             if (hasAnswers) {
-              setApiAnswers(response.data.answers)
+              setApiAnswers(response)
               setHasApiData(true)
               setLoading(false)
               return
@@ -107,9 +107,9 @@ const ReviewStep: React.FC<ReviewStepProps> = ({ selectedCampaign, questionSetId
 
       // Format answers for API
       const formattedAnswers: AnswerType[] = validAnswers.map(([questionId, data]) => ({
-        subQuestionId: parseInt(questionId),
-        answerText: data.value === 'Có' ? 'true' : 'false',
-        description: data.description || ''
+        questionId: parseInt(questionId),
+        answer: data.value === 'Có' ? 'true' : 'false',
+        detail: data.description || ''
       }))
 
       // Create payload
@@ -171,13 +171,13 @@ const ReviewStep: React.FC<ReviewStepProps> = ({ selectedCampaign, questionSetId
             </div>
             <div className='pl-4 space-y-2'>
               {answers.map((answer) => (
-                <div key={answer.subQuestionId} className='text-sm'>
+                <div key={answer.questionId} className='text-sm'>
                   <div className='flex items-start'>
                     <div className='mt-0.5 mr-2 h-2 w-2 rounded-full bg-red-500'></div>
-                    <span className='font-medium'>{answer.subQuestionInfo.content}</span>
+                    <span className='font-medium'>{answer.questionInfo.content}</span>
                   </div>
-                  {answer.description && (
-                    <div className='text-gray-500 italic ml-4 mt-1'>Mô tả: {answer.description}</div>
+                  {answer.detail && (
+                    <div className='text-gray-500 italic ml-4 mt-1'>Mô tả: {answer.detail}</div>
                   )}
                 </div>
               ))}
@@ -218,21 +218,9 @@ const ReviewStep: React.FC<ReviewStepProps> = ({ selectedCampaign, questionSetId
             return {
               question,
               apiAnswer: {
-                id: 0,
-                subQuestionId: question.id,
-                answerText: answer.value === 'Có' ? 'true' : 'false',
-                description: answer.description || '',
-                questionInfo: {
-                  id: question.id,
-                  content: question.content,
-                  type: 'BOOLEAN',
-                  order: question.order
-                },
-                subQuestionInfo: {
-                  id: question.id,
-                  content: question.content,
-                  has_description: question.hasDetail
-                }
+                questionId: question.id,
+                answer: answer.value === 'Có' ? 'true' : 'false',
+                detail: answer.description || ''
               }
             } as GroupedAnswer
           })
@@ -259,10 +247,10 @@ const ReviewStep: React.FC<ReviewStepProps> = ({ selectedCampaign, questionSetId
               <div className='mt-2 pl-4'>
                 <div className='flex items-start'>
                   <div className='mt-0.5 mr-2 h-2 w-2 rounded-full bg-red-500'></div>
-                  <span className='font-medium text-sm'>{apiAnswer.answerText === 'true' ? 'Có' : 'Không'}</span>
+                  <span className='font-medium text-sm'>{apiAnswer.answer === 'true' ? 'Có' : 'Không'}</span>
                 </div>
-                {apiAnswer.description && (
-                  <div className='text-gray-500 italic ml-4 mt-1 text-sm'>Mô tả: {apiAnswer.description}</div>
+                {apiAnswer.detail && (
+                  <div className='text-gray-500 italic ml-4 mt-1 text-sm'>Mô tả: {apiAnswer.detail}</div>
                 )}
               </div>
             </div>
