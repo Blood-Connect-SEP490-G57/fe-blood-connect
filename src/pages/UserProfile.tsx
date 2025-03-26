@@ -48,10 +48,10 @@ const UserProfilePage: React.FC = () => {
         const response = await CheckExtractStatus()
 
         if (response.success && response.data) {
-          setIsVerified(response.data.status === 1)
-          if (response.data.status === 1 && selectedOption === 'verification') {
-            setSelectedOption('profile')
-            window.location.hash = 'profile'
+          setIsVerified(response.data.status === 'EXTRACTED')
+          if (response.data.status === 'EXTRACTED') {
+            setSelectedOption('thong-tin-ca-nhan')
+            window.location.hash = 'thong-tin-ca-nhan'
           }
         }
       } catch (error) {

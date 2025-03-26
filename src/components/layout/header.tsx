@@ -24,7 +24,7 @@ const Header: React.FC = () => {
 
   useEffect(() => {
     if (
-      location.pathname === '/user-profile-page' &&
+      location.pathname === '/trang-ca-nhan' &&
       (location.hash === '#lich-hen' ||
         location.hash === '#thong-tin-ca-nhan' ||
         location.hash === '#lich-su-hien-mau' ||

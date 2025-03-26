@@ -34,16 +34,40 @@ interface Campaign {
 
 interface Answer {
   id: number
-  questionText: string
-  subQuestionContent: string
-  answerText: string
-  questionOrder: number
+  sectionId: number
+  questionId: number
+  content: string
+  answer: boolean
+  detail: string
+}
+
+interface Question {
+  id: number
+  sectionId: number
+  content: string
+  order: number
+  hasDetail: boolean
+}
+
+interface Section {
+  id: number
+  name: string
+  order: number
+  questionSetId: number
+  hidden: boolean
+  questions: Question[]
+  answers: Answer[]
 }
 
 interface AppointmentData {
   userInfo: UserInfo
   campaign: Campaign | null
-  answer: Answer[] | null
+  answer: {
+    sections: Section[]
+    questionSetId: number
+    userId: number
+    campaignId: number
+  } | null
 }
 
 const AppointmentInfo = () => {
@@ -118,42 +142,11 @@ const AppointmentInfo = () => {
     return <Badge className={`${config.color} font-medium`}>{config.label}</Badge>
   }
 
-  // Nhóm câu trả lời theo câu hỏi
-  const groupAnswersByQuestion = (answers: Answer[] | null) => {
-    if (!answers || !Array.isArray(answers)) return []
+  // Nhóm câu trả lời theo section
+  const groupAnswersBySection = (sections: Section[] | null) => {
+    if (!sections || !Array.isArray(sections)) return []
 
-    const groupedAnswers = answers.reduce(
-      (acc, answer) => {
-        const key = `${answer.questionOrder}_${answer.questionText}`
-
-        if (!acc[key]) {
-          acc[key] = {
-            questionText: answer.questionText,
-            questionOrder: answer.questionOrder,
-            answers: []
-          }
-        }
-
-        acc[key].answers.push({
-          id: answer.id,
-          content: answer.subQuestionContent,
-          answerText: answer.answerText
-        })
-
-        return acc
-      },
-      {} as Record<
-        string,
-        {
-          questionText: string
-          questionOrder: number
-          answers: Array<{ id: number; content: string; answerText: string }>
-        }
-      >
-    )
-
-    // Chuyển từ object thành array và sắp xếp
-    return Object.values(groupedAnswers).sort((a, b) => a.questionOrder - b.questionOrder)
+    return sections.sort((a, b) => a.order - b.order)
   }
 
   if (loading) {
@@ -180,7 +173,7 @@ const AppointmentInfo = () => {
   }
 
   const { userInfo } = data
-  const groupedAnswers = groupAnswersByQuestion(data.answer)
+  const groupedSections = groupAnswersBySection(data.answer?.sections || null)
 
   const appointmentItems = data.campaign
     ? [
@@ -215,7 +208,7 @@ const AppointmentInfo = () => {
                   { label: 'Số thẻ HS/SV/Quân nhân', value: userInfo.student_id || '-' },
                   { label: 'Điện thoại', value: userInfo.phoneNumber },
                   { label: 'Email', value: userInfo.email, fullWidth: true },
-                  { label: 'Địa chỉ liên lạc', value: userInfo.addressContact, fullWidth: true }
+                  { label: 'Điện thoại', value: userInfo.addressContact, fullWidth: true }
                 ].map((item, index) => (
                   <div key={index} className={item.fullWidth ? 'col-span-1 md:col-span-2' : ''}>
                     <span className='font-medium text-gray-700 block mb-1'>{item.label}:</span>
@@ -326,7 +319,7 @@ const AppointmentInfo = () => {
         </div>
 
         {/* Chi tiết bảng câu hỏi sức khỏe */}
-        {groupedAnswers.length > 0 && (
+        {groupedSections.length > 0 && (
           <div id='health-questionnaire' className='mt-8 mx-2'>
             <Card>
               <CardHeader className='pb-2'>
@@ -336,17 +329,27 @@ const AppointmentInfo = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className='bg-gray-50 rounded-lg p-4 space-y-4'>
-                  {groupedAnswers.map((group) => (
-                    <div key={group.questionOrder} className='border-b pb-3 last:border-b-0 last:pb-0'>
-                      <p className='font-medium text-gray-800'>
-                        <span className='text-red-600'>Câu {group.questionOrder}:</span> {group.questionText}
-                      </p>
-                      <div className='ml-5 mt-2 space-y-1'>
-                        {group.answers.map((answer) => (
-                          <div key={answer.id} className='flex gap-2 items-center'>
-                            <div className='w-2 h-2 rounded-full bg-red-600'></div>
-                            <span>{answer.content}</span>
+                <div className='bg-gray-50 rounded-lg p-4 space-y-6'>
+                  {groupedSections.map((section) => (
+                    <div key={section.id} className='border-b pb-4 last:border-b-0 last:pb-0'>
+                      <h3 className='font-medium text-gray-800 mb-3'>{section.name}</h3>
+                      <div className='space-y-3'>
+                        {section.answers.map((answer) => (
+                          <div key={answer.id} className='flex flex-col gap-1'>
+                            <div className='flex gap-2 items-start'>
+                              <div className={`w-2 h-2 rounded-full mt-2 bg-red-600`}></div>
+                              <div className='flex-1'>
+                                <div className='flex justify-between items-start'>
+                                  <span className='text-gray-700'>{answer.content}</span>
+                                  <span className={`ml-4 font-medium`}>
+                                    {answer.answer ? 'Có' : 'Không'}
+                                  </span>
+                                </div>
+                                {answer.detail && (
+                                  <p className='text-sm text-gray-500 mt-1 ml-4'>Chi tiết: {answer.detail}</p>
+                                )}
+                              </div>
+                            </div>
                           </div>
                         ))}
                       </div>
