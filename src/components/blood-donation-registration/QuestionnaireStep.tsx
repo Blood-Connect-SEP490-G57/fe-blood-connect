@@ -7,6 +7,7 @@ import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogFooter } f
 import { useNavigate } from 'react-router-dom'
 import { AlertTriangle } from 'lucide-react'
 import { ValidRegisterDonate } from '@/api/campaign'
+import { useToast } from '@/components/ui/use-toast'
 
 type VerificationStatus = 'NOT_VERIFIED' | 'ALREADY_REGISTERED' | 'SUCCESS' | ''
 
@@ -28,10 +29,13 @@ const QuestionnaireStep: React.FC<QuestionnaireStepProps> = ({
   const [dialogMessage, setDialogMessage] = useState('')
   const [statusType, setStatusType] = useState<VerificationStatus>('')
   const [isCheckingStatus, setIsCheckingStatus] = useState(true)
+  const [totalQuestions, setTotalQuestions] = useState(0)
   const navigate = useNavigate()
   const hasFetched = useRef(false)
+  const { toast } = useToast()
 
-  const hasValidAnswers = Object.values(answers).some((answer) => answer.value.trim() !== '')
+  const answeredQuestions = Object.values(answers).filter(answer => answer.value.trim() !== '').length
+  const hasAllAnswers = answeredQuestions === totalQuestions && totalQuestions > 0
 
   useEffect(() => {
     if (hasFetched.current) return
@@ -62,6 +66,20 @@ const QuestionnaireStep: React.FC<QuestionnaireStepProps> = ({
   }, [])
 
   const handleContinue = () => {
+    if (!hasAllAnswers) {
+      toast({
+        variant: "destructive",
+        title: "Thông báo",
+        description: `Vui lòng trả lời tất cả ${totalQuestions} câu hỏi. Hiện tại bạn đã trả lời ${answeredQuestions}/${totalQuestions} câu.`,
+      })
+      
+      // Tìm câu hỏi đầu tiên chưa trả lời và cuộn đến
+      const unansweredQuestion = document.querySelector('.border-red-200')
+      if (unansweredQuestion) {
+        unansweredQuestion.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      }
+      return
+    }
     setCurrentStep(STEPS.REVIEW)
   }
 
@@ -117,10 +135,22 @@ const QuestionnaireStep: React.FC<QuestionnaireStepProps> = ({
         <Card className='border-none shadow-lg mb-6'>
           <CardHeader>
             <CardTitle>Bảng câu hỏi sức khỏe</CardTitle>
-            <CardDescription>Vui lòng trả lời các câu hỏi sau để đảm bảo bạn đủ điều kiện hiến máu</CardDescription>
+            <CardDescription>
+              Vui lòng trả lời tất cả các câu hỏi sau để đảm bảo bạn đủ điều kiện hiến máu
+              {totalQuestions > 0 && (
+                <span className="block mt-1 text-sm text-gray-500">
+                  Đã trả lời: {answeredQuestions}/{totalQuestions} câu hỏi
+                </span>
+              )}
+            </CardDescription>
           </CardHeader>
           <CardContent>
-            <Questionnaire questionSetId={questionSetId} onAnswerChange={handleAnswerChange} answers={answers} />
+            <Questionnaire 
+              questionSetId={questionSetId} 
+              onAnswerChange={handleAnswerChange} 
+              answers={answers}
+              onQuestionsLoaded={setTotalQuestions}
+            />
           </CardContent>
         </Card>
 
@@ -131,7 +161,7 @@ const QuestionnaireStep: React.FC<QuestionnaireStepProps> = ({
           <Button
             className='bg-blue-600 text-white hover:bg-blue-700'
             onClick={handleContinue}
-            disabled={!hasValidAnswers || isCheckingStatus}
+            disabled={isCheckingStatus || !hasAllAnswers}
           >
             Tiếp tục
           </Button>
