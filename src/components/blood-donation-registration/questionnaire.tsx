@@ -11,9 +11,10 @@ interface QuestionnaireProps {
   questionSetId: number
   onAnswerChange: (id: number, value: string, description?: string) => void
   answers: Record<number, { value: string; description?: string }>
+  onQuestionsLoaded?: (count: number) => void
 }
 
-const Questionnaire: React.FC<QuestionnaireProps> = ({ questionSetId, onAnswerChange, answers }) => {
+const Questionnaire: React.FC<QuestionnaireProps> = ({ questionSetId, onAnswerChange, answers, onQuestionsLoaded }) => {
   const [questionSet, setQuestionSet] = useState<QuestionSet | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -29,6 +30,10 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({ questionSetId, onAnswerCh
 
         if (response.success && response.data) {
           setQuestionSet(response.data)
+          const totalQuestions = response.data.sections
+            .filter(section => !section.hidden)
+            .reduce((total, section) => total + section.questions.length, 0)
+          onQuestionsLoaded?.(totalQuestions)
         } else {
           setError('Cấu trúc dữ liệu không hợp lệ')
         }
@@ -41,7 +46,7 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({ questionSetId, onAnswerCh
     }
 
     fetchQuestionsData()
-  }, [questionSetId])
+  }, [questionSetId, onQuestionsLoaded])
 
   const handleAnswerChange = (questionId: number, value: string, description?: string) => {
     onAnswerChange(questionId, value, description)
@@ -49,13 +54,15 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({ questionSetId, onAnswerCh
 
   const renderQuestion = (question: Question) => {
     const currentAnswer = answers[question.id]
+    const isAnswered = currentAnswer?.value.trim() !== ''
 
     return (
-      <Card key={question.id} className='overflow-hidden'>
+      <Card key={question.id} className={`overflow-hidden ${!isAnswered ? 'border-red-200' : ''}`}>
         <CardContent className='pt-6'>
           <div className='space-y-4'>
             <Label className='text-base font-medium'>
               Câu {question.order}: {question.content}
+              <span className='text-red-500 ml-1'>*</span>
             </Label>
 
             <div className='flex items-center space-x-4'>
