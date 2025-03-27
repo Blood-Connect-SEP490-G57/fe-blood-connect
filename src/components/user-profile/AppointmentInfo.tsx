@@ -7,6 +7,8 @@ import { format } from 'date-fns'
 import { vi } from 'date-fns/locale'
 import { useNavigate } from 'react-router-dom'
 import { Badge } from '@/components/ui/badge'
+import { cancelAppointment } from '@/api/campaign'
+import { toast } from '../ui/use-toast'
 
 interface UserInfo {
   fullName: string
@@ -76,6 +78,7 @@ const AppointmentInfo = () => {
   const [error, setError] = useState<string | null>(null)
   const navigate = useNavigate()
   const hasFetched = useRef(false)
+  const [isModalOpen, setModalOpen] = useState(false)
   // Scroll to top when component mounts
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -108,6 +111,75 @@ const AppointmentInfo = () => {
 
     fetchAppointmentInfo()
   }, [])
+
+  function CancelAppointmentModal({
+    isOpen,
+    onClose,
+    onConfirm
+  }: {
+    isOpen: boolean
+    onClose: () => void
+    onConfirm: () => void
+  }) {
+    if (!isOpen) return null
+
+    return (
+      <div className='fixed inset-0 flex items-center justify-center bg-black bg-opacity-50'>
+        <div className='bg-white p-6 rounded shadow-lg'>
+          <h2 className='text-lg font-bold mb-4'>Xác nhận hủy lịch hẹn</h2>
+          <p className='mb-4'>Bạn có chắc chắn muốn hủy lịch hẹn này không?</p>
+          <div className='flex justify-end space-x-2'>
+            <button onClick={onClose} className='px-4 py-2 bg-gray-300 rounded hover:bg-gray-400'>
+              Hủy bỏ
+            </button>
+            <button onClick={onConfirm} className='px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700'>
+              Xác nhận
+            </button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // Hàm hủy lịch hẹn
+  const handleCancelAppointment = async () => {
+    if (!data?.campaign?.campaignId) {
+      toast({
+        title: 'Lỗi',
+        description: 'Không tìm thấy thông tin lịch hẹn',
+        variant: 'destructive'
+      })
+      return
+    }
+
+    try {
+      await cancelAppointment(data.campaign.campaignId)
+      
+      // Update local state to reflect cancellation
+      setData(prev => prev ? {
+        ...prev,
+        campaign: prev.campaign ? {
+          ...prev.campaign,
+          status: 'CANCELLED'
+        } : null
+      } : null)
+
+      toast({
+        title: 'Thành công',
+        description: 'Lịch hẹn đã được hủy thành công',
+        variant: 'default'
+      })
+      
+      setModalOpen(false)
+    } catch (error) {
+      console.error('Error cancelling appointment:', error)
+      toast({
+        title: 'Lỗi',
+        description: 'Không thể hủy lịch hẹn. Vui lòng thử lại sau.',
+        variant: 'destructive'
+      })
+    }
+  }
 
   // Hàm format ngày giờ
   const formatDate = (dateString: string) => {
@@ -276,7 +348,7 @@ const AppointmentInfo = () => {
                   </div>
 
                   <div className='flex justify-end space-x-3 mt-4 pt-4 border-t border-gray-100'>
-                    <Button
+                    {/* <Button
                       variant='outline'
                       className='border-red-200 text-red-600 hover:bg-red-50 text-sm py-1 h-9'
                       onClick={() => {
@@ -285,15 +357,13 @@ const AppointmentInfo = () => {
                       }}
                     >
                       Xem lịch sử
-                    </Button>
+                    </Button> */}
 
                     {data.campaign.status === 'BOOKING' && (
                       <Button
                         variant='outline'
                         className='border-red-200 text-red-600 hover:bg-red-50 text-sm py-1 h-9'
-                        onClick={() => {
-                          alert('Chức năng hủy lịch hẹn sẽ được cập nhật sớm')
-                        }}
+                        onClick={() => setModalOpen(true)}
                       >
                         Hủy lịch hẹn
                       </Button>
@@ -341,9 +411,7 @@ const AppointmentInfo = () => {
                               <div className='flex-1'>
                                 <div className='flex justify-between items-start'>
                                   <span className='text-gray-700'>{answer.content}</span>
-                                  <span className={`ml-4 font-medium`}>
-                                    {answer.answer ? 'Có' : 'Không'}
-                                  </span>
+                                  <span className={`ml-4 font-medium`}>{answer.answer ? 'Có' : 'Không'}</span>
                                 </div>
                                 {answer.detail && (
                                   <p className='text-sm text-gray-500 mt-1 ml-4'>Chi tiết: {answer.detail}</p>
@@ -361,6 +429,11 @@ const AppointmentInfo = () => {
           </div>
         )}
       </div>
+      <CancelAppointmentModal
+        isOpen={isModalOpen}
+        onClose={() => setModalOpen(false)}
+        onConfirm={handleCancelAppointment}
+      />
     </div>
   )
 }
