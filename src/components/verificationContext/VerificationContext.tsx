@@ -28,17 +28,13 @@ export const VerificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
     const checkVerificationStatus = async () => {
       try {
         const response = await CheckExtractStatus()
-        console.log('Verification API Response:', response)
         if (response.success && response.data?.status) {
           setIsVerified(response.data.status)
-          console.log('Setting isVerified to:', response.data.status)
         } else {
-          console.log('No status in response or response not successful')
           setIsVerified('NONE')
         }
       } catch (error) {
         console.error('Error checking verification status:', error)
-        setIsVerified('NONE')
       }
     }
 
