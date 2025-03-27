@@ -1,84 +1,46 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
-import { Calendar, CheckCircle, History, Info, User, Loader2 } from 'lucide-react'
+import { Calendar, CheckCircle, History, Info, User } from 'lucide-react'
 import Profile from '@/components/user-profile/Profile'
 import AppointmentInfo from '@/components/user-profile/AppointmentInfo'
 import DonationHistory from '@/components/user-profile/DonationHistory'
 import UserVerification from '@/components/user-profile/UserVerification'
-import { CheckExtractStatus } from '@/api/extract'
-import { toast } from '@/components/ui/use-toast'
+import { useVerification } from '@/components/verificationContext/VerificationContext'
 
 const UserProfilePage: React.FC = () => {
   const [selectedOption, setSelectedOption] = useState<string>('thong-tin-ca-nhan')
-  const [isCheckingStatus, setIsCheckingStatus] = useState(true)
-  const [isVerified, setIsVerified] = useState(false)
-  const hasFetched = useRef(false)
-  // Effect to initialize state on mount from the URL hash
+  const { isVerified } = useVerification()
+  
+  useEffect(() => {
+    console.log('UserProfile - Current verification status:', isVerified)
+  }, [isVerified])
+
   useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash.slice(1)
-      if (hash && ['thong-tin-ca-nhan', 'lich-hen', 'lich-su-hien-mau', 'xac-thuc-tai-khoan'].includes(hash)) {
-        setSelectedOption(hash)
-      }
-    }
-    // Set the initial option from URL
-    handleHashChange()
+      const validOptions = ['thong-tin-ca-nhan', 'lich-hen', 'lich-su-hien-mau']
 
-    // Add an event listener for hash changes
+      if (isVerified === 'NONE') {
+        validOptions.push('xac-thuc-tai-khoan')
+      }
+
+      setSelectedOption(validOptions.includes(hash) ? hash : 'thong-tin-ca-nhan')
+    }
+
+    handleHashChange()
     window.addEventListener('hashchange', handleHashChange)
 
-    // Clean up the event listener on unmount
     return () => {
       window.removeEventListener('hashchange', handleHashChange)
     }
-  }, [])
+  }, [isVerified])
 
   const handleOptionClick = (option: string) => {
     setSelectedOption(option)
-    // Update the URL hash without reloading the page
     window.location.hash = option
   }
 
-  useEffect(() => {
-    if (hasFetched.current) return
-    hasFetched.current = true
-    const checkVerificationStatus = async () => {
-      try {
-        setIsCheckingStatus(true)
-        const response = await CheckExtractStatus()
-
-        if (response.success && response.data) {
-          setIsVerified(response.data.status === 'EXTRACTED')
-          if (response.data.status === 'EXTRACTED') {
-            setSelectedOption('thong-tin-ca-nhan')
-            window.location.hash = 'thong-tin-ca-nhan'
-          }
-        }
-      } catch (error) {
-        console.error('Error checking verification status:', error)
-        toast({
-          title: 'Lỗi kiểm tra trạng thái',
-          description: 'Không thể kiểm tra trạng thái xác thực',
-          variant: 'destructive'
-        })
-      } finally {
-        setIsCheckingStatus(false)
-      }
-    }
-
-    checkVerificationStatus()
-  }, [selectedOption])
-
   const renderContent = () => {
-    if (isCheckingStatus) {
-      return (
-        <div className='flex flex-col items-center justify-center h-full py-12'>
-          <Loader2 className='h-8 w-8 animate-spin text-red-600 mb-4' />
-          <p className='text-gray-600'>Đang tải thông tin...</p>
-        </div>
-      )
-    }
-
     switch (selectedOption) {
       case 'thong-tin-ca-nhan':
         return <Profile />
@@ -87,8 +49,7 @@ const UserProfilePage: React.FC = () => {
       case 'lich-su-hien-mau':
         return <DonationHistory />
       case 'xac-thuc-tai-khoan':
-        // Chỉ hiển thị UserVerification nếu chưa xác thực
-        return isVerified ? <Profile /> : <UserVerification />
+        return isVerified === 'NONE' ? <UserVerification /> : <Profile />
       default:
         return <Profile />
     }
@@ -134,7 +95,7 @@ const UserProfilePage: React.FC = () => {
               Lịch sử đặt hẹn
             </button>
 
-            {!isVerified && (
+            {isVerified === 'NONE' && (
               <button
                 className={`w-full text-left p-3 rounded-md flex items-center gap-2 ${
                   selectedOption === 'xac-thuc-tai-khoan' ? 'bg-red-100' : ''
