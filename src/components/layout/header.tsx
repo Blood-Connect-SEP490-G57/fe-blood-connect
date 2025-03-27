@@ -184,6 +184,7 @@ const Header: React.FC = () => {
             {isLoggedIn && location.pathname !== '/dang-nhap' && location.pathname !== '/dang-ky' && (
               <Button
                 variant='ghost'
+                data-notifications-trigger
                 onClick={() => {
                   setIsMobileNotiOpen((prev) => !prev)
                 }}

@@ -75,20 +75,12 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
               path='/thong-bao'
               element={
                 <Protected tokenRequired={true} destination='/dang-nhap'>
-                  <NotificationDetail />
-                </Protected>
-              }
-            />
-            <Route
-              path='/notifications'
-              element={
-                <Protected tokenRequired={true} destination='/dang-nhap'>
                   <NotificationList />
                 </Protected>
               }
             />
             <Route
-              path='/notifications/:id'
+              path='/thong-bao/:id'
               element={
                 <Protected tokenRequired={true} destination='/dang-nhap'>
                   <NotificationDetail />
