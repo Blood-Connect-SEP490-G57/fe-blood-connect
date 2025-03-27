@@ -1,240 +1,177 @@
-import React, { useState, useRef, useEffect } from 'react'
-import PropTypes from 'prop-types'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { Card } from '@/components/ui/card'
+import { MoreVertical, Calendar, Bell, AlertCircle } from 'lucide-react'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import { NotificationType, getTypeLabel, getTypeBadgeClasses, NotificationParams } from '@/schema/notification-schema'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { formatExactDate, getNotifications, markAllAsRead, toggleNotificationStatus } from '@/api/notification'
 import { useNavigate } from 'react-router-dom'
-import { Calendar, MoreVertical } from 'lucide-react'
-import {
-  getNotifications,
-  markAllAsRead,
-  NotificationListResponse,
-  formatExactDate,
-  formatRelativeTime,
-  markAsRead,
-  toggleNotificationStatus
-} from '@/api/notification/index'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu'
+import { useRef, useState } from 'react'
 
-interface NotificationsProps {
-  onClose: () => void
-}
-
-function useOnClickOutside(ref: React.RefObject<HTMLElement>, handler: (event: Event) => void) {
-  useEffect(() => {
-    const listener = (event: Event) => {
-      if (!ref.current || ref.current.contains(event.target as Node)) return
-      handler(event)
-    }
-    document.addEventListener('mousedown', listener)
-    document.addEventListener('touchstart', listener)
-    return () => {
-      document.removeEventListener('mousedown', listener)
-      document.removeEventListener('touchstart', listener)
-    }
-  }, [ref, handler])
-}
-
-/**
- * Hàm mapping từ số type sang nhãn văn bản.
- */
-const getTypeLabel = (type: number): string => {
-  switch (type) {
-    case 1:
-      return 'Nhắc nhở'
-    case 2:
-      return 'Sự kiện'
-    case 3:
-      return 'Tin tức'
-    default:
-      return ''
-  }
-}
-
-/**
- * Hàm trả về các lớp CSS cho badge dựa trên type.
- * Bạn có thể điều chỉnh màu sắc theo yêu cầu.
- */
-const getTypeBadgeClasses = (type: number): string => {
-  switch (type) {
-    case 1:
-      return 'bg-yellow-500 text-white' // Nhắc nhở: màu vàng
-    case 2:
-      return 'bg-blue-500 text-white' // Sự kiện: màu xanh lam
-    case 3:
-      return 'bg-green-500 text-white' // Tin tức: màu xanh lá
-    default:
-      return 'bg-gray-500 text-white'
-  }
-}
-
-const Notifications: React.FC<NotificationsProps> = ({ onClose }) => {
-  const containerRef = useRef<HTMLDivElement>(null)
-  useOnClickOutside(containerRef, onClose)
+export default function Notifications({ onClose }: { onClose?: () => void }) {
   const navigate = useNavigate()
-  const [filter, setFilter] = useState<string>('Tất cả')
   const queryClient = useQueryClient()
+  const containerRef = useRef<HTMLDivElement>(null)
+  const [filter, setFilter] = useState<string>('Tất cả')
 
-  // Fixed query parameters logic
-  const getParams = () => {
-    let type: number | undefined
-    let unread: boolean | undefined
-
-    switch (filter) {
-      case 'Nhắc nhở':
-        type = 1
-        break
-      case 'Sự kiện':
-        type = 2
-        break
-      case 'Tin tức':
-        type = 3
-        break
-      case 'Chưa đọc':
-        unread = true
-        break
-    }
-
-    return { type, unread }
-  }
-
-  const { data, isLoading } = useQuery(
-    ['notifications-preview', filter],
-    async () => {
-      const { type, unread } = getParams()
-      const response = await getNotifications({
-        page: 0,
-        size: 5,
-        type,
-        unread
-      })
-      console.log('API Response:', response) // Debug logging
-      return response
-    },
-    {
-      refetchOnWindowFocus: false,
-      staleTime: 30000 // Cache for 30 seconds
-    }
-  )
-
-  const markAllReadMutation = useMutation(markAllAsRead, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(['notifications-preview'])
-      queryClient.invalidateQueries(['unread-count'])
+  const { data: notifications } = useQuery({
+    queryKey: ['notifications', filter],
+    queryFn: () => {
+      const params: NotificationParams = { page: 0, size: 10 }
+      
+      // Add type filter
+      if (filter === 'Nhắc nhở') {
+        params.type = NotificationType.REMINDER
+      } else if (filter === 'Sự kiện') {
+        params.type = NotificationType.EVENT
+      } else if (filter === 'Tin tức') {
+        params.type = NotificationType.NEWS
+      } else if (filter === 'Chưa đọc') {
+        params.unread = true
+      }
+      
+      return getNotifications(params)
     }
   })
 
-  const handleNotificationClick = (notification: NotificationListResponse) => {
-    if (!notification.status) {
-      markAsRead(notification.id.toString()).then(() => {
-        queryClient.invalidateQueries(['notifications-preview'])
-        queryClient.invalidateQueries(['notifications'])
-        queryClient.invalidateQueries(['unread-count'])
-      })
-    }
-    onClose()
-    navigate(`/notifications/${notification.id}`)
+  const handleToggleStatus = async (id: string, status: boolean) => {
+    await toggleNotificationStatus(id, status)
   }
 
-  // Safe access to notifications data
-  const notifications: NotificationListResponse[] = data?.data.data || []
+  const handleMarkAllAsRead = async () => {
+    try {
+      await markAllAsRead()
+      // Update the notifications cache to mark all as read
+      queryClient.setQueryData(['notifications'], (oldData: any) => ({
+        ...oldData,
+        data: {
+          ...oldData.data,
+          data: oldData.data.data.map((notification: any) => ({
+            ...notification,
+            status: true
+          }))
+        }
+      }))
+      // Reset unread count to 0
+      queryClient.setQueryData(['unreadCount'], 0)
+
+      // Optional: Close the notifications panel
+      onClose?.()
+    } catch (error) {
+      console.error('Error marking all notifications as read:', error)
+    }
+  }
+
+  const filterButtons = [
+    { label: 'Tất cả', value: 'Tất cả' },
+    { label: 'Chưa đọc', value: 'Chưa đọc' },
+    { label: 'Nhắc nhở', value: 'Nhắc nhở', type: NotificationType.REMINDER },
+    { label: 'Sự kiện', value: 'Sự kiện', type: NotificationType.EVENT },
+    { label: 'Tin tức', value: 'Tin tức', type: NotificationType.NEWS }
+  ]
 
   return (
     <div
       ref={containerRef}
       className='h-full min-w-[250px] lg:min-w-[300px] w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg px-4 py-3 bg-white rounded-2xl shadow-lg border overflow-y-auto'
     >
-      {/* Header */}
       <div className='flex justify-between items-center border-b pb-2'>
-        <h2 className='text-lg font-bold'>Thông báo</h2>
+        <div className='flex items-center gap-2'>
+          <Bell className='h-6 w-6 text-red-500' />
+          <h1 className='text-2xl font-bold'>Thông báo</h1>
+        </div>
         <Button
-          variant='outline'
-          onClick={() => markAllReadMutation.mutate()}
-          className='text-red-600 border-red-500 hover:text-white hover:bg-red-600 text-xs sm:text-sm'
+          variant='ghost'
+          onClick={handleMarkAllAsRead}
+          className='text-red-600 hover:text-red-700 hover:bg-red-50 rounded-md border border-red-200'
         >
-          Đánh dấu đã đọc tất cả
+          Đánh dấu tất cả đã đọc
         </Button>
       </div>
 
       {/* Filter buttons */}
       <div className='inline-flex w-full gap-1 my-2 justify-start overflow-x-auto'>
-        {['Tất cả', 'Chưa đọc', 'Nhắc nhở', 'Sự kiện', 'Tin tức'].map((item) => (
-          <Button
-            key={item}
-            variant={filter === item ? 'default' : 'outline'}
-            className={`text-red-600 text-xs sm:text-sm ${
-              filter === item ? 'bg-red-500 text-white' : 'hover:bg-red-100'
-            }`}
-            onClick={() => setFilter(item)}
-          >
-            {item}
-          </Button>
-        ))}
-      </div>
-
-      {/* Notification list */}
-      <div className='mt-2 space-y-2'>
-        {isLoading ? (
-          Array(3)
-            .fill(0)
-            .map((_, i) => (
-              <Card key={i} className='border'>
-                <CardContent className='p-3'>
-                  <div className='animate-pulse space-y-2'>
-                    <div className='flex items-center gap-2'>
-                      <div className='h-3 w-3 bg-gray-200 rounded'></div>
-                      <div className='h-3 w-24 bg-gray-200 rounded'></div>
-                    </div>
-                    <div className='flex items-center justify-between'>
-                      <div className='h-4 w-32 bg-gray-200 rounded'></div>
-                      <div className='h-4 w-16 bg-gray-200 rounded'></div>
-                    </div>
-                    <div className='h-4 w-full bg-gray-200 rounded'></div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))
-        ) : notifications.length > 0 ? (
-          notifications.map((notification) => (
-            <Card
-              key={notification.id}
-              className={`border hover:bg-gray-100 cursor-pointer transition-colors ${
-                notification.status ? 'bg-white' : 'bg-red-50'
-              }`}
-              onClick={() => handleNotificationClick(notification)}
+          {filterButtons.map((button) => (
+            <Button
+              key={button.value}
+              variant={filter === button.value ? 'default' : 'outline'}
+              className={`text-red-600 text-xs sm:text-sm ${
+                filter === button.value
+                  ? 'bg-red-500 text-white hover:bg-red-600'
+                  : 'hover:bg-red-100 hover:text-red-700'
+              } transition-colors duration-200`}
+              onClick={() => setFilter(button.value)}
             >
-              <CardContent className='p-3'>
-                <div className='flex items-center justify-between'>
-                  <div className='flex items-center gap-2 text-xs text-gray-500'>
-                    <Calendar className='h-3 w-3' />
-                    {notification.created && (
-                      <>
-                        <span>{formatExactDate(notification.created)}</span>
-                        <span>•</span>
-                        <span>{formatRelativeTime(notification.created)}</span>
-                      </>
-                    )}
+              {button.label}
+            </Button>
+          ))}
+        </div>
+
+      <div className='space-y-4'>
+        {notifications?.data.data.length === 0 ? (
+          <div className='flex flex-col items-center justify-center py-8 text-gray-500'>
+            <AlertCircle className='h-12 w-12 mb-2 text-red-400' />
+            <p className='text-lg font-medium'>Không có thông báo nào</p>
+            <p className='text-sm'>
+              {filter === 'Tất cả'
+                ? 'Hiện tại bạn chưa có thông báo nào'
+                : `Không có thông báo nào thuộc loại "${filter}"`}
+            </p>
+          </div>
+        ) : (
+          <>
+            {notifications?.data.data.map((notification) => (
+              <Card
+                key={notification.id}
+                className={`p-4 transition-all duration-200 hover:shadow-md ${
+                  notification.status ? 'bg-white' : 'bg-red-50'
+                }`}
+              >
+                <div className='flex justify-between items-start gap-4'>
+                  <div
+                    className='flex-1'
+                    onClick={() => {
+                      navigate('/thong-bao/' + notification.id)
+                      handleToggleStatus(notification.id.toString(), true)
+                      onClose?.()
+                    }}
+                  >
+                    <div className='flex items-center gap-2 mb-2'>
+                      <span
+                        className={`px-2 py-1 rounded-full text-xs font-medium ${getTypeBadgeClasses(
+                          notification.type as NotificationType
+                        )}`}
+                      >
+                        {getTypeLabel(notification.type as NotificationType)}
+                      </span>
+                      <span className='text-xs text-gray-500 flex items-center gap-1'>
+                        <Calendar className='h-3 w-3' />
+                        {formatExactDate(notification.created)}
+                      </span>
+                    </div>
+                    <h3 className='font-semibold text-lg text-gray-900'>{notification.title}</h3>
+                    <div
+                      className='text-gray-600 mt-2 prose prose-sm max-w-none'
+                      dangerouslySetInnerHTML={{
+                        __html:
+                          notification.content.length > 100
+                            ? notification.content.slice(0, 50) + '...'
+                            : notification.content
+                      }}
+                    />
                   </div>
+
                   <DropdownMenu>
-                    <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
-                      <Button variant="ghost" className="h-8 w-8 p-0">
-                        <MoreVertical className="h-4 w-4" />
+                    <DropdownMenuTrigger asChild>
+                      <Button variant='ghost' size='icon' className='h-8 w-8'>
+                        <MoreVertical className='h-4 w-4' />
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
+                    <DropdownMenuContent align='end'>
                       <DropdownMenuItem
-                        onClick={(e) => {
-                          toggleNotificationStatus(notification.id.toString(), !notification.status).then(() => {
-                            queryClient.invalidateQueries(['notifications-preview'])
-                            queryClient.invalidateQueries(['notifications'])
-                            queryClient.invalidateQueries(['unread-count'])
-                          })
-                          e.stopPropagation()
+                        onClick={() => {
+                          handleToggleStatus(notification.id.toString(), !notification.status)
+                          onClose?.()
                         }}
                       >
                         {notification.status ? 'Đánh dấu chưa đọc' : 'Đánh dấu đã đọc'}
@@ -242,39 +179,16 @@ const Notifications: React.FC<NotificationsProps> = ({ onClose }) => {
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </div>
-                <div className='flex items-center justify-between mt-1'>
-                  <h3 className='text-sm sm:text-lg font-bold text-red-500 truncate'>{notification.title}</h3>
-                  {notification.type !== null && notification.type !== undefined && (
-                    <span
-                      className={`inline-block text-xs font-medium rounded-full px-2 ${getTypeBadgeClasses(
-                        notification.type
-                      )}`}
-                    >
-                      {getTypeLabel(notification.type)}
-                    </span>
-                  )}
-                </div>
-                <div
-                  className='text-gray-600 line-clamp-1'
-                  dangerouslySetInnerHTML={{ __html: notification.content }}
-                />
-              </CardContent>
-            </Card>
-          ))
-        ) : (
-          <p className='text-center text-sm text-gray-500'>Không có thông báo nào</p>
+              </Card>
+            ))}
+          </>
         )}
       </div>
-
-      {/* Footer */}
       <div className='mt-4'>
         <Button
           variant='outline'
-          onClick={() => {
-            onClose()
-            navigate('/notifications')
-          }}
-          className='w-full text-red-600 border-red-500 hover:text-white hover:bg-red-600 text-sm sm:text-base'
+          className='inline-flex items-center justify-center whitespace-nowrap rounded-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border bg-background h-10 px-4 py-2 w-full text-red-600 border-red-500 hover:text-white hover:bg-red-600 text-sm sm:text-base'
+          onClick={() => navigate('/thong-bao')}
         >
           Xem thêm
         </Button>
@@ -282,9 +196,3 @@ const Notifications: React.FC<NotificationsProps> = ({ onClose }) => {
     </div>
   )
 }
-
-Notifications.propTypes = {
-  onClose: PropTypes.func.isRequired
-}
-
-export default Notifications

@@ -1,11 +1,10 @@
 import { ArrowLeft, Calendar } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'  // Add useQueryClient
-import { formatExactDate, getNotificationById, markAsRead } from '@/api/notification/index'
+import { useQuery } from '@tanstack/react-query' // Add useQueryClient
+import { formatExactDate, getNotificationById } from '@/api/notification/index'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Skeleton } from '@/components/ui/skeleton'
-import { useToast } from '@/components/ui/use-toast'
 
 /**
  * Hàm mapping từ số type sang nhãn văn bản.
@@ -42,36 +41,13 @@ const getTypeBadgeClasses = (type: number): string => {
 const NotificationDetail = () => {
   const { id } = useParams()
   const navigate = useNavigate()
-  const { toast } = useToast()
-  const queryClient = useQueryClient()  // Add this line
 
   const {
     data: notification,
     isLoading,
     isError
   } = useQuery(['notification', id], () => getNotificationById(id as string), {
-    enabled: !!id,
-    onSuccess: (data) => {
-      // Gọi API markAsRead ngay khi load notification thành công
-      if (!data.status) {
-        markNotificationRead.mutate(id as string)
-      }
-    },
-    onError: () => {
-      toast({
-        variant: 'destructive',
-        title: 'Lỗi',
-        description: 'Không thể tải thông báo. Vui lòng thử lại sau.'
-      })
-    }
-  })
-
-  const markNotificationRead = useMutation(markAsRead, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(['notifications'])
-      queryClient.invalidateQueries(['notifications-preview'])
-      queryClient.invalidateQueries(['unread-count'])
-    }
+    enabled: !!id
   })
 
   if (isError) {
@@ -115,7 +91,7 @@ const NotificationDetail = () => {
   return (
     <div className='min-h-screen bg-white py-12'>
       <div className='container mx-auto px-4 max-w-4xl'>
-        <Button variant='ghost' className='mb-6 hover:bg-gray-100' onClick={() => navigate('/notifications')}>
+        <Button variant='ghost' className='mb-6 hover:bg-gray-100' onClick={() => navigate('/thong-bao')}>
           <ArrowLeft className='h-4 w-4 mr-2' />
           Quay lại
         </Button>
