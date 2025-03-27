@@ -14,6 +14,7 @@ import Notifications from '@/components/notification/Notifications'
 import { useAuth } from '@/components/authContext/AuthContext'
 import { useQuery } from '@tanstack/react-query'
 import { getUnreadCount } from '@/api/notification/index'
+import { useVerification } from '../verificationContext/VerificationContext'
 
 const Header: React.FC = () => {
   const navigate = useNavigate()
@@ -21,6 +22,7 @@ const Header: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isMobileNotiOpen, setIsMobileNotiOpen] = useState(false)
   const { isLoggedIn, setIsLoggedIn } = useAuth()
+  const { isVerified } = useVerification()
 
   useEffect(() => {
     if (
@@ -78,9 +80,20 @@ const Header: React.FC = () => {
     { name: 'LỊCH HẸN CỦA TÔI', href: '/trang-ca-nhan#lich-hen' },
     { name: 'LỊCH SỬ ĐẶT HẸN', href: '/trang-ca-nhan#lich-su-hien-mau' },
     { name: 'THÔNG TIN CÁ NHÂN', href: '/trang-ca-nhan#thong-tin-ca-nhan' },
-    { name: 'XÁC THỰC TÀI KHOẢN', href: '/trang-ca-nhan#xac-thuc-tai-khoan' },
     { name: 'CÀI ĐẶT', href: '/cai-dat' }
   ]
+
+  // Add verification link dynamically if not verified
+  const getFilteredNavigation = () => {
+    let filteredNav = [...navigation]
+    if (isVerified === 'NONE' && isLoggedIn) {
+      filteredNav.splice(8, 0, {
+        name: 'XÁC THỰC TÀI KHOẢN',
+        href: '/trang-ca-nhan#xac-thuc-tai-khoan'
+      })
+    }
+    return filteredNav
+  }
 
   const handleLoginClick = () => {
     navigate('/dang-nhap')
@@ -101,15 +114,14 @@ const Header: React.FC = () => {
           </div>
           {/* Desktop and Tablet Navigation */}
           <div className='hidden xl:flex items-center space-x-8'>
-            {navigation
+            {getFilteredNavigation()
               .filter((item) => {
                 if (!isLoggedIn && (item.name === 'LỊCH HẸN CỦA TÔI' || item.name === 'LỊCH SỬ ĐẶT HẸN')) {
                   return false
                 }
                 return (
-                  item.name !== 'THÔNG TIN CÁ NHÂN' &&
                   item.name !== 'XÁC THỰC TÀI KHOẢN' &&
-                  item.name !== 'TRANG CHỦ' &&
+                  item.name !== 'THÔNG TIN CÁ NHÂN' &&
                   item.name !== 'CÀI ĐẶT'
                 )
               })
@@ -229,12 +241,12 @@ const Header: React.FC = () => {
               <X className='w-6 h-6' />
             </Button>
             <div className='flex flex-col space-y-2'>
-              {navigation
+              {getFilteredNavigation()
                 .filter((item) => {
                   if (!isLoggedIn && (item.name === 'LỊCH HẸN CỦA TÔI' || item.name === 'LỊCH SỬ ĐẶT HẸN')) {
                     return false
                   }
-                  return item.name !== 'XÁC THỰC TÀI KHOẢN'
+                  return true
                 })
                 .map((item) => (
                   <a
