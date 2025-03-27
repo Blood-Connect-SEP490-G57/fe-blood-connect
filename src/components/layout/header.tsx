@@ -14,16 +14,6 @@ import Notifications from '@/components/notification/Notifications'
 import { useAuth } from '@/components/authContext/AuthContext'
 import { useQuery } from '@tanstack/react-query'
 import { getUnreadCount } from '@/api/notification/index'
-import { CheckExtractStatus } from '@/api/extract'
-
-// Create a context for verification status
-export const VerificationContext = React.createContext<{
-  isVerified: 'EXTRACTED' | 'NONE'
-  // isCheckingStatus: boolean
-}>({
-  isVerified: 'NONE',
-  // isCheckingStatus: false
-})
 
 const Header: React.FC = () => {
   const navigate = useNavigate()
@@ -31,8 +21,6 @@ const Header: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isMobileNotiOpen, setIsMobileNotiOpen] = useState(false)
   const { isLoggedIn, setIsLoggedIn } = useAuth()
-  const [isVerified, setIsVerified] = useState<'EXTRACTED' | 'NONE'>('NONE')
-  // const [isCheckingStatus, setIsCheckingStatus] = useState(false)
 
   useEffect(() => {
     if (
@@ -66,29 +54,13 @@ const Header: React.FC = () => {
     queryKey: ['unreadCount'],
     queryFn: () => getUnreadCount(),
     refetchOnWindowFocus: true,
-    enabled: isLoggedIn // Only run query when user is logged in
+    enabled: isLoggedIn
   })
 
   useEffect(() => {
     const token = localStorage.getItem('access_token')
     setIsLoggedIn(!!token)
   }, [setIsLoggedIn])
-
-  useEffect(() => {
-    const checkVerificationStatus = async () => {
-      try {
-        const response = await CheckExtractStatus()
-        if (response.success && response.data?.status) {
-          setIsVerified(response.data.status)
-        } 
-      } catch (error) {
-        console.error('Error checking verification status:', error)
-        setIsVerified('NONE')
-      }
-    }
-
-    checkVerificationStatus()
-  }, [isLoggedIn])
 
   const handleLogout = () => {
     localStorage.clear()
@@ -119,98 +91,37 @@ const Header: React.FC = () => {
   }
 
   return (
-    <VerificationContext.Provider value={{ isVerified }}>
-      <header className='bg-white shadow-sm fixed top-0 left-0 right-0 z-50'>
-        <div className='mx-auto px-4'>
-          <div className='flex items-center justify-between h-16'>
-            <div className='flex items-center'>
-              <a href='/' className='text-primary font-bold text-xl'>
-                Giọt Máu Hy Vọng
-              </a>
-            </div>
-            {/* Desktop and Tablet Navigation */}
-            <div className='hidden xl:flex items-center space-x-8'>
-              {navigation
-                .filter((item) => {
-                  if (!isLoggedIn && (item.name === 'LỊCH HẸN CỦA TÔI' || item.name === 'LỊCH SỬ ĐẶT HẸN')) {
-                    return false
-                  }
-                  return (
-                    item.name !== 'THÔNG TIN CÁ NHÂN' &&
-                    item.name !== 'XÁC THỰC TÀI KHOẢN' &&
-                    item.name !== 'TRANG CHỦ' &&
-                    item.name !== 'CÀI ĐẶT'
-                  )
-                })
-                .map((item) => (
-                  <a key={item.name} href={item.href} className='text-gray-700 hover:text-primary transition-colors'>
-                    {item.name}
-                  </a>
-                ))}
-            </div>
-            <div className='hidden xl:flex items-center space-x-4'>
-              {isLoggedIn ? (
-                <>
-                  <Button
-                    variant='ghost'
-                    onClick={() => {
-                      setIsMobileNotiOpen((prev) => !prev)
-                    }}
-                    className='group p-inherit text-red-600 hover:text-white hover:bg-red-600 relative'
-                  >
-                    <div className='relative w-full h-full'>
-                      <Bell className='group-hover:text-white text-red-600 hover:text-white' />
-                      <span className='absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full px-2 hover:bg-red-700 group-hover:bg-red-700'>
-                        {unreadCount !== undefined ? unreadCount : 0}
-                      </span>
-                    </div>
-                  </Button>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant='ghost' className='relative h-8 w-8 rounded-full'>
-                        <UserAvatar size='sm' />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className='w-56' align='end' forceMount>
-                      <DropdownMenuItem onClick={() => navigate('/trang-ca-nhan#thong-tin-ca-nhan')}>
-                        <User className='mr-2 h-4 w-4' />
-                        <span>Hồ sơ cá nhân</span>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => navigate('/cai-dat')}>
-                        <Settings className='mr-2 h-4 w-4' />
-                        <span>Cài đặt</span>
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem className='text-red-600' onClick={handleLogout}>
-                        <LogOut className='mr-2 h-4 w-4' />
-                        <span>Đăng xuất</span>
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </>
-              ) : (
-                <div className='flex items-center gap-3'>
-                  <Button
-                    variant='outline'
-                    className='border-red-600 text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors'
-                    onClick={handleLoginClick}
-                  >
-                    Đăng nhập
-                  </Button>
-                  <Button
-                    variant='default'
-                    className='bg-red-600 text-white hover:bg-red-700 transition-colors'
-                    onClick={handleRegisterClick}
-                  >
-                    Đăng ký
-                  </Button>
-                </div>
-              )}
-            </div>
-
-            {/* Mobile menu button */}
-            <div className='xl:hidden flex items-center space-x-2'>
-              {isLoggedIn && location.pathname !== '/dang-nhap' && location.pathname !== '/dang-ky' && (
+    <header className='bg-white shadow-sm fixed top-0 left-0 right-0 z-50'>
+      <div className='mx-auto px-4'>
+        <div className='flex items-center justify-between h-16'>
+          <div className='flex items-center'>
+            <a href='/' className='text-primary font-bold text-xl'>
+              Giọt Máu Hy Vọng
+            </a>
+          </div>
+          {/* Desktop and Tablet Navigation */}
+          <div className='hidden xl:flex items-center space-x-8'>
+            {navigation
+              .filter((item) => {
+                if (!isLoggedIn && (item.name === 'LỊCH HẸN CỦA TÔI' || item.name === 'LỊCH SỬ ĐẶT HẸN')) {
+                  return false
+                }
+                return (
+                  item.name !== 'THÔNG TIN CÁ NHÂN' &&
+                  item.name !== 'XÁC THỰC TÀI KHOẢN' &&
+                  item.name !== 'TRANG CHỦ' &&
+                  item.name !== 'CÀI ĐẶT'
+                )
+              })
+              .map((item) => (
+                <a key={item.name} href={item.href} className='text-gray-700 hover:text-primary transition-colors'>
+                  {item.name}
+                </a>
+              ))}
+          </div>
+          <div className='hidden xl:flex items-center space-x-4'>
+            {isLoggedIn ? (
+              <>
                 <Button
                   variant='ghost'
                   onClick={() => {
@@ -225,122 +136,181 @@ const Header: React.FC = () => {
                     </span>
                   </div>
                 </Button>
-              )}
-              <Button
-                variant='ghost'
-                size='sm'
-                onClick={() => {
-                  setIsMobileMenuOpen(!isMobileMenuOpen)
-                  setIsMobileNotiOpen(false)
-                }}
-              >
-                <Menu className='w-6 h-6' />
-                <span className='sr-only'>Open menu</span>
-              </Button>
-            </div>
-          </div>
-          {/* Mobile Navigation */}
-          <div
-            className={`xl:hidden fixed top-0 right-0 h-full min-w-[250px] lg:min-w-[300px] w-64 
-              bg-white shadow-lg transform transition-transform duration-300 ease-in-out z-50 
-              ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}
-          >
-            <div className='flex flex-col space-y-4 p-4 h-full'>
-              <Button
-                variant='ghost'
-                size='sm'
-                className='self-end mb-4'
-                onClick={() => {
-                  setIsMobileMenuOpen(false)
-                }}
-              >
-                <X className='w-6 h-6' />
-              </Button>
-              <div className='flex flex-col space-y-2'>
-                {navigation
-                  .filter((item) => {
-                    if (!isLoggedIn && (item.name === 'LỊCH HẸN CỦA TÔI' || item.name === 'LỊCH SỬ ĐẶT HẸN')) {
-                      return false
-                    }
-                    return item.name !== 'XÁC THỰC TÀI KHOẢN'
-                  })
-                  .map((item) => (
-                    <a
-                      key={item.name}
-                      href={item.href}
-                      className='text-gray-700 hover:text-primary transition-colors py-2 px-4 rounded-md hover:bg-gray-50'
-                      onClick={() => setIsMobileMenuOpen(false)}
-                    >
-                      {item.name}
-                    </a>
-                  ))}
-              </div>
-              <div className='mt-auto'>
-                {isLoggedIn ? (
-                  <div className='flex flex-col space-y-2'>
-                    <Button
-                      variant='ghost'
-                      className='w-full border border-red-600 justify-start text-red-600 hover:text-white'
-                      onClick={() => {
-                        handleLogout()
-                        setIsMobileMenuOpen(false)
-                      }}
-                    >
-                      <LogOutIcon className='mr-2 h-4 w-4' />
-                      <span className='text-center'>ĐĂNG XUẤT</span>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant='ghost' className='relative h-8 w-8 rounded-full'>
+                      <UserAvatar size='sm' />
                     </Button>
-                  </div>
-                ) : (
-                  <div className='flex flex-col space-y-2'>
-                    <Button
-                      variant='outline'
-                      className='w-full border-red-600 text-red-600 hover:bg-red-50 hover:text-red-700'
-                      onClick={() => {
-                        handleLoginClick()
-                        setIsMobileMenuOpen(false)
-                      }}
-                    >
-                      <LogInIcon className='mr-2 h-4 w-4' />
-                      <span>ĐĂNG NHẬP</span>
-                    </Button>
-                    <Button
-                      variant='default'
-                      className='w-full bg-red-600 text-white hover:bg-red-700'
-                      onClick={() => {
-                        handleRegisterClick()
-                        setIsMobileMenuOpen(false)
-                      }}
-                    >
-                      <UserPlusIcon className='mr-2 h-4 w-4' />
-                      <span>ĐĂNG KÝ</span>
-                    </Button>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-          {/* Mobile Notification */}
-          <div className='relative'>
-            {isMobileNotiOpen && (
-              <div
-                className='absolute right-0 mt-2 z-50'
-                style={{
-                  maxHeight: '80vh',
-                  minWidth: window.innerWidth < 780 ? '250px' : '600px'
-                }}
-              >
-                <Notifications
-                  onClose={() => {
-                    setIsMobileNotiOpen(false)
-                    refetchUnreadCount()
-                  }}
-                />
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className='w-56' align='end' forceMount>
+                    <DropdownMenuItem onClick={() => navigate('/trang-ca-nhan#thong-tin-ca-nhan')}>
+                      <User className='mr-2 h-4 w-4' />
+                      <span>Hồ sơ cá nhân</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => navigate('/cai-dat')}>
+                      <Settings className='mr-2 h-4 w-4' />
+                      <span>Cài đặt</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem className='text-red-600' onClick={handleLogout}>
+                      <LogOut className='mr-2 h-4 w-4' />
+                      <span>Đăng xuất</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </>
+            ) : (
+              <div className='flex items-center gap-3'>
+                <Button
+                  variant='outline'
+                  className='border-red-600 text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors'
+                  onClick={handleLoginClick}
+                >
+                  Đăng nhập
+                </Button>
+                <Button
+                  variant='default'
+                  className='bg-red-600 text-white hover:bg-red-700 transition-colors'
+                  onClick={handleRegisterClick}
+                >
+                  Đăng ký
+                </Button>
               </div>
             )}
           </div>
+
+          {/* Mobile menu button */}
+          <div className='xl:hidden flex items-center space-x-2'>
+            {isLoggedIn && location.pathname !== '/dang-nhap' && location.pathname !== '/dang-ky' && (
+              <Button
+                variant='ghost'
+                onClick={() => {
+                  setIsMobileNotiOpen((prev) => !prev)
+                }}
+                className='group p-inherit text-red-600 hover:text-white hover:bg-red-600 relative'
+              >
+                <div className='relative w-full h-full'>
+                  <Bell className='group-hover:text-white text-red-600 hover:text-white' />
+                  <span className='absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full px-2 hover:bg-red-700 group-hover:bg-red-700'>
+                    {unreadCount !== undefined ? unreadCount : 0}
+                  </span>
+                </div>
+              </Button>
+            )}
+            <Button
+              variant='ghost'
+              size='sm'
+              onClick={() => {
+                setIsMobileMenuOpen(!isMobileMenuOpen)
+                setIsMobileNotiOpen(false)
+              }}
+            >
+              <Menu className='w-6 h-6' />
+              <span className='sr-only'>Open menu</span>
+            </Button>
+          </div>
         </div>
-      </header>
-    </VerificationContext.Provider>
+        {/* Mobile Navigation */}
+        <div
+          className={`xl:hidden fixed top-0 right-0 h-full min-w-[250px] lg:min-w-[300px] w-64 
+            bg-white shadow-lg transform transition-transform duration-300 ease-in-out z-50 
+            ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}
+        >
+          <div className='flex flex-col space-y-4 p-4 h-full'>
+            <Button
+              variant='ghost'
+              size='sm'
+              className='self-end mb-4'
+              onClick={() => {
+                setIsMobileMenuOpen(false)
+              }}
+            >
+              <X className='w-6 h-6' />
+            </Button>
+            <div className='flex flex-col space-y-2'>
+              {navigation
+                .filter((item) => {
+                  if (!isLoggedIn && (item.name === 'LỊCH HẸN CỦA TÔI' || item.name === 'LỊCH SỬ ĐẶT HẸN')) {
+                    return false
+                  }
+                  return item.name !== 'XÁC THỰC TÀI KHOẢN'
+                })
+                .map((item) => (
+                  <a
+                    key={item.name}
+                    href={item.href}
+                    className='text-gray-700 hover:text-primary transition-colors py-2 px-4 rounded-md hover:bg-gray-50'
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    {item.name}
+                  </a>
+                ))}
+            </div>
+            <div className='mt-auto'>
+              {isLoggedIn ? (
+                <div className='flex flex-col space-y-2'>
+                  <Button
+                    variant='ghost'
+                    className='w-full border border-red-600 justify-start text-red-600 hover:text-white'
+                    onClick={() => {
+                      handleLogout()
+                      setIsMobileMenuOpen(false)
+                    }}
+                  >
+                    <LogOutIcon className='mr-2 h-4 w-4' />
+                    <span className='text-center'>ĐĂNG XUẤT</span>
+                  </Button>
+                </div>
+              ) : (
+                <div className='flex flex-col space-y-2'>
+                  <Button
+                    variant='outline'
+                    className='w-full border-red-600 text-red-600 hover:bg-red-50 hover:text-red-700'
+                    onClick={() => {
+                      handleLoginClick()
+                      setIsMobileMenuOpen(false)
+                    }}
+                  >
+                    <LogInIcon className='mr-2 h-4 w-4' />
+                    <span>ĐĂNG NHẬP</span>
+                  </Button>
+                  <Button
+                    variant='default'
+                    className='w-full bg-red-600 text-white hover:bg-red-700'
+                    onClick={() => {
+                      handleRegisterClick()
+                      setIsMobileMenuOpen(false)
+                    }}
+                  >
+                    <UserPlusIcon className='mr-2 h-4 w-4' />
+                    <span>ĐĂNG KÝ</span>
+                  </Button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+        {/* Mobile Notification */}
+        <div className='relative'>
+          {isMobileNotiOpen && (
+            <div
+              className='absolute right-0 mt-2 z-50'
+              style={{
+                maxHeight: '80vh',
+                minWidth: window.innerWidth < 780 ? '250px' : '600px'
+              }}
+            >
+              <Notifications
+                onClose={() => {
+                  setIsMobileNotiOpen(false)
+                  refetchUnreadCount()
+                }}
+              />
+            </div>
+          )}
+        </div>
+      </div>
+    </header>
   )
 }
 

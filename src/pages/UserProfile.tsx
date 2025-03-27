@@ -1,22 +1,26 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Calendar, CheckCircle, History, Info, User } from 'lucide-react'
 import Profile from '@/components/user-profile/Profile'
 import AppointmentInfo from '@/components/user-profile/AppointmentInfo'
 import DonationHistory from '@/components/user-profile/DonationHistory'
 import UserVerification from '@/components/user-profile/UserVerification'
-import { VerificationContext } from '@/components/layout/header'
+import { useVerification } from '@/components/verificationContext/VerificationContext'
 
 const UserProfilePage: React.FC = () => {
   const [selectedOption, setSelectedOption] = useState<string>('thong-tin-ca-nhan')
-  const { isVerified } = useContext(VerificationContext)
+  const { isVerified } = useVerification()
+  
+  useEffect(() => {
+    console.log('UserProfile - Current verification status:', isVerified)
+  }, [isVerified])
 
   useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash.slice(1)
       const validOptions = ['thong-tin-ca-nhan', 'lich-hen', 'lich-su-hien-mau']
 
-      if (isVerified !== 'EXTRACTED') {
+      if (isVerified === 'NONE') {
         validOptions.push('xac-thuc-tai-khoan')
       }
 
@@ -45,7 +49,7 @@ const UserProfilePage: React.FC = () => {
       case 'lich-su-hien-mau':
         return <DonationHistory />
       case 'xac-thuc-tai-khoan':
-        return isVerified !== 'EXTRACTED' ? <UserVerification /> : <Profile />
+        return isVerified === 'NONE' ? <UserVerification /> : <Profile />
       default:
         return <Profile />
     }
@@ -91,7 +95,7 @@ const UserProfilePage: React.FC = () => {
               Lịch sử đặt hẹn
             </button>
 
-            {isVerified !== 'EXTRACTED' && (
+            {isVerified === 'NONE' && (
               <button
                 className={`w-full text-left p-3 rounded-md flex items-center gap-2 ${
                   selectedOption === 'xac-thuc-tai-khoan' ? 'bg-red-100' : ''
