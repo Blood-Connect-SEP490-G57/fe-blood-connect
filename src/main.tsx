@@ -19,6 +19,7 @@ import ForgotPassword from './pages/ForgotPassword'
 import NotificationDetail from './pages/NotificationDetail.tsx'
 import ScrollToTop from './components/scrollToTop/index.tsx'
 import NotificationList from './pages/NotificationList.tsx'
+import NewsDetailPage from './pages/NewDetail.tsx'
 // import NotFoundPage from '@/pages/404'
 
 const queryClient = new QueryClient({
@@ -46,6 +47,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
             <Route path='/lien-he' element={<ContactPage />} />
             <Route path='/cau-hoi-thuong-gap' element={<FAQPage />} />
             <Route path='/tin-tuc' element={<NewsPage />} />
+            <Route path='/tin-tuc/:id' element={<NewsDetailPage />} />
             <Route
               path='/dang-ky-hien-mau'
               element={
