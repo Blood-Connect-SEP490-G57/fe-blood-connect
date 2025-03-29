@@ -176,9 +176,7 @@ const ReviewStep: React.FC<ReviewStepProps> = ({ selectedCampaign, questionSetId
                     <div className='mt-0.5 mr-2 h-2 w-2 rounded-full bg-red-500'></div>
                     <span className='font-medium'>{answer.questionInfo.content}</span>
                   </div>
-                  {answer.detail && (
-                    <div className='text-gray-500 italic ml-4 mt-1'>Mô tả: {answer.detail}</div>
-                  )}
+                  {answer.detail && <div className='text-gray-500 italic ml-4 mt-1'>Mô tả: {answer.detail}</div>}
                 </div>
               ))}
             </div>
@@ -196,22 +194,22 @@ const ReviewStep: React.FC<ReviewStepProps> = ({ selectedCampaign, questionSetId
 
     // Group answers by section
     type GroupedAnswer = {
-      question: Question;
-      apiAnswer: ApiAnswerType;
+      question: Question
+      apiAnswer: ApiAnswerType
     }
 
     type SectionGroup = {
-      section: Section;
-      answers: GroupedAnswer[];
+      section: Section
+      answers: GroupedAnswer[]
     }
 
     const groupedBySection = questionSet.sections
-      .filter(section => !section.hidden)
+      .filter((section) => !section.hidden)
       .sort((a, b) => a.order - b.order)
-      .map(section => {
+      .map((section) => {
         const sectionAnswers = section.questions
           .sort((a, b) => a.order - b.order)
-          .map(question => {
+          .map((question) => {
             const answer = answers[question.id]
             if (!answer || answer.value.trim() === '') return null
 

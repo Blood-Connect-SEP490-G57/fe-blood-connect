@@ -45,11 +45,7 @@ export const VerificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
     }
   }, [isLoggedIn])
 
-  return (
-    <VerificationContext.Provider value={{ isVerified, setIsVerified }}>
-      {children}
-    </VerificationContext.Provider>
-  )
+  return <VerificationContext.Provider value={{ isVerified, setIsVerified }}>{children}</VerificationContext.Provider>
 }
 
-export default VerificationContext 
+export default VerificationContext

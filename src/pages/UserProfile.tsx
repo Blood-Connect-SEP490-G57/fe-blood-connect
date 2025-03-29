@@ -10,7 +10,7 @@ import { useVerification } from '@/components/verificationContext/VerificationCo
 const UserProfilePage: React.FC = () => {
   const [selectedOption, setSelectedOption] = useState<string>('thong-tin-ca-nhan')
   const { isVerified } = useVerification()
-  
+
   useEffect(() => {
     console.log('UserProfile - Current verification status:', isVerified)
   }, [isVerified])

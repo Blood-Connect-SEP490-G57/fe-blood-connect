@@ -16,7 +16,7 @@ interface QuestionnaireStepProps {
   campaignId: number
   answers: Record<number, { value: string; description?: string }>
   handleAnswerChange: (questionId: number, value: string, description?: string) => void
-  setCurrentStep: (step: typeof STEPS[keyof typeof STEPS]) => void
+  setCurrentStep: (step: (typeof STEPS)[keyof typeof STEPS]) => void
 }
 
 const QuestionnaireStep: React.FC<QuestionnaireStepProps> = ({
@@ -34,7 +34,7 @@ const QuestionnaireStep: React.FC<QuestionnaireStepProps> = ({
   const hasFetched = useRef(false)
   const { toast } = useToast()
 
-  const answeredQuestions = Object.values(answers).filter(answer => answer.value.trim() !== '').length
+  const answeredQuestions = Object.values(answers).filter((answer) => answer.value.trim() !== '').length
   const hasAllAnswers = answeredQuestions === totalQuestions && totalQuestions > 0
 
   useEffect(() => {
@@ -68,11 +68,11 @@ const QuestionnaireStep: React.FC<QuestionnaireStepProps> = ({
   const handleContinue = () => {
     if (!hasAllAnswers) {
       toast({
-        variant: "destructive",
-        title: "Thông báo",
-        description: `Vui lòng trả lời tất cả ${totalQuestions} câu hỏi. Hiện tại bạn đã trả lời ${answeredQuestions}/${totalQuestions} câu.`,
+        variant: 'destructive',
+        title: 'Thông báo',
+        description: `Vui lòng trả lời tất cả ${totalQuestions} câu hỏi. Hiện tại bạn đã trả lời ${answeredQuestions}/${totalQuestions} câu.`
       })
-      
+
       // Tìm câu hỏi đầu tiên chưa trả lời và cuộn đến
       const unansweredQuestion = document.querySelector('.border-red-200')
       if (unansweredQuestion) {
@@ -138,16 +138,16 @@ const QuestionnaireStep: React.FC<QuestionnaireStepProps> = ({
             <CardDescription>
               Vui lòng trả lời tất cả các câu hỏi sau để đảm bảo bạn đủ điều kiện hiến máu
               {totalQuestions > 0 && (
-                <span className="block mt-1 text-sm text-gray-500">
+                <span className='block mt-1 text-sm text-gray-500'>
                   Đã trả lời: {answeredQuestions}/{totalQuestions} câu hỏi
                 </span>
               )}
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Questionnaire 
-              questionSetId={questionSetId} 
-              onAnswerChange={handleAnswerChange} 
+            <Questionnaire
+              questionSetId={questionSetId}
+              onAnswerChange={handleAnswerChange}
               answers={answers}
               onQuestionsLoaded={setTotalQuestions}
             />

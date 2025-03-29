@@ -85,7 +85,7 @@ const Header: React.FC = () => {
 
   // Add verification link dynamically if not verified
   const getFilteredNavigation = () => {
-    let filteredNav = [...navigation]
+    const filteredNav = [...navigation]
     if (isVerified === 'NONE' && isLoggedIn) {
       filteredNav.splice(8, 0, {
         name: 'XÁC THỰC TÀI KHOẢN',
@@ -120,9 +120,7 @@ const Header: React.FC = () => {
                   return false
                 }
                 return (
-                  item.name !== 'XÁC THỰC TÀI KHOẢN' &&
-                  item.name !== 'THÔNG TIN CÁ NHÂN' &&
-                  item.name !== 'CÀI ĐẶT'
+                  item.name !== 'XÁC THỰC TÀI KHOẢN' && item.name !== 'THÔNG TIN CÁ NHÂN' && item.name !== 'CÀI ĐẶT'
                 )
               })
               .map((item) => (

@@ -110,7 +110,7 @@ export default function EventDonationSlider() {
                   </div>
 
                   {/* Images */}
-                  <div className="flex-1 h-[70%] lg:h-full grid grid-cols-3 grid-rows-2 gap-4">
+                  <div className='flex-1 h-[70%] lg:h-full grid grid-cols-3 grid-rows-2 gap-4'>
                     {event.images.map((image, imgIndex) => (
                       <div
                         key={imgIndex}

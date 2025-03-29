@@ -7,6 +7,9 @@ import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Phone } from 'lucide-react'
+import { toast } from '@/components/ui/use-toast'
+import { isAxiosError } from 'axios'
+import { forgotPassword } from '@/api/auth'
 
 const formSchema = z.object({
   phoneNumber: z
@@ -17,6 +20,7 @@ const formSchema = z.object({
 
 const ForgotPassword: React.FC = () => {
   const navigate = useNavigate()
+  const [isLoading, setIsLoading] = React.useState(false)
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -25,13 +29,26 @@ const ForgotPassword: React.FC = () => {
   })
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    // Xử lý gửi email đặt lại mật khẩu ở đây
-    console.log(values)
-    // Giả lập gửi email thành công
-    setTimeout(() => {
-      alert('Đã gửi email đặt lại mật khẩu')
+    try {
+      setIsLoading(true)
+      await forgotPassword(values.phoneNumber)
+      toast({
+        title: 'Thành công',
+        description: 'Vui lòng kiểm tra điện thoại để nhận mã xác nhận',
+        variant: 'default'
+      })
       navigate('/dang-nhap')
-    }, 2000)
+    } catch (error) {
+      if (isAxiosError(error)) {
+        toast({
+          title: 'Lỗi',
+          description: error.response?.data?.message || 'Không thể gửi yêu cầu khôi phục mật khẩu',
+          variant: 'destructive'
+        })
+      }
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -78,9 +95,10 @@ const ForgotPassword: React.FC = () => {
               <div>
                 <Button
                   type='submit'
+                  disabled={isLoading}
                   className='w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500'
                 >
-                  Gửi liên kết đặt lại mật khẩu
+                  {isLoading ? 'Đang xử lý...' : 'Gửi yêu cầu khôi phục mật khẩu'}
                 </Button>
               </div>
             </form>

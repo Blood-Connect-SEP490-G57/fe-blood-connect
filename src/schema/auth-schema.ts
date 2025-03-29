@@ -39,3 +39,21 @@ export const RegisterSchema = z
   })
 
 export type RegisterType = z.infer<typeof RegisterSchema>
+
+export const ChangePasswordSchema = z
+  .object({
+    oldPassword: z.string().min(1, 'Vui lòng nhập mật khẩu cũ'),
+    newPassword: z
+      .string()
+      .min(8, 'Mật khẩu phải có ít nhất 8 ký tự')
+      .max(50, 'Mật khẩu không quá 50 ký tự')
+      .regex(/[a-z]/, 'Mật khẩu phải có ít nhất một chữ cái thường')
+      .regex(/[A-Z]/, 'Mật khẩu phải có ít nhất một chữ cái in hoa')
+      .regex(/[0-9]/, 'Mật khẩu phải có ít nhất một chữ số')
+      .regex(/[@$!%*?&]/, 'Mật khẩu phải có ít nhất một ký tự đặc biệt'),
+    confirmNewPassword: z.string().min(1, 'Vui lòng xác nhận mật khẩu mới')
+  })
+  .refine((data) => data.newPassword === data.confirmNewPassword, {
+    message: 'Mật khẩu xác nhận không khớp',
+    path: ['confirmNewPassword']
+  })
