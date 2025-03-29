@@ -16,7 +16,6 @@ export const apiAnswerSchema = z.object({
     type: z.string(),
     order: z.number()
   })
-  
 })
 
 export type AnswerType = z.infer<typeof answerSchema>

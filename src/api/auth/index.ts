@@ -1,4 +1,4 @@
-import { apiPostCall } from '..'
+import { apiPostCall, axiosPrivate } from '..'
 import { LoginType, RegisterType } from '@/schema/auth-schema'
 import axios from 'axios'
 
@@ -23,6 +23,18 @@ export const registerUser = async (data: RegisterType) => {
   const response = await apiPostCall('/auth/register', {
     mobile: data.mobile,
     password: data.password
+  })
+  return response.data
+}
+
+export async function changePassword(data: { oldPassword: string; newPassword: string }) {
+  const response = await axiosPrivate.put('/auth/change-password', data)
+  return response.data
+}
+
+export const forgotPassword = async (phoneNumber: string) => {
+  const response = await apiPostCall('/auth/forgot-password', {
+    mobile: phoneNumber
   })
   return response.data
 }

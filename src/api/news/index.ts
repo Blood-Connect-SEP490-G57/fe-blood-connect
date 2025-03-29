@@ -22,7 +22,7 @@ export const getNews = async (params: NewsParams): Promise<ApiResponse<News>> =>
 
 export const getNewsById = async (id: number): Promise<News> => {
   const response = await apiGetCall(`/api/news/${id}`)
-  
+
   if (!response.data.success) {
     throw new Error(response.data.message || 'Failed to fetch news details')
   }

@@ -37,9 +37,7 @@ const NewsPage = () => {
   })
 
   if (isLoading) {
-    return (
-      <Loading/>
-    )
+    return <Loading />
   }
 
   return (

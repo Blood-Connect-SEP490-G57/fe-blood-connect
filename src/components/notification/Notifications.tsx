@@ -18,7 +18,7 @@ export default function Notifications({ onClose }: { onClose?: () => void }) {
     queryKey: ['notifications', filter],
     queryFn: () => {
       const params: NotificationParams = { page: 0, size: 10 }
-      
+
       // Add type filter
       if (filter === 'Nhắc nhở') {
         params.type = NotificationType.REMINDER
@@ -29,7 +29,7 @@ export default function Notifications({ onClose }: { onClose?: () => void }) {
       } else if (filter === 'Chưa đọc') {
         params.unread = true
       }
-      
+
       return getNotifications(params)
     }
   })
@@ -91,21 +91,19 @@ export default function Notifications({ onClose }: { onClose?: () => void }) {
 
       {/* Filter buttons */}
       <div className='inline-flex w-full gap-1 my-2 justify-start overflow-x-auto'>
-          {filterButtons.map((button) => (
-            <Button
-              key={button.value}
-              variant={filter === button.value ? 'default' : 'outline'}
-              className={`text-red-600 text-xs sm:text-sm ${
-                filter === button.value
-                  ? 'bg-red-500 text-white hover:bg-red-600'
-                  : 'hover:bg-red-100 hover:text-red-700'
-              } transition-colors duration-200`}
-              onClick={() => setFilter(button.value)}
-            >
-              {button.label}
-            </Button>
-          ))}
-        </div>
+        {filterButtons.map((button) => (
+          <Button
+            key={button.value}
+            variant={filter === button.value ? 'default' : 'outline'}
+            className={`text-red-600 text-xs sm:text-sm ${
+              filter === button.value ? 'bg-red-500 text-white hover:bg-red-600' : 'hover:bg-red-100 hover:text-red-700'
+            } transition-colors duration-200`}
+            onClick={() => setFilter(button.value)}
+          >
+            {button.label}
+          </Button>
+        ))}
+      </div>
 
       <div className='space-y-4'>
         {notifications?.data.data.length === 0 ? (

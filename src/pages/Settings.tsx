@@ -15,9 +15,52 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/components/ui/dialog'
+import { changePassword } from '@/api/auth'
+import { ChangePasswordSchema } from '@/schema/auth-schema'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import * as z from 'zod'
+import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form'
+import { toast } from '@/components/ui/use-toast'
+import { isAxiosError } from 'axios'
 
 const Settings = () => {
   const [isChangingPassword, setIsChangingPassword] = React.useState(false)
+
+  const passwordForm = useForm<z.infer<typeof ChangePasswordSchema>>({
+    resolver: zodResolver(ChangePasswordSchema),
+    defaultValues: {
+      oldPassword: '',
+      newPassword: '',
+      confirmNewPassword: ''
+    }
+  })
+
+  const onChangePassword = async (values: z.infer<typeof ChangePasswordSchema>) => {
+    try {
+      await changePassword({
+        oldPassword: values.oldPassword,
+        newPassword: values.newPassword
+      })
+
+      toast({
+        title: 'Thành công',
+        description: 'Đổi mật khẩu thành công',
+        variant: 'default'
+      })
+
+      setIsChangingPassword(false)
+      passwordForm.reset()
+    } catch (error) {
+      if (isAxiosError(error)) {
+        toast({
+          title: 'Lỗi',
+          description: error.response?.data?.message || 'Đổi mật khẩu thất bại',
+          variant: 'destructive'
+        })
+      }
+    }
+  }
 
   return (
     <div className='min-h-screen bg-gradient-to-br from-red-50 via-white to-red-50 py-12'>
@@ -87,28 +130,57 @@ const Settings = () => {
                         <DialogTitle>Đổi mật khẩu</DialogTitle>
                         <DialogDescription>Vui lòng nhập mật khẩu cũ và mật khẩu mới</DialogDescription>
                       </DialogHeader>
-                      <div className='space-y-4 py-4'>
-                        <div className='space-y-2'>
-                          <Label>Mật khẩu hiện tại</Label>
-                          <Input type='password' />
-                        </div>
-                        <div className='space-y-2'>
-                          <Label>Mật khẩu mới</Label>
-                          <Input type='password' />
-                        </div>
-                        <div className='space-y-2'>
-                          <Label>Xác nhận mật khẩu mới</Label>
-                          <Input type='password' />
-                        </div>
-                      </div>
-                      <DialogFooter>
-                        <Button variant='outline' onClick={() => setIsChangingPassword(false)}>
-                          Hủy
-                        </Button>
-                        <Button type='submit' className='bg-red-600 text-white hover:bg-red-700'>
-                          Lưu thay đổi
-                        </Button>
-                      </DialogFooter>
+                      <Form {...passwordForm}>
+                        <form onSubmit={passwordForm.handleSubmit(onChangePassword)} className='space-y-4'>
+                          <FormField
+                            control={passwordForm.control}
+                            name='oldPassword'
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Mật khẩu hiện tại</FormLabel>
+                                <FormControl>
+                                  <Input type='password' {...field} />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={passwordForm.control}
+                            name='newPassword'
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Mật khẩu mới</FormLabel>
+                                <FormControl>
+                                  <Input type='password' {...field} />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={passwordForm.control}
+                            name='confirmNewPassword'
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Xác nhận mật khẩu mới</FormLabel>
+                                <FormControl>
+                                  <Input type='password' {...field} />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <DialogFooter>
+                            <Button variant='outline' onClick={() => setIsChangingPassword(false)}>
+                              Hủy
+                            </Button>
+                            <Button type='submit' className='bg-red-600 text-white hover:bg-red-700'>
+                              Lưu thay đổi
+                            </Button>
+                          </DialogFooter>
+                        </form>
+                      </Form>
                     </DialogContent>
                   </Dialog>
                 </div>

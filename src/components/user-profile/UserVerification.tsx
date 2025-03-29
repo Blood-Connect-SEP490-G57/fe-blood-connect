@@ -279,16 +279,16 @@ const UserVerification = () => {
       setError('Không tìm thấy thông tin CCCD')
       return
     }
-  
+
     try {
       setLoading(true)
-      
+
       // First update extract status
       const extractResponse = await updateExtractStatus(extractId, 'CONFIRM_MATCHED')
       if (!extractResponse.success) {
         throw new Error(extractResponse.message || 'Lỗi khi xác nhận thông tin CCCD')
       }
-  
+
       // Then create/update user detail
       const userDetailData = {
         email: formData.email,
@@ -300,12 +300,12 @@ const UserVerification = () => {
         blood_group: formData.bloodGroup,
         organization_id: Number(formData.organizationId)
       }
-  
+
       const userResponse = await createOrUpdateUserDetail(userDetailData)
       if (!userResponse) {
         throw new Error('Lỗi khi cập nhật thông tin người dùng')
       }
-  
+
       setError(null)
       nextStep()
     } catch (err) {

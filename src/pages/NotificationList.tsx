@@ -17,8 +17,8 @@ export default function NotificationList({ onClose }: { onClose?: () => void }) 
   const { data: notifications } = useQuery({
     queryKey: ['notifications', filter], // Add filter to query key
     queryFn: async () => {
-      const params: NotificationParams = { 
-        page: 0, 
+      const params: NotificationParams = {
+        page: 0,
         size: 10,
         sortBy: 'created',
         sortDir: 'desc'

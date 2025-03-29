@@ -26,11 +26,21 @@ const Footer: React.FC = () => {
           <div>
             <h3 className='text-lg font-semibold mb-4'>Theo dõi chúng tôi</h3>
             <div className='flex flex-col space-y-2 gap-2'>
-              <a href='https://www.facebook.com/giotmauhyvong' target='_blank' rel='noopener noreferrer' className='flex flex-row items-center space-x-2'>
+              <a
+                href='https://www.facebook.com/giotmauhyvong'
+                target='_blank'
+                rel='noopener noreferrer'
+                className='flex flex-row items-center space-x-2'
+              >
                 <FacebookIcon className='w-6 h-6 text-blue-600 hover:text-blue-700' />
                 <span>Facebook: Giọt Máu Hy Vọng</span>
               </a>
-              <a href='https://www.facebook.com/giotmauhyvong' target='_blank' rel='noopener noreferrer' className='flex flex-row items-center space-x-2'>
+              <a
+                href='https://www.facebook.com/giotmauhyvong'
+                target='_blank'
+                rel='noopener noreferrer'
+                className='flex flex-row items-center space-x-2'
+              >
                 <InstagramIcon className='w-6 h-6 text-blue-600 hover:text-blue-700' />
                 <span>Instagram: Giọt Máu Hy Vọng</span>
               </a>

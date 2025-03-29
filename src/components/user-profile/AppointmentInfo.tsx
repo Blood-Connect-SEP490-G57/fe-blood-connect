@@ -154,22 +154,28 @@ const AppointmentInfo = () => {
 
     try {
       await cancelAppointment(data.campaign.campaignId)
-      
+
       // Update local state to reflect cancellation
-      setData(prev => prev ? {
-        ...prev,
-        campaign: prev.campaign ? {
-          ...prev.campaign,
-          status: 'CANCELLED'
-        } : null
-      } : null)
+      setData((prev) =>
+        prev
+          ? {
+              ...prev,
+              campaign: prev.campaign
+                ? {
+                    ...prev.campaign,
+                    status: 'CANCELLED'
+                  }
+                : null
+            }
+          : null
+      )
 
       toast({
         title: 'Thành công',
         description: 'Lịch hẹn đã được hủy thành công',
         variant: 'default'
       })
-      
+
       setModalOpen(false)
     } catch (error) {
       console.error('Error cancelling appointment:', error)
