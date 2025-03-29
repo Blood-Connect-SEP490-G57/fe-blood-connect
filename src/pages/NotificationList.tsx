@@ -42,25 +42,49 @@ export default function NotificationList({ onClose }: { onClose?: () => void }) 
 
   // Khi bấm vào thông báo, đánh dấu thông báo là đã đọc
   const handleToggleStatus = async (id: string, status: boolean) => {
-    await toggleNotificationStatus(id, status)
+    try {
+      await toggleNotificationStatus(id, status)
+
+      // Update the notifications cache
+      queryClient.setQueryData(['notifications', filter], (oldData: any) => ({
+        ...oldData,
+        data: {
+          ...oldData.data,
+          data: oldData.data.data.map((notification: any) =>
+            notification.id.toString() === id ? { ...notification, status } : notification
+          )
+        }
+      }))
+
+      // Update unread count
+      await invalidateUnreadCount()
+    } catch (error) {
+      console.error('Error toggling notification status:', error)
+    }
   }
 
   // Đánh dấu tất cả thông báo đã đọc
   const handleMarkAllAsRead = async () => {
     try {
       await markAllAsRead()
-      queryClient.setQueryData(['notifications'], (oldData: any) => ({
-        ...oldData,
-        data: {
-          ...oldData.data,
-          data: oldData.data.data.map((notification: any) => ({
-            ...notification,
-            status: true
-          }))
+
+      // Update notifications cache
+      queryClient.setQueriesData(['notifications'], (oldData: any) => {
+        if (!oldData?.data?.data) return oldData
+        return {
+          ...oldData,
+          data: {
+            ...oldData.data,
+            data: oldData.data.data.map((notification: any) => ({
+              ...notification,
+              status: true
+            }))
+          }
         }
-      }))
-      queryClient.setQueryData(['unreadCount'], 0)
-      onClose?.()
+      })
+
+      // Update unread count
+      await invalidateUnreadCount()
     } catch (error) {
       console.error('Error marking all notifications as read:', error)
     }
@@ -159,11 +183,16 @@ export default function NotificationList({ onClose }: { onClose?: () => void }) 
 
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant='ghost' size='icon'>
+                        <Button variant='ghost' size='icon' className='relative z-10'>
                           <MoreVertical className='h-4 w-4' />
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent>
+                      <DropdownMenuContent
+                        align='end'
+                        avoidCollisions={true}
+                        collisionPadding={10}
+                        className='min-w-[150px] z-50'
+                      >
                         <DropdownMenuItem
                           onClick={() => {
                             handleToggleStatus(notification.id.toString(), !notification.status)
@@ -183,4 +212,7 @@ export default function NotificationList({ onClose }: { onClose?: () => void }) 
       </div>
     </div>
   )
+}
+function invalidateUnreadCount() {
+  throw new Error('Function not implemented.')
 }
