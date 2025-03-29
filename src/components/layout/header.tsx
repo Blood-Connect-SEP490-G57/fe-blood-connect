@@ -12,9 +12,8 @@ import { User, Settings, LogOut, Menu, Bell, X, LogOutIcon, LogInIcon, UserPlusI
 import UserAvatar from '@/components/ui/user-avatar'
 import Notifications from '@/components/notification/Notifications'
 import { useAuth } from '@/components/authContext/AuthContext'
-import { useQuery } from '@tanstack/react-query'
-import { getUnreadCount } from '@/api/notification/index'
 import { useVerification } from '../verificationContext/VerificationContext'
+import { useUnreadNotifications } from '@/hooks/useUnreadNotifications'
 
 const Header: React.FC = () => {
   const navigate = useNavigate()
@@ -23,6 +22,8 @@ const Header: React.FC = () => {
   const [isMobileNotiOpen, setIsMobileNotiOpen] = useState(false)
   const { isLoggedIn, setIsLoggedIn } = useAuth()
   const { isVerified } = useVerification()
+
+  const { unreadCount } = useUnreadNotifications()
 
   useEffect(() => {
     if (
@@ -51,13 +52,6 @@ const Header: React.FC = () => {
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [isMobileMenuOpen])
-
-  const { data: unreadCount, refetch: refetchUnreadCount } = useQuery({
-    queryKey: ['unreadCount'],
-    queryFn: () => getUnreadCount(),
-    refetchOnWindowFocus: true,
-    enabled: isLoggedIn
-  })
 
   useEffect(() => {
     const token = localStorage.getItem('access_token')
@@ -103,6 +97,10 @@ const Header: React.FC = () => {
     navigate('/dang-ky')
   }
 
+  const handleNotificationClose = () => {
+    setIsMobileNotiOpen(false)
+  }
+
   return (
     <header className='bg-white shadow-sm fixed top-0 left-0 right-0 z-50'>
       <div className='mx-auto px-4'>
@@ -134,15 +132,13 @@ const Header: React.FC = () => {
               <>
                 <Button
                   variant='ghost'
-                  onClick={() => {
-                    setIsMobileNotiOpen((prev) => !prev)
-                  }}
+                  onClick={() => setIsMobileNotiOpen((prev) => !prev)}
                   className='group p-inherit text-red-600 hover:text-white hover:bg-red-600 relative'
                 >
                   <div className='relative w-full h-full'>
                     <Bell className='group-hover:text-white text-red-600 hover:text-white' />
                     <span className='absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full px-2 hover:bg-red-700 group-hover:bg-red-700'>
-                      {unreadCount !== undefined ? unreadCount : 0}
+                      {unreadCount}
                     </span>
                   </div>
                 </Button>
@@ -203,7 +199,7 @@ const Header: React.FC = () => {
                 <div className='relative w-full h-full'>
                   <Bell className='group-hover:text-white text-red-600 hover:text-white' />
                   <span className='absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full px-2 hover:bg-red-700 group-hover:bg-red-700'>
-                    {unreadCount !== undefined ? unreadCount : 0}
+                    {unreadCount}
                   </span>
                 </div>
               </Button>
@@ -311,12 +307,7 @@ const Header: React.FC = () => {
                 minWidth: window.innerWidth < 780 ? '250px' : '600px'
               }}
             >
-              <Notifications
-                onClose={() => {
-                  setIsMobileNotiOpen(false)
-                  refetchUnreadCount()
-                }}
-              />
+              <Notifications onClose={handleNotificationClose} />
             </div>
           )}
         </div>
