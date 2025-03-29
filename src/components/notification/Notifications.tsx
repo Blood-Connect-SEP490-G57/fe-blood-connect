@@ -6,13 +6,17 @@ import { NotificationType, getTypeLabel, getTypeBadgeClasses, NotificationParams
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { formatExactDate, getNotifications, markAllAsRead, toggleNotificationStatus } from '@/api/notification'
 import { useNavigate } from 'react-router-dom'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { getUnreadCount } from '@/api/notification'
+import { useUnreadNotifications } from '@/hooks/useUnreadNotifications'
 
 export default function Notifications({ onClose }: { onClose?: () => void }) {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const containerRef = useRef<HTMLDivElement>(null)
   const [filter, setFilter] = useState<string>('Tất cả')
+
+  const { invalidateUnreadCount } = useUnreadNotifications()
 
   const { data: notifications } = useQuery({
     queryKey: ['notifications', filter],
@@ -34,29 +38,56 @@ export default function Notifications({ onClose }: { onClose?: () => void }) {
     }
   })
 
+  useQuery({
+    queryKey: ['unreadCount'],
+    queryFn: () => getUnreadCount(),
+    refetchOnWindowFocus: true,
+    initialData: 0
+  })
+
   const handleToggleStatus = async (id: string, status: boolean) => {
-    await toggleNotificationStatus(id, status)
+    try {
+      await toggleNotificationStatus(id, status)
+
+      // Update the notifications cache
+      queryClient.setQueryData(['notifications', filter], (oldData: any) => ({
+        ...oldData,
+        data: {
+          ...oldData.data,
+          data: oldData.data.data.map((notification: any) =>
+            notification.id.toString() === id ? { ...notification, status } : notification
+          )
+        }
+      }))
+
+      // Update unread count
+      await invalidateUnreadCount()
+    } catch (error) {
+      console.error('Error toggling notification status:', error)
+    }
   }
 
   const handleMarkAllAsRead = async () => {
     try {
       await markAllAsRead()
-      // Update the notifications cache to mark all as read
-      queryClient.setQueryData(['notifications'], (oldData: any) => ({
-        ...oldData,
-        data: {
-          ...oldData.data,
-          data: oldData.data.data.map((notification: any) => ({
-            ...notification,
-            status: true
-          }))
-        }
-      }))
-      // Reset unread count to 0
-      queryClient.setQueryData(['unreadCount'], 0)
 
-      // Optional: Close the notifications panel
-      onClose?.()
+      // Update notifications cache
+      queryClient.setQueriesData(['notifications'], (oldData: any) => {
+        if (!oldData?.data?.data) return oldData
+        return {
+          ...oldData,
+          data: {
+            ...oldData.data,
+            data: oldData.data.data.map((notification: any) => ({
+              ...notification,
+              status: true
+            }))
+          }
+        }
+      })
+
+      // Update unread count
+      await invalidateUnreadCount()
     } catch (error) {
       console.error('Error marking all notifications as read:', error)
     }
@@ -70,6 +101,27 @@ export default function Notifications({ onClose }: { onClose?: () => void }) {
     { label: 'Tin tức', value: 'Tin tức', type: NotificationType.NEWS }
   ]
 
+  // Handle click outside to close the notification panel
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement
+
+      // Check if click is on dropdown menu or its children
+      const isDropdownClick =
+        target.closest('[role="menu"]') || target.closest('[role="menuitem"]') || target.closest('[data-state="open"]')
+
+      if (containerRef.current && !containerRef.current.contains(target) && !isDropdownClick) {
+        onClose?.()
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [onClose])
+
   return (
     <div
       ref={containerRef}
@@ -82,7 +134,10 @@ export default function Notifications({ onClose }: { onClose?: () => void }) {
         </div>
         <Button
           variant='ghost'
-          onClick={handleMarkAllAsRead}
+          onClick={() => {
+            handleMarkAllAsRead()
+            // onClose?.()
+          }}
           className='text-red-600 hover:text-red-700 hover:bg-red-50 rounded-md border border-red-200'
         >
           Đánh dấu tất cả đã đọc
@@ -98,7 +153,9 @@ export default function Notifications({ onClose }: { onClose?: () => void }) {
             className={`text-red-600 text-xs sm:text-sm ${
               filter === button.value ? 'bg-red-500 text-white hover:bg-red-600' : 'hover:bg-red-100 hover:text-red-700'
             } transition-colors duration-200`}
-            onClick={() => setFilter(button.value)}
+            onClick={() => {
+              setFilter(button.value)
+            }}
           >
             {button.label}
           </Button>

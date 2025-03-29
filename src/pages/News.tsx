@@ -2,7 +2,7 @@ import React from 'react'
 import { Calendar, ChevronRight, Search } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { getNews } from '@/api/news'
 import { NewsParams } from '@/schema/news-schema'
 import { useNavigate } from 'react-router-dom'
@@ -10,14 +10,14 @@ import Loading from '@/components/warnings/loading'
 
 const NewsPage = () => {
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const [searchTerm, setSearchTerm] = React.useState('')
   const [debouncedSearchTerm, setDebouncedSearchTerm] = React.useState('')
 
-  // Debounce effect
   React.useEffect(() => {
     const timerId = setTimeout(() => {
       setDebouncedSearchTerm(searchTerm)
-    }, 1000) // 500ms delay
+    }, 500) // Reduced delay to 500ms for better responsiveness
 
     return () => {
       clearTimeout(timerId)
@@ -33,8 +33,31 @@ const NewsPage = () => {
         search: debouncedSearchTerm || ''
       }
       return getNews(params)
-    }
+    },
+    staleTime: 30000, // Data considered fresh for 30 seconds
+    cacheTime: 5 * 60 * 1000, // Cache kept for 5 minutes
+    keepPreviousData: true // Keep showing old data while fetching new data
   })
+
+  // Prefetch next page of results
+  React.useEffect(() => {
+    if (debouncedSearchTerm !== searchTerm) {
+      const prefetchData = async () => {
+        await queryClient.prefetchQuery({
+          queryKey: ['news', searchTerm],
+          queryFn: async () => {
+            const params: NewsParams = {
+              sortBy: 'createdAt',
+              sortDir: 'desc',
+              search: searchTerm || ''
+            }
+            return getNews(params)
+          }
+        })
+      }
+      prefetchData()
+    }
+  }, [searchTerm, debouncedSearchTerm, queryClient])
 
   if (isLoading) {
     return <Loading />

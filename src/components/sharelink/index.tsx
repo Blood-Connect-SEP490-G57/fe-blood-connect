@@ -1,4 +1,4 @@
-import { FacebookIcon, CopyIcon, ShareIcon, Share2 } from 'lucide-react'
+import { FacebookIcon, CopyIcon, Share2 } from 'lucide-react'
 import { useState, useRef } from 'react'
 import { toast } from '../ui/use-toast'
 import { CampaignResponse } from '@/schema/campaign-schema'
@@ -7,7 +7,6 @@ export default function ShareLink({ selectedCampaign }: { selectedCampaign: Camp
   const [showIcons, setShowIcons] = useState(false)
   const dropdownRef = useRef<HTMLDivElement | null>(null)
 
-  // const baseUrl = `http://localhost:3000/dang-ky-hien-mau`
   const baseUrl = `https://giotmauhyvong.org/dang-ky-hien-mau`
 
   const urlToShare = `${baseUrl}?campaignId=${selectedCampaign?.id}&questionset=${selectedCampaign?.questionSetId}`
@@ -18,23 +17,9 @@ export default function ShareLink({ selectedCampaign }: { selectedCampaign: Camp
       const fbUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shortUrl)}`
       window.open(fbUrl, '_blank')?.focus()
       localStorage.removeItem('selectedCampaign')
-      // console.log('shareToFacebook', fbUrl)
     } catch (error) {
       console.error('Lỗi khi chia sẻ:', error)
       window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(urlToShare)}`, '_blank')?.focus()
-    }
-  }
-
-  async function shareToZalo() {
-    try {
-      const shortUrl = await shortenUrl(urlToShare)
-      const zaloUrl = `https://zalo.me/share?url=${encodeURIComponent(shortUrl)}`
-      window.open(zaloUrl, '_blank')?.focus()
-      localStorage.removeItem('selectedCampaign')
-      console.log('shareToZalo', zaloUrl)
-    } catch (error) {
-      console.error('Lỗi khi chia sẻ:', error)
-      window.open(`https://zalo.me/share?url=${encodeURIComponent(urlToShare)}`, '_blank')?.focus()
     }
   }
 
@@ -84,7 +69,7 @@ export default function ShareLink({ selectedCampaign }: { selectedCampaign: Camp
           ref={dropdownRef}
           tabIndex={0}
           onBlur={handleBlur}
-          className='absolute top-full mt-2 flex space-x-3 p-3 bg-white border border-gray-200 rounded-lg shadow-lg'
+          className='absolute top-full mt-2 flex space-x-3 p-3 bg-white border border-gray-200 rounded-lg shadow-lg z-10'
         >
           <button
             onClick={shareToFacebook}
@@ -93,14 +78,6 @@ export default function ShareLink({ selectedCampaign }: { selectedCampaign: Camp
             aria-label='Chia sẻ lên Facebook'
           >
             <FacebookIcon size={20} />
-          </button>
-          <button
-            onClick={shareToZalo}
-            title='Chia sẻ lên Zalo'
-            className='p-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-transform transform hover:scale-110 shadow-md'
-            aria-label='Chia sẻ lên Zalo'
-          >
-            <ShareIcon size={20} />
           </button>
           <button
             onClick={copyToClipboard}
