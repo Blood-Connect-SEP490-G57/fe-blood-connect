@@ -15,7 +15,7 @@ const AdviceSection = () => {
               'Đè chặt miếng bông gòn cầm máu nơi kim chích 10 phút, giữ băng keo cá nhân trong 4-6 giờ.',
               'Nằm và ngồi nghỉ tại chỗ 10 phút sau khi hiến máu.',
               'Nằm nghỉ đầu thấp, kê chân cao nếu thấy chóng mặt, mệt, buồn nôn.',
-              'Chườm lạnh (túi chườm chuyên dụng hoặc cho đá vào khăn) chườm vết chích nếu bị sưng, bầm tím.'
+              'Chườm lạnh (túi chườm chuyên dụng hoặc cho đá vào khăn) chườm vết chích nếu bị sưng, bầm tím.',
             ]}
             doctor=''
             position=''
@@ -26,7 +26,10 @@ const AdviceSection = () => {
             type='shouldNot'
             items={[
               'Uống sữa, rượu bia trước khi hiến máu.',
-              'Lái xe đi xa, khuân vác, làm việc nặng hoặc luyện tập thể thao gắng sức trong ngày lấy máu.'
+              'Lái xe đi xa, khuân vác, làm việc nặng hoặc luyện tập thể thao gắng sức trong ngày lấy máu.',
+              'Nhịn ăn trước khi hiến máu, vì có thể gây chóng mặt, mệt mỏi.',
+              'Sử dụng các chất kích thích như cà phê, thuốc lá trước khi hiến máu.',
+              'Mặc quần áo quá chật khi đi hiến máu, tránh gây khó khăn cho việc lấy máu.',
             ]}
             doctor=''
             position=''
@@ -39,7 +42,9 @@ const AdviceSection = () => {
               'Nếu phát hiện chảy máu tại chỗ chích:',
               'Giơ tay cao.',
               'Lấy tay kia ấn nhẹ vào miếng bông hoặc băng dính.',
-              'Liên hệ nhân viên y tế để được hỗ trợ khi cần thiết.'
+              'Liên hệ nhân viên y tế để được hỗ trợ khi cần thiết.',
+              'Uống nhiều nước và bổ sung thực phẩm giàu sắt để phục hồi lượng máu đã hiến.',
+              'Không tháo băng dính quá sớm để tránh chảy máu.'
             ]}
             doctor=''
             position=''
