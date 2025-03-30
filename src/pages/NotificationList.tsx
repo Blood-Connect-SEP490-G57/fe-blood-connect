@@ -7,12 +7,14 @@ import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 import { useRef, useState } from 'react'
 import { getTypeBadgeClasses, getTypeLabel, NotificationParams, NotificationType } from '@/schema/notification-schema'
+import { useUnreadNotifications } from '@/hooks/useUnreadNotifications'
 
 export default function NotificationList({ onClose }: { onClose?: () => void }) {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const containerRef = useRef<HTMLDivElement>(null)
   const [filter, setFilter] = useState<string>('Tất cả')
+  const { invalidateUnreadCount } = useUnreadNotifications()
 
   const { data: notifications } = useQuery({
     queryKey: ['notifications', filter], // Add filter to query key
@@ -187,12 +189,7 @@ export default function NotificationList({ onClose }: { onClose?: () => void }) 
                           <MoreVertical className='h-4 w-4' />
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent
-                        align='end'
-                        avoidCollisions={true}
-                        collisionPadding={10}
-                        className='min-w-[150px] z-50'
-                      >
+                      <DropdownMenuContent>
                         <DropdownMenuItem
                           onClick={() => {
                             handleToggleStatus(notification.id.toString(), !notification.status)
@@ -212,7 +209,4 @@ export default function NotificationList({ onClose }: { onClose?: () => void }) 
       </div>
     </div>
   )
-}
-function invalidateUnreadCount() {
-  throw new Error('Function not implemented.')
 }
