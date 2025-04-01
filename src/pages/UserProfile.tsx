@@ -4,8 +4,9 @@ import { Calendar, CheckCircle, History, Info, User } from 'lucide-react'
 import Profile from '@/components/user-profile/Profile'
 import AppointmentInfo from '@/components/user-profile/AppointmentInfo'
 import DonationHistory from '@/components/user-profile/DonationHistory'
-import UserVerification from '@/components/user-profile/UserVerification'
+// import UserVerification from '@/components/user-profile/UserVerification'
 import { useVerification } from '@/components/verificationContext/VerificationContext'
+import Verification from '@/components/user-profile/Verification/Verification'
 
 const UserProfilePage: React.FC = () => {
   const [selectedOption, setSelectedOption] = useState<string>('thong-tin-ca-nhan')
@@ -49,7 +50,7 @@ const UserProfilePage: React.FC = () => {
       case 'lich-su-hien-mau':
         return <DonationHistory />
       case 'xac-thuc-tai-khoan':
-        return isVerified === 'NONE' ? <UserVerification /> : <Profile />
+        return isVerified === 'NONE' ? <Verification /> : <Profile />
       default:
         return <Profile />
     }
