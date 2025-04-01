@@ -3,6 +3,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { CheckCircle, Home, Calendar } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { FC } from 'react'
+import ScrollToTop from '../scrollToTop'
 
 interface SuccessStepProps {
   navigate: (path: string) => void
@@ -11,6 +12,7 @@ interface SuccessStepProps {
 const SuccessStep: FC<SuccessStepProps> = ({ navigate }) => {
   return (
     <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5 }}>
+      <ScrollToTop />
       <Card className='border-none shadow-xl overflow-hidden'>
         <div className='bg-gradient-to-r from-red-500 to-red-600 h-16'></div>
         <CardContent className='pt-0'>

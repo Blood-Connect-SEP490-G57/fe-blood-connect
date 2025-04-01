@@ -8,6 +8,7 @@ import { toast } from '@/components/ui/use-toast'
 import { Loader2 } from 'lucide-react'
 import { Question, QuestionSet, Section } from '@/schema/question-schema'
 import { AnswerType, ApiAnswerType } from '@/schema/answer-schema'
+import ScrollToTop from '../scrollToTop'
 
 // Interfaces
 
@@ -268,62 +269,65 @@ const ReviewStep: React.FC<ReviewStepProps> = ({ selectedCampaign, questionSetId
   }
 
   return (
-    <Card className='border-none shadow-lg'>
-      <CardHeader>
-        <CardTitle>Xác nhận thông tin</CardTitle>
-        <CardDescription>
-          {hasApiData
-            ? 'Thông tin đăng ký hiến máu của bạn'
-            : 'Vui lòng kiểm tra lại thông tin đăng ký hiến máu của bạn'}
-        </CardDescription>
-      </CardHeader>
-      <CardContent className='space-y-6'>
-        {/* Campaign info */}
-        {selectedCampaign ? (
-          <div className='space-y-4'>
-            <h3 className='font-medium text-lg'>Thông tin buổi hiến máu</h3>
-            <div className='bg-gray-50 rounded-lg p-4'>
-              <CampaignDetails campaign={selectedCampaign} />
+    <div>
+      <ScrollToTop />
+      <Card className='border-none shadow-lg'>
+        <CardHeader>
+          <CardTitle>Xác nhận thông tin</CardTitle>
+          <CardDescription>
+            {hasApiData
+              ? 'Thông tin đăng ký hiến máu của bạn'
+              : 'Vui lòng kiểm tra lại thông tin đăng ký hiến máu của bạn'}
+          </CardDescription>
+        </CardHeader>
+        <CardContent className='space-y-6'>
+          {/* Campaign info */}
+          {selectedCampaign ? (
+            <div className='space-y-4'>
+              <h3 className='font-medium text-lg'>Thông tin buổi hiến máu</h3>
+              <div className='bg-gray-50 rounded-lg p-4'>
+                <CampaignDetails campaign={selectedCampaign} />
+              </div>
             </div>
-          </div>
-        ) : (
-          <div className='bg-yellow-50 p-4 rounded-lg'>
-            <p className='text-yellow-800'>Không tìm thấy thông tin buổi hiến máu</p>
-          </div>
-        )}
-
-        {/* Answers display */}
-        <div className='space-y-4'>
-          <h3 className='font-medium text-lg'>Câu trả lời của bạn</h3>
-          <div className='bg-gray-50 rounded-lg p-4 space-y-3'>{renderAnswers()}</div>
-        </div>
-
-        {/* Navigation buttons */}
-        <div className='flex justify-between'>
-          {!hasApiData && (
-            <Button variant='outline' onClick={() => setCurrentStep(STEPS.QUESTIONNAIRE)} disabled={submitting}>
-              Quay lại
-            </Button>
+          ) : (
+            <div className='bg-yellow-50 p-4 rounded-lg'>
+              <p className='text-yellow-800'>Không tìm thấy thông tin buổi hiến máu</p>
+            </div>
           )}
-          <Button
-            className='bg-red-600 text-white hover:bg-red-700 ml-auto'
-            onClick={handleConfirm}
-            disabled={submitting}
-          >
-            {submitting ? (
-              <>
-                <span className='mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent'></span>
-                Đang xử lý...
-              </>
-            ) : hasApiData ? (
-              'Đóng'
-            ) : (
-              'Xác nhận đăng ký'
+
+          {/* Answers display */}
+          <div className='space-y-4'>
+            <h3 className='font-medium text-lg'>Câu trả lời của bạn</h3>
+            <div className='bg-gray-50 rounded-lg p-4 space-y-3'>{renderAnswers()}</div>
+          </div>
+
+          {/* Navigation buttons */}
+          <div className='flex justify-between'>
+            {!hasApiData && (
+              <Button variant='outline' onClick={() => setCurrentStep(STEPS.QUESTIONNAIRE)} disabled={submitting}>
+                Quay lại
+              </Button>
             )}
-          </Button>
-        </div>
-      </CardContent>
-    </Card>
+            <Button
+              className='bg-red-600 text-white hover:bg-red-700 ml-auto'
+              onClick={handleConfirm}
+              disabled={submitting}
+            >
+              {submitting ? (
+                <>
+                  <span className='mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent'></span>
+                  Đang xử lý...
+                </>
+              ) : hasApiData ? (
+                'Đóng'
+              ) : (
+                'Xác nhận đăng ký'
+              )}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   )
 }
 

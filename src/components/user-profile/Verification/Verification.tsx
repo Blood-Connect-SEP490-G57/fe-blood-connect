@@ -5,6 +5,7 @@ import { getOrganizationsByType, Organization } from '@/api/organization'
 import Step1Upload from './Step1Upload'
 import Step2ConfirmInfo from './Step2ExtractedInfo'
 import Step3Complete from './Step3ConfirmInfo'
+import ScrollToTop from '@/components/scrollToTop'
 
 interface FormData {
   frontImage: File | null
@@ -103,6 +104,7 @@ const Verification = () => {
 
   return (
     <div className='min-h-screen bg-white py-12 px-4 sm:px-6 lg:px-8'>
+      <ScrollToTop />
       <div className='mb-8'>
         <div className='flex items-center mb-8'>
           {[1, 2, 3].map((stepNumber, index) => (
