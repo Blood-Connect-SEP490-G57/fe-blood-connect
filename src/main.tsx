@@ -91,6 +91,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
             />
             <Route path='*' element={<Navigate to='/' />} />
             {/* <Route path='*' element={<NotFoundPage />} /> */}
+            {/* <Route path='/1' element={<Verification />} /> */}
           </Routes>
         </MainLayout>
       </BrowserRouter>
