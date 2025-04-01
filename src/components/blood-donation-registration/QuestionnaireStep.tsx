@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom'
 import { AlertTriangle } from 'lucide-react'
 import { ValidRegisterDonate } from '@/api/campaign'
 import { useToast } from '@/components/ui/use-toast'
+import ScrollToTop from '../scrollToTop'
 
 type VerificationStatus = 'NOT_VERIFIED' | 'ALREADY_REGISTERED' | 'SUCCESS' | ''
 
@@ -103,6 +104,7 @@ const QuestionnaireStep: React.FC<QuestionnaireStepProps> = ({
 
   return (
     <>
+      <ScrollToTop />
       <Dialog open={showVerificationDialog} onOpenChange={handleCloseDialog}>
         <DialogContent className='sm:max-w-md'>
           <div className='flex items-center gap-3 mb-2 text-red-600'>

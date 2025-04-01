@@ -7,6 +7,7 @@ import { Dispatch, SetStateAction, useState, useEffect, useRef } from 'react'
 import { Step } from '@/pages/BloodDonationRegistration'
 import { Campaign as fetchCampaigns } from '@/api/campaign'
 import { CampaignResponse } from '@/schema/campaign-schema'
+import ScrollToTop from '../scrollToTop'
 
 const SelectCampaignStep = ({
   selectedCampaign,
@@ -52,6 +53,7 @@ const SelectCampaignStep = ({
 
   return (
     <div className='space-y-6'>
+      <ScrollToTop />
       <Card className='border-none shadow-lg'>
         <CardHeader>
           <CardTitle>Chọn buổi hiến máu</CardTitle>

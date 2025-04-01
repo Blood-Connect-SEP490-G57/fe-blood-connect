@@ -3,6 +3,7 @@ import { useExtractStore } from '@/hooks/stores/useExtractStore'
 import { getExtractById, updateExtractStatus } from '@/api/extract'
 import { createOrUpdateUserDetail, getCurrentUserDetail } from '@/api/user'
 import { toast } from '@/components/ui/use-toast'
+import ScrollToTop from '@/components/scrollToTop'
 
 interface Step2Props {
   formData: any
@@ -24,6 +25,8 @@ const Step2ExtractedInfo: React.FC<Step2Props> = ({
   isLoading
 }) => {
   const { extractId, cardDetails, setLoading, setError, error } = useExtractStore()
+
+  console.log('Card details:', JSON.stringify(cardDetails))
 
   // Separate components for better organization
   const LoadingSpinner = () => (
@@ -87,9 +90,9 @@ const Step2ExtractedInfo: React.FC<Step2Props> = ({
             >
               <option value=''>Chọn đơn vị trực thuộc</option>
               {organizations.map((org) => (
-          <option key={org.id} value={org.id}>
-            {org.name}
-          </option>
+                <option key={org.id} value={org.id}>
+                  {org.name}
+                </option>
               ))}
             </select>
           </div>
@@ -137,9 +140,9 @@ const Step2ExtractedInfo: React.FC<Step2Props> = ({
             >
               <option value=''>Chọn nhóm máu</option>
               {['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'].map((group) => (
-          <option key={group} value={group}>
-            {group}
-          </option>
+                <option key={group} value={group}>
+                  {group}
+                </option>
               ))}
             </select>
           </div>
@@ -153,9 +156,9 @@ const Step2ExtractedInfo: React.FC<Step2Props> = ({
             >
               <option value=''>Chọn tỉnh/thành phố</option>
               {['Hà Nội', 'Hồ Chí Minh', 'Đà Nẵng', 'Hải Phòng', 'Cần Thơ'].map((province) => (
-          <option key={province} value={province}>
-            {province}
-          </option>
+                <option key={province} value={province}>
+                  {province}
+                </option>
               ))}
             </select>
           </div>
@@ -169,14 +172,14 @@ const Step2ExtractedInfo: React.FC<Step2Props> = ({
             >
               <option value=''>Chọn quận/huyện</option>
               {['Quận 1', 'Quận 2', 'Quận 3', 'Quận 4', 'Quận 5'].map((district) => (
-          <option key={district} value={district}>
-            {district}
-          </option>
+                <option key={district} value={district}>
+                  {district}
+                </option>
               ))}
             </select>
           </div>
         </div>
-        <div>
+        <div className='mt-4'>
           <p className='text-sm text-gray-500'>Địa chỉ liên hệ</p>
           <input
             type='text'
@@ -299,6 +302,7 @@ const Step2ExtractedInfo: React.FC<Step2Props> = ({
           setFormData((prev: any) => ({
             ...prev,
             extractedInfo: extractData,
+            cardType: extractData.card_type,
             fullName: extractData.name || '',
             dateOfBirth: extractData.dob || ''
           }))
@@ -317,6 +321,7 @@ const Step2ExtractedInfo: React.FC<Step2Props> = ({
 
   return (
     <div className='space-y-6'>
+      <ScrollToTop />
       <h3 className='text-2xl font-heading font-semibold'>Thông tin xác thực</h3>
 
       {isLoading ? (
@@ -325,8 +330,8 @@ const Step2ExtractedInfo: React.FC<Step2Props> = ({
         <div className='space-y-6'>
           <div className='space-y-4 p-6 border rounded-lg'>
             <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-              <CardInfoField label='Loại thẻ' value={cardDetails.cardType} />
-              <CardInfoField label='Số CCCD' value={cardDetails.cardId} />
+              <CardInfoField label='Loại thẻ' value={formData.cardType} />
+              <CardInfoField label='Số CCCD' value={cardDetails.id?.toString() || '---'} />
               <CardInfoField label='Họ và tên' value={cardDetails.name} />
               <CardInfoField label='Ngày sinh' value={cardDetails.dob} />
               <CardInfoField label='Giới tính' value={cardDetails.gender} />
@@ -336,9 +341,7 @@ const Step2ExtractedInfo: React.FC<Step2Props> = ({
               <CardInfoField label='Nơi cấp' value={cardDetails.issueLoc} />
               <CardInfoField label='Ngày cấp' value={cardDetails.issueDate} />
               <CardInfoField label='Đặc điểm nhận dạng' value={cardDetails.features || ''} />
-              <div className='col-span-2'>
-                <CardInfoField label='Địa chỉ thường trú' value={cardDetails.address} />
-              </div>
+              <CardInfoField label='Địa chỉ thường trú' value={cardDetails.address} />
             </div>
           </div>
 

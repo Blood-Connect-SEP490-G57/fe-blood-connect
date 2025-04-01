@@ -161,7 +161,6 @@ const Profile = () => {
   return (
     <div className='min-h-screen bg-white py-12'>
       <div className='container mx-auto px-4'>
-        <h2 className='text-2xl font-semibold mb-8'>Thông tin cá nhân</h2>
         <div className='max-w-6xl mx-auto'>
           <Card>
             <CardContent>

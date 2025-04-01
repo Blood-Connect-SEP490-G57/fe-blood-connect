@@ -20,6 +20,7 @@ interface UserInfo {
   address: string
   issueLoc: string
   student_id: string
+  militaryId: string
   addressContact: string
   phoneNumber: string
   email: string
@@ -283,21 +284,22 @@ const AppointmentInfo = () => {
                   { label: 'Giới tính', value: userInfo.gender },
                   { label: 'Nghề nghiệp', value: userInfo.jobName },
                   { label: 'Cơ quan/Trường, Lớp', value: userInfo.organizationName },
-                  { label: 'Số thẻ HS/SV/Quân nhân', value: userInfo.student_id || '-' },
+                  { label: 'Số thẻ HS/SV', value: userInfo.student_id || '-' },
+                  { label: 'Số thẻ quân nhân', value: userInfo.militaryId || '-' },
                   { label: 'Điện thoại', value: userInfo.phoneNumber },
-                  { label: 'Email', value: userInfo.email, fullWidth: true },
-                  { label: 'Điện thoại', value: userInfo.addressContact, fullWidth: true }
+                  { label: 'Email', value: userInfo.email },
+                  { label: 'Địa chỉ liên hệ', value: userInfo.addressContact, fullWidth: true }
                 ].map((item, index) => (
                   <div key={index} className={item.fullWidth ? 'col-span-1 md:col-span-2' : ''}>
-                    <span className='font-medium text-gray-700 block mb-1'>{item.label}:</span>
-                    <div className='flex items-center p-3 border rounded-lg bg-gray-50 w-full'>
-                      <input
-                        type='text'
-                        value={item.value}
-                        readOnly
-                        className='w-full bg-transparent border-none focus:outline-none text-gray-900'
-                      />
-                    </div>
+                  <span className='font-medium text-gray-700 block mb-1'>{item.label}:</span>
+                  <div className='flex items-center p-3 border rounded-lg bg-gray-50 w-full'>
+                    <input
+                    type='text'
+                    value={item.value}
+                    readOnly
+                    className='w-full bg-transparent border-none focus:outline-none text-gray-900'
+                    />
+                  </div>
                   </div>
                 ))}
                 <div className='col-span-1 md:col-span-2'>
