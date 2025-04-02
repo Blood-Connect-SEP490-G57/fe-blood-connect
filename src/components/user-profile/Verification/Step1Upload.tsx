@@ -3,7 +3,7 @@ import { useDropzone } from 'react-dropzone'
 import { extractFront, extractBack } from '@/api/extract'
 import { useExtractStore } from '@/hooks/stores/useExtractStore'
 import Loading from '@/components/warnings/loading'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import ScrollToTop from '@/components/scrollToTop'
 
 interface Step1UploadProps {
@@ -31,7 +31,13 @@ const Step1Upload: React.FC<Step1UploadProps> = ({ formData, setFormData, error,
     back: false
   })
   const [isChecked, setIsChecked] = useState(false)
-  const [change, setChange] = useState(false)
+  const [showUploadForm, setShowUploadForm] = useState(localStorage.getItem('change') === 'false')
+
+  useEffect(() => {
+    if (!localStorage.getItem('change')) {
+      localStorage.setItem('change', 'false')
+    }
+  }, [])
 
   const handleFrontImageDrop = async (acceptedFiles: File[]) => {
     if (acceptedFiles.length === 0) {
@@ -199,7 +205,8 @@ const Step1Upload: React.FC<Step1UploadProps> = ({ formData, setFormData, error,
           }`}
           disabled={!isChecked}
           onClick={() => {
-            setChange(true)
+            localStorage.setItem('change', 'true')
+            setShowUploadForm(true)
           }}
         >
           Xác nhận và tiếp tục
@@ -211,7 +218,7 @@ const Step1Upload: React.FC<Step1UploadProps> = ({ formData, setFormData, error,
   return (
     <div className='space-y-6'>
       <ScrollToTop />
-      {!change ? (
+      {!showUploadForm ? (
         <OneStep />
       ) : (
         <>
@@ -219,7 +226,8 @@ const Step1Upload: React.FC<Step1UploadProps> = ({ formData, setFormData, error,
           <p>
             Lưu ý: Ảnh cần rõ nét, không mờ, không bị chói hoặc che khuất thông tin. Chụp thẳng, không lệch góc, toàn bộ
             CCCD phải nằm trong khung hình. Sử dụng định dạng JPG, PNG với độ phân giải cao. Tránh chỉnh sửa ảnh làm
-            thay đổi nội dung. Bảo mật thông tin, không chia sẻ ảnh CCCD nếu không cần thiết.
+            thay đổi nội dung. Bảo mật thông tin, không chia sẻ ảnh CCCD nếu không cần thiết. Nếu bạn tải sai ảnh vui
+            lòng tải lại cả ảnh mặt trước và mặt sau.
           </p>
           {/* Mặt trước */}
           <div className='space-y-2'>
