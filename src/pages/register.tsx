@@ -49,7 +49,7 @@ export default function Register() {
   }
 
   return (
-    <div className='min-h-screen bg-gradient-to-br from-red-50 via-white to-red-50 flex flex-col py-12 sm:px-6 lg:px-8'>
+    <div className='min-h-screen bg-graay-100 flex flex-col py-12 sm:px-6 lg:px-8'>
       <div className='sm:mx-auto sm:w-full sm:max-w-md'>
         {/* Logo */}
         <div className='flex justify-center mb-6'>

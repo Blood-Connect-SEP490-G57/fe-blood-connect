@@ -79,7 +79,7 @@ const FAQPage = () => {
   ]
 
   return (
-    <div className='min-h-screen bg-gradient-to-b from-red-50 to-white'>
+    <div className='min-h-screen bg-gray-100'>
       {/* Banner hero */}
       <section className='bg-gradient-to-r from-red-600 to-red-500 text-white py-16 sm:py-24'>
         <div className='container mx-auto px-4 relative'>

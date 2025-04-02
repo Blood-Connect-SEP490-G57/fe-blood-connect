@@ -40,7 +40,7 @@ const NewsDetailPage = () => {
   const otherNews = relatedNews?.data.data.filter((item) => item.id !== Number(id)) || []
 
   return (
-    <div className='bg-white min-h-screen py-12 mt-10 max-w-4xl mx-auto'>
+    <div className='bg-gary-100 min-h-screen py-12 mt-10 max-w-4xl mx-auto'>
       <div className='container mx-auto px-4'>
         <div className='grid grid-cols-1 lg:grid-cols-3 gap-8'>
           {/* Main Content Column - Takes up 2/3 of the space */}

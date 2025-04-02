@@ -99,7 +99,7 @@ export default function NotificationList({ onClose }: { onClose?: () => void }) 
     { label: 'Tin tức', value: 'Tin tức', type: NotificationType.NEWS }
   ]
   return (
-    <div className='min-h-screen bg-white py-12'>
+    <div className='min-h-screen bg-gray-100 py-12'>
       <div ref={containerRef} className='container mx-auto px-4 max-w-4xl'>
         <div className='space-y-4'>
           <div className='flex items-center justify-between mb-6'>
