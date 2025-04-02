@@ -89,7 +89,7 @@ const NotificationDetail = () => {
   if (!notification) return null
 
   return (
-    <div className='min-h-screen bg-white py-12'>
+    <div className='min-h-screen bg-gray-100 py-12'>
       <div className='container mx-auto px-4 max-w-4xl'>
         <Button variant='ghost' className='mb-6 hover:bg-gray-100' onClick={() => navigate('/thong-bao')}>
           <ArrowLeft className='h-4 w-4 mr-2' />
