@@ -8,9 +8,9 @@ interface Step3CompleteProps {
 }
 
 const Step3Complete: React.FC<Step3CompleteProps> = ({ onHomeClick, onRegisterClick }) => {
+  <ScrollToTop />
   return (
     <div className='space-y-6 text-center'>
-      <ScrollToTop />
       <div className='w-16 h-16 bg-chart-2 rounded-full flex items-center justify-center mx-auto'>
         <Check className='w-8 h-8 text-primary-foreground' />
       </div>
