@@ -42,158 +42,6 @@ const Step2ExtractedInfo: React.FC<Step2Props> = ({
     </div>
   )
 
-  const PersonalInfoForm = () => (
-    <div className='space-y-4'>
-      <h3 className='text-lg font-semibold'>Thông tin cá nhân</h3>
-      <div className='p-4 border rounded-lg'>
-        <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-          <div>
-            <p className='text-sm text-gray-500'>Email</p>
-            <input
-              type='email'
-              name='email'
-              value={formData.email}
-              onChange={onInputChange}
-              placeholder='Email'
-              className='w-full p-2 border rounded'
-            />
-          </div>
-          <div>
-            <p className='text-sm text-gray-500'>Số điện thoại</p>
-            <input
-              type='tel'
-              name='mobile'
-              value={formData.mobile}
-              onChange={onInputChange}
-              placeholder='Số điện thoại'
-              className='w-full p-2 border rounded required'
-            />
-          </div>
-          <div>
-            <p className='text-sm text-gray-500'>Nghề nghiệp</p>
-            <input
-              type='text'
-              name='jobName'
-              value={formData.jobName}
-              onChange={onInputChange}
-              placeholder='Nghề nghiệp'
-              className='w-full p-2 border rounded'
-            />
-          </div>
-          <div>
-            <p className='text-sm text-gray-500'>Đơn vị trực thuộc</p>
-            <select
-              name='organizationId'
-              value={formData.organizationId}
-              onChange={onInputChange}
-              className='w-full p-2 border rounded'
-            >
-              <option value=''>Chọn đơn vị trực thuộc</option>
-              {organizations.map((org) => (
-                <option key={org.id} value={org.id}>
-                  {org.name}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <p className='text-sm text-gray-500'>Mã sinh viên</p>
-            <input
-              type='text'
-              name='studentId'
-              value={formData.studentId}
-              onChange={onInputChange}
-              placeholder='Mã sinh viên'
-              className='w-full p-2 border rounded'
-            />
-          </div>
-          <div>
-            <p className='text-sm text-gray-500'>Mã quân nhân</p>
-            <input
-              type='text'
-              name='militaryId'
-              value={formData.militaryId}
-              onChange={onInputChange}
-              placeholder='Mã quân nhân'
-              className='w-full p-2 border rounded'
-            />
-          </div>
-          <div>
-            <p className='text-sm text-gray-500'>Số lần hiến máu</p>
-            <input
-              type='number'
-              name='timeDonation'
-              value={formData.timeDonation || ''}
-              onChange={onInputChange}
-              placeholder='Số lần hiến máu'
-              className='w-full p-2 border rounded'
-              min='0'
-            />
-          </div>
-          <div>
-            <p className='text-sm text-gray-500'>Nhóm máu</p>
-            <select
-              name='bloodGroup'
-              value={formData.bloodGroup}
-              onChange={onInputChange}
-              className='w-full p-2 border rounded'
-            >
-              <option value=''>Chọn nhóm máu</option>
-              {['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'].map((group) => (
-                <option key={group} value={group}>
-                  {group}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <p className='text-sm text-gray-500'>Tỉnh/Thành phố</p>
-            <select
-              name='province'
-              value={formData.province}
-              onChange={onInputChange}
-              className='w-full p-2 border rounded'
-            >
-              <option value=''>Chọn tỉnh/thành phố</option>
-              {['Hà Nội', 'Hồ Chí Minh', 'Đà Nẵng', 'Hải Phòng', 'Cần Thơ'].map((province) => (
-                <option key={province} value={province}>
-                  {province}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <p className='text-sm text-gray-500'>Quận/Huyện</p>
-            <select
-              name='district'
-              value={formData.district}
-              onChange={onInputChange}
-              className='w-full p-2 border rounded'
-            >
-              <option value=''>Chọn quận/huyện</option>
-              {['Quận 1', 'Quận 2', 'Quận 3', 'Quận 4', 'Quận 5'].map((district) => (
-                <option key={district} value={district}>
-                  {district}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-        <div className='mt-4'>
-          <p className='text-sm text-gray-500'>Địa chỉ liên hệ</p>
-          <input
-            type='text'
-            name='addressContact'
-            value={formData.addressContact}
-            onChange={onInputChange}
-            placeholder='Địa chỉ liên hệ'
-            className='w-full p-2 border rounded required'
-          />
-        </div>
-      </div>
-    </div>
-  )
-
   const handleConfirm = async () => {
     if (!formData.mobile || !formData.addressContact) {
       setError('Vui lòng điền đầy đủ thông tin bắt buộc')
@@ -345,8 +193,156 @@ const Step2ExtractedInfo: React.FC<Step2Props> = ({
             </div>
           </div>
 
-          <PersonalInfoForm />
-
+          {/* <PersonalInfoForm /> */}
+          <div className='space-y-4'>
+            <h3 className='text-lg font-semibold'>Thông tin cá nhân</h3>
+            <div className='p-4 border rounded-lg'>
+              <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                <div>
+                  <p className='text-sm text-gray-500'>Email</p>
+                  <input
+                    type='email'
+                    name='email'
+                    value={formData.email}
+                    onChange={(e) => setFormData((prev: any) => ({ ...prev, email: e.target.value }))}
+                    placeholder='Email'
+                    className='w-full p-2 border rounded'
+                  />
+                </div>
+                <div>
+                  <p className='text-sm text-gray-500'>Số điện thoại</p>
+                  <input
+                    type='tel'
+                    name='mobile'
+                    value={formData.mobile}
+                    onChange={(e) => setFormData((prev: any) => ({ ...prev, mobile: e.target.value }))}
+                    placeholder='Số điện thoại'
+                    className='w-full p-2 border rounded required'
+                  />
+                </div>
+                <div>
+                  <p className='text-sm text-gray-500'>Nghề nghiệp</p>
+                  <input
+                    type='text'
+                    name='jobName'
+                    value={formData.jobName}
+                    onChange={(e) => setFormData((prev: any) => ({ ...prev, jobName: e.target.value }))}
+                    placeholder='Nghề nghiệp'
+                    className='w-full p-2 border rounded'
+                  />
+                </div>
+                <div>
+                  <p className='text-sm text-gray-500'>Đơn vị trực thuộc</p>
+                  <select
+                    name='organizationId'
+                    value={formData.organizationId}
+                    onChange={onInputChange}
+                    className='w-full p-2 border rounded'
+                  >
+                    <option value=''>Chọn đơn vị trực thuộc</option>
+                    {organizations.map((org) => (
+                      <option key={org.id} value={org.id}>
+                        {org.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <p className='text-sm text-gray-500'>Mã sinh viên</p>
+                  <input
+                    type='text'
+                    name='studentId'
+                    value={formData.studentId}
+                    onChange={(e) => setFormData((prev: any) => ({ ...prev, studentId: e.target.value }))}
+                    placeholder='Mã sinh viên'
+                    className='w-full p-2 border rounded'
+                  />
+                </div>
+                <div>
+                  <p className='text-sm text-gray-500'>Mã quân nhân</p>
+                  <input
+                    type='text'
+                    name='militaryId'
+                    value={formData.militaryId}
+                    onChange={(e) => setFormData((prev: any) => ({ ...prev, militaryId: e.target.value }))}
+                    placeholder='Mã quân nhân'
+                    className='w-full p-2 border rounded'
+                  />
+                </div>
+                <div>
+                  <p className='text-sm text-gray-500'>Số lần hiến máu</p>
+                  <input
+                    type='number'
+                    name='timeDonation'
+                    value={formData.timeDonation || ''}
+                    onChange={(e) => setFormData((prev: any) => ({ ...prev, timeDonation: e.target.value }))}
+                    placeholder='Số lần hiến máu'
+                    className='w-full p-2 border rounded'
+                    min='0'
+                  />
+                </div>
+                <div>
+                  <p className='text-sm text-gray-500'>Nhóm máu</p>
+                  <select
+                    name='bloodGroup'
+                    value={formData.bloodGroup}
+                    onChange={onInputChange}
+                    className='w-full p-2 border rounded'
+                  >
+                    <option value=''>Chọn nhóm máu</option>
+                    {['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'].map((group) => (
+                      <option key={group} value={group}>
+                        {group}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <p className='text-sm text-gray-500'>Tỉnh/Thành phố</p>
+                  <select
+                    name='province'
+                    value={formData.province}
+                    onChange={onInputChange}
+                    className='w-full p-2 border rounded'
+                  >
+                    <option value=''>Chọn tỉnh/thành phố</option>
+                    {['Hà Nội', 'Hồ Chí Minh', 'Đà Nẵng', 'Hải Phòng', 'Cần Thơ'].map((province) => (
+                      <option key={province} value={province}>
+                        {province}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <p className='text-sm text-gray-500'>Quận/Huyện</p>
+                  <select
+                    name='district'
+                    value={formData.district}
+                    onChange={onInputChange}
+                    className='w-full p-2 border rounded'
+                  >
+                    <option value=''>Chọn quận/huyện</option>
+                    {['Quận 1', 'Quận 2', 'Quận 3', 'Quận 4', 'Quận 5'].map((district) => (
+                      <option key={district} value={district}>
+                        {district}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              <div className='mt-4'>
+                <p className='text-sm text-gray-500'>Địa chỉ liên hệ</p>
+                <input
+                  type='text'
+                  name='addressContact'
+                  value={formData.addressContact}
+                  onChange={(e) => setFormData((prev: any) => ({ ...prev, addressContact: e.target.value }))}
+                  placeholder='Địa chỉ liên hệ'
+                  className='w-full p-2 border rounded required'
+                />
+              </div>
+            </div>
+          </div>
           <div className='flex justify-between'>
             <button onClick={onPrev} className='px-4 py-2 bg-secondary text-accent rounded hover:bg-secondary/80'>
               Quay lại
