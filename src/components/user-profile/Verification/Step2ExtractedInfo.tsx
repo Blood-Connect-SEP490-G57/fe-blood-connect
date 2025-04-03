@@ -47,24 +47,24 @@ const Step2ExtractedInfo: React.FC<Step2Props> = ({
       <h3 className='text-lg font-semibold'>Thông tin cá nhân</h3>
       <div className='p-4 border rounded-lg'>
         <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-          <div>
+            <div>
             <p className='text-sm text-gray-500'>Email</p>
             <input
               type='email'
               name='email'
               value={formData.email}
-              onChange={onInputChange}
+              onChange={(e) => setFormData((prev: any) => ({ ...prev, email: e.target.value }))}
               placeholder='Email'
               className='w-full p-2 border rounded'
             />
-          </div>
+            </div>
           <div>
             <p className='text-sm text-gray-500'>Số điện thoại</p>
             <input
               type='tel'
               name='mobile'
               value={formData.mobile}
-              onChange={onInputChange}
+              onChange={(e) => setFormData((prev: any) => ({ ...prev, mobile: e.target.value }))}
               placeholder='Số điện thoại'
               className='w-full p-2 border rounded required'
             />
@@ -75,7 +75,7 @@ const Step2ExtractedInfo: React.FC<Step2Props> = ({
               type='text'
               name='jobName'
               value={formData.jobName}
-              onChange={onInputChange}
+              onChange={(e) => setFormData((prev: any) => ({ ...prev, jobName: e.target.value }))}
               placeholder='Nghề nghiệp'
               className='w-full p-2 border rounded'
             />
@@ -85,7 +85,7 @@ const Step2ExtractedInfo: React.FC<Step2Props> = ({
             <select
               name='organizationId'
               value={formData.organizationId}
-              onChange={onInputChange}
+              onChange={(onInputChange)}
               className='w-full p-2 border rounded'
             >
               <option value=''>Chọn đơn vị trực thuộc</option>
@@ -102,7 +102,7 @@ const Step2ExtractedInfo: React.FC<Step2Props> = ({
               type='text'
               name='studentId'
               value={formData.studentId}
-              onChange={onInputChange}
+              onChange={(e) => setFormData((prev: any) => ({ ...prev, studentId: e.target.value }))}
               placeholder='Mã sinh viên'
               className='w-full p-2 border rounded'
             />
@@ -113,7 +113,7 @@ const Step2ExtractedInfo: React.FC<Step2Props> = ({
               type='text'
               name='militaryId'
               value={formData.militaryId}
-              onChange={onInputChange}
+              onChange={(e) => setFormData((prev: any) => ({ ...prev, militaryId: e.target.value }))}
               placeholder='Mã quân nhân'
               className='w-full p-2 border rounded'
             />
@@ -124,7 +124,7 @@ const Step2ExtractedInfo: React.FC<Step2Props> = ({
               type='number'
               name='timeDonation'
               value={formData.timeDonation || ''}
-              onChange={onInputChange}
+              onChange={(e) => setFormData((prev: any) => ({ ...prev, timeDonation: e.target.value }))}
               placeholder='Số lần hiến máu'
               className='w-full p-2 border rounded'
               min='0'
@@ -135,7 +135,7 @@ const Step2ExtractedInfo: React.FC<Step2Props> = ({
             <select
               name='bloodGroup'
               value={formData.bloodGroup}
-              onChange={onInputChange}
+              onChange={(onInputChange)}
               className='w-full p-2 border rounded'
             >
               <option value=''>Chọn nhóm máu</option>
@@ -185,7 +185,7 @@ const Step2ExtractedInfo: React.FC<Step2Props> = ({
             type='text'
             name='addressContact'
             value={formData.addressContact}
-            onChange={onInputChange}
+            onChange={(e) => setFormData((prev: any) => ({ ...prev, addressContact: e.target.value }))}
             placeholder='Địa chỉ liên hệ'
             className='w-full p-2 border rounded required'
           />
