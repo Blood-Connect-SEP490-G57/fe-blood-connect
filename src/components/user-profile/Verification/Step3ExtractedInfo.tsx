@@ -30,7 +30,6 @@ const Step3ExtractedInfo: React.FC<Step2Props> = ({
   const [contact, setContact] = React.useState<string>('')
   const [selectedProvince, setSelectedProvince] = React.useState<string>('')
   const [selectedDistrict, setSelectedDistrict] = React.useState<string>('')
-  const [address_contact, setAddressContact] = React.useState<string>('')
   const [organizations, setOrganizations] = React.useState<any[]>([])
 
   console.log('Card details:', JSON.stringify(cardDetails))
@@ -50,12 +49,42 @@ const Step3ExtractedInfo: React.FC<Step2Props> = ({
   )
 
   const handleConfirm = async () => {
-    if (!formData.mobile || !formData.addressContact) {
-      setError('Vui lòng điền đầy đủ thông tin bắt buộc')
+    if (!formData.mobile) {
+      setError('Vui lòng điền số điện thoại')
       toast({
-        title: 'Lỗi',
-        description: 'Vui lòng điền đầy đủ thông tin số điện thoại và địa chỉ liên hệ',
-        variant: 'destructive'
+      title: 'Lỗi',
+      description: 'Vui lòng điền số điện thoại',
+      variant: 'destructive'
+      })
+      return
+    }
+
+    if (!contact) {
+      setError('Vui lòng điền địa chỉ liên hệ')
+      toast({
+      title: 'Lỗi',
+      description: 'Vui lòng điền địa chỉ liên hệ',
+      variant: 'destructive'
+      })
+      return
+    }
+
+    if (!selectedProvince) {
+      setError('Vui lòng chọn tỉnh/thành phố')
+      toast({
+      title: 'Lỗi',
+      description: 'Vui lòng chọn tỉnh/thành phố',
+      variant: 'destructive'
+      })
+      return
+    }
+
+    if (!selectedDistrict) {
+      setError('Vui lòng chọn quận/huyện')
+      toast({
+      title: 'Lỗi',
+      description: 'Vui lòng chọn quận/huyện',
+      variant: 'destructive'
       })
       return
     }
@@ -74,20 +103,22 @@ const Step3ExtractedInfo: React.FC<Step2Props> = ({
     try {
       setLoading(true)
 
+      // Concatenate full address
+      const provinceName = provinces.find((p) => p.code.toString() === selectedProvince)?.name || ''
+      const districtName = districts.find((d) => d.code.toString() === selectedDistrict)?.name || ''
+      const fullAddress = `${contact}, ${districtName}, ${provinceName}`
+
       const extractResponse = await updateExtractStatus(extractId, 'CONFIRM_MATCHED')
       if (!extractResponse.success) {
         throw new Error(extractResponse.message || 'Lỗi khi xác nhận thông tin CCCD')
       }
-
-      const setContact = contact + ' ' + selectedDistrict + ' ' + selectedProvince
-      setAddressContact(setContact)
 
       const userDetailData = {
         email: formData.email,
         job_name: formData.jobName,
         student_id: formData.studentId,
         military_id: formData.militaryId,
-        address_contact: address_contact,
+        address_contact: fullAddress, // Use the full address here
         time_donation: Number(formData.timeDonation),
         blood_group: formData.bloodGroup,
         organization_id: Number(formData.organizationId)
@@ -286,17 +317,17 @@ const Step3ExtractedInfo: React.FC<Step2Props> = ({
                 <div>
                   <p className='text-sm text-gray-500'>Đơn vị trực thuộc</p>
                   <select
-                    name='organizationId'
-                    value={formData.organizationId}
-                    onChange={onInputChange}
-                    className='w-full p-2 border rounded'
+                  name='organizationId'
+                  value={formData.organizationId}
+                  onChange={(e) => setFormData((prev: any) => ({ ...prev, organizationId: e.target.value }))}
+                  className='w-full p-2 border rounded'
                   >
-                    <option value=''>Tự do</option>
-                    {organizations.map((org) => (
-                      <option key={org.id} value={org.id}>
-                        {org.name}
-                      </option>
-                    ))}
+                  <option value=''>Tự do</option>
+                  {organizations.map((org) => (
+                    <option key={org.id} value={org.id}>
+                    {org.name}
+                    </option>
+                  ))}
                   </select>
                 </div>
                 <div>
@@ -333,6 +364,22 @@ const Step3ExtractedInfo: React.FC<Step2Props> = ({
                     min='0'
                   />
                 </div>
+                <div>
+                  <p className='text-sm text-gray-500'>Nhóm máu</p>
+                  <select
+                    name='bloodGroup'
+                    value={formData.bloodGroup}
+                    onChange={onInputChange}
+                    className='w-full p-2 border rounded'
+                  >
+                    <option value=''>Chọn nhóm máu</option>
+                    {['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'].map((group) => (
+                      <option key={group} value={group}>
+                        {group}
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
                 <div>
                   <p className='text-sm text-gray-500'>Tỉnh/Thành phố</p>
@@ -366,7 +413,7 @@ const Step3ExtractedInfo: React.FC<Step2Props> = ({
                     ))}
                   </select>
                 </div>
-                <div>
+                <div className='col-span-2'>
                   <p className='text-sm text-gray-500'>Địa chỉ liên hệ</p>
                   <input
                     type='text'
@@ -376,22 +423,6 @@ const Step3ExtractedInfo: React.FC<Step2Props> = ({
                     placeholder='Xóm thôn, xã phường'
                     className='w-full p-2 border rounded required'
                   />
-                </div>
-                <div>
-                  <p className='text-sm text-gray-500'>Nhóm máu</p>
-                  <select
-                    name='bloodGroup'
-                    value={formData.bloodGroup}
-                    onChange={onInputChange}
-                    className='w-full p-2 border rounded'
-                  >
-                    <option value=''>Chọn nhóm máu</option>
-                    {['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'].map((group) => (
-                      <option key={group} value={group}>
-                        {group}
-                      </option>
-                    ))}
-                  </select>
                 </div>
               </div>
             </div>
