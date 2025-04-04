@@ -18,7 +18,7 @@ export const extractFront = async (file: File) => {
     if (error.response && error.response.data) {
       return error.response.data // Return the error response directly
     }
-    throw error // Re-throw if it's not an API error response
+    throw error // Rethrow the error if it doesn't have a response
   }
 }
 
@@ -40,7 +40,7 @@ export const extractBack = async (file: File, extractId: string) => {
     if (error.response && error.response.data) {
       return error.response.data // Return the error response directly
     }
-    throw error // Re-throw if it's not an API error response
+    throw error // Rethrow the error if it doesn't have a response
   }
 }
 

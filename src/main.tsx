@@ -50,6 +50,8 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
             <Route path='/tin-tuc' element={<NewsPage />} />
             <Route path='/tin-tuc/:id' element={<NewsDetailPage />} />
             <Route path='/dieu-khoan-su-dung' element={<Terms />} />
+            <Route path='*' element={<Navigate to='/' />} />
+            {/* <Route path='*' element={<NotFoundPage />} /> */}
             <Route
               path='/dang-ky-hien-mau'
               element={
@@ -91,9 +93,6 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
                 </Protected>
               }
             />
-            <Route path='*' element={<Navigate to='/' />} />
-            {/* <Route path='*' element={<NotFoundPage />} /> */}
-            {/* <Route path='/1' element={<Verification />} /> */}
           </Routes>
         </MainLayout>
       </BrowserRouter>

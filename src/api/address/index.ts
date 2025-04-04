@@ -1,4 +1,4 @@
-import { apiGetCall } from '..'
+import axios from 'axios'
 
 
 export interface District {
@@ -20,7 +20,7 @@ export interface Ward {
 
 export const getDistricts = async (): Promise<District[]> => {
   try {
-    const response = await apiGetCall('/address/districts')
+    const response = await axios.get('https://provinces.open-api.vn/api/d/')
     return response.data
   } catch (error) {
     console.error('Error fetching districts:', error)
@@ -28,12 +28,13 @@ export const getDistricts = async (): Promise<District[]> => {
   }
 }
 
-export const getWardsByDistrictCode = async (districtCode: number): Promise<Ward[]> => {
+export const getListProvinces = async (): Promise<District[]> => {
   try {
-    const response = await apiGetCall(`/address/wards/${districtCode}`)
+    const response = await axios.get('https://provinces.open-api.vn/api/p/')
     return response.data
   } catch (error) {
-    console.error('Error fetching wards:', error)
+    console.error('Error fetching districts:', error)
     throw error
   }
 }
+

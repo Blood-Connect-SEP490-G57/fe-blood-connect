@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useExtractStore } from '@/hooks/stores/useExtractStore'
-import { getOrganizationsByType, Organization } from '@/api/organization'
-import Step1Upload from './Step1Upload'
-import Step2ConfirmInfo from './Step2ExtractedInfo'
-import Step3Complete from './Step3ConfirmInfo'
 import ScrollToTop from '@/components/scrollToTop'
+import Step1ConfirmTerms from './Step1ConfirmTerms'
+import Step2Upload from './Step2Upload'
+import Step3ExtractedInfo from './Step3ExtractedInfo'
+import Step4Complete from './Step4Complete'
 
 interface FormData {
   frontImage: File | null
@@ -42,61 +42,36 @@ const Verification = () => {
     organizationId: ''
   })
 
-  const { isLoading, error: storeError, setError } = useExtractStore()
+  const { isLoading, error: storeError } = useExtractStore()
   const navigate = useNavigate()
-  const [organizations, setOrganizations] = useState<Organization[]>([])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>): void => {
     const { name, value } = e.target
     setFormData({ ...formData, [name]: value })
   }
 
-  const nextStep = (): void => setStep(step + 1)
-  const prevStep = (): void => setStep(step - 1)
-
-  useEffect(() => {
-    const fetchOrganizations = async () => {
-      try {
-        const response = await getOrganizationsByType()
-        setOrganizations(Array.isArray(response.data) ? response.data : [])
-      } catch (err) {
-        console.error('Error fetching organizations:', err)
-        setError('Không thể tải danh sách tổ chức')
-        setOrganizations([])
-      }
-    }
-
-    fetchOrganizations()
-  }, [])
+  const nextStep = (): void => setStep((prev) => prev + 1)
+  const prevStep = (): void => setStep((prev) => prev - 1)
 
   const renderCurrentStep = () => {
     switch (step) {
       case 1:
-        return (
-          <Step1Upload
-            formData={formData}
-            setFormData={setFormData}
-            error={storeError}
-            onNext={nextStep}
-          />
-        )
+        return <Step1ConfirmTerms onNext={nextStep} />
       case 2:
+        return <Step2Upload formData={formData} setFormData={setFormData} error={storeError} onNext={nextStep} />
+      case 3:
         return (
-          <Step2ConfirmInfo
+          <Step3ExtractedInfo
             formData={formData}
             setFormData={setFormData}
-            organizations={organizations}
             onInputChange={handleInputChange}
             onNext={nextStep}
             onPrev={prevStep}
             isLoading={isLoading}
           />
         )
-      case 3:
-        return <Step3Complete 
-          onHomeClick={() => navigate('/')} 
-          onRegisterClick={() => navigate('/dang-ky-hien-mau')} 
-        />
+      case 4:
+        return <Step4Complete onHomeClick={() => navigate('/')} onRegisterClick={() => navigate('/dang-ky-hien-mau')} />
       default:
         return null
     }
@@ -107,7 +82,7 @@ const Verification = () => {
       <ScrollToTop />
       <div className='mb-8'>
         <div className='flex items-center mb-8'>
-          {[1, 2, 3].map((stepNumber, index) => (
+          {[1, 2, 3, 4].map((stepNumber, index) => (
             <React.Fragment key={stepNumber}>
               <div
                 className={`w-10 h-10 rounded-full flex items-center justify-center ${
@@ -116,7 +91,7 @@ const Verification = () => {
               >
                 {stepNumber}
               </div>
-              {index < 2 && (
+              {index < 3 && (
                 <div
                   className={`flex-1 h-1 mx-2 transition-all duration-500 ease-in-out ${
                     step > stepNumber ? 'bg-primary' : 'bg-secondary'
