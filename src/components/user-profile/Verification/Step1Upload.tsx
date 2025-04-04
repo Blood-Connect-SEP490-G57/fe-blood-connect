@@ -90,13 +90,9 @@ const Step1Upload: React.FC<Step1UploadProps> = ({ formData, setFormData, error,
       } else {
         setError(response.message || 'Lỗi khi xử lý ảnh mặt trước')
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Front extract error:', err)
-      if (err instanceof Error) {
-        setError(`Lỗi khi xử lý ảnh mặt trước: ${err.message}`)
-      } else {
-        setError('Lỗi không xác định khi xử lý ảnh mặt trước')
-      }
+      setError('Lỗi không xác định khi xử lý ảnh mặt trước')
     } finally {
       setUploadLoading((prev) => ({ ...prev, front: false }))
     }
@@ -140,13 +136,9 @@ const Step1Upload: React.FC<Step1UploadProps> = ({ formData, setFormData, error,
       } else {
         setError(response.message || 'Lỗi khi xử lý ảnh mặt sau')
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Back extract error:', err)
-      if (err instanceof Error) {
-        setError(`Lỗi khi xử lý ảnh mặt sau: ${err.message}`)
-      } else {
-        setError('Lỗi không xác định khi xử lý ảnh mặt sau')
-      }
+      setError('Lỗi không xác định khi xử lý ảnh mặt sau')
     } finally {
       setUploadLoading((prev) => ({ ...prev, back: false }))
     }

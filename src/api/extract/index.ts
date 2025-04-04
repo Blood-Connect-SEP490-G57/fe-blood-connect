@@ -1,17 +1,25 @@
 import { apiPostCall, apiGetCall } from '..'
 import axios from 'axios'
+
 export const extractFront = async (file: File) => {
   const formData = new FormData()
   formData.append('image', file)
   formData.append('type', 'front')
 
-  const response = await axios.post('/recognition-id', formData, {
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem('access_token')}`,
-      'Content-Type': 'multipart/form-data'
+  try {
+    const response = await axios.post('/recognition-id', formData, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+    return response.data
+  } catch (error: any) {
+    if (error.response && error.response.data) {
+      return error.response.data // Return the error response directly
     }
-  })
-  return response.data
+    throw error // Re-throw if it's not an API error response
+  }
 }
 
 export const extractBack = async (file: File, extractId: string) => {
@@ -20,13 +28,20 @@ export const extractBack = async (file: File, extractId: string) => {
   formData.append('extract_id', extractId)
   formData.append('image', file)
 
-  const response = await axios.post('/recognition-id', formData, {
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem('access_token')}`,
-      'Content-Type': 'multipart/form-data'
+  try {
+    const response = await axios.post('/recognition-id', formData, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+    return response.data
+  } catch (error: any) {
+    if (error.response && error.response.data) {
+      return error.response.data // Return the error response directly
     }
-  })
-  return response.data
+    throw error // Re-throw if it's not an API error response
+  }
 }
 
 export const getExtractById = async (extractId: string) => {
