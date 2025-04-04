@@ -7,7 +7,7 @@ interface Step3CompleteProps {
   onRegisterClick: () => void
 }
 
-const Step3Complete: React.FC<Step3CompleteProps> = ({ onHomeClick, onRegisterClick }) => {
+const Step4Complete: React.FC<Step3CompleteProps> = ({ onHomeClick, onRegisterClick }) => {
   <ScrollToTop />
   return (
     <div className='space-y-6 text-center'>
@@ -28,4 +28,4 @@ const Step3Complete: React.FC<Step3CompleteProps> = ({ onHomeClick, onRegisterCl
   )
 }
 
-export default Step3Complete
+export default Step4Complete

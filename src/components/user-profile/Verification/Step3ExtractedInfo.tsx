@@ -4,27 +4,34 @@ import { getExtractById, updateExtractStatus } from '@/api/extract'
 import { createOrUpdateUserDetail, getCurrentUserDetail } from '@/api/user'
 import { toast } from '@/components/ui/use-toast'
 import ScrollToTop from '@/components/scrollToTop'
+import { getDistricts, getListProvinces } from '@/api/address'
+import { getOrganizationsByType } from '@/api/organization'
 
 interface Step2Props {
   formData: any
   setFormData: React.Dispatch<React.SetStateAction<any>>
-  organizations: any[]
   onInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void
   onNext: () => void
   onPrev: () => void
   isLoading: boolean
 }
 
-const Step2ExtractedInfo: React.FC<Step2Props> = ({
+const Step3ExtractedInfo: React.FC<Step2Props> = ({
   formData,
   setFormData,
-  organizations,
   onInputChange,
   onNext,
   onPrev,
   isLoading
 }) => {
   const { extractId, cardDetails, setLoading, setError, error } = useExtractStore()
+  const [provinces, setProvinces] = React.useState<any[]>([])
+  const [districts, setDistricts] = React.useState<any[]>([])
+  const [contact, setContact] = React.useState<string>('')
+  const [selectedProvince, setSelectedProvince] = React.useState<string>('')
+  const [selectedDistrict, setSelectedDistrict] = React.useState<string>('')
+  const [address_contact, setAddressContact] = React.useState<string>('')
+  const [organizations, setOrganizations] = React.useState<any[]>([])
 
   console.log('Card details:', JSON.stringify(cardDetails))
 
@@ -72,12 +79,15 @@ const Step2ExtractedInfo: React.FC<Step2Props> = ({
         throw new Error(extractResponse.message || 'Lỗi khi xác nhận thông tin CCCD')
       }
 
+      const setContact = contact + ' ' + selectedDistrict + ' ' + selectedProvince
+      setAddressContact(setContact)
+
       const userDetailData = {
         email: formData.email,
         job_name: formData.jobName,
         student_id: formData.studentId,
         military_id: formData.militaryId,
-        address_contact: formData.addressContact,
+        address_contact: address_contact,
         time_donation: Number(formData.timeDonation),
         blood_group: formData.bloodGroup,
         organization_id: Number(formData.organizationId)
@@ -167,6 +177,48 @@ const Step2ExtractedInfo: React.FC<Step2Props> = ({
     fetchExtractedInfo()
   }, [extractId])
 
+  // Fetch provinces and districts when the component mounts
+  React.useEffect(() => {
+    const fetchProvinces = async () => {
+      try {
+        const response = await getListProvinces()
+        setProvinces(response)
+      } catch (error) {
+        console.error('Error fetching provinces:', error)
+      }
+    }
+
+    fetchProvinces()
+  }, [])
+
+  React.useEffect(() => {
+    const fetchDistricts = async () => {
+      if (!selectedProvince) return // Fetch districts only when a province is selected
+      try {
+        const response = await getDistricts()
+        const filteredDistricts = response.filter((district) => district.province_code.toString() === selectedProvince)
+        setDistricts(filteredDistricts)
+      } catch (error) {
+        console.error('Error fetching districts:', error)
+      }
+    }
+
+    fetchDistricts()
+  }, [selectedProvince])
+
+  useEffect(() => {
+    const fetchOrganizations = async () => {
+      try {
+        const response = await getOrganizationsByType()
+        setOrganizations(Array.isArray(response.data) ? response.data : [])
+      } catch (err) {
+        console.error('Error fetching organizations:', err)
+        setOrganizations([])
+      }
+    }
+
+    fetchOrganizations()
+  }, [])
   return (
     <div className='space-y-6'>
       <ScrollToTop />
@@ -239,7 +291,7 @@ const Step2ExtractedInfo: React.FC<Step2Props> = ({
                     onChange={onInputChange}
                     className='w-full p-2 border rounded'
                   >
-                    <option value=''>Chọn đơn vị trực thuộc</option>
+                    <option value=''>Tự do</option>
                     {organizations.map((org) => (
                       <option key={org.id} value={org.id}>
                         {org.name}
@@ -281,6 +333,50 @@ const Step2ExtractedInfo: React.FC<Step2Props> = ({
                     min='0'
                   />
                 </div>
+
+                <div>
+                  <p className='text-sm text-gray-500'>Tỉnh/Thành phố</p>
+                  <select
+                    name='province'
+                    value={selectedProvince}
+                    onChange={(e) => setSelectedProvince(e.target.value)}
+                    className='w-full p-2 border rounded'
+                  >
+                    <option value=''>Chọn tỉnh/thành phố</option>
+                    {provinces.map((province) => (
+                      <option key={province.code} value={province.code}>
+                        {province.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <p className='text-sm text-gray-500'>Quận/Huyện</p>
+                  <select
+                    name='district'
+                    value={selectedDistrict}
+                    onChange={(e) => setSelectedDistrict(e.target.value)}
+                    className='w-full p-2 border rounded'
+                  >
+                    <option value=''>Chọn quận/huyện</option>
+                    {districts.map((district) => (
+                      <option key={district.code} value={district.code}>
+                        {district.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <p className='text-sm text-gray-500'>Địa chỉ liên hệ</p>
+                  <input
+                    type='text'
+                    name='addressContact'
+                    value={contact}
+                    onChange={(e) => setContact(e.target.value)}
+                    placeholder='Xóm thôn, xã phường'
+                    className='w-full p-2 border rounded required'
+                  />
+                </div>
                 <div>
                   <p className='text-sm text-gray-500'>Nhóm máu</p>
                   <select
@@ -297,49 +393,6 @@ const Step2ExtractedInfo: React.FC<Step2Props> = ({
                     ))}
                   </select>
                 </div>
-                <div>
-                  <p className='text-sm text-gray-500'>Tỉnh/Thành phố</p>
-                  <select
-                    name='province'
-                    value={formData.province}
-                    onChange={onInputChange}
-                    className='w-full p-2 border rounded'
-                  >
-                    <option value=''>Chọn tỉnh/thành phố</option>
-                    {['Hà Nội', 'Hồ Chí Minh', 'Đà Nẵng', 'Hải Phòng', 'Cần Thơ'].map((province) => (
-                      <option key={province} value={province}>
-                        {province}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <p className='text-sm text-gray-500'>Quận/Huyện</p>
-                  <select
-                    name='district'
-                    value={formData.district}
-                    onChange={onInputChange}
-                    className='w-full p-2 border rounded'
-                  >
-                    <option value=''>Chọn quận/huyện</option>
-                    {['Quận 1', 'Quận 2', 'Quận 3', 'Quận 4', 'Quận 5'].map((district) => (
-                      <option key={district} value={district}>
-                        {district}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-              <div className='mt-4'>
-                <p className='text-sm text-gray-500'>Địa chỉ liên hệ</p>
-                <input
-                  type='text'
-                  name='addressContact'
-                  value={formData.addressContact}
-                  onChange={(e) => setFormData((prev: any) => ({ ...prev, addressContact: e.target.value }))}
-                  placeholder='Địa chỉ liên hệ'
-                  className='w-full p-2 border rounded required'
-                />
               </div>
             </div>
           </div>
@@ -365,4 +418,4 @@ const Step2ExtractedInfo: React.FC<Step2Props> = ({
   )
 }
 
-export default Step2ExtractedInfo
+export default Step3ExtractedInfo
