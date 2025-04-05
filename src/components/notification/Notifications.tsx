@@ -125,7 +125,7 @@ export default function Notifications({ onClose }: { onClose?: () => void }) {
   return (
     <div
       ref={containerRef}
-      className='h-full min-w-[250px] lg:min-w-[300px] w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg px-4 py-3 bg-white rounded-2xl shadow-lg border overflow-y-auto'
+      className='h-full min-w-[250px] lg:min-w-[300px] w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg px-4 py-3 bg-white rounded-2xl shadow-lg border overflow-y-auto max-h-[80vh]'
     >
       <div className='flex justify-between items-center border-b pb-2'>
         <div className='flex items-center gap-2'>
