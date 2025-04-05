@@ -31,7 +31,6 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({ questionSetId, onAnswerCh
         if (response.success && response.data) {
           setQuestionSet(response.data)
           const totalQuestions = response.data.sections
-            .filter((section) => !section.hidden)
             .reduce((total, section) => total + section.questions.length, 0)
           onQuestionsLoaded?.(totalQuestions)
         } else {
@@ -151,7 +150,6 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({ questionSetId, onAnswerCh
   return (
     <div className='space-y-8'>
       {questionSet.sections
-        .filter((section) => !section.hidden)
         .sort((a, b) => a.order - b.order)
         .map(renderSection)}
     </div>
