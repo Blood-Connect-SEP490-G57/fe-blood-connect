@@ -90,7 +90,7 @@ const QuestionnaireStep: React.FC<QuestionnaireStepProps> = ({
         navigate('/trang-ca-nhan#xac-thuc-tai-khoan')
         break
       case 'ALREADY_REGISTERED':
-        navigate('/lich-su-hien-mau')
+        navigate('/trang-ca-nhan#lich-su-hien-mau')
         break
       default:
         setShowVerificationDialog(false)
