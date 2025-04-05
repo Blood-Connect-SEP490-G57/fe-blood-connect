@@ -205,7 +205,6 @@ const ReviewStep: React.FC<ReviewStepProps> = ({ selectedCampaign, questionSetId
     }
 
     const groupedBySection = questionSet.sections
-      .filter((section) => !section.hidden)
       .sort((a, b) => a.order - b.order)
       .map((section) => {
         const sectionAnswers = section.questions
