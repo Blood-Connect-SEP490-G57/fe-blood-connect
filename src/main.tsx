@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './styles/index.css'
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Login from '@/pages/Login'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import Protected from './components/protected'
@@ -21,7 +21,7 @@ import ScrollToTop from './components/scrollToTop/index.tsx'
 import NotificationList from './pages/NotificationList.tsx'
 import NewsDetailPage from './pages/NewDetail.tsx'
 import Terms from './pages/Tems.tsx'
-// import NotFoundPage from '@/pages/404'
+import NotFoundPage from '@/pages/404'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -50,8 +50,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
             <Route path='/tin-tuc' element={<NewsPage />} />
             <Route path='/tin-tuc/:id' element={<NewsDetailPage />} />
             <Route path='/dieu-khoan-su-dung' element={<Terms />} />
-            <Route path='*' element={<Navigate to='/' />} />
-            {/* <Route path='*' element={<NotFoundPage />} /> */}
+            <Route path='*' element={<NotFoundPage />} />
             <Route
               path='/dang-ky-hien-mau'
               element={
