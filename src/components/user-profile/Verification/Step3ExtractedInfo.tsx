@@ -1,11 +1,11 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useExtractStore } from '@/hooks/stores/useExtractStore'
 import { getExtractById, updateExtractStatus } from '@/api/extract'
 import { createOrUpdateUserDetail, getCurrentUserDetail } from '@/api/user'
-import { toast } from '@/components/ui/use-toast'
 import ScrollToTop from '@/components/scrollToTop'
 import { getDistricts, getListProvinces } from '@/api/address'
 import { getOrganizationsByType } from '@/api/organization'
+import Select from 'react-select'
 
 interface Step2Props {
   formData: any
@@ -14,6 +14,11 @@ interface Step2Props {
   onNext: () => void
   onPrev: () => void
   isLoading: boolean
+}
+interface Organization {
+  id: string
+  name: string
+  type: string
 }
 
 const Step3ExtractedInfo: React.FC<Step2Props> = ({
@@ -24,13 +29,14 @@ const Step3ExtractedInfo: React.FC<Step2Props> = ({
   onPrev,
   isLoading
 }) => {
-  const { extractId, cardDetails, setLoading, setError, error } = useExtractStore()
+  const { extractId, cardDetails, setLoading, setError } = useExtractStore()
+  const [fieldErrors, setFieldErrors] = React.useState<Record<string, string>>({}) // Object to store field-specific errors
   const [provinces, setProvinces] = React.useState<any[]>([])
   const [districts, setDistricts] = React.useState<any[]>([])
   const [contact, setContact] = React.useState<string>('')
   const [selectedProvince, setSelectedProvince] = React.useState<string>('')
   const [selectedDistrict, setSelectedDistrict] = React.useState<string>('')
-  const [organizations, setOrganizations] = React.useState<any[]>([])
+  const [organizations, setOrganizations] = useState<Organization[]>([])
 
   console.log('Card details:', JSON.stringify(cardDetails))
 
@@ -49,69 +55,45 @@ const Step3ExtractedInfo: React.FC<Step2Props> = ({
   )
 
   const handleConfirm = async () => {
+    const errors: Record<string, string> = {}
+
     if (!formData.mobile) {
-      setError('Vui lòng điền số điện thoại')
-      toast({
-      title: 'Lỗi',
-      description: 'Vui lòng điền số điện thoại',
-      variant: 'destructive'
-      })
-      return
+      errors.mobile = 'Vui lòng điền số điện thoại'
+    } else if (!/^[0-9]{10}$/.test(formData.mobile)) {
+      errors.mobile = 'Số điện thoại không hợp lệ'
     }
 
     if (!contact) {
-      setError('Vui lòng điền địa chỉ liên hệ')
-      toast({
-      title: 'Lỗi',
-      description: 'Vui lòng điền địa chỉ liên hệ',
-      variant: 'destructive'
-      })
-      return
+      errors.contact = 'Vui lòng điền địa chỉ liên hệ'
     }
 
     if (!selectedProvince) {
-      setError('Vui lòng chọn tỉnh/thành phố')
-      toast({
-      title: 'Lỗi',
-      description: 'Vui lòng chọn tỉnh/thành phố',
-      variant: 'destructive'
-      })
-      return
+      errors.province = 'Vui lòng chọn tỉnh/thành phố'
     }
 
     if (!selectedDistrict) {
-      setError('Vui lòng chọn quận/huyện')
-      toast({
-      title: 'Lỗi',
-      description: 'Vui lòng chọn quận/huyện',
-      variant: 'destructive'
-      })
-      return
-    }
-
-    const phoneRegex = /^[0-9]{10}$/
-    if (!phoneRegex.test(formData.mobile)) {
-      setError('Số điện thoại không hợp lệ')
-      return
+      errors.district = 'Vui lòng chọn quận/huyện'
     }
 
     if (!extractId) {
-      setError('Không tìm thấy thông tin CCCD')
+      errors.extractId = 'Không tìm thấy thông tin CCCD'
+    }
+
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors)
       return
     }
 
     try {
       setLoading(true)
+      setFieldErrors({}) // Clear errors if no issues
 
       // Concatenate full address
       const provinceName = provinces.find((p) => p.code.toString() === selectedProvince)?.name || ''
       const districtName = districts.find((d) => d.code.toString() === selectedDistrict)?.name || ''
       const fullAddress = `${contact}, ${districtName}, ${provinceName}`
 
-      const extractResponse = await updateExtractStatus(extractId, 'CONFIRM_MATCHED')
-      if (!extractResponse.success) {
-        throw new Error(extractResponse.message || 'Lỗi khi xác nhận thông tin CCCD')
-      }
+      
 
       const userDetailData = {
         email: formData.email,
@@ -127,6 +109,13 @@ const Step3ExtractedInfo: React.FC<Step2Props> = ({
       const userResponse = await createOrUpdateUserDetail(userDetailData)
       if (!userResponse) {
         throw new Error('Lỗi khi cập nhật thông tin người dùng')
+      }
+
+      if (userResponse.success) {
+        const extractResponse = await updateExtractStatus(extractId, 'CONFIRM_MATCHED')
+        if (!extractResponse.success) {
+          throw new Error(extractResponse.message || 'Lỗi khi xác nhận thông tin CCCD')
+        }
       }
 
       setError(null)
@@ -250,6 +239,12 @@ const Step3ExtractedInfo: React.FC<Step2Props> = ({
 
     fetchOrganizations()
   }, [])
+
+  const orgOptions = organizations.map((org) => ({
+    value: org.id,
+    label: org.name
+  }))
+
   return (
     <div className='space-y-6'>
       <ScrollToTop />
@@ -293,7 +288,9 @@ const Step3ExtractedInfo: React.FC<Step2Props> = ({
                   />
                 </div>
                 <div>
-                  <p className='text-sm text-gray-500'>Số điện thoại</p>
+                  <p className='text-sm text-gray-500'>
+                    Số điện thoại <span className='text-red-700'>*</span>
+                  </p>
                   <input
                     type='tel'
                     name='mobile'
@@ -302,6 +299,7 @@ const Step3ExtractedInfo: React.FC<Step2Props> = ({
                     placeholder='Số điện thoại'
                     className='w-full p-2 border rounded required'
                   />
+                  {fieldErrors.mobile && <p className='text-sm text-red-600'>{fieldErrors.mobile}</p>}
                 </div>
                 <div>
                   <p className='text-sm text-gray-500'>Nghề nghiệp</p>
@@ -315,20 +313,21 @@ const Step3ExtractedInfo: React.FC<Step2Props> = ({
                   />
                 </div>
                 <div>
-                  <p className='text-sm text-gray-500'>Đơn vị trực thuộc</p>
-                  <select
-                  name='organizationId'
-                  value={formData.organizationId}
-                  onChange={(e) => setFormData((prev: any) => ({ ...prev, organizationId: e.target.value }))}
-                  className='w-full p-2 border rounded'
-                  >
-                  <option value=''>Tự do</option>
-                  {organizations.map((org) => (
-                    <option key={org.id} value={org.id}>
-                    {org.name}
-                    </option>
-                  ))}
-                  </select>
+                    <p className='text-sm text-gray-500'>Đơn vị trực thuộc</p>
+                    <Select
+                    options={orgOptions}
+                    isClearable
+                    isSearchable
+                    className='w-full p2'
+                    placeholder='Tìm kiếm tổ chức...'
+                    value={orgOptions.find((option) => option.value === formData.organizationId) || null}
+                    onChange={(selectedOption) =>
+                      setFormData((prev: any) => ({
+                      ...prev,
+                      organizationId: selectedOption ? selectedOption.value : ''
+                      }))
+                    }
+                    />
                 </div>
                 <div>
                   <p className='text-sm text-gray-500'>Mã sinh viên</p>
@@ -382,7 +381,9 @@ const Step3ExtractedInfo: React.FC<Step2Props> = ({
                 </div>
 
                 <div>
-                  <p className='text-sm text-gray-500'>Tỉnh/Thành phố</p>
+                  <p className='text-sm text-gray-500'>
+                    Tỉnh/Thành phố <span className='text-red-700'>*</span>
+                  </p>
                   <select
                     name='province'
                     value={selectedProvince}
@@ -396,9 +397,12 @@ const Step3ExtractedInfo: React.FC<Step2Props> = ({
                       </option>
                     ))}
                   </select>
+                  {fieldErrors.province && <p className='text-sm text-red-600'>{fieldErrors.province}</p>}
                 </div>
                 <div>
-                  <p className='text-sm text-gray-500'>Quận/Huyện</p>
+                  <p className='text-sm text-gray-500'>
+                    Quận/Huyện <span className='text-red-700'>*</span>
+                  </p>
                   <select
                     name='district'
                     value={selectedDistrict}
@@ -412,9 +416,12 @@ const Step3ExtractedInfo: React.FC<Step2Props> = ({
                       </option>
                     ))}
                   </select>
+                  {fieldErrors.district && <p className='text-sm text-red-600'>{fieldErrors.district}</p>}
                 </div>
                 <div className='col-span-2'>
-                  <p className='text-sm text-gray-500'>Địa chỉ liên hệ</p>
+                  <p className='text-sm text-gray-500'>
+                    Địa chỉ liên hệ <span className='text-red-700'>*</span>
+                  </p>
                   <input
                     type='text'
                     name='addressContact'
@@ -423,6 +430,7 @@ const Step3ExtractedInfo: React.FC<Step2Props> = ({
                     placeholder='Xóm thôn, xã phường'
                     className='w-full p-2 border rounded required'
                   />
+                  {fieldErrors.contact && <p className='text-sm text-red-600'>{fieldErrors.contact}</p>}
                 </div>
               </div>
             </div>
@@ -440,7 +448,7 @@ const Step3ExtractedInfo: React.FC<Step2Props> = ({
             </button>
           </div>
 
-          {error && <div className='p-4 bg-red-50 text-red-600 rounded-lg'>{error}</div>}
+          {/* {error && <div className='p-4 bg-red-50 text-red-600 rounded-lg'>{error}</div>} */}
         </div>
       ) : (
         <div className='p-4 bg-yellow-50 text-yellow-600 rounded-lg'>Không có thông tin thẻ</div>

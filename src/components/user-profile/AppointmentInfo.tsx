@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Calendar, User, AlertCircle, ClipboardList, Loader2 } from 'lucide-react'
+import { Calendar, User, ClipboardList } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { getCurrent } from '@/api/appointment'
 import { format } from 'date-fns'
@@ -9,6 +9,8 @@ import { useNavigate } from 'react-router-dom'
 import { Badge } from '@/components/ui/badge'
 import { cancelAppointment } from '@/api/campaign'
 import { toast } from '../ui/use-toast'
+import Loading from '../warnings/loading'
+import Empty from '../warnings/empty'
 
 interface UserInfo {
   fullName: string
@@ -19,7 +21,7 @@ interface UserInfo {
   organizationName: number
   address: string
   issueLoc: string
-  student_id: string
+  studentId: string
   militaryId: string
   addressContact: string
   phoneNumber: string
@@ -80,6 +82,7 @@ const AppointmentInfo = () => {
   const navigate = useNavigate()
   const hasFetched = useRef(false)
   const [isModalOpen, setModalOpen] = useState(false)
+
   // Scroll to top when component mounts
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -188,6 +191,80 @@ const AppointmentInfo = () => {
     }
   }
 
+  // Hàm chỉnh sửa thông tin cá nhân
+  const [isEditing, setIsEditing] = useState(false) // Trạng thái chỉnh sửa
+  const [formData, setFormData] = useState({
+    fullName: '',
+    identityNumber: '',
+    dob: '',
+    gender: '',
+    jobName: '',
+    organizationName: '',
+    student_id: '',
+    militaryId: '',
+    phoneNumber: '',
+    email: '',
+    addressContact: '',
+    address: '',
+    issueLoc: ''
+  })
+
+  useEffect(() => {
+    if (data?.userInfo) {
+      setFormData({
+        fullName: data.userInfo.fullName || '',
+        identityNumber: data.userInfo.identityNumber || '',
+        dob: data.userInfo.dob || '',
+        gender: data.userInfo.gender || '',
+        jobName: data.userInfo.jobName || '',
+        organizationName: String(data.userInfo.organizationName || ''),
+        student_id: data.userInfo.studentId || '',
+        militaryId: data.userInfo.militaryId || '',
+        phoneNumber: data.userInfo.phoneNumber || '',
+        email: data.userInfo.email || '',
+        addressContact: data.userInfo.addressContact || '',
+        address: data.userInfo.address || '',
+        issueLoc: data.userInfo.issueLoc || ''
+      })
+    }
+  }, [data])
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target
+    setFormData((prev) => ({ ...prev, [name]: value }))
+  }
+
+  const handleSave = () => {
+    console.log('Saved data:', formData)
+    try {
+      // Gọi API để lưu thông tin đã chỉnh sửa
+      // await updateUserInfo(formData)
+      // Cập nhật lại dữ liệu trong state
+      // setData((prev) => {
+      //   if (!prev) return null
+      //   return {
+      //     ...prev,
+      //     userInfo: {
+      //       ...prev.userInfo,
+      //       ...formData
+      //     }
+      //   }
+      // })
+      toast({
+        title: 'Thành công',
+        description: 'Thông tin đã được lưu thành công',
+        variant: 'default'
+      })
+    } catch (error) {
+      console.error('Error saving data:', error)
+      toast({
+        title: 'Lỗi',
+        description: 'Không thể lưu thông tin. Vui lòng thử lại sau.',
+        variant: 'destructive'
+      })
+    }
+    setIsEditing(false)
+  }
   // Hàm format ngày giờ
   const formatDate = (dateString: string) => {
     try {
@@ -229,26 +306,11 @@ const AppointmentInfo = () => {
   }
 
   if (loading) {
-    return (
-      <div className='flex items-center justify-center mt-12'>
-        <Loader2 className='w-8 h-8 text-red-600 animate-spin mr-2' />
-        <span className='ml-2'>Đang xử lý...</span>
-      </div>
-    )
+    return <Loading />
   }
 
   if (error || !data) {
-    return (
-      <div className='min-h-screen bg-white py-12'>
-        <div className='container mx-auto px-4 flex flex-col items-center'>
-          <AlertCircle className='w-12 h-12 text-red-500 mb-4' />
-          <p className='text-red-600 text-xl mb-6'>{error || 'Không thể tải dữ liệu'}</p>
-          <Button onClick={() => window.location.reload()} className='bg-red-600 hover:bg-red-700 text-white'>
-            Thử lại
-          </Button>
-        </div>
-      </div>
-    )
+    return <Empty />
   }
 
   const { userInfo } = data
@@ -272,58 +334,81 @@ const AppointmentInfo = () => {
             <CardHeader className='pb-2'>
               <CardTitle className='text-lg text-red-600 flex items-center gap-2'>
                 <User className='w-5 h-5' />
-                Thông tin cá nhân
+                Hồ sơ hiến máu
               </CardTitle>
             </CardHeader>
             <CardContent className='space-y-4 pt-4'>
               <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
                 {[
-                  { label: 'Họ và tên', value: userInfo.fullName },
-                  { label: 'Số CMND/Hộ chiếu', value: userInfo.identityNumber },
-                  { label: 'Ngày sinh', value: formatDate(userInfo.dob) },
-                  { label: 'Giới tính', value: userInfo.gender },
+                  { label: 'Họ và tên (CCCD)', value: userInfo.fullName },
+                  { label: 'Số CCCD/Hộ chiếu (CCCD)', value: userInfo.identityNumber },
+                  { label: 'Ngày sinh (CCCD)', value: formatDate(userInfo.dob) },
+                  { label: 'Giới tính (CCCD)', value: userInfo.gender }
+                ].map((item, index) => (
+                  <div key={index} className='flex items-center justify-between col-span-1 md:col-span-1'>
+                    <p className='text-gray-700 block mb-1 font-bold'>{item.label}:</p>
+                    <span>{item.value}</span>
+                  </div>
+                ))}
+                {[
                   { label: 'Nghề nghiệp', value: userInfo.jobName },
                   { label: 'Cơ quan/Trường, Lớp', value: userInfo.organizationName },
-                  { label: 'Số thẻ HS/SV', value: userInfo.student_id || '-' },
+                  { label: 'Số thẻ HS/SV', value: userInfo.studentId || '-' },
                   { label: 'Số thẻ quân nhân', value: userInfo.militaryId || '-' },
                   { label: 'Điện thoại', value: userInfo.phoneNumber },
                   { label: 'Email', value: userInfo.email },
                   { label: 'Địa chỉ liên hệ', value: userInfo.addressContact, fullWidth: true }
                 ].map((item, index) => (
-                  <div key={index} className={item.fullWidth ? 'col-span-1 md:col-span-2' : ''}>
-                  <span className='font-medium text-gray-700 block mb-1'>{item.label}:</span>
-                  <div className='flex items-center p-3 border rounded-lg bg-gray-50 w-full'>
-                    <input
-                    type='text'
-                    value={item.value}
-                    readOnly
-                    className='w-full bg-transparent border-none focus:outline-none text-gray-900'
-                    />
-                  </div>
+                  <div key={index} className={item.fullWidth ? ' col-span-1 md:col-span-2' : ''}>
+                    {isEditing ? (
+                      <div>
+                        <p className='text-gray-700 block mb-1 font-bold'>{item.label}:</p>
+                        <input
+                          type='text'
+                          name={item.label}
+                          value={item.value}
+                          onChange={handleInputChange}
+                          className='w-full bg-transparent p-2 border rounded-lg focus:outline-none text-gray-900'
+                        />
+                      </div>
+                    ) : (
+                      <div className='flex items-center justify-between col-span-1 md:col-span-1'>
+                        <p className='text-gray-700 block mb-1 font-bold'>{item.label}:</p>
+
+                        <span>{item.value}</span>
+                      </div>
+                    )}
                   </div>
                 ))}
-                <div className='col-span-1 md:col-span-2'>
-                  <span className='font-medium text-gray-700 block mb-1'>Địa chỉ thường trú (CMND):</span>
-                  <div className='flex items-center p-3 border rounded-lg bg-gray-50'>
-                    <input
-                      type='text'
-                      value={userInfo.address}
-                      readOnly
-                      className='w-full bg-transparent border-none focus:outline-none text-gray-900'
-                    />
-                  </div>
+
+                <div className='flex items-center justify-between col-span-1 md:col-span-2'>
+                  <span className='font-bold text-gray-700 block mb-1'>Địa chỉ thường trú (CCCD):</span>
+                  <span>{userInfo.address}</span>
                 </div>
-                <div className='col-span-1 md:col-span-2'>
-                  <span className='font-medium text-gray-700 block mb-1'>Nơi cấp:</span>
-                  <div className='flex items-center p-3 border rounded-lg bg-gray-50'>
-                    <input
-                      type='text'
-                      value={userInfo.issueLoc}
-                      readOnly
-                      className='w-full bg-transparent border-none focus:outline-none text-gray-900'
-                    />
-                  </div>
+                <div className='flex items-center justify-between col-span-1 md:col-span-2'>
+                  <span className='font-bold text-gray-700 block mb-1'>Nơi cấp (CCCD):</span>
+                  <span>{userInfo.issueLoc}</span>
                 </div>
+              </div>
+              <div className='flex justify-end space-x-4'>
+                {isEditing ? (
+                  <>
+                    <Button
+                      variant='outline'
+                      onClick={() => setIsEditing(false)}
+                      className='border-gray-300 text-gray-600 hover:bg-gray-100'
+                    >
+                      Hủy
+                    </Button>
+                    <Button onClick={handleSave} className='bg-red-600 hover:bg-red-700 text-white'>
+                      Lưu
+                    </Button>
+                  </>
+                ) : (
+                  <Button onClick={() => setIsEditing(true)} className='bg-red-600 hover:bg-red-700 text-white'>
+                    Chỉnh sửa thông tin
+                  </Button>
+                )}
               </div>
             </CardContent>
           </Card>

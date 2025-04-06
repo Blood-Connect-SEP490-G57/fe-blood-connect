@@ -9,6 +9,9 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { userDetailSchema, UserFullInfoResponseSchema } from '@/schema/user-schema'
 import { User as fetchUser, updateUserDetail } from '@/api/user'
 import { toast } from '../ui/use-toast'
+import Loading from '../warnings/loading'
+import Empty from '../warnings/empty'
+import { Info, User } from 'lucide-react'
 
 const Profile = () => {
   // Scroll to top when component mounts
@@ -141,20 +144,11 @@ const Profile = () => {
   }
 
   if (loading) {
-    return (
-      <div className='flex items-center justify-center mt-12'>
-        <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-primary'></div>
-        <span className='ml-2'>Đang xử lý...</span>
-      </div>
-    )
+    return <Loading />
   }
 
   if (error) {
-    return (
-      <div className='flex items-center justify-center mt-12'>
-        <div className='text-red-500'>{error}</div>
-      </div>
-    )
+    return <Empty />
   }
   // console.log(form2.formState.errors)
 
@@ -162,152 +156,69 @@ const Profile = () => {
     <div className='min-h-screen bg-white py-12'>
       <div className='container mx-auto px-4'>
         <div className='max-w-6xl mx-auto'>
-          <Card>
+          <Card className='mb-6'>
             <CardContent>
-              <Form {...form}>
-                {/* Phần 1: Thông tin cá nhân */}
-                <div>
-                  <h2 className='text-lg font-semibold mb-4 mt-4'>Thông tin cá nhân</h2>
-                  <div className='grid grid-cols-1 gap-6'>
-                    <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-                      <FormField
-                        control={form.control}
-                        name='card_id'
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Số CCCD</FormLabel>
-                            <FormControl>
-                              <Input {...field} readOnly />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={form.control}
-                        name='full_name'
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Họ và tên</FormLabel>
-                            <FormControl>
-                              <Input {...field} readOnly />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
+              {/* Phần 1: Thông tin cá nhân */}
+              <div>
+                <h2 className='flex items-center text-lg font-semibold text-red-500 mb-4 mt-4'>
+                <User className='mr-2' size={20} />
+                  Thông tin cá nhân</h2>
+                <div className='grid grid-cols-1 gap-4'>
+                  <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+                    <div className='flex items-center justify-between'>
+                      <span className='font-bold'>Họ và tên:</span> {form.getValues('full_name')}
                     </div>
-
-                    <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-                      <FormField
-                        control={form.control}
-                        name='dob'
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Ngày sinh</FormLabel>
-                            <FormControl>
-                              <Input {...field} readOnly />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={form.control}
-                        name='gender'
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Giới tính</FormLabel>
-                            <FormControl>
-                              <Input {...field} readOnly />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
+                    <div className='flex items-center justify-between'>
+                      <span className='font-bold'>Số CCCD:</span> {form.getValues('card_id')}
                     </div>
+                  </div>
 
-                    <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-                      <FormField
-                        control={form.control}
-                        name='blood_group'
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Nhóm máu</FormLabel>
-                            <FormControl>
-                              <Input {...field} readOnly />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name='national'
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Quốc gia</FormLabel>
-                            <FormControl>
-                              <Input {...field} readOnly />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
+                  <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+                    <div className='flex items-center justify-between'>
+                      <span className='font-bold'>Ngày sinh:</span> {form.getValues('dob')}
                     </div>
-
-                    <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-                      <FormField
-                        control={form.control}
-                        name='time_donation'
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Số lần hiến máu</FormLabel>
-                            <FormControl>
-                              <Input {...field} readOnly />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={form.control}
-                        name='home'
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Nơi thường trú</FormLabel>
-                            <FormControl>
-                              <Input {...field} readOnly />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
+                    <div className='flex items-center justify-between'>
+                      <span className='font-bold'>Giới tính:</span> {form.getValues('gender')}
                     </div>
-                    <FormField
-                      control={form.control}
-                      name='address'
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Quê quán</FormLabel>
-                          <FormControl>
-                            <Input {...field} readOnly />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                  </div>
+
+                  <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+                    <div className='flex items-center justify-between'>
+                      <span className='font-bold'>Nhóm máu:</span> {form.getValues('blood_group')}
+                    </div>
+                    <div className='flex items-center justify-between'>
+                      <span className='font-bold'>Quốc gia:</span> {form.getValues('national')}
+                    </div>
+                  </div>
+
+                  <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+                    <div className='flex items-center justify-between'>
+                      <span className='font-bold'>Số lần hiến máu:</span> {form.getValues('time_donation')}
+                    </div>
+                    <div className='flex items-center justify-between'>
+                      <span className='font-bold'>Quốc gia:</span> {form.getValues('national')}
+                    </div>
+                  </div>
+                  <div>
+                    <span className='font-bold mr-2'>Quê quán:</span> {form.getValues('home')}
+                  </div>
+                  <div>
+                    <span className='font-bold mr-2'>Địa chỉ thường trú:</span> {form.getValues('address')}
                   </div>
                 </div>
-              </Form>
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent>
               <Form {...form2}>
                 <form onSubmit={form2.handleSubmit(onSubmit)} className='space-y-8'>
                   {/* Phần 2: Thông tin liên hệ */}
                   <div>
-                    <h2 className='text-lg font-semibold mb-4 mt-4'>Thông tin liên hệ</h2>
+                    <h2 className='flex items-center text-lg font-semibold text-red-500 mb-4 mt-4'>
+                      <Info className='mr-2' size={20} />
+                      Thông tin liên hệ
+                    </h2>
                     <div className='grid grid-cols-1 gap-6'>
                       <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
                         <FormField
@@ -315,7 +226,7 @@ const Profile = () => {
                           name='address_contact'
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Địa chỉ liên hệ</FormLabel>
+                              <FormLabel className='font-bold'>Địa chỉ liên hệ</FormLabel>
                               <FormControl>
                                 <Input
                                   {...field}
@@ -334,7 +245,7 @@ const Profile = () => {
                           name='mobile'
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Điện thoại di động</FormLabel>
+                              <FormLabel className='font-bold'>Điện thoại di động</FormLabel>
                               <FormControl>
                                 <Input
                                   {...field}
@@ -356,7 +267,7 @@ const Profile = () => {
                           name='student_id'
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Mã sinh viên</FormLabel>
+                              <FormLabel className='font-bold'>Mã sinh viên</FormLabel>
                               <FormControl>
                                 <Input
                                   {...field}
@@ -376,7 +287,7 @@ const Profile = () => {
                           name='military_id'
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Mã quân nhân</FormLabel>
+                              <FormLabel className='font-bold'>Mã quân nhân</FormLabel>
                               <FormControl>
                                 <Input
                                   {...field}
@@ -397,7 +308,7 @@ const Profile = () => {
                           name='email'
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Email</FormLabel>
+                              <FormLabel className='font-bold'>Email</FormLabel>
                               <FormControl>
                                 <Input
                                   {...field}
@@ -417,7 +328,7 @@ const Profile = () => {
                           name='job_name'
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Nghề nghiệp</FormLabel>
+                              <FormLabel className='font-bold'>Nghề nghiệp</FormLabel>
                               <FormControl>
                                 <Input
                                   {...field}
