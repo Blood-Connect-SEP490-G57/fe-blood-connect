@@ -33,9 +33,32 @@ export async function changePassword(data: { oldPassword: string; newPassword: s
   return response.data
 }
 
-export const forgotPassword = async (phoneNumber: string) => {
+export const forgotPassword = async (email: string) => {
   const response = await apiPostCall('/auth/forgot-password', {
-    mobile: phoneNumber
+    email: email
+  })
+  return response.data
+}
+
+export const verifyOtp = async (email: string, otp: string) => {
+  const response = await axios.post('/auth/verify-otp', {
+    email: email,
+    otp: otp
+  })
+  return response.data
+}
+
+export const resetPassword = async (
+  email: string,
+  reresetToken: string,
+  newPassword: string,
+  confirmPassword: string
+) => {
+  const response = await apiPostCall('/auth/reset-password', {
+    email: email,
+    resetToken: reresetToken,
+    newPassword: newPassword,
+    confirmPassword: confirmPassword
   })
   return response.data
 }

@@ -24,6 +24,8 @@ import Terms from './pages/Tems.tsx'
 import NotFoundPage from '@/pages/404'
 import Success from './pages/Success.tsx'
 import VerificationHandler from './components/VerifyHandle/index.tsx'
+import OTPInput from './components/forgot-password/OTP.tsx'
+import ResetPassword from './components/forgot-password/ResetPassword.tsx'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -52,7 +54,9 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
             <Route path='/tin-tuc' element={<NewsPage />} />
             <Route path='/tin-tuc/:id' element={<NewsDetailPage />} />
             <Route path='/hoan-thanh-dang-ky' element={<Success />} />
-            <Route path='/verification/:status' element={<VerificationHandler />} />
+            <Route path='/verification' element={<VerificationHandler />} />
+            <Route path='/xac-thuc-otp' element={<OTPInput /> } />
+            <Route path='/thay-doi-mat-khau' element={<ResetPassword />} />
             <Route path='/dieu-khoan-su-dung' element={<Terms />} />
             <Route path='*' element={<NotFoundPage />} />
             <Route
