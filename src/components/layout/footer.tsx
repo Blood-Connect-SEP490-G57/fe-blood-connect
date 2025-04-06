@@ -67,7 +67,7 @@ const Footer: React.FC = () => {
                 <span>Trang Web chính thức: Hội Chữ Thập Đỏ Ninh Bình</span>
               </a>
             </div>
-            <h3 className='text-lg font-semibold mb-4 mt-4'>Điều khoản sửa dụng</h3>
+            <h3 className='text-lg font-semibold mb-4 mt-4'>Điều khoản sử dụng</h3>
             <div className='flex flex-col space-y-2 gap-2 text-gray-400'>
               <a href='/dieu-khoan-su-dung' className='text-gray-400 hover:text-white'>
                 Điều khoản sử dụng
