@@ -5,9 +5,10 @@ export const LoginSchema = z.object({
     .string()
     .trim()
     .min(1, {
-      message: 'Số điện thoại không được để trống'
+      message: 'Tên đăng nhập không được để trống'
     })
-    .max(20),
+    .max(50),
+
   password: z
     .string()
     .trim()
@@ -21,7 +22,8 @@ export type LoginType = z.infer<typeof LoginSchema>
 
 export const RegisterSchema = z
   .object({
-    mobile: z.string().min(10, 'Số điện thoại không được ít hơn 10 số').max(12, 'Số điện thoại không quá 12 số'),
+    email: z.string().trim().email('Email không hợp lệ').min(1, 'Email không được để trống').max(50, 'Email không quá 50 ký tự'),
+    username: z.string().trim().min(1, 'Tên đăng nhập không được để trống').max(50, 'Tên đăng nhập không quá 50 ký tự'),
     password: z
       .string()
       .min(8, 'Mật khẩu phải có ít nhất 8 ký tự')

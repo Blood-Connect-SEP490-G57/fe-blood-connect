@@ -21,7 +21,8 @@ export const loginUser = async (data: LoginType) => {
 
 export const registerUser = async (data: RegisterType) => {
   const response = await apiPostCall('/auth/register', {
-    mobile: data.mobile,
+    email: data.email,
+    username: data.username,
     password: data.password
   })
   return response.data

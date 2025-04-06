@@ -1,24 +1,27 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Calendar, User, ClipboardList } from 'lucide-react'
+import { User } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
-import { getCurrent } from '@/api/appointment'
+import { getCurrent, updateinfor } from '@/api/appointment'
 import { format } from 'date-fns'
 import { vi } from 'date-fns/locale'
-import { useNavigate } from 'react-router-dom'
 import { Badge } from '@/components/ui/badge'
-import { cancelAppointment } from '@/api/campaign'
 import { toast } from '../ui/use-toast'
 import Loading from '../warnings/loading'
 import Empty from '../warnings/empty'
+import AppointmentDetailsPopup from './AppointmentDetailsPopup'
+import { getOrganizationsByType } from '@/api/organization'
+import Select from 'react-select'
 
 interface UserInfo {
+  userId: string
   fullName: string
   identityNumber: string
   dob: string
   gender: string
   jobName: string
-  organizationName: number
+  organizationName: string
+  organizationId: string
   address: string
   issueLoc: string
   studentId: string
@@ -75,18 +78,37 @@ interface AppointmentData {
   } | null
 }
 
+interface Organization {
+  id: string
+  name: string
+}
+
 const AppointmentInfo = () => {
   const [data, setData] = useState<AppointmentData | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const navigate = useNavigate()
   const hasFetched = useRef(false)
-  const [isModalOpen, setModalOpen] = useState(false)
+  const [isPopupOpen, setPopupOpen] = useState(false)
+  const [organizations, setOrganizations] = useState<Organization[]>([])
 
-  // Scroll to top when component mounts
   useEffect(() => {
-    window.scrollTo(0, 0)
+    const fetchOrganizations = async () => {
+      try {
+        const response = await getOrganizationsByType()
+        setOrganizations(Array.isArray(response.data) ? response.data : [])
+      } catch (err) {
+        console.error('Error fetching organizations:', err)
+        setOrganizations([])
+      }
+    }
+
+    fetchOrganizations()
   }, [])
+
+  const orgOptions = organizations.map((org) => ({
+    value: org.id,
+    label: org.name
+  }))
 
   useEffect(() => {
     if (hasFetched.current) return
@@ -116,155 +138,44 @@ const AppointmentInfo = () => {
     fetchAppointmentInfo()
   }, [])
 
-  function CancelAppointmentModal({
-    isOpen,
-    onClose,
-    onConfirm
-  }: {
-    isOpen: boolean
-    onClose: () => void
-    onConfirm: () => void
-  }) {
-    if (!isOpen) return null
-
-    return (
-      <div className='fixed inset-0 flex items-center justify-center bg-black bg-opacity-50'>
-        <div className='bg-white p-6 rounded shadow-lg'>
-          <h2 className='text-lg font-bold mb-4'>Xác nhận hủy lịch hẹn</h2>
-          <p className='mb-4'>Bạn có chắc chắn muốn hủy lịch hẹn này không?</p>
-          <div className='flex justify-end space-x-2'>
-            <button onClick={onClose} className='px-4 py-2 bg-gray-300 rounded hover:bg-gray-400'>
-              Hủy bỏ
-            </button>
-            <button onClick={onConfirm} className='px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700'>
-              Xác nhận
-            </button>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  // Hàm hủy lịch hẹn
-  const handleCancelAppointment = async () => {
-    if (!data?.campaign?.campaignId) {
-      toast({
-        title: 'Lỗi',
-        description: 'Không tìm thấy thông tin lịch hẹn',
-        variant: 'destructive'
-      })
-      return
-    }
-
-    try {
-      await cancelAppointment(data.campaign.campaignId)
-
-      // Update local state to reflect cancellation
-      setData((prev) =>
-        prev
-          ? {
-              ...prev,
-              campaign: prev.campaign
-                ? {
-                    ...prev.campaign,
-                    status: 'CANCELLED'
-                  }
-                : null
-            }
-          : null
-      )
-
-      toast({
-        title: 'Thành công',
-        description: 'Lịch hẹn đã được hủy thành công',
-        variant: 'default'
-      })
-
-      setModalOpen(false)
-    } catch (error) {
-      console.error('Error cancelling appointment:', error)
-      toast({
-        title: 'Lỗi',
-        description: 'Không thể hủy lịch hẹn. Vui lòng thử lại sau.',
-        variant: 'destructive'
-      })
-    }
-  }
-
   // Hàm chỉnh sửa thông tin cá nhân
   const [isEditing, setIsEditing] = useState(false) // Trạng thái chỉnh sửa
   const [formData, setFormData] = useState({
-    fullName: '',
-    identityNumber: '',
-    dob: '',
-    gender: '',
-    jobName: '',
-    organizationName: '',
-    student_id: '',
+    userId: '',
+    studentId: '',
     militaryId: '',
     phoneNumber: '',
     email: '',
     addressContact: '',
-    address: '',
-    issueLoc: ''
+    bloodGroup: '',
+    jobName: '',
+    organizationId: ''
   })
 
   useEffect(() => {
     if (data?.userInfo) {
       setFormData({
-        fullName: data.userInfo.fullName || '',
-        identityNumber: data.userInfo.identityNumber || '',
-        dob: data.userInfo.dob || '',
-        gender: data.userInfo.gender || '',
+        userId: data.userInfo.userId || '',
         jobName: data.userInfo.jobName || '',
-        organizationName: String(data.userInfo.organizationName || ''),
-        student_id: data.userInfo.studentId || '',
+        organizationId: data.userInfo.organizationId || '',
+        bloodGroup: data.userInfo.bloodGroup || '',
+        addressContact: data.userInfo.addressContact || '',
+        studentId: data.userInfo.studentId || '',
         militaryId: data.userInfo.militaryId || '',
         phoneNumber: data.userInfo.phoneNumber || '',
-        email: data.userInfo.email || '',
-        addressContact: data.userInfo.addressContact || '',
-        address: data.userInfo.address || '',
-        issueLoc: data.userInfo.issueLoc || ''
+        email: data.userInfo.email || ''
       })
     }
   }, [data])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value }))
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value
+    }))
   }
 
-  const handleSave = () => {
-    console.log('Saved data:', formData)
-    try {
-      // Gọi API để lưu thông tin đã chỉnh sửa
-      // await updateUserInfo(formData)
-      // Cập nhật lại dữ liệu trong state
-      // setData((prev) => {
-      //   if (!prev) return null
-      //   return {
-      //     ...prev,
-      //     userInfo: {
-      //       ...prev.userInfo,
-      //       ...formData
-      //     }
-      //   }
-      // })
-      toast({
-        title: 'Thành công',
-        description: 'Thông tin đã được lưu thành công',
-        variant: 'default'
-      })
-    } catch (error) {
-      console.error('Error saving data:', error)
-      toast({
-        title: 'Lỗi',
-        description: 'Không thể lưu thông tin. Vui lòng thử lại sau.',
-        variant: 'destructive'
-      })
-    }
-    setIsEditing(false)
-  }
   // Hàm format ngày giờ
   const formatDate = (dateString: string) => {
     try {
@@ -305,6 +216,41 @@ const AppointmentInfo = () => {
     return sections.sort((a, b) => a.order - b.order)
   }
 
+  // update thông tin cá nhân
+  const updateUserInfo = async () => {
+    try {
+      // Gửi dữ liệu từ formData
+      const data = await updateinfor(formData)
+      console.log('Update response:', data)
+      // Cập nhật lại dữ liệu trong state
+      setData((prev) => {
+        if (!prev) return null
+        return {
+          ...prev,
+          userInfo: {
+            ...prev.userInfo,
+            ...formData // Cập nhật với giá trị mới từ formData
+          }
+        }
+      })
+
+      toast({
+        title: 'Thành công',
+        description: 'Thông tin đã được cập nhật thành công',
+        variant: 'default'
+      })
+
+      setIsEditing(false) // Thoát chế độ chỉnh sửa
+    } catch (error) {
+      console.error('Error updating user info:', error)
+      toast({
+        title: 'Lỗi',
+        description: 'Không thể cập nhật thông tin. Vui lòng thử lại sau.',
+        variant: 'destructive'
+      })
+    }
+  }
+
   if (loading) {
     return <Loading />
   }
@@ -325,15 +271,14 @@ const AppointmentInfo = () => {
     : []
 
   return (
-    <div className='min-h-screen bg-white py-8'>
+    <div className='min-h-screen bg-white py-4 md:py-8'>
       <div className='container mx-auto px-4'>
-        <h1 className='text-2xl font-bold text-gray-900 mb-6'>Thông tin đăng ký hiến máu</h1>
-        <div className='grid grid-cols-1 md:grid-cols-1 gap-6 mx-2'>
+        <div className='grid grid-cols-1 gap-4 md:gap-6'>
           {/* Personal Information Card */}
-          <Card className='h-full p-4'>
+          <Card className='h-full'>
             <CardHeader className='pb-2'>
-              <CardTitle className='text-lg text-red-600 flex items-center gap-2'>
-                <User className='w-5 h-5' />
+              <CardTitle className='text-lg md:text-xl text-red-600 flex items-center gap-2'>
+                <User className='w-5 h-5 md:w-6 md:h-6' />
                 Hồ sơ hiến máu
               </CardTitle>
             </CardHeader>
@@ -345,187 +290,179 @@ const AppointmentInfo = () => {
                   { label: 'Ngày sinh (CCCD)', value: formatDate(userInfo.dob) },
                   { label: 'Giới tính (CCCD)', value: userInfo.gender }
                 ].map((item, index) => (
-                  <div key={index} className='flex items-center justify-between col-span-1 md:col-span-1'>
-                    <p className='text-gray-700 block mb-1 font-bold'>{item.label}:</p>
-                    <span>{item.value}</span>
-                  </div>
-                ))}
-                {[
-                  { label: 'Nghề nghiệp', value: userInfo.jobName },
-                  { label: 'Cơ quan/Trường, Lớp', value: userInfo.organizationName },
-                  { label: 'Số thẻ HS/SV', value: userInfo.studentId || '-' },
-                  { label: 'Số thẻ quân nhân', value: userInfo.militaryId || '-' },
-                  { label: 'Điện thoại', value: userInfo.phoneNumber },
-                  { label: 'Email', value: userInfo.email },
-                  { label: 'Địa chỉ liên hệ', value: userInfo.addressContact, fullWidth: true }
-                ].map((item, index) => (
-                  <div key={index} className={item.fullWidth ? ' col-span-1 md:col-span-2' : ''}>
-                    {isEditing ? (
-                      <div>
-                        <p className='text-gray-700 block mb-1 font-bold'>{item.label}:</p>
-                        <input
-                          type='text'
-                          name={item.label}
-                          value={item.value}
-                          onChange={handleInputChange}
-                          className='w-full bg-transparent p-2 border rounded-lg focus:outline-none text-gray-900'
-                        />
-                      </div>
-                    ) : (
-                      <div className='flex items-center justify-between col-span-1 md:col-span-1'>
-                        <p className='text-gray-700 block mb-1 font-bold'>{item.label}:</p>
-
-                        <span>{item.value}</span>
-                      </div>
-                    )}
+                  <div key={index} className='col-span-1'>
+                    <span className='text-gray-700 mb-1 font-bold mr-2'>{item.label}:</span>
+                    <span className='text-gray-900'>{item.value}</span>
                   </div>
                 ))}
 
-                <div className='flex items-center justify-between col-span-1 md:col-span-2'>
-                  <span className='font-bold text-gray-700 block mb-1'>Địa chỉ thường trú (CCCD):</span>
-                  <span>{userInfo.address}</span>
+                <div className='col-span-1'>
+                  <span className='text-gray-700 mb-1 font-bold mr-2'>Nghề nghiệp:</span>
+                  {isEditing ? (
+                    <input
+                      type='text'
+                      name='jobName'
+                      value={formData.jobName} // Sử dụng formData thay vì userInfo
+                      onChange={handleInputChange}
+                      className='w-full bg-gray-50 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 text-gray-900'
+                    />
+                  ) : (
+                    <span className='text-gray-900'>{userInfo.jobName}</span>
+                  )}
                 </div>
-                <div className='flex items-center justify-between col-span-1 md:col-span-2'>
-                  <span className='font-bold text-gray-700 block mb-1'>Nơi cấp (CCCD):</span>
-                  <span>{userInfo.issueLoc}</span>
+
+                <div className='col-span-1'>
+                  <span className='text-gray-700 mb-1 font-bold mr-2'>Cơ quan/Trường, Lớp:</span>
+                  {isEditing ? (
+                    <Select
+                      options={orgOptions}
+                      isSearchable
+                      className='w-full p2'
+                      placeholder='Tìm kiếm tổ chức...'
+                      value={orgOptions.find((option) => option.value === formData.organizationId) || null}
+                      onChange={(selectedOption) => {
+                        setFormData((prev) => ({
+                          ...prev,
+                          organizationId: selectedOption ? selectedOption.value : ''
+                        }))
+                      }}
+                    />
+                  ) : (
+                    <span className='text-gray-900'>
+                      {organizations.find((org) => org.id === userInfo.organizationId)?.name || 'Chưa cập nhật'}
+                    </span>
+                  )}
+                </div>
+
+                <div className='col-span-1'>
+                  <span className='text-gray-700 mb-1 font-bold mr-2'>Số thẻ HS/SV:</span>
+                  {isEditing ? (
+                    <input
+                      type='text'
+                      name='studentId'
+                      value={formData.studentId}
+                      onChange={handleInputChange}
+                      className='w-full bg-gray-50 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 text-gray-900'
+                    />
+                  ) : (
+                    <span className='text-gray-900'>{userInfo.studentId}</span>
+                  )}
+                </div>
+
+                <div className='col-span-1'>
+                  <span className='text-gray-700 mb-1 font-bold mr-2'>Số thẻ quân nhân:</span>
+                  {isEditing ? (
+                    <input
+                      type='text'
+                      name='militaryId'
+                      value={formData.militaryId}
+                      onChange={handleInputChange}
+                      className='w-full bg-gray-50 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 text-gray-900'
+                    />
+                  ) : (
+                    <span className='text-gray-900'>{userInfo.militaryId || '-'}</span>
+                  )}
+                </div>
+
+                <div className='col-span-1'>
+                  <span className='text-gray-700 mb-1 font-bold mr-2'>Điện thoại:</span>
+                  {isEditing ? (
+                    <input
+                      type='text'
+                      name='phoneNumber'
+                      value={formData.phoneNumber}
+                      onChange={handleInputChange}
+                      className='w-full bg-gray-50 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 text-gray-900'
+                    />
+                  ) : (
+                    <span className='text-gray-900'>{userInfo.phoneNumber}</span>
+                  )}
+                </div>
+
+                <div className='col-span-1'>
+                  <span className='text-gray-700 mb-1 font-bold mr-2'>Email:</span>
+                  {isEditing ? (
+                    <input
+                      type='text'
+                      name='email'
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      className='w-full bg-gray-50 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 text-gray-900'
+                    />
+                  ) : (
+                    <span className='text-gray-900'>{userInfo.email}</span>
+                  )}
+                </div>
+
+                <div className='col-span-2'>
+                  <span className='text-gray-700 mb-1 font-bold mr-2'>Địa chỉ liên hệ:</span>
+                  {isEditing ? (
+                    <input
+                      type='text'
+                      name='addressContact'
+                      value={formData.addressContact}
+                      onChange={handleInputChange}
+                      className='w-full bg-gray-50 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 text-gray-900'
+                    />
+                  ) : (
+                    <span className='text-gray-900'>{userInfo.addressContact}</span>
+                  )}
+                </div>
+
+                <div className='col-span-1 md:col-span-2'>
+                  <span className='font-bold text-gray-700 mb-1 mr-2'>Địa chỉ thường trú (CCCD):</span>
+                  <span className='text-gray-900'>{userInfo.address}</span>
+                </div>
+                <div className='col-span-1 md:col-span-2'>
+                  <span className='font-bold text-gray-700 mb-1 mr-2'>Nơi cấp (CCCD):</span>
+                  <span className='text-gray-900'>{userInfo.issueLoc}</span>
                 </div>
               </div>
-              <div className='flex justify-end space-x-4'>
+              <div className='flex flex-col md:flex-row justify-end space-y-2 md:space-y-0 md:space-x-4'>
                 {isEditing ? (
                   <>
                     <Button
                       variant='outline'
                       onClick={() => setIsEditing(false)}
-                      className='border-gray-300 text-gray-600 hover:bg-gray-100'
+                      className='border-gray-300 text-gray-600 hover:bg-gray-100 w-full md:w-auto'
                     >
                       Hủy
                     </Button>
-                    <Button onClick={handleSave} className='bg-red-600 hover:bg-red-700 text-white'>
+                    <Button
+                      onClick={updateUserInfo}
+                      className='bg-red-600 hover:bg-red-700 text-white w-full md:w-auto'
+                    >
                       Lưu
                     </Button>
                   </>
                 ) : (
-                  <Button onClick={() => setIsEditing(true)} className='bg-red-600 hover:bg-red-700 text-white'>
-                    Chỉnh sửa thông tin
-                  </Button>
+                  <>
+                    <Button
+                      className='bg-red-600 hover:bg-red-700 text-white w-full md:w-auto'
+                      onClick={() => setPopupOpen(true)}
+                    >
+                      Xem phiếu đăng ký
+                    </Button>
+                    <Button
+                      onClick={() => setIsEditing(true)}
+                      className='bg-red-600 hover:bg-red-700 text-white w-full md:w-auto'
+                    >
+                      Chỉnh sửa thông tin
+                    </Button>
+                  </>
                 )}
               </div>
             </CardContent>
           </Card>
-
-          {/* Appointment Registration Card */}
-          <Card className='h-full'>
-            <CardHeader className='pb-2'>
-              <CardTitle className='text-lg text-red-600 flex items-center gap-2'>
-                <Calendar className='w-5 h-5' />
-                Phiếu đăng ký hiến máu
-              </CardTitle>
-            </CardHeader>
-            <CardContent className='pt-2'>
-              {data.campaign ? (
-                <div className='w-full space-y-3'>
-                  <div className='flex justify-between items-center border-b pb-2'>
-                    <h3 className='font-medium'>Thông tin buổi hiến máu</h3>
-                    {renderStatusBadge(data.campaign.status)}
-                  </div>
-
-                  <div className='flex flex-col gap-3'>
-                    {appointmentItems.map((item, index) => (
-                      <div key={index} className='flex items-start gap-2'>
-                        <div>
-                          <span className='text-gray-600 text-sm'>{item.label}:</span>
-                          <p className='font-medium text-sm'>{item.value}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className='flex justify-end space-x-3 mt-4 pt-4 border-t border-gray-100'>
-                    {/* <Button
-                      variant='outline'
-                      className='border-red-200 text-red-600 hover:bg-red-50 text-sm py-1 h-9'
-                      onClick={() => {
-                        window.scrollTo(0, 0)
-                        navigate('/trang-ca-nhan#lich-su-hien-mau')
-                      }}
-                    >
-                      Xem lịch sử
-                    </Button> */}
-
-                    {data.campaign.status === 'BOOKING' && (
-                      <Button
-                        variant='outline'
-                        className='border-red-200 text-red-600 hover:bg-red-50 text-sm py-1 h-9'
-                        onClick={() => setModalOpen(true)}
-                      >
-                        Hủy lịch hẹn
-                      </Button>
-                    )}
-                  </div>
-                </div>
-              ) : (
-                <div className='flex flex-col items-center justify-center py-8 space-y-4'>
-                  <p className='text-gray-600 text-center'>Chưa có phiếu đăng ký hiến máu</p>
-                  <Button
-                    className='bg-red-600 hover:bg-red-700 text-white'
-                    onClick={() => {
-                      window.scrollTo(0, 0)
-                      navigate('/dang-ky-hien-mau')
-                    }}
-                  >
-                    Đăng ký hiến máu
-                  </Button>
-                </div>
-              )}
-            </CardContent>
-          </Card>
         </div>
-
-        {/* Chi tiết bảng câu hỏi sức khỏe */}
-        {groupedSections.length > 0 && (
-          <div id='health-questionnaire' className='mt-8 mx-2'>
-            <Card>
-              <CardHeader className='pb-2'>
-                <CardTitle className='text-lg text-red-600 flex items-center gap-2'>
-                  <ClipboardList className='w-5 h-5' />
-                  Chi tiết câu hỏi sức khỏe
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className='bg-gray-50 rounded-lg p-4 space-y-6'>
-                  {groupedSections.map((section) => (
-                    <div key={section.id} className='border-b pb-4 last:border-b-0 last:pb-0'>
-                      <h3 className='font-medium text-gray-800 mb-3'>{section.name}</h3>
-                      <div className='space-y-3'>
-                        {section.answers.map((answer) => (
-                          <div key={answer.id} className='flex flex-col gap-1'>
-                            <div className='flex gap-2 items-start'>
-                              <div className={`w-2 h-2 rounded-full mt-2 bg-red-600`}></div>
-                              <div className='flex-1'>
-                                <div className='flex justify-between items-start'>
-                                  <span className='text-gray-700'>{answer.content}</span>
-                                  <span className={`ml-4 font-medium`}>{answer.answer ? 'Có' : 'Không'}</span>
-                                </div>
-                                {answer.detail && (
-                                  <p className='text-sm text-gray-500 mt-1 ml-4'>Chi tiết: {answer.detail}</p>
-                                )}
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        )}
       </div>
-      <CancelAppointmentModal
-        isOpen={isModalOpen}
-        onClose={() => setModalOpen(false)}
-        onConfirm={handleCancelAppointment}
+      <AppointmentDetailsPopup
+        isOpen={isPopupOpen}
+        onClose={() => setPopupOpen(false)}
+        appointmentItems={appointmentItems}
+        groupedSections={groupedSections}
+        renderStatusBadge={renderStatusBadge}
+        status={data.campaign?.status || ''}
       />
     </div>
   )

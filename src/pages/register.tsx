@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useToast } from '@/components/ui/use-toast'
 import * as z from 'zod'
-import { Loader2Icon, Phone, Lock } from 'lucide-react'
+import { Loader2Icon, Lock, Mail } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
@@ -11,6 +11,7 @@ import { RegisterSchema, RegisterType } from '@/schema/auth-schema'
 import { registerUser } from '@/api/auth'
 import { useMutation } from '@tanstack/react-query'
 import { isAxiosError } from 'axios'
+import { User } from 'lucide-react'
 
 export default function Register() {
   const { toast } = useToast()
@@ -19,7 +20,8 @@ export default function Register() {
   const form = useForm<z.infer<typeof RegisterSchema>>({
     resolver: zodResolver(RegisterSchema),
     defaultValues: {
-      mobile: '',
+      username: '',
+      email: '',
       password: '',
       confirmPassword: ''
     }
@@ -29,9 +31,12 @@ export default function Register() {
     onSuccess: () => {
       toast({
         title: 'Đăng ký thành công',
-        description: 'Vui lòng đăng nhập để tiếp tục'
+        description: 'Vui lòng kiểm tra gmail để xác thực tài khoản!',
+        variant: 'default'
       })
-      navigate('/dang-nhap')
+      setTimeout(() => {
+        navigate('/hoan-thanh-dang-ky')
+      }, 2000)
     },
     onError: (error: Error) => {
       if (isAxiosError(error)) {
@@ -70,17 +75,40 @@ export default function Register() {
             <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
               <FormField
                 control={form.control}
-                name='mobile'
+                name='username'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className='block text-sm font-medium text-gray-700'>Số điện thoại</FormLabel>
+                    <FormLabel className='block text-sm font-medium text-gray-700'>Tên đăng nhập</FormLabel>
                     <FormControl>
                       <div className='mt-1 relative'>
-                        <Phone className='absolute left-3 top-3 text-accent' size={18} />
+                        <User className='absolute left-3 top-3 text-accent' size={18} />
                         <Input
                           {...field}
                           className='appearance-none block w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500'
-                          placeholder='Nhập số điện thoại'
+                          placeholder='Nhập tên đăng nhập'
+                        />
+                      </div>
+                    </FormControl>
+                    <FormMessage className='text-red-500 text-sm mt-1' />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name='email'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className='block text-sm font-medium text-gray-700'>
+                      Email<span className='text-red-500'>*</span>
+                    </FormLabel>
+                    <FormControl>
+                      <div className='mt-1 relative'>
+                        <Mail className='absolute left-3 top-3 text-accent' size={18} />
+                        <Input
+                          {...field}
+                          className='appearance-none block w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500'
+                          placeholder='Nhập email'
                         />
                       </div>
                     </FormControl>
