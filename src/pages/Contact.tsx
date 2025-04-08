@@ -11,7 +11,7 @@ const ContactPage = () => {
   })
   const [status, setStatus] = useState('')
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setIsLoading(true)
     try {
@@ -36,6 +36,7 @@ const ContactPage = () => {
       setIsLoading(false)
     }
   }
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
     setForm((prev) => ({ ...prev, [name]: value }))
