@@ -16,7 +16,7 @@ const ContactPage = () => {
     setIsLoading(true)
     try {
       const response = await axios.post(
-        'https://script.google.com/macros/s/AKfycbwt_jJ7jDV60d_jaD_LZfQJJjGRWGQheVj8IlJpsXRaVDgyvHYKe25yWjxZ0uxHzfFi1A/exec',
+        'https://script.google.com/macros/s/AKfycbyIEhOjcoZ5zetXFxXlfw3jVnJhSJ6elcmXemSfwOo-Le6oRVjLJoqnFZ6lXdP4nTlMnQ/exec',
         form,
         {
           headers: {
