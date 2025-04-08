@@ -48,15 +48,22 @@ export const verifyOtp = async (email: string, otp: string) => {
   return response.data
 }
 
+export const resendOtp = async (email: string) => {
+  const response = await axios.post('/auth/resend-verification', {
+    email: email,
+  })
+  return response.data
+}
+
 export const resetPassword = async (
   email: string,
-  reresetToken: string,
+  resetToken: string,
   newPassword: string,
   confirmPassword: string
 ) => {
   const response = await apiPostCall('/auth/reset-password', {
     email: email,
-    resetToken: reresetToken,
+    resetToken: resetToken,
     newPassword: newPassword,
     confirmPassword: confirmPassword
   })
