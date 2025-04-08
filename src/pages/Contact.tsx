@@ -18,7 +18,7 @@ const ContactPage = () => {
 
   const sendFeedback = async (formData: { name: string; email: string; message: string }) => {
     const response = await fetch(
-      'https://script.google.com/macros/s/AKfycbydWW2q9OSbwSQw6Ua2XGmNZ4OXL_PTcw1C4hRYt3mZF_ObPxsu44WiaMnnCY1BLotu/exec',
+      'https://script.google.com/macros/s/AKfycbxOtuIuODga3huznYtQB0EF8kJNO0eF29cNOwY9uT4bsTRFDY7IhRzoUuAVqI3Hf4FZ/exec',
       {
         method: 'POST',
         headers: {
