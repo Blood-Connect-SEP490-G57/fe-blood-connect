@@ -1,40 +1,44 @@
-import React from 'react'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import * as z from 'zod'
-import { Mail, Phone, MapPin, Clock, Send, Loader2 } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-
-const formSchema = z.object({
-  name: z.string().min(2, 'Tên phải có ít nhất 2 ký tự'),
-  email: z.string().email('Email không hợp lệ'),
-  phone: z.string().min(10, 'Số điện thoại không hợp lệ'),
-  subject: z.string().min(5, 'Tiêu đề phải có ít nhất 5 ký tự'),
-  message: z.string().min(10, 'Nội dung phải có ít nhất 10 ký tự')
-})
+import React, { useState } from 'react'
+import { Mail, Phone, MapPin, Clock } from 'lucide-react'
+import axios from 'axios'
 
 const ContactPage = () => {
-  const [isLoading, setIsLoading] = React.useState(false)
-
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: '',
-      email: '',
-      phone: '',
-      subject: '',
-      message: ''
-    }
+  const [isLoading, setIsLoading] = useState(false)
+  const [form, setForm] = useState({
+    name: '',
+    email: '',
+    message: ''
   })
+  const [status, setStatus] = useState('')
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
     setIsLoading(true)
-    // Xử lý gửi form ở đây
-    console.log(values)
-    setTimeout(() => setIsLoading(false), 2000)
+    try {
+      const response = await axios.post(
+        'https://script.google.com/macros/s/AKfycbwt_jJ7jDV60d_jaD_LZfQJJjGRWGQheVj8IlJpsXRaVDgyvHYKe25yWjxZ0uxHzfFi1A/exec',
+        form,
+        {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
+      )
+      if (response.data.result === 'success') {
+        setStatus('Feedback sent successfully!')
+        setForm({ name: '', email: '', message: '' })
+      } else {
+        setStatus('Something went wrong. Please try again.')
+      }
+    } catch (err) {
+      setStatus('Error sending feedback.')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target
+    setForm((prev) => ({ ...prev, [name]: value }))
   }
 
   const contactInfo = [
@@ -96,97 +100,47 @@ const ContactPage = () => {
           <div className='lg:col-span-2'>
             <div className='bg-white rounded-xl shadow-lg p-8'>
               <h2 className='text-2xl font-semibold text-gray-900 mb-6'>Gửi Tin Nhắn</h2>
-              <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
-                  <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-                    <FormField
-                      control={form.control}
+              <div>
+                <form onSubmit={handleSubmit} className='space-y-4'>
+                  <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                    <input
+                      type='text'
                       name='name'
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Họ và tên</FormLabel>
-                          <FormControl>
-                            <Input placeholder='Nguyễn Văn A' {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
+                      placeholder='Họ và Tên'
+                      value={form.name}
+                      onChange={handleChange}
+                      className='w-full border p-2 rounded'
+                      required
                     />
-
-                    <FormField
-                      control={form.control}
+                    <input
+                      type='email'
                       name='email'
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Email</FormLabel>
-                          <FormControl>
-                            <Input placeholder='example@email.com' {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
+                      placeholder='Email'
+                      value={form.email}
+                      onChange={handleChange}
+                      className='w-full border p-2 rounded'
+                      required
                     />
                   </div>
-
-                  <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-                    <FormField
-                      control={form.control}
-                      name='phone'
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Số điện thoại</FormLabel>
-                          <FormControl>
-                            <Input placeholder='0123 456 789' {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name='subject'
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Tiêu đề</FormLabel>
-                          <FormControl>
-                            <Input placeholder='Nhập tiêu đề' {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-
-                  <FormField
-                    control={form.control}
+                  <textarea
                     name='message'
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Nội dung</FormLabel>
-                        <FormControl>
-                          <Textarea placeholder='Nhập nội dung tin nhắn của bạn' className='min-h-[150px]' {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
+                    placeholder='Tin nhắn của bạn'
+                    value={form.message}
+                    onChange={handleChange}
+                    className='w-full border p-2 rounded'
+                    rows={4}
+                    required
                   />
-
-                  <Button type='submit' disabled={isLoading} className='w-full bg-red-600 hover:bg-red-700 text-white'>
-                    {isLoading ? (
-                      <>
-                        <Loader2 className='mr-2 h-4 w-4 animate-spin' />
-                        Đang gửi...
-                      </>
-                    ) : (
-                      <>
-                        <Send className='mr-2 h-4 w-4' />
-                        Gửi tin nhắn
-                      </>
-                    )}
-                  </Button>
+                  <button
+                    type='submit'
+                    disabled={isLoading}
+                    className='w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 disabled:opacity-50'
+                  >
+                    {isLoading ? 'Đang gửi...' : 'Gửi phản hồi'}
+                  </button>
+                  {status && <p className='text-sm text-green-600'>{status}</p>}
                 </form>
-              </Form>
+              </div>
             </div>
           </div>
         </div>
