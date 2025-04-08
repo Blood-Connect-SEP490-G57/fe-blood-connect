@@ -1,5 +1,5 @@
-import { verifyOtp } from '@/api/auth'
-import { useState } from 'react'
+import { resendOtp, verifyOtp } from '@/api/auth'
+import { useEffect, useState } from 'react'
 import { OtpInput } from 'reactjs-otp-input'
 import { toast } from '../ui/use-toast'
 import { useNavigate } from 'react-router-dom'
@@ -8,6 +8,7 @@ export default function OTPInput() {
   const navigate = useNavigate()
   const [otp, setOtp] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [countdown, setCountdown] = useState(300) // 5 minutes
 
   const handleChange = (otp: string) => setOtp(otp)
 
@@ -46,7 +47,7 @@ export default function OTPInput() {
     } catch (error) {
       toast({
         title: 'Lỗi',
-        description: (error as any)?.response?.message || 'Đã xảy ra lỗi không xác định. Vui lòng thử lại.',
+        description: (error as any)?.response?.data?.message,
         variant: 'destructive'
       })
     } finally {
@@ -54,28 +55,68 @@ export default function OTPInput() {
     }
   }
 
+  useEffect(() => {
+    if (countdown > 0) {
+      const interval = setInterval(() => {
+        setCountdown((prev) => prev - 1)
+      }, 1000)
+
+      return () => clearInterval(interval)
+    }
+  }, [countdown])
+
+  const handleResendOtp = async () => {
+    const email = localStorage.getItem('email')
+    if (!email) {
+      toast({
+        title: 'Lỗi',
+        description: 'Không tìm thấy email vui lòng kiểm tra lại',
+        variant: 'destructive'
+      })
+      return
+    }
+
+    try {
+      const response = await resendOtp(email) // Gọi API resendOtp từ file API
+      toast({
+        title: 'Thành công',
+        description: response.message,
+        variant: 'default'
+      })
+      setCountdown(300) // Reset lại 5 phút
+    } catch (error) {
+      toast({
+        title: 'Lỗi',
+        description: (error as any)?.response?.data?.message || 'Đã xảy ra lỗi không xác định.',
+        variant: 'destructive'
+      })
+    }
+  }
+
   return (
-    <div className='flex items-center justify-center min-h-screen bg-gray-100 py-12 sm:px-6 lg:px-8'>
-      <div className='sm:mx-auto sm:w-full sm:max-w-md'>
-        <div className='flex justify-center mb-6'>
-          <div className='w-20 h-20 bg-red-600 rounded-full flex items-center justify-center'>
+    <div className='flex items-center justify-center min-h-screen bg-gray-100 px-4 py-12'>
+      <div className='w-full max-w-md space-y-8'>
+        <div className='flex flex-col items-center'>
+          <div className='w-20 h-20 bg-red-600 rounded-full flex items-center justify-center shadow-lg'>
             <span className='text-4xl'>🩸</span>
           </div>
+          <h2 className='mt-6 text-center text-3xl font-bold text-gray-900'>Xác Nhận OTP</h2>
+          <p className='mt-2 text-center text-sm text-gray-600'>Nhập mã OTP được gửi đến email của bạn</p>
         </div>
 
-        <h2 className='mt-3 text-center text-3xl font-extrabold text-gray-900'>Quên Mật Khẩu</h2>
-        <p className='mt-2 text-center text-sm text-gray-600'>Nhập gmail của bạn để nhận mail đặt lại mật khẩu</p>
+        <div className='bg-white rounded-lg shadow-md px-8 py-6'>
+          <div className='text-left text-sm mb-4'>
+            <button onClick={() => navigate(-1)} className='w-full text-start text-sm text-red-600 hover:underline'>
+              ← Quay lại
+            </button>
+          </div>
+          <div className='text-left text-sm mb-4'>
+            <span className='text-gray-500'>Gmail:</span>
+            <p className='font-medium text-gray-800'>{localStorage.getItem('email')}</p>
+          </div>
 
-        <div className='bg-white shadow-lg rounded-lg p-8 max-w-md w-full text-center mt-8'>
-          <button
-            onClick={() => navigate(-1)}
-            className='absolute top-4 left-4 px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold rounded-lg shadow'
-          >
-            Quay lại
-          </button>
-          <h1 className='text-2xl font-bold text-gray-800'>Nhập mã OTP</h1>
-          <p className='text-gray-600 mt-4'>Vui lòng nhập mã OTP đã được gửi đến email của bạn.</p>
-          <div className='flex justify-center gap-4 mt-6'>
+          <div className='text-left text-sm mb-4'>
+            <span className='text-gray-500'>Mã OTP:</span>
             <OtpInput
               value={otp}
               onChange={handleChange}
@@ -83,27 +124,45 @@ export default function OTPInput() {
               inputStyle={{
                 width: '3rem',
                 height: '3rem',
-                fontSize: '1.5rem',
+                fontSize: '1.25rem',
                 borderRadius: '0.5rem',
                 border: '1px solid #d1d5db',
                 textAlign: 'center',
                 outline: 'none',
-                boxShadow: '0 1px 2px rgba(0, 0, 0, 0.1)',
-                margin: '0 0.5rem'
+                boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
+                margin: '0 0.4rem',
+                backgroundColor: '#f9fafb'
               }}
               focusStyle={{
-                border: '2px solid #ef4444'
+                border: '2px solid #ef4444',
+                backgroundColor: '#fff'
               }}
+              isInputNum
+              shouldAutoFocus
             />
           </div>
+
           <button
             onClick={handleSubmit}
             disabled={isLoading}
-            className={`mt-6 px-8 py-3 font-semibold rounded-lg shadow ${
-              isLoading ? 'bg-gray-400 cursor-not-allowed' : 'bg-red-600 hover:bg-red-500 text-white'
+            className={`w-full mt-6 py-3 text-sm font-semibold rounded-lg transition-all duration-200 ${
+              isLoading ? 'bg-gray-300 cursor-not-allowed text-gray-700' : 'bg-red-600 hover:bg-red-500 text-white'
             }`}
           >
             {isLoading ? 'Đang xử lý...' : 'Xác nhận'}
+          </button>
+          <button
+            onClick={handleResendOtp}
+            disabled={countdown > 0}
+            className={`w-full mt-4 py-3 text-sm font-semibold rounded-lg transition-all duration-200 ${
+              countdown > 0
+                ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+            }`}
+          >
+            {countdown > 0
+              ? `Gửi lại mã OTP (${Math.floor(countdown / 60)}:${(countdown % 60).toString().padStart(2, '0')})`
+              : 'Gửi lại mã OTP'}
           </button>
         </div>
       </div>
