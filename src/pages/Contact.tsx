@@ -15,15 +15,16 @@ const ContactPage = () => {
     e.preventDefault()
     setIsLoading(true)
     try {
+      const formData = new FormData()
+      formData.append('name', form.name)
+      formData.append('email', form.email)
+      formData.append('message', form.message)
+
       const response = await axios.post(
-        'https://script.google.com/macros/s/AKfycbwt_jJ7jDV60d_jaD_LZfQJJjGRWGQheVj8IlJpsXRaVDgyvHYKe25yWjxZ0uxHzfFi1A/exec',
-        form,
-        {
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        }
+        'https://script.google.com/macros/s/AKfycbyIEhOjcoZ5zetXFxXlfw3jVnJhSJ6elcmXemSfwOo-Le6oRVjLJoqnFZ6lXdP4nTlMnQ/exec',
+        formData
       )
+
       if (response.data.result === 'success') {
         setStatus('Feedback sent successfully!')
         setForm({ name: '', email: '', message: '' })
@@ -68,7 +69,6 @@ const ContactPage = () => {
   return (
     <div className='min-h-screen bg-gray-100 py-12'>
       <div className='container mx-auto px-4'>
-        {/* Header Section */}
         <div className='text-center mb-16'>
           <h1 className='text-4xl font-bold text-gray-900 mb-4'>Liên Hệ Với Chúng Tôi</h1>
           <p className='text-lg text-gray-600 max-w-2xl mx-auto'>
@@ -77,7 +77,6 @@ const ContactPage = () => {
         </div>
 
         <div className='grid grid-cols-1 lg:grid-cols-3 gap-12'>
-          {/* Contact Information */}
           <div className='lg:col-span-1'>
             <div className='bg-white rounded-xl shadow-lg p-8'>
               <h2 className='text-2xl font-semibold text-gray-900 mb-6'>Thông Tin Liên Hệ</h2>
@@ -97,51 +96,48 @@ const ContactPage = () => {
             </div>
           </div>
 
-          {/* Contact Form */}
           <div className='lg:col-span-2'>
             <div className='bg-white rounded-xl shadow-lg p-8'>
               <h2 className='text-2xl font-semibold text-gray-900 mb-6'>Gửi Tin Nhắn</h2>
-              <div>
-                <form onSubmit={handleSubmit} className='space-y-4'>
-                  <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-                    <input
-                      type='text'
-                      name='name'
-                      placeholder='Họ và Tên'
-                      value={form.name}
-                      onChange={handleChange}
-                      className='w-full border p-2 rounded'
-                      required
-                    />
-                    <input
-                      type='email'
-                      name='email'
-                      placeholder='Email'
-                      value={form.email}
-                      onChange={handleChange}
-                      className='w-full border p-2 rounded'
-                      required
-                    />
-                  </div>
-                  <textarea
-                    name='message'
-                    placeholder='Tin nhắn của bạn'
-                    value={form.message}
+              <form onSubmit={handleSubmit} className='space-y-4'>
+                <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                  <input
+                    type='text'
+                    name='name'
+                    placeholder='Họ và Tên'
+                    value={form.name}
                     onChange={handleChange}
                     className='w-full border p-2 rounded'
-                    rows={4}
                     required
                   />
-                  <button
-                    type='submit'
-                    disabled={isLoading}
-                    className='w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 disabled:opacity-50'
-                  >
-                    {isLoading ? 'Đang gửi...' : 'Gửi phản hồi'}
-                  </button>
-                  {status && <p className='text-sm text-green-600'>{status}</p>}
-                </form>
-              </div>
+                  <input
+                    type='email'
+                    name='email'
+                    placeholder='Email'
+                    value={form.email}
+                    onChange={handleChange}
+                    className='w-full border p-2 rounded'
+                    required
+                  />
+                </div>
+                <textarea
+                  name='message'
+                  placeholder='Tin nhắn của bạn'
+                  value={form.message}
+                  onChange={handleChange}
+                  className='w-full border p-2 rounded'
+                  rows={4}
+                  required
+                />
+                <button
+                  type='submit'
+                  disabled={isLoading}
+                  className='w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 disabled:opacity-50'
+                >
+                  {isLoading ? 'Đang gửi...' : 'Gửi phản hồi'}
+                </button>
+                {status && <p className='text-sm text-green-600'>{status}</p>}
+              </form>
             </div>
           </div>
         </div>
