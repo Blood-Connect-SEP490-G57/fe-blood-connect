@@ -6,8 +6,9 @@ import { Button } from '../ui/button'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
-import { Lock, Loader2Icon } from 'lucide-react'
+import { Lock, Loader2Icon, Eye, EyeOff } from 'lucide-react'
 import { resetPassword } from '@/api/auth'
+import { useState } from 'react'
 
 // Validation schema using Zod
 const resetPasswordSchema = z
@@ -31,6 +32,8 @@ const resetPasswordSchema = z
 export default function ResetPassword() {
   const { toast } = useToast()
   const navigate = useNavigate()
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
   const form = useForm({
     resolver: zodResolver(resetPasswordSchema),
@@ -82,15 +85,15 @@ export default function ResetPassword() {
           </div>
         </div>
 
-        <h2 className='mt-3 text-center text-3xl font-extrabold text-gray-900'>Đặt lại mật khẩu</h2>
+        <h2 className='mt-3 text-center text-3xl font-bold text-gray-900'>Đặt lại mật khẩu</h2>
         <p className='mt-2 text-center text-sm text-gray-600'>
-          Chào mừng bạn trở lại với <span className='font-semibold text-red-600'>Giọt Máu Hi Vọng</span>
+          Chào mừng bạn trở lại với <span className='font-semibold text-red-600'>Giọt Máu Hy Vọng</span>
         </p>
       </div>
 
       <div className='mt-8 sm:mx-auto sm:w-full sm:max-w-md'>
         <div className='bg-white py-8 px-4 shadow-xl rounded-lg sm:px-10 border border-red-100'>
-        <div className='text-left text-sm mb-4'>
+          <div className='text-left text-sm mb-4'>
             <button onClick={() => navigate(-1)} className='w-full text-start text-sm text-red-600 hover:underline'>
               ← Quay lại
             </button>
@@ -108,10 +111,17 @@ export default function ResetPassword() {
                         <Lock className='absolute left-3 top-3 text-accent' size={18} />
                         <Input
                           {...field}
-                          type='password'
-                          className='appearance-none block w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500'
+                          type={showPassword ? 'text' : 'password'}
+                          className='appearance-none block w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500'
                           placeholder='Nhập mật khẩu'
                         />
+                        <button
+                          type='button'
+                          onClick={() => setShowPassword(!showPassword)}
+                          className='absolute right-3 top-3 text-gray-500 hover:text-gray-700 focus:outline-none'
+                        >
+                          {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
+                        </button>
                       </div>
                     </FormControl>
                     <FormMessage className='text-red-500 text-sm mt-1' />
@@ -130,10 +140,17 @@ export default function ResetPassword() {
                         <Lock className='absolute left-3 top-3 text-accent' size={18} />
                         <Input
                           {...field}
-                          type='password'
-                          className='appearance-none block w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500'
+                          type={showConfirmPassword ? 'text' : 'password'}
+                          className='appearance-none block w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500'
                           placeholder='Xác nhận mật khẩu'
                         />
+                        <button
+                          type='button'
+                          onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                          className='absolute right-3 top-3 text-gray-500 hover:text-gray-700 focus:outline-none'
+                        >
+                          {showConfirmPassword ? <Eye size={18} /> : <EyeOff size={18} />}
+                        </button>
                       </div>
                     </FormControl>
                     <FormMessage className='text-red-500 text-sm mt-1' />

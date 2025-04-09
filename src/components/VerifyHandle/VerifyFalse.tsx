@@ -34,8 +34,6 @@ export default function VerifyFalse() {
         <p className='text-gray-600 mt-4'>
           Đã có sai sót trong quá trình xác thực! Vui lòng thử lại hoặc liên hệ với đội ngũ hỗ trợ của chúng tôi.
         </p>
-      </div>
-      <div className='bg-white shadow-lg rounded-lg p-6 max-w-md w-full mt-6'>
         <h2 className='text-lg font-semibold text-gray-800'>Nhập lại email để nhận mail xác thực mới</h2>
         <label htmlFor='email' className='block text-sm text-gray-600 mt-4'>
           Địa chỉ email

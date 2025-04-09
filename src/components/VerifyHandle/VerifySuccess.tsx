@@ -7,7 +7,7 @@ export default function VerifySuccess() {
         <CheckCircle className="w-16 h-16 text-green-500 mx-auto" />
         <h2 className="text-2xl font-bold text-gray-800 mt-4">Xác thực thành công</h2>
         <p className="text-gray-600 mt-4">
-          Cảm ơn bạn đã xác thực tài khoản của mình! Bây giờ bạn có thể đăng nhập và sử dụng dịch vụ của chúng tôi.
+          Bây giờ bạn có thể đăng nhập và sử dụng dịch vụ của chúng tôi.
         </p>
         <div className="mt-6 flex flex-col gap-4">
           <a

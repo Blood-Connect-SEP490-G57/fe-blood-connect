@@ -1,10 +1,7 @@
-import React from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Shield, Lock, AlertTriangle } from 'lucide-react'
-import { Switch } from '@/components/ui/switch'
-import { Label } from '@/components/ui/label'
+import { Shield, Lock, Eye, EyeOff } from 'lucide-react'
 import { Separator } from '@/components/ui/separator'
 import {
   Dialog,
@@ -23,9 +20,14 @@ import * as z from 'zod'
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form'
 import { toast } from '@/components/ui/use-toast'
 import { isAxiosError } from 'axios'
+import { useState } from 'react'
 
 const Settings = () => {
-  const [isChangingPassword, setIsChangingPassword] = React.useState(false)
+  const [isChangingPassword, setIsChangingPassword] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [showOldPassword, setShowOldPassword] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const passwordForm = useForm<z.infer<typeof ChangePasswordSchema>>({
     resolver: zodResolver(ChangePasswordSchema),
@@ -37,15 +39,25 @@ const Settings = () => {
   })
 
   const onChangePassword = async (values: z.infer<typeof ChangePasswordSchema>) => {
+    if (values.newPassword !== values.confirmNewPassword) {
+      toast({
+        title: 'Lỗi',
+        description: 'Mật khẩu mới và xác nhận mật khẩu không khớp',
+        variant: 'destructive'
+      })
+      return
+    }
+
+    setIsSubmitting(true)
     try {
-      await changePassword({
+      const response = await changePassword({
         oldPassword: values.oldPassword,
         newPassword: values.newPassword
       })
 
       toast({
         title: 'Thành công',
-        description: 'Đổi mật khẩu thành công',
+        description: response.data.message,
         variant: 'default'
       })
 
@@ -59,43 +71,15 @@ const Settings = () => {
           variant: 'destructive'
         })
       }
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
   return (
-    <div className='min-h-screen bg-gray-100 py-12'>
+    <div className='min-h-screen bg-gray-100 py-12 overflow-hidden'>
       <div className='container mx-auto px-4'>
-        <h1 className='text-2xl font-bold text-gray-900 mb-8'>Cài đặt</h1>
-
         <div className='max-w-3xl mx-auto space-y-6'>
-          {/* Notification Settings */}
-          {/* <Card>
-            <CardHeader>
-              <CardTitle className='text-xl text-red-600 flex items-center gap-2'>
-                <Bell className='w-5 h-5' />
-                Cài đặt thông báo
-              </CardTitle>
-            </CardHeader>
-            <CardContent className='space-y-6'>
-              <div className='flex items-center justify-between'>
-                <div className='space-y-0.5'>
-                  <Label className='text-base'>Thông báo qua Email</Label>
-                  <p className='text-sm text-muted-foreground'>Nhận thông báo về lịch hẹn qua email</p>
-                </div>
-                <Switch />
-              </div>
-              <Separator />
-              <div className='flex items-center justify-between'>
-                <div className='space-y-0.5'>
-                  <Label className='text-base'>Thông báo qua SMS</Label>
-                  <p className='text-sm text-muted-foreground'>Nhận thông báo về lịch hẹn qua tin nhắn</p>
-                </div>
-                <Switch />
-              </div>
-            </CardContent>
-          </Card> */}
-
-          {/* Security Settings */}
           <Card>
             <CardHeader>
               <CardTitle className='text-xl text-red-600 flex items-center gap-2'>
@@ -104,23 +88,12 @@ const Settings = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className='space-y-6'>
-              <div className='space-y-4'>
-                <div className='flex items-center justify-between'>
-                  <div className='space-y-0.5'>
-                    <Label className='text-base'>Xác thực hai yếu tố</Label>
-                    <p className='text-sm text-muted-foreground'>Bảo vệ tài khoản bằng xác thực hai yếu tố</p>
-                  </div>
-                  <Switch />
-                </div>
+              <div className='space-y-4 '>
                 <Separator />
                 <div>
                   <Dialog open={isChangingPassword} onOpenChange={setIsChangingPassword}>
                     <DialogTrigger asChild>
-                      <Button
-                        variant='outline'
-                        className='w-full border-red-600 text-red-600 hover:bg-red-50'
-                        onClick={() => setIsChangingPassword(true)}
-                      >
+                      <Button variant='outline' className='w-full border-red-600 text-red-600 hover:bg-red-50'>
                         <Lock className='w-4 h-4 mr-2' />
                         Đổi mật khẩu
                       </Button>
@@ -139,7 +112,16 @@ const Settings = () => {
                               <FormItem>
                                 <FormLabel>Mật khẩu hiện tại</FormLabel>
                                 <FormControl>
-                                  <Input type='password' {...field} />
+                                  <div className='relative'>
+                                    <Input {...field} type={showOldPassword ? 'text' : 'password'} />
+                                    <button
+                                      type='button'
+                                      onClick={() => setShowOldPassword(!showOldPassword)}
+                                      className='absolute right-3 top-3 text-gray-500 hover:text-gray-700 focus:outline-none'
+                                    >
+                                      {showOldPassword ? <Eye size={18} /> : <EyeOff size={18} />}
+                                    </button>
+                                  </div>
                                 </FormControl>
                                 <FormMessage />
                               </FormItem>
@@ -152,7 +134,16 @@ const Settings = () => {
                               <FormItem>
                                 <FormLabel>Mật khẩu mới</FormLabel>
                                 <FormControl>
-                                  <Input type='password' {...field} />
+                                  <div className='relative'>
+                                    <Input {...field} type={showPassword ? 'text' : 'password'} />
+                                    <button
+                                      type='button'
+                                      onClick={() => setShowPassword(!showPassword)}
+                                      className='absolute right-3 top-3 text-gray-500 hover:text-gray-700 focus:outline-none'
+                                    >
+                                      {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
+                                    </button>
+                                  </div>
                                 </FormControl>
                                 <FormMessage />
                               </FormItem>
@@ -165,7 +156,16 @@ const Settings = () => {
                               <FormItem>
                                 <FormLabel>Xác nhận mật khẩu mới</FormLabel>
                                 <FormControl>
-                                  <Input type='password' {...field} />
+                                  <div className='relative'>
+                                    <Input {...field} type={showConfirmPassword ? 'text' : 'password'} />
+                                    <button
+                                      type='button'
+                                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                      className='absolute right-3 top-3 text-gray-500 hover:text-gray-700 focus:outline-none'
+                                    >
+                                      {showConfirmPassword ? <Eye size={18} /> : <EyeOff size={18} />}
+                                    </button>
+                                  </div>
                                 </FormControl>
                                 <FormMessage />
                               </FormItem>
@@ -175,8 +175,12 @@ const Settings = () => {
                             <Button variant='outline' onClick={() => setIsChangingPassword(false)}>
                               Hủy
                             </Button>
-                            <Button type='submit' className='bg-red-600 text-white hover:bg-red-700'>
-                              Lưu thay đổi
+                            <Button
+                              type='submit'
+                              className='bg-red-600 text-white hover:bg-red-700'
+                              disabled={isSubmitting}
+                            >
+                              {isSubmitting ? 'Đang xử lý...' : 'Lưu thay đổi'}
                             </Button>
                           </DialogFooter>
                         </form>
@@ -185,37 +189,6 @@ const Settings = () => {
                   </Dialog>
                 </div>
               </div>
-            </CardContent>
-          </Card>
-
-          {/* Danger Zone */}
-          <Card>
-            <CardHeader>
-              <CardTitle className='text-xl text-red-600 flex items-center gap-2'>
-                <AlertTriangle className='w-5 h-5' />
-                Vùng nguy hiểm
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button variant='destructive' className='w-full'>
-                    Xóa tài khoản
-                  </Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Bạn chắc chắn muốn xóa tài khoản?</DialogTitle>
-                    <DialogDescription>
-                      Hành động này không thể hoàn tác. Tất cả dữ liệu của bạn sẽ bị xóa vĩnh viễn.
-                    </DialogDescription>
-                  </DialogHeader>
-                  <DialogFooter>
-                    <Button variant='outline'>Hủy</Button>
-                    <Button variant='destructive'>Xóa tài khoản</Button>
-                  </DialogFooter>
-                </DialogContent>
-              </Dialog>
             </CardContent>
           </Card>
         </div>
