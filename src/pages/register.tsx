@@ -50,6 +50,7 @@ export default function Register() {
   })
 
   const onSubmit = (data: RegisterType) => {
+    localStorage.setItem('email', data.email)
     register(data)
   }
 
