@@ -86,10 +86,7 @@ const SelectCampaignStep = ({
         </CardContent>
       </Card>
 
-      <div className='flex justify-between'>
-        <Button variant='outline' onClick={() => setCurrentStep(0)}>
-          Quay lại
-        </Button>
+      <div className='flex justify-end'>
         <Button
           className='bg-red-600 text-white hover:bg-red-700'
           disabled={!selectedCampaign}

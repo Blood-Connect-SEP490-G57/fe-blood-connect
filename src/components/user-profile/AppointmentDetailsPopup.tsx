@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { ClipboardList, Calendar } from 'lucide-react'
-
+import { useNavigate } from 'react-router-dom'
 interface AppointmentDetailsPopupProps {
   isOpen: boolean
   onClose: () => void
@@ -25,6 +25,7 @@ const AppointmentDetailsPopup = ({
 }: AppointmentDetailsPopupProps) => {
   if (!isOpen) return null
 
+  const navigate = useNavigate()
   return (
     <div className='fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50'>
       <div className='bg-white rounded-lg shadow-lg w-full max-w-4xl p-6 max-h-[100vh] overflow-y-auto'>
@@ -60,9 +61,11 @@ const AppointmentDetailsPopup = ({
                   </div>
                 </div>
               ) : (
-                <div className='flex justify-center'>
-                  <p className='text-gray-600 text-center'>Chưa có phiếu đăng ký hiến máu</p>
-                  <Button onClick={onClose} className='bg-red-600 hover:bg-red-700 text-white'>
+                <div className='flex flex-col justify-center'>
+                  <p className='text-gray-600 text-center mb-6'>Chưa có phiếu đăng ký hiến máu</p>
+                  <Button onClick={() =>
+                    navigate('/dang-ky-hien-mau')
+                  } className='bg-red-600 hover:bg-red-700 text-white'>
                     Đăng ký ngay
                   </Button>
                 </div>
