@@ -61,7 +61,7 @@ const HeroSection: React.FC = () => {
             </div>
 
             <h1 className='text-4xl lg:text-6xl font-bold mb-6 leading-tight'>
-              Giọt Máu Hi Vọng
+              Giọt Máu Hy Vọng
               <span className='block text-2xl lg:text-3xl font-normal mt-4 text-red-100'>
                 Kết nối yêu thương - Lan tỏa sự sống
               </span>

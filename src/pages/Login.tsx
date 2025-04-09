@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useToast } from '@/components/ui/use-toast'
 import * as z from 'zod'
-import { Loader2Icon, Phone, Lock } from 'lucide-react'
+import { Loader2Icon, Phone, Lock, Eye, EyeOff } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
@@ -12,6 +12,7 @@ import { loginUser } from '@/api/auth'
 import { useMutation } from '@tanstack/react-query'
 import { isAxiosError } from 'axios'
 import { useAuth } from '@/components/authContext/AuthContext'
+import { useState } from 'react'
 
 export default function Login() {
   const { toast } = useToast()
@@ -66,9 +67,9 @@ export default function Login() {
           </div>
         </div>
 
-        <h2 className='mt-3 text-center text-3xl font-extrabold text-gray-900'>Đăng Nhập</h2>
+        <h2 className='mt-3 text-center text-3xl font-bold text-gray-900'>Đăng Nhập</h2>
         <p className='mt-2 text-center text-sm text-gray-600'>
-          Chào mừng bạn trở lại với <span className='font-semibold text-red-600'>Giọt Máu Hi Vọng</span>
+          Chào mừng bạn trở lại với <span className='font-semibold text-red-600'>Giọt Máu Hy Vọng</span>
         </p>
       </div>
 
@@ -81,14 +82,14 @@ export default function Login() {
                 name='username'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className='block text-sm font-medium text-gray-700'>Số điện thoại</FormLabel>
+                    <FormLabel className='block text-sm font-medium text-gray-700'>Tên đăng nhập</FormLabel>
                     <FormControl>
                       <div className='mt-1 relative'>
                         <Phone className='absolute left-3 top-3 text-accent' size={18} />
                         <Input
                           {...field}
                           className='appearance-none block w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500'
-                          placeholder='Nhập số điện thoại'
+                          placeholder='Nhập tên đăng nhập'
                         />
                       </div>
                     </FormControl>
@@ -100,23 +101,38 @@ export default function Login() {
               <FormField
                 control={form.control}
                 name='password'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className='block text-sm font-medium text-gray-700'>Mật khẩu</FormLabel>
-                    <FormControl>
-                      <div className='mt-1 relative'>
-                        <Lock className='absolute left-3 top-3 text-accent' size={18} />
-                        <Input
-                          {...field}
-                          type='password'
-                          className='appearance-none block w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500'
-                          placeholder='Nhập mật khẩu'
-                        />
-                      </div>
-                    </FormControl>
-                    <FormMessage className='text-red-500 text-sm mt-1' />
-                  </FormItem>
-                )}
+                render={({ field }) => {
+                  const [showPassword, setShowPassword] = useState(false)
+
+                  const togglePasswordVisibility = () => {
+                    setShowPassword((prev) => !prev)
+                  }
+
+                  return (
+                    <FormItem>
+                      <FormLabel className='block text-sm font-medium text-gray-700'>Mật khẩu</FormLabel>
+                      <FormControl>
+                        <div className='mt-1 relative'>
+                          <Lock className='absolute left-3 top-3 text-accent' size={18} />
+                          <Input
+                            {...field}
+                            type={showPassword ? 'text' : 'password'}
+                            className='appearance-none block w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500'
+                            placeholder='Nhập mật khẩu'
+                          />
+                          <button
+                            type='button'
+                            onClick={togglePasswordVisibility}
+                            className='absolute right-3 top-3 text-gray-500 hover:text-gray-700 focus:outline-none'
+                          >
+                            {showPassword ? <Eye className='h-5 w-5' /> : <EyeOff className='h-5 w-5' />}
+                          </button>
+                        </div>
+                      </FormControl>
+                      <FormMessage className='text-red-500 text-sm mt-1' />
+                    </FormItem>
+                  )
+                }}
               />
 
               <div className='flex items-center justify-between'>

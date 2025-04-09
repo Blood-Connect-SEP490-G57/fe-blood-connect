@@ -9,7 +9,7 @@ const Footer: React.FC = () => {
           <div>
             <h3 className='text-lg font-semibold mb-4'>Về chúng tôi</h3>
             <p className='text-gray-400'>
-              Giọt Máu Hi Vọng là dự án phi lợi nhuận nhằm kết nối những người hiến máu tình nguyện với những người cần
+              Giọt Máu Hy Vọng là dự án phi lợi nhuận nhằm kết nối những người hiến máu tình nguyện với những người cần
               máu. Chúng tôi tin rằng mỗi giọt máu đều mang lại hy vọng và sự sống cho những người đang cần.
             </p>
             <br />

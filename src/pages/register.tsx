@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useToast } from '@/components/ui/use-toast'
 import * as z from 'zod'
-import { Loader2Icon, Lock, Mail } from 'lucide-react'
+import { Eye, EyeOff, Loader2Icon, Lock, Mail } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
@@ -12,10 +12,13 @@ import { registerUser } from '@/api/auth'
 import { useMutation } from '@tanstack/react-query'
 import { isAxiosError } from 'axios'
 import { User } from 'lucide-react'
+import { useState } from 'react'
 
 export default function Register() {
   const { toast } = useToast()
   const navigate = useNavigate()
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
   const form = useForm<z.infer<typeof RegisterSchema>>({
     resolver: zodResolver(RegisterSchema),
@@ -28,10 +31,10 @@ export default function Register() {
   })
 
   const { mutate: register, isLoading } = useMutation((data: RegisterType) => registerUser(data), {
-    onSuccess: () => {
+    onSuccess: (response) => {
       toast({
         title: 'Đăng ký thành công',
-        description: 'Vui lòng kiểm tra gmail để xác thực tài khoản!',
+        description: response.data.message,
         variant: 'default'
       })
       setTimeout(() => {
@@ -64,9 +67,9 @@ export default function Register() {
           </div>
         </div>
 
-        <h2 className='mt-3 text-center text-3xl font-extrabold text-gray-900'>Đăng Ký</h2>
+        <h2 className='mt-3 text-center text-3xl font-bold text-gray-900'>Đăng Ký</h2>
         <p className='mt-2 text-center text-sm text-gray-600'>
-          Chào mừng bạn trở lại với <span className='font-semibold text-red-600'>Giọt Máu Hi Vọng</span>
+          Chào mừng bạn trở lại với <span className='font-semibold text-red-600'>Giọt Máu Hy Vọng</span>
         </p>
       </div>
 
@@ -129,10 +132,17 @@ export default function Register() {
                         <Lock className='absolute left-3 top-3 text-accent' size={18} />
                         <Input
                           {...field}
-                          type='password'
+                          type={showPassword ? 'text' : 'password'}
                           className='appearance-none block w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500'
                           placeholder='Nhập mật khẩu'
                         />
+                        <button
+                          type='button'
+                          onClick={() => setShowPassword(!showPassword)}
+                          className='absolute right-3 top-3 text-gray-500 hover:text-gray-700 focus:outline-none'
+                        >
+                          {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
+                        </button>
                       </div>
                     </FormControl>
                     <FormMessage className='text-red-500 text-sm mt-1' />
@@ -151,10 +161,17 @@ export default function Register() {
                         <Lock className='absolute left-3 top-3 text-accent' size={18} />
                         <Input
                           {...field}
-                          type='password'
+                          type={showConfirmPassword ? 'text' : 'password'}
                           className='appearance-none block w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500'
                           placeholder='Xác nhận mật khẩu'
                         />
+                        <button
+                          type='button'
+                          onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                          className='absolute right-3 top-3 text-gray-500 hover:text-gray-700 focus:outline-none'
+                        >
+                          {showConfirmPassword ? <Eye size={18} /> : <EyeOff size={18} />}
+                        </button>
                       </div>
                     </FormControl>
                     <FormMessage className='text-red-500 text-sm mt-1' />
