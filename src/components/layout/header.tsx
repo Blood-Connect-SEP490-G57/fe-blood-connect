@@ -8,12 +8,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
-import { User, Settings, LogOut, Menu, Bell, X, LogOutIcon, LogInIcon, UserPlusIcon } from 'lucide-react'
+import { User, Settings, LogOut, Menu, Bell, X, LogOutIcon, LogInIcon, UserPlusIcon, Home, Newspaper, HelpCircle, Phone, Calendar } from 'lucide-react'
 import UserAvatar from '@/components/ui/user-avatar'
 import Notifications from '@/components/notification/Notifications'
 import { useAuth } from '@/components/authContext/AuthContext'
 import { useVerification } from '../verificationContext/VerificationContext'
 import { useUnreadNotifications } from '@/hooks/useUnreadNotifications'
+import { motion, AnimatePresence } from 'framer-motion'
 
 const Header: React.FC = () => {
   const navigate = useNavigate()
@@ -22,8 +23,20 @@ const Header: React.FC = () => {
   const [isMobileNotiOpen, setIsMobileNotiOpen] = useState(false)
   const { isLoggedIn, setIsLoggedIn } = useAuth()
   const { isVerified } = useVerification()
-
   const { unreadCount } = useUnreadNotifications()
+  const [scrolled, setScrolled] = useState(false)
+
+  // Monitor scrolling for glass effect
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 10)
+    }
+    
+    window.addEventListener('scroll', handleScroll)
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [])
 
   useEffect(() => {
     if (
@@ -66,15 +79,15 @@ const Header: React.FC = () => {
   }
 
   const navigation = [
-    { name: 'TRANG CHỦ', href: '/' },
-    { name: 'TIN TỨC', href: '/tin-tuc' },
-    { name: 'HỎI ĐÁP', href: '/cau-hoi-thuong-gap' },
-    { name: 'LIÊN HỆ', href: '/lien-he' },
-    { name: 'ĐĂNG KÝ HIẾN MÁU', href: '/dang-ky-hien-mau' },
-    { name: 'LỊCH HẸN CỦA TÔI', href: '/trang-ca-nhan#lich-hen' },
-    { name: 'LỊCH SỬ ĐẶT HẸN', href: '/trang-ca-nhan#lich-su-hien-mau' },
-    { name: 'THÔNG TIN CÁ NHÂN', href: '/trang-ca-nhan#thong-tin-ca-nhan' },
-    { name: 'CÀI ĐẶT', href: '/cai-dat' }
+    { name: 'TRANG CHỦ', href: '/', icon: <Home className="w-4 h-4 mr-2" /> },
+    { name: 'TIN TỨC', href: '/tin-tuc', icon: <Newspaper className="w-4 h-4 mr-2" /> },
+    { name: 'HỎI ĐÁP', href: '/cau-hoi-thuong-gap', icon: <HelpCircle className="w-4 h-4 mr-2" /> },
+    { name: 'LIÊN HỆ', href: '/lien-he', icon: <Phone className="w-4 h-4 mr-2" /> },
+    { name: 'ĐĂNG KÝ HIẾN MÁU', href: '/dang-ky-hien-mau', icon: <Calendar className="w-4 h-4 mr-2" /> },
+    { name: 'LỊCH HẸN CỦA TÔI', href: '/trang-ca-nhan#lich-hen', icon: <Calendar className="w-4 h-4 mr-2" /> },
+    { name: 'LỊCH SỬ ĐẶT HẸN', href: '/trang-ca-nhan#lich-su-hien-mau', icon: <Calendar className="w-4 h-4 mr-2" /> },
+    { name: 'THÔNG TIN CÁ NHÂN', href: '/trang-ca-nhan#thong-tin-ca-nhan', icon: <User className="w-4 h-4 mr-2" /> },
+    { name: 'CÀI ĐẶT', href: '/cai-dat', icon: <Settings className="w-4 h-4 mr-2" /> }
   ]
 
   // Add verification link dynamically if not verified
@@ -83,7 +96,8 @@ const Header: React.FC = () => {
     if (isVerified === 'NONE' && isLoggedIn) {
       filteredNav.splice(8, 0, {
         name: 'XÁC THỰC TÀI KHOẢN',
-        href: '/trang-ca-nhan#xac-thuc-tai-khoan'
+        href: '/trang-ca-nhan#xac-thuc-tai-khoan',
+        icon: <User className="w-4 h-4 mr-2" />
       })
     }
     return filteredNav
@@ -101,17 +115,33 @@ const Header: React.FC = () => {
     setIsMobileNotiOpen(false)
   }
 
+  // Get current page for active status
+  const isActive = (path: string) => {
+    if (path === '/') {
+      return location.pathname === path
+    }
+    return location.pathname.startsWith(path)
+  }
+
   return (
-    <header className='bg-white shadow-sm fixed top-0 left-0 right-0 z-50'>
-      <div className='mx-auto px-4'>
+    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-white/80 backdrop-blur-md shadow-sm' : 'bg-white shadow-sm'}`}>
+      <div className='max-w-7xl mx-auto px-4'>
         <div className='flex items-center justify-between h-16'>
-          <div className='flex items-center'>
-            <a href='/' className='text-primary font-bold text-xl'>
-              Giọt Máu Hy Vọng
+          <motion.div 
+            className='flex items-center'
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <a href='/' className='flex items-center'>
+              <span className='text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-500 font-bold text-xl'>
+                Giọt Máu Hy Vọng
+              </span>
             </a>
-          </div>
+          </motion.div>
+          
           {/* Desktop and Tablet Navigation */}
-          <div className='hidden xl:flex items-center space-x-8'>
+          <div className='hidden xl:flex items-center space-x-6'>
             {getFilteredNavigation()
               .filter((item) => {
                 if (!isLoggedIn && (item.name === 'LỊCH HẸN CỦA TÔI' || item.name === 'LỊCH SỬ ĐẶT HẸN')) {
@@ -122,44 +152,71 @@ const Header: React.FC = () => {
                 )
               })
               .map((item) => (
-                <a key={item.name} href={item.href} className='text-gray-700 hover:text-primary transition-colors'>
+                <motion.a 
+                  key={item.name} 
+                  href={item.href} 
+                  className={`text-sm font-medium transition-colors px-3 py-2 rounded-full ${
+                    isActive(item.href) 
+                      ? 'text-white bg-gradient-to-r from-red-600 to-red-500 shadow-sm' 
+                      : 'text-gray-700 hover:text-red-600 hover:bg-red-50'
+                  }`}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
                   {item.name}
-                </a>
+                </motion.a>
               ))}
           </div>
-          <div className='hidden xl:flex items-center space-x-4'>
+          
+          <div className='hidden xl:flex items-center space-x-3'>
             {isLoggedIn ? (
               <>
-                <Button
-                  variant='ghost'
-                  onClick={() => setIsMobileNotiOpen((prev) => !prev)}
-                  className='group p-inherit text-red-600 hover:text-white hover:bg-red-600 relative'
-                >
-                  <div className='relative w-full h-full'>
-                    <Bell className='group-hover:text-white text-red-600 hover:text-white' />
-                    <span className='absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full px-2 hover:bg-red-700 group-hover:bg-red-700'>
-                      {unreadCount}
-                    </span>
-                  </div>
-                </Button>
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  <Button
+                    variant='ghost'
+                    onClick={() => setIsMobileNotiOpen((prev) => !prev)}
+                    className='group relative rounded-full p-2 bg-red-50 border border-red-100 text-red-600 hover:bg-gradient-to-r from-red-600 to-red-500 hover:text-white hover:border-transparent'
+                  >
+                    <div className='relative w-full h-full'>
+                      <Bell className='group-hover:text-white w-5 h-5' />
+                      {unreadCount > 0 && (
+                        <span className='absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full px-1.5 py-0.5 min-w-[18px] text-center'>
+                          {unreadCount}
+                        </span>
+                      )}
+                    </div>
+                  </Button>
+                </motion.div>
+                
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant='ghost' className='relative h-8 w-8 rounded-full'>
-                      <UserAvatar size='sm' />
-                    </Button>
+                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                      <Button variant='ghost' className='relative rounded-full overflow-hidden p-0 h-10 w-10 border-2 border-red-100'>
+                        <UserAvatar size='sm' />
+                      </Button>
+                    </motion.div>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent className='w-56' align='end' forceMount>
-                    <DropdownMenuItem onClick={() => navigate('/trang-ca-nhan#thong-tin-ca-nhan')}>
-                      <User className='mr-2 h-4 w-4' />
+                  <DropdownMenuContent className='w-56 mt-1 rounded-xl overflow-hidden border border-gray-100 p-1' align='end' forceMount>
+                    <DropdownMenuItem 
+                      onClick={() => navigate('/trang-ca-nhan#thong-tin-ca-nhan')}
+                      className='rounded-lg hover:bg-red-50 focus:bg-red-50 hover:text-red-600 focus:text-red-600 gap-2 cursor-pointer p-2.5'
+                    >
+                      <User className='h-4 w-4' />
                       <span>Hồ sơ cá nhân</span>
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => navigate('/cai-dat')}>
-                      <Settings className='mr-2 h-4 w-4' />
+                    <DropdownMenuItem 
+                      onClick={() => navigate('/cai-dat')}
+                      className='rounded-lg hover:bg-red-50 focus:bg-red-50 hover:text-red-600 focus:text-red-600 gap-2 cursor-pointer p-2.5'
+                    >
+                      <Settings className='h-4 w-4' />
                       <span>Cài đặt</span>
                     </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem className='text-red-600' onClick={handleLogout}>
-                      <LogOut className='mr-2 h-4 w-4' />
+                    <DropdownMenuSeparator className='my-1' />
+                    <DropdownMenuItem 
+                      className='rounded-lg hover:bg-red-50 focus:bg-red-50 text-red-600 gap-2 cursor-pointer p-2.5' 
+                      onClick={handleLogout}
+                    >
+                      <LogOut className='h-4 w-4' />
                       <span>Đăng xuất</span>
                     </DropdownMenuItem>
                   </DropdownMenuContent>
@@ -167,20 +224,27 @@ const Header: React.FC = () => {
               </>
             ) : (
               <div className='flex items-center gap-3'>
-                <Button
-                  variant='outline'
-                  className='border-red-600 text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors'
-                  onClick={handleLoginClick}
-                >
-                  Đăng nhập
-                </Button>
-                <Button
-                  variant='default'
-                  className='bg-red-600 text-white hover:bg-red-700 transition-colors'
-                  onClick={handleRegisterClick}
-                >
-                  Đăng ký
-                </Button>
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  <Button
+                    variant='outline'
+                    className='rounded-full border-red-500 text-red-600 hover:bg-red-50 hover:text-red-700 transition-all'
+                    onClick={handleLoginClick}
+                  >
+                    <LogInIcon className="w-4 h-4 mr-1.5" />
+                    Đăng nhập
+                  </Button>
+                </motion.div>
+                
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  <Button
+                    variant='default'
+                    className='rounded-full bg-gradient-to-r from-red-600 to-red-500 text-white hover:from-red-700 hover:to-red-600 transition-all shadow-sm'
+                    onClick={handleRegisterClick}
+                  >
+                    <UserPlusIcon className="w-4 h-4 mr-1.5" />
+                    Đăng ký
+                  </Button>
+                </motion.div>
               </div>
             )}
           </div>
@@ -188,129 +252,177 @@ const Header: React.FC = () => {
           {/* Mobile menu button */}
           <div className='xl:hidden flex items-center space-x-2'>
             {isLoggedIn && location.pathname !== '/dang-nhap' && location.pathname !== '/dang-ky' && (
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Button
+                  variant='ghost'
+                  data-notifications-trigger
+                  onClick={() => {
+                    setIsMobileNotiOpen((prev) => !prev)
+                  }}
+                  className='group relative rounded-full p-2 bg-red-50 border border-red-100 text-red-600 hover:bg-red-100'
+                >
+                  <div className='relative w-full h-full'>
+                    <Bell className='w-5 h-5' />
+                    {unreadCount > 0 && (
+                      <span className='absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full px-1.5 py-0.5 min-w-[18px] text-center'>
+                        {unreadCount}
+                      </span>
+                    )}
+                  </div>
+                </Button>
+              </motion.div>
+            )}
+            
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Button
                 variant='ghost'
-                data-notifications-trigger
+                size='sm'
                 onClick={() => {
-                  setIsMobileNotiOpen((prev) => !prev)
+                  setIsMobileMenuOpen(!isMobileMenuOpen)
+                  setIsMobileNotiOpen(false)
                 }}
-                className='group p-inherit text-red-600 hover:text-white hover:bg-red-600 relative'
+                className='rounded-full p-2 text-red-600 hover:bg-red-50'
               >
-                <div className='relative w-full h-full'>
-                  <Bell className='group-hover:text-white text-red-600 hover:text-white' />
-                  <span className='absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full px-2 hover:bg-red-700 group-hover:bg-red-700'>
-                    {unreadCount}
-                  </span>
-                </div>
+                <Menu className='w-6 h-6' />
+                <span className='sr-only'>Open menu</span>
               </Button>
-            )}
-            <Button
-              variant='ghost'
-              size='sm'
-              onClick={() => {
-                setIsMobileMenuOpen(!isMobileMenuOpen)
-                setIsMobileNotiOpen(false)
-              }}
-            >
-              <Menu className='w-6 h-6' />
-              <span className='sr-only'>Open menu</span>
-            </Button>
+            </motion.div>
           </div>
         </div>
+        
         {/* Mobile Navigation */}
-        <div
-          className={`xl:hidden fixed top-0 right-0 h-full min-w-[250px] lg:min-w-[300px] w-64 
-            bg-white shadow-lg transform transition-transform duration-300 ease-in-out z-50 
-            ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}
-        >
-          <div className='flex flex-col space-y-4 p-4 h-full'>
-            <Button
-              variant='ghost'
-              size='sm'
-              className='self-end mb-4'
-              onClick={() => {
-                setIsMobileMenuOpen(false)
-              }}
-            >
-              <X className='w-6 h-6' />
-            </Button>
-            <div className='flex flex-col space-y-2'>
-              {getFilteredNavigation()
-                .filter((item) => {
-                  if (!isLoggedIn && (item.name === 'LỊCH HẸN CỦA TÔI' || item.name === 'LỊCH SỬ ĐẶT HẸN')) {
-                    return false
-                  }
-                  return true
-                })
-                .map((item) => (
-                  <a
-                    key={item.name}
-                    href={item.href}
-                    className='text-gray-700 hover:text-primary transition-colors py-2 px-4 rounded-md hover:bg-gray-50'
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    {item.name}
-                  </a>
-                ))}
-            </div>
-            <div className='mt-auto'>
-              {isLoggedIn ? (
-                <div className='flex flex-col space-y-2'>
-                  <Button
-                    variant='ghost'
-                    className='w-full border border-red-600 justify-start text-red-600 hover:text-white'
-                    onClick={() => {
-                      handleLogout()
-                      setIsMobileMenuOpen(false)
-                    }}
-                  >
-                    <LogOutIcon className='mr-2 h-4 w-4' />
-                    <span className='text-center'>ĐĂNG XUẤT</span>
-                  </Button>
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 0.5 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 bg-black z-40"
+                onClick={() => setIsMobileMenuOpen(false)}
+              />
+              
+              <motion.div
+                className='xl:hidden fixed top-0 right-0 h-full min-w-[280px] max-w-[85vw] w-72 
+                  bg-white shadow-xl z-50 mobile-menu overflow-auto'
+                initial={{ x: '100%' }}
+                animate={{ x: 0 }}
+                exit={{ x: '100%' }}
+                transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+              >
+                <div className='flex flex-col h-full pb-6'>
+                  <div className='flex justify-between items-center p-4 border-b border-gray-100'>
+                    <span className='font-medium text-lg text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-500'>
+                      Giọt Máu Hy Vọng
+                    </span>
+                    <Button
+                      variant='ghost'
+                      size='sm'
+                      className='rounded-full p-1.5 text-gray-500 hover:bg-gray-100'
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      <X className='w-5 h-5' />
+                    </Button>
+                  </div>
+                  
+                  <div className='flex-1 overflow-y-auto py-4 px-3'>
+                    <div className='space-y-1'>
+                      {getFilteredNavigation()
+                        .filter((item) => {
+                          if (!isLoggedIn && (item.name === 'LỊCH HẸN CỦA TÔI' || item.name === 'LỊCH SỬ ĐẶT HẸN')) {
+                            return false
+                          }
+                          return true
+                        })
+                        .map((item) => (
+                          <motion.a
+                            key={item.name}
+                            href={item.href}
+                            className={`flex items-center rounded-xl py-2.5 px-4 transition-all ${
+                              isActive(item.href)
+                                ? 'bg-gradient-to-r from-red-600 to-red-500 text-white shadow-sm'
+                                : 'text-gray-700 hover:bg-red-50 hover:text-red-600'
+                            }`}
+                            onClick={() => setIsMobileMenuOpen(false)}
+                            whileHover={{ x: 4 }}
+                            whileTap={{ scale: 0.98 }}
+                          >
+                            {item.icon}
+                            {item.name}
+                          </motion.a>
+                        ))}
+                    </div>
+                  </div>
+                  
+                  <div className='px-4 py-2 border-t border-gray-100'>
+                    {isLoggedIn ? (
+                      <motion.button
+                        className='w-full flex items-center justify-center gap-2 bg-gradient-to-r from-red-600 to-red-500 text-white py-2.5 px-4 rounded-xl shadow-sm hover:from-red-700 hover:to-red-600 transition-all'
+                        onClick={() => {
+                          handleLogout()
+                          setIsMobileMenuOpen(false)
+                        }}
+                        whileHover={{ y: -2 }}
+                        whileTap={{ y: 0 }}
+                      >
+                        <LogOutIcon className='h-4 w-4' />
+                        <span>ĐĂNG XUẤT</span>
+                      </motion.button>
+                    ) : (
+                      <div className='flex flex-col space-y-2'>
+                        <motion.button
+                          className='w-full flex items-center justify-center gap-2 border border-red-500 text-red-600 py-2.5 px-4 rounded-xl hover:bg-red-50 transition-all'
+                          onClick={() => {
+                            handleLoginClick()
+                            setIsMobileMenuOpen(false)
+                          }}
+                          whileHover={{ y: -2 }}
+                          whileTap={{ y: 0 }}
+                        >
+                          <LogInIcon className='h-4 w-4' />
+                          <span>ĐĂNG NHẬP</span>
+                        </motion.button>
+                        
+                        <motion.button
+                          className='w-full flex items-center justify-center gap-2 bg-gradient-to-r from-red-600 to-red-500 text-white py-2.5 px-4 rounded-xl shadow-sm hover:from-red-700 hover:to-red-600 transition-all'
+                          onClick={() => {
+                            handleRegisterClick()
+                            setIsMobileMenuOpen(false)
+                          }}
+                          whileHover={{ y: -2 }}
+                          whileTap={{ y: 0 }}
+                        >
+                          <UserPlusIcon className='h-4 w-4' />
+                          <span>ĐĂNG KÝ</span>
+                        </motion.button>
+                      </div>
+                    )}
+                  </div>
                 </div>
-              ) : (
-                <div className='flex flex-col space-y-2'>
-                  <Button
-                    variant='outline'
-                    className='w-full border-red-600 text-red-600 hover:bg-red-50 hover:text-red-700'
-                    onClick={() => {
-                      handleLoginClick()
-                      setIsMobileMenuOpen(false)
-                    }}
-                  >
-                    <LogInIcon className='mr-2 h-4 w-4' />
-                    <span>ĐĂNG NHẬP</span>
-                  </Button>
-                  <Button
-                    variant='default'
-                    className='w-full bg-red-600 text-white hover:bg-red-700'
-                    onClick={() => {
-                      handleRegisterClick()
-                      setIsMobileMenuOpen(false)
-                    }}
-                  >
-                    <UserPlusIcon className='mr-2 h-4 w-4' />
-                    <span>ĐĂNG KÝ</span>
-                  </Button>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>
+        
         {/* Mobile Notification */}
-        <div className='relative'>
+        <AnimatePresence>
           {isMobileNotiOpen && (
-            <div
+            <motion.div
               className='absolute right-0 mt-2 z-50'
               style={{
                 maxHeight: '80vh',
-                minWidth: window.innerWidth < 780 ? '250px' : '600px'
+                minWidth: window.innerWidth < 780 ? '280px' : '400px',
+                maxWidth: '95vw'
               }}
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
             >
               <Notifications onClose={handleNotificationClose} />
-            </div>
+            </motion.div>
           )}
-        </div>
+        </AnimatePresence>
       </div>
     </header>
   )
