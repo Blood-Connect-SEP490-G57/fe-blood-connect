@@ -1,7 +1,8 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { ClipboardList, Calendar } from 'lucide-react'
+import { ClipboardList, Calendar, X, MapPin, ChevronRight } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
+
 interface AppointmentDetailsPopupProps {
   isOpen: boolean
   onClose: () => void
@@ -27,96 +28,116 @@ const AppointmentDetailsPopup = ({
 
   const navigate = useNavigate()
   return (
-    <div className='fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50'>
-      <div className='bg-white rounded-lg shadow-lg w-full max-w-4xl p-6 max-h-[100vh] overflow-y-auto'>
-        <div className='flex justify-end items-center mb-4'>
-          <button onClick={onClose} className='text-gray-500 hover:text-gray-700'>
-            Đóng
+    <div className='fixed inset-0 flex flex-col z-50 md:items-center md:justify-center bg-black/50 overflow-y-auto'>
+      <div className='bg-gray-100 w-full h-full md:h-auto md:max-h-[90vh] md:w-[90%] md:max-w-2xl md:rounded-2xl shadow-xl overflow-hidden md:my-4'>
+        {/* Header */}
+        <div className='bg-white p-4 sticky top-0 z-10 border-b flex items-center justify-between'>
+          <h2 className='text-lg font-semibold'>Chi tiết đăng ký hiến máu</h2>
+          <button 
+            onClick={onClose} 
+            className='w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-gray-500 hover:bg-gray-200'
+          >
+            <X size={18} />
           </button>
         </div>
-        <div className='space-y-6'>
-          <Card>
-            <CardHeader className='pb-2'>
-              <CardTitle className='text-lg text-red-600 flex items-center gap-2'>
-                <Calendar className='w-5 h-5' />
-                Phiếu đăng ký hiến máu
-              </CardTitle>
-            </CardHeader>
-            <CardContent className='pt-2'>
-              {appointmentItems.length > 0 ? (
-                <div className='w-full space-y-3'>
-                  <div className='flex justify-between items-center border-b pb-2'>
-                    <h3 className='font-medium'>Thông tin buổi hiến máu</h3>
-                    {renderStatusBadge(status)}
-                  </div>
-                  <div className='flex flex-col gap-3'>
-                    {appointmentItems.map((item, index) => (
-                      <div key={index} className='flex items-start gap-2'>
-                        <div>
-                          <span className='text-gray-600 font-blod'>{item.label}:</span>
-                          <p className='font-medium'>{item.value}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ) : (
-                <div className='flex flex-col justify-center'>
-                  <p className='text-gray-600 text-center mb-6'>Chưa có phiếu đăng ký hiến máu</p>
-                  <Button onClick={() =>
-                    navigate('/dang-ky-hien-mau')
-                  } className='bg-red-600 hover:bg-red-700 text-white'>
-                    Đăng ký ngay
-                  </Button>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-
-          {/* Health Questionnaire Details */}
-          {groupedSections.length > 0 && (
-            <Card>
-              <CardHeader className='pb-2'>
-                <CardTitle className='text-lg text-red-600 flex items-center gap-2'>
-                  <ClipboardList className='w-5 h-5' />
-                  Chi tiết câu hỏi sức khỏe
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className='bg-gray-50 rounded-lg p-4 space-y-6'>
-                  {groupedSections.map((section) => (
-                    <div key={section.id} className='border-b pb-4 last:border-b-0 last:pb-0'>
-                      <h3 className='font-medium text-gray-800 mb-3'>{section.name}</h3>
-                      <div className='space-y-3'>
-                        {section.answers.map((answer) => (
-                          <div key={answer.id} className='flex flex-col gap-1'>
-                            <div className='flex gap-2 items-start'>
-                              <div className={`w-2 h-2 rounded-full mt-2 bg-red-600`}></div>
-                              <div className='flex-1'>
-                                <div className='flex justify-between items-start'>
-                                  <span className='text-gray-700'>{answer.content}</span>
-                                  <span className={`ml-4 font-medium`}>{answer.answer ? 'Có' : 'Không'}</span>
-                                </div>
-                                {answer.detail && (
-                                  <p className='text-sm text-gray-500 mt-1 ml-4'>Chi tiết: {answer.detail}</p>
-                                )}
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
+        
+        {/* Content */}
+        <div className='p-4 overflow-y-auto'>
+          {appointmentItems.length > 0 ? (
+            <>
+              {/* Appointment Information */}
+              <div className='mb-6'>
+                <h3 className='text-lg font-semibold text-gray-700 mb-2 px-2'>Thông tin buổi hiến máu</h3>
+                <Card className='overflow-hidden rounded-xl shadow-sm border-none'>
+                  <CardContent className='p-0'>
+                    <div className='bg-white p-4 flex items-center justify-between'>
+                      <span className='text-sm font-medium'>Trạng thái</span>
+                      {renderStatusBadge(status)}
                     </div>
+                    
+                    <div className='divide-y'>
+                      {appointmentItems.map((item, index) => (
+                        <div key={index} className='p-4 flex items-center justify-between'>
+                          <div className='flex items-center gap-3'>
+                            {index === 0 ? (
+                              <ClipboardList className='h-5 w-5 text-gray-500' />
+                            ) : index === 1 ? (
+                              <Calendar className='h-5 w-5 text-gray-500' />
+                            ) : (
+                              <MapPin className='h-5 w-5 text-gray-500' />
+                            )}
+                            <span className='text-sm font-medium text-gray-700'>{item.label}</span>
+                          </div>
+                          <div className='flex items-center gap-2'>
+                            <span className='text-sm text-gray-600'>{item.value}</span>
+                            <ChevronRight className='h-4 w-4 text-gray-400' />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+              
+              {/* Health Questionnaire Details */}
+              {groupedSections.length > 0 && (
+                <div className='mb-6'>
+                  <h3 className='text-lg font-semibold text-gray-700 mb-2 px-2'>Câu hỏi sức khỏe</h3>
+                  {groupedSections.map((section) => (
+                    <Card key={section.id} className='mb-4 overflow-hidden rounded-xl shadow-sm border-none'>
+                      <div className='bg-white p-4 font-medium border-b'>{section.name}</div>
+                      <CardContent className='p-0'>
+                        <div className='divide-y'>
+                          {section.answers.map((answer) => (
+                            <div key={answer.id} className='p-4'>
+                              <div className='flex items-start justify-between'>
+                                <span className='text-sm text-gray-700 pr-4'>{answer.content}</span>
+                                <span className={`text-sm font-medium ${answer.answer ? 'text-green-600' : 'text-red-600'}`}>
+                                  {answer.answer ? 'Có' : 'Không'}
+                                </span>
+                              </div>
+                              {answer.detail && (
+                                <div className='mt-2 text-sm text-gray-500 italic pl-0'>
+                                  Chi tiết: {answer.detail}
+                                </div>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      </CardContent>
+                    </Card>
                   ))}
                 </div>
-              </CardContent>
-            </Card>
+              )}
+            </>
+          ) : (
+            <div className='flex flex-col items-center justify-center py-12'>
+              <div className='w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center mb-4'>
+                <Calendar className='w-10 h-10 text-gray-400' />
+              </div>
+              <h3 className='text-lg font-medium text-gray-800 mb-2'>Chưa có phiếu đăng ký</h3>
+              <p className='text-gray-500 text-center mb-6'>Bạn chưa đăng ký hiến máu. Hãy đăng ký ngay để tham gia hiến máu.</p>
+              <Button 
+                onClick={() => navigate('/dang-ky-hien-mau')} 
+                className='bg-red-600 hover:bg-red-700 text-white py-5 px-6 rounded-xl w-full md:w-auto'
+              >
+                Đăng ký ngay
+              </Button>
+            </div>
           )}
         </div>
-        <div className='flex justify-end mt-4'>
-          <Button onClick={onClose} className='bg-gray-300 hover:bg-gray-400 text-gray-800'>
-            Đóng
-          </Button>
-        </div>
+        
+        {/* Footer */}
+        {appointmentItems.length > 0 && (
+          <div className='p-4 bg-white border-t sticky bottom-0'>
+            <Button 
+              onClick={onClose} 
+              className='w-full bg-gray-200 hover:bg-gray-300 text-gray-800 py-5 rounded-xl'
+            >
+              Đóng
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   )

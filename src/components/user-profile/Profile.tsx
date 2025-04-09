@@ -11,7 +11,7 @@ import { User as fetchUser, updateUserDetail } from '@/api/user'
 import { toast } from '../ui/use-toast'
 import Loading from '../warnings/loading'
 import Empty from '../warnings/empty'
-import { Info, User } from 'lucide-react'
+import { ChevronRight, Info, User, Droplet, Briefcase, Phone, Mail, MapPin, School, Award } from 'lucide-react'
 
 const Profile = () => {
   // Scroll to top when component mounts
@@ -68,7 +68,7 @@ const Profile = () => {
   })
 
   useEffect(() => {
-    if (hasFetched.current) return // Nếu đã fetch thì không gọi lại
+    if (hasFetched.current) return
     hasFetched.current = true
 
     const fetchUserData = async () => {
@@ -150,215 +150,231 @@ const Profile = () => {
   if (error) {
     return <Empty />
   }
-  // console.log(form2.formState.errors)
 
   return (
-    <div className='min-h-screen bg-white py-12'>
-      <div className='container mx-auto px-4'>
-        <div className='max-w-6xl mx-auto'>
-          <Card className='mb-6'>
-            <CardContent>
-              {/* Phần 1: Thông tin cá nhân */}
-              <div>
-                <h2 className='flex items-center text-lg font-semibold text-red-500 mb-4 mt-4'>
-                <User className='mr-2' size={20} />
-                  Thông tin cá nhân</h2>
-                <div className='grid grid-cols-1 gap-4'>
-                  <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-                    <div className='flex items-center justify-between'>
-                      <span className='font-bold'>Họ và tên:</span> {form.getValues('full_name')}
-                    </div>
-                    <div className='flex items-center justify-between'>
-                      <span className='font-bold'>Số CCCD:</span> {form.getValues('card_id')}
-                    </div>
-                  </div>
+    <div className='min-h-screen bg-gray-100'>
+      {/* Banner section */}
+      <div className='bg-gradient-to-r from-red-600 to-red-400 text-white p-8 relative'>
+        <div className='container mx-auto'>
+          <div className='flex flex-col items-center'>
+            <div className='h-24 w-24 bg-white rounded-full flex items-center justify-center shadow-md mb-4'>
+              <User className='h-12 w-12 text-red-500' />
+            </div>
+            <h1 className='text-2xl font-bold mb-1'>{form.getValues('full_name')}</h1>
+            <div className='flex items-center gap-2'>
+              <Droplet className='h-4 w-4' />
+              <span>Nhóm máu: {form.getValues('blood_group')}</span>
+              <span className='mx-2'>•</span>
+              <span>Đã hiến {form.getValues('time_donation')} lần</span>
+            </div>
+          </div>
+        </div>
+      </div>
 
-                  <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-                    <div className='flex items-center justify-between'>
-                      <span className='font-bold'>Ngày sinh:</span> {form.getValues('dob')}
-                    </div>
-                    <div className='flex items-center justify-between'>
-                      <span className='font-bold'>Giới tính:</span> {form.getValues('gender')}
-                    </div>
-                  </div>
-
-                  <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-                    <div className='flex items-center justify-between'>
-                      <span className='font-bold'>Nhóm máu:</span> {form.getValues('blood_group')}
-                    </div>
-                    <div className='flex items-center justify-between'>
-                      <span className='font-bold'>Quốc gia:</span> {form.getValues('national')}
-                    </div>
-                  </div>
-
-                  <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-                    <div className='flex items-center justify-between'>
-                      <span className='font-bold'>Số lần hiến máu:</span> {form.getValues('time_donation')}
-                    </div>
-                    <div className='flex items-center justify-between'>
-                      <span className='font-bold'>Quốc gia:</span> {form.getValues('national')}
-                    </div>
-                  </div>
-                  <div>
-                    <span className='font-bold mr-2'>Quê quán:</span> {form.getValues('home')}
-                  </div>
-                  <div>
-                    <span className='font-bold mr-2'>Địa chỉ thường trú:</span> {form.getValues('address')}
-                  </div>
-                </div>
+      <div className='container mx-auto px-4 py-6'>
+        {/* Personal Information Group */}
+        <div className='mb-6'>
+          <h2 className='text-lg font-semibold text-gray-700 mb-2 px-2'>Thông tin cá nhân</h2>
+          <Card className='overflow-hidden rounded-xl shadow-sm'>
+            <CardContent className='p-0'>
+              <div className='divide-y'>
+                <InfoItem icon={<User className='h-5 w-5 text-gray-500' />} label="Họ và tên" value={form.getValues('full_name')} />
+                <InfoItem icon={<Info className='h-5 w-5 text-gray-500' />} label="Số CCCD" value={form.getValues('card_id')} />
+                <InfoItem icon={<Info className='h-5 w-5 text-gray-500' />} label="Ngày sinh" value={form.getValues('dob')} />
+                <InfoItem icon={<Info className='h-5 w-5 text-gray-500' />} label="Giới tính" value={form.getValues('gender')} />
+                <InfoItem icon={<Info className='h-5 w-5 text-gray-500' />} label="Quốc gia" value={form.getValues('national')} />
+                <InfoItem icon={<MapPin className='h-5 w-5 text-gray-500' />} label="Quê quán" value={form.getValues('home')} />
+                <InfoItem icon={<MapPin className='h-5 w-5 text-gray-500' />} label="Địa chỉ thường trú" value={form.getValues('address')} />
               </div>
             </CardContent>
           </Card>
-          <Card>
-            <CardContent>
-              <Form {...form2}>
-                <form onSubmit={form2.handleSubmit(onSubmit)} className='space-y-8'>
-                  {/* Phần 2: Thông tin liên hệ */}
-                  <div>
-                    <h2 className='flex items-center text-lg font-semibold text-red-500 mb-4 mt-4'>
-                      <Info className='mr-2' size={20} />
-                      Thông tin liên hệ
-                    </h2>
-                    <div className='grid grid-cols-1 gap-6'>
-                      <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-                        <FormField
-                          control={form2.control}
-                          name='address_contact'
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel className='font-bold'>Địa chỉ liên hệ</FormLabel>
-                              <FormControl>
-                                <Input
-                                  {...field}
-                                  onChange={(e) => {
-                                    field.onChange(e)
-                                    form2.setValue('address_contact', e.target.value)
-                                  }}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <FormField
-                          control={form2.control}
-                          name='mobile'
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel className='font-bold'>Điện thoại di động</FormLabel>
-                              <FormControl>
-                                <Input
-                                  {...field}
-                                  onChange={(e) => {
-                                    field.onChange(e)
-                                    form2.setValue('mobile', e.target.value)
-                                  }}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-
-                      <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-                        <FormField
-                          control={form2.control}
-                          name='student_id'
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel className='font-bold'>Mã sinh viên</FormLabel>
-                              <FormControl>
-                                <Input
-                                  {...field}
-                                  onChange={(e) => {
-                                    field.onChange(e)
-                                    form2.setValue('student_id', e.target.value)
-                                  }}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-
-                        <FormField
-                          control={form2.control}
-                          name='military_id'
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel className='font-bold'>Mã quân nhân</FormLabel>
-                              <FormControl>
-                                <Input
-                                  {...field}
-                                  onChange={(e) => {
-                                    field.onChange(e)
-                                    form2.setValue('military_id', e.target.value)
-                                  }}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-                      <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-                        <FormField
-                          control={form2.control}
-                          name='email'
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel className='font-bold'>Email</FormLabel>
-                              <FormControl>
-                                <Input
-                                  {...field}
-                                  type='email'
-                                  onChange={(e) => {
-                                    field.onChange(e)
-                                    form2.setValue('email', e.target.value)
-                                  }}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <FormField
-                          control={form2.control}
-                          name='job_name'
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel className='font-bold'>Nghề nghiệp</FormLabel>
-                              <FormControl>
-                                <Input
-                                  {...field}
-                                  onChange={(e) => {
-                                    field.onChange(e)
-                                    form2.setValue('job_name', e.target.value)
-                                  }}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className='flex justify-end space-x-4'>
-                    <Button type='submit' className='bg-red-600 text-white hover:bg-red-700'>
-                      Lưu thay đổi
-                    </Button>
-                  </div>
-                </form>
-              </Form>
-            </CardContent>
-          </Card>
         </div>
+
+        {/* Contact Information Group */}
+        <Form {...form2}>
+          <form onSubmit={form2.handleSubmit(onSubmit)} className='space-y-6'>
+            <div>
+              <h2 className='text-lg font-semibold text-gray-700 mb-2 px-2'>Thông tin liên hệ</h2>
+              <Card className='overflow-hidden rounded-xl shadow-sm'>
+                <CardContent className='p-0'>
+                  <div className='divide-y'>
+                    <FormField
+                      control={form2.control}
+                      name='address_contact'
+                      render={({ field }) => (
+                        <FormItem className='p-4'>
+                          <div className='flex items-center justify-between'>
+                            <div className='flex items-center gap-3'>
+                              <MapPin className='h-5 w-5 text-gray-500' />
+                              <FormLabel className='text-sm font-medium text-gray-700 m-0'>Địa chỉ liên hệ</FormLabel>
+                            </div>
+                            <FormControl>
+                              <Input
+                                {...field}
+                                className='w-1/2 border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0'
+                                placeholder='Nhập địa chỉ'
+                              />
+                            </FormControl>
+                          </div>
+                          <FormMessage className='ml-8 text-xs' />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={form2.control}
+                      name='mobile'
+                      render={({ field }) => (
+                        <FormItem className='p-4'>
+                          <div className='flex items-center justify-between'>
+                            <div className='flex items-center gap-3'>
+                              <Phone className='h-5 w-5 text-gray-500' />
+                              <FormLabel className='text-sm font-medium text-gray-700 m-0'>Điện thoại di động</FormLabel>
+                            </div>
+                            <FormControl>
+                              <Input
+                                {...field}
+                                className='w-1/2 border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0'
+                                placeholder='Nhập số điện thoại'
+                              />
+                            </FormControl>
+                          </div>
+                          <FormMessage className='ml-8 text-xs' />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={form2.control}
+                      name='email'
+                      render={({ field }) => (
+                        <FormItem className='p-4'>
+                          <div className='flex items-center justify-between'>
+                            <div className='flex items-center gap-3'>
+                              <Mail className='h-5 w-5 text-gray-500' />
+                              <FormLabel className='text-sm font-medium text-gray-700 m-0'>Email</FormLabel>
+                            </div>
+                            <FormControl>
+                              <Input
+                                {...field}
+                                type='email'
+                                className='w-1/2 border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0'
+                                placeholder='Nhập email'
+                              />
+                            </FormControl>
+                          </div>
+                          <FormMessage className='ml-8 text-xs' />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Work Information Group */}
+            <div>
+              <h2 className='text-lg font-semibold text-gray-700 mb-2 px-2'>Thông tin nghề nghiệp</h2>
+              <Card className='overflow-hidden rounded-xl shadow-sm'>
+                <CardContent className='p-0'>
+                  <div className='divide-y'>
+                    <FormField
+                      control={form2.control}
+                      name='job_name'
+                      render={({ field }) => (
+                        <FormItem className='p-4'>
+                          <div className='flex items-center justify-between'>
+                            <div className='flex items-center gap-3'>
+                              <Briefcase className='h-5 w-5 text-gray-500' />
+                              <FormLabel className='text-sm font-medium text-gray-700 m-0'>Nghề nghiệp</FormLabel>
+                            </div>
+                            <FormControl>
+                              <Input
+                                {...field}
+                                className='w-1/2 border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0'
+                                placeholder='Nhập nghề nghiệp'
+                              />
+                            </FormControl>
+                          </div>
+                          <FormMessage className='ml-8 text-xs' />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={form2.control}
+                      name='student_id'
+                      render={({ field }) => (
+                        <FormItem className='p-4'>
+                          <div className='flex items-center justify-between'>
+                            <div className='flex items-center gap-3'>
+                              <School className='h-5 w-5 text-gray-500' />
+                              <FormLabel className='text-sm font-medium text-gray-700 m-0'>Mã sinh viên</FormLabel>
+                            </div>
+                            <FormControl>
+                              <Input
+                                {...field}
+                                className='w-1/2 border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0'
+                                placeholder='Nhập mã sinh viên'
+                              />
+                            </FormControl>
+                          </div>
+                          <FormMessage className='ml-8 text-xs' />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={form2.control}
+                      name='military_id'
+                      render={({ field }) => (
+                        <FormItem className='p-4'>
+                          <div className='flex items-center justify-between'>
+                            <div className='flex items-center gap-3'>
+                              <Award className='h-5 w-5 text-gray-500' />
+                              <FormLabel className='text-sm font-medium text-gray-700 m-0'>Mã quân nhân</FormLabel>
+                            </div>
+                            <FormControl>
+                              <Input
+                                {...field}
+                                className='w-1/2 border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0'
+                                placeholder='Nhập mã quân nhân'
+                              />
+                            </FormControl>
+                          </div>
+                          <FormMessage className='ml-8 text-xs' />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            <div className='py-4'>
+              <Button type='submit' className='w-full bg-red-600 text-white hover:bg-red-700 py-6 rounded-xl'>
+                Lưu thay đổi
+              </Button>
+            </div>
+          </form>
+        </Form>
       </div>
     </div>
   )
 }
+
+// Helper component for read-only info items
+const InfoItem = ({ icon, label, value }: { icon: React.ReactNode, label: string, value: string | number }) => (
+  <div className='p-4 flex items-center justify-between'>
+    <div className='flex items-center gap-3'>
+      {icon}
+      <span className='text-sm font-medium text-gray-700'>{label}</span>
+    </div>
+    <div className='flex items-center gap-2'>
+      <span className='text-sm text-gray-600'>{value}</span>
+      <ChevronRight className='h-4 w-4 text-gray-400' />
+    </div>
+  </div>
+)
 
 export default Profile

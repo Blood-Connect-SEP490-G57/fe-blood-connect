@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import { MoreVertical, Calendar, Bell, AlertCircle } from 'lucide-react'
+import { MoreVertical, Calendar, Bell, AlertCircle, CheckCircle } from 'lucide-react'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { NotificationType, getTypeLabel, getTypeBadgeClasses, NotificationParams } from '@/schema/notification-schema'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom'
 import { useEffect, useRef, useState } from 'react'
 import { getUnreadCount } from '@/api/notification'
 import { useUnreadNotifications } from '@/hooks/useUnreadNotifications'
+import { motion, AnimatePresence } from 'framer-motion'
 
 export default function Notifications({ onClose }: { onClose?: () => void }) {
   const navigate = useNavigate()
@@ -123,131 +124,171 @@ export default function Notifications({ onClose }: { onClose?: () => void }) {
   }, [onClose])
 
   return (
-    <div
+    <motion.div
       ref={containerRef}
-      className='h-full min-w-[250px] lg:min-w-[300px] w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg px-4 py-3 bg-white rounded-2xl shadow-lg border overflow-y-auto max-h-[80vh]'
+      className='h-full min-w-[250px] lg:min-w-[300px] w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg bg-white/95 backdrop-blur-md rounded-3xl shadow-xl border border-gray-100 overflow-hidden max-h-[80vh]'
+      initial={{ opacity: 0, y: -20, scale: 0.95 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, y: -20, scale: 0.95 }}
+      transition={{ type: 'spring', damping: 25, stiffness: 300 }}
     >
-      <div className='flex justify-between items-center border-b pb-2'>
-        <div className='flex items-center gap-2'>
-          <Bell className='h-6 w-6 text-red-500' />
-          <h1 className='text-2xl font-bold'>Thông báo</h1>
-        </div>
-        <Button
-          variant='ghost'
-          onClick={() => {
-            handleMarkAllAsRead()
-            // onClose?.()
-          }}
-          className='text-red-600 hover:text-red-700 hover:bg-red-50 rounded-md border border-red-200'
-        >
-          Đánh dấu tất cả đã đọc
-        </Button>
-      </div>
-
-      {/* Filter buttons */}
-      <div className='inline-flex w-full gap-1 my-2 justify-start overflow-x-auto'>
-        {filterButtons.map((button) => (
-          <Button
-            key={button.value}
-            variant={filter === button.value ? 'default' : 'outline'}
-            className={`text-red-600 text-xs sm:text-sm ${
-              filter === button.value ? 'bg-red-500 text-white hover:bg-red-600' : 'hover:bg-red-100 hover:text-red-700'
-            } transition-colors duration-200`}
+      <div className='px-5 py-4 bg-gradient-to-b from-red-50 to-white'>
+        <div className='flex justify-between items-center'>
+          <div className='flex items-center gap-2'>
+            <div className='p-2 bg-red-100 rounded-full text-red-600'>
+              <Bell className='h-5 w-5' />
+            </div>
+            <h1 className='text-xl font-bold text-gray-800'>Thông báo</h1>
+          </div>
+          <motion.button
+            className='text-red-600 text-sm font-medium flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-red-50 hover:bg-red-100 transition-colors'
             onClick={() => {
-              setFilter(button.value)
+              handleMarkAllAsRead()
             }}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
-            {button.label}
-          </Button>
-        ))}
+            <CheckCircle className='h-3.5 w-3.5' />
+            <span>Đánh dấu đã đọc</span>
+          </motion.button>
+        </div>
+
+        {/* Filter buttons */}
+        <div className='flex gap-1.5 mt-4 pb-1 overflow-x-auto px-0.5 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent'>
+          {filterButtons.map((button) => (
+            <motion.button
+              key={button.value}
+              className={`px-3 py-1.5 rounded-full text-xs font-medium min-w-max transition-all ${
+                filter === button.value
+                  ? 'bg-gradient-to-r from-red-500 to-red-600 text-white shadow-sm'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+              onClick={() => {
+                setFilter(button.value)
+              }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              {button.label}
+            </motion.button>
+          ))}
+        </div>
       </div>
 
-      <div className='space-y-4'>
+      <div className='overflow-y-auto max-h-[calc(80vh-120px)] py-3 px-5 space-y-3'>
         {notifications?.data.data.length === 0 ? (
-          <div className='flex flex-col items-center justify-center py-8 text-gray-500'>
-            <AlertCircle className='h-12 w-12 mb-2 text-red-400' />
-            <p className='text-lg font-medium'>Không có thông báo nào</p>
-            <p className='text-sm'>
+          <motion.div 
+            className='flex flex-col items-center justify-center py-8 text-gray-500'
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+          >
+            <div className='bg-red-50 rounded-full p-4 mb-4'>
+              <AlertCircle className='h-10 w-10 text-red-400' />
+            </div>
+            <p className='text-lg font-medium text-gray-700'>Không có thông báo</p>
+            <p className='text-sm text-center text-gray-500 mt-1'>
               {filter === 'Tất cả'
                 ? 'Hiện tại bạn chưa có thông báo nào'
                 : `Không có thông báo nào thuộc loại "${filter}"`}
             </p>
-          </div>
+          </motion.div>
         ) : (
-          <>
-            {notifications?.data.data.map((notification) => (
-              <Card
+          <AnimatePresence>
+            {notifications?.data.data.map((notification, index) => (
+              <motion.div
                 key={notification.id}
-                className={`p-4 transition-all duration-200 hover:shadow-md ${
-                  notification.status ? 'bg-white' : 'bg-red-50'
-                }`}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ delay: index * 0.05, duration: 0.2 }}
               >
-                <div className='flex justify-between items-start gap-4'>
-                  <div
-                    className='flex-1'
-                    onClick={() => {
-                      navigate('/thong-bao/' + notification.id)
-                      handleToggleStatus(notification.id.toString(), true)
-                      onClose?.()
-                    }}
-                  >
-                    <div className='flex items-center gap-2 mb-2'>
-                      <span
-                        className={`px-2 py-1 rounded-full text-xs font-medium ${getTypeBadgeClasses(
-                          notification.type as NotificationType
-                        )}`}
-                      >
-                        {getTypeLabel(notification.type as NotificationType)}
-                      </span>
-                      <span className='text-xs text-gray-500 flex items-center gap-1'>
-                        <Calendar className='h-3 w-3' />
-                        {formatExactDate(notification.created)}
-                      </span>
-                    </div>
-                    <h3 className='font-semibold text-lg text-gray-900'>{notification.title}</h3>
+                <Card
+                  className={`p-0 transition-all duration-200 hover:shadow-md overflow-hidden ${
+                    notification.status ? 'bg-white' : 'bg-red-50'
+                  } border-0 shadow-sm rounded-2xl`}
+                >
+                  <div className='flex justify-between items-start gap-3'>
                     <div
-                      className='text-gray-600 mt-2 prose prose-sm max-w-none'
-                      dangerouslySetInnerHTML={{
-                        __html:
-                          notification.content.length > 100
-                            ? notification.content.slice(0, 50) + '...'
-                            : notification.content
+                      className='flex-1 p-4 cursor-pointer'
+                      onClick={() => {
+                        navigate('/thong-bao/' + notification.id)
+                        handleToggleStatus(notification.id.toString(), true)
+                        onClose?.()
                       }}
-                    />
-                  </div>
-
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant='ghost' size='icon' className='h-8 w-8'>
-                        <MoreVertical className='h-4 w-4' />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align='end'>
-                      <DropdownMenuItem
-                        onClick={() => {
-                          handleToggleStatus(notification.id.toString(), !notification.status)
-                          onClose?.()
+                    >
+                      <div className='flex flex-wrap items-center gap-2 mb-2'>
+                        <span
+                          className={`px-2.5 py-1 rounded-full text-xs font-medium ${getTypeBadgeClasses(
+                            notification.type as NotificationType
+                          )} shadow-sm`}
+                        >
+                          {getTypeLabel(notification.type as NotificationType)}
+                        </span>
+                        <span className='text-xs text-gray-500 flex items-center gap-1'>
+                          <Calendar className='h-3 w-3' />
+                          {formatExactDate(notification.created)}
+                        </span>
+                      </div>
+                      <h3 className='font-semibold text-md text-gray-800'>{notification.title}</h3>
+                      <div
+                        className='text-gray-600 mt-1.5 prose prose-sm max-w-none text-sm'
+                        dangerouslySetInnerHTML={{
+                          __html:
+                            notification.content.length > 100
+                              ? notification.content.slice(0, 80) + '...'
+                              : notification.content
                         }}
-                      >
-                        {notification.status ? 'Đánh dấu chưa đọc' : 'Đánh dấu đã đọc'}
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </div>
-              </Card>
+                      />
+                    </div>
+
+                    <div className='p-1 mt-2 mr-1'>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant='ghost' size='icon' className='h-8 w-8 rounded-full hover:bg-gray-100'>
+                            <MoreVertical className='h-4 w-4 text-gray-500' />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className='min-w-[160px] p-1.5 rounded-xl shadow-lg border border-gray-100' align='end'>
+                          <DropdownMenuItem
+                            className='rounded-lg cursor-pointer flex items-center gap-2 py-2 px-3 hover:bg-gray-100'
+                            onClick={() => {
+                              handleToggleStatus(notification.id.toString(), !notification.status)
+                              onClose?.()
+                            }}
+                          >
+                            {notification.status ? (
+                              <>
+                                <span className='h-2 w-2 rounded-full bg-red-500'></span>
+                                <span>Đánh dấu chưa đọc</span>
+                              </>
+                            ) : (
+                              <>
+                                <span className='h-2 w-2 rounded-full bg-green-500'></span>
+                                <span>Đánh dấu đã đọc</span>
+                              </>
+                            )}
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
+                  </div>
+                </Card>
+              </motion.div>
             ))}
-          </>
+          </AnimatePresence>
         )}
       </div>
-      <div className='mt-4'>
-        <Button
-          variant='outline'
-          className='inline-flex items-center justify-center whitespace-nowrap rounded-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border bg-background h-10 px-4 py-2 w-full text-red-600 border-red-500 hover:text-white hover:bg-red-600 text-sm sm:text-base'
+      <div className='p-4 border-t border-gray-100 bg-white'>
+        <motion.button
+          className='w-full flex items-center justify-center gap-2 bg-gradient-to-r from-red-500 to-red-600 text-white py-2.5 px-4 rounded-full shadow-sm hover:shadow-md transition-all text-sm font-medium'
           onClick={() => navigate('/thong-bao')}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
         >
-          Xem thêm
-        </Button>
+          Xem tất cả thông báo
+        </motion.button>
       </div>
-    </div>
+    </motion.div>
   )
 }

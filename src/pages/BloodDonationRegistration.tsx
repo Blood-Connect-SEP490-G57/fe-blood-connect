@@ -4,6 +4,7 @@ import ReviewStep from '@/components/blood-donation-registration/ReviewStep'
 import SuccessStep from '@/components/blood-donation-registration/SuccessStep'
 import { useNavigate } from 'react-router-dom'
 import QuestionnaireStep from '@/components/blood-donation-registration/QuestionnaireStep'
+import { Droplet } from 'lucide-react'
 
 export enum STEPS {
   SELECT_CAMPAIGN,
@@ -59,36 +60,82 @@ const BloodDonationRegistration: React.FC = () => {
     }))
   }
 
+  const getStepTitle = () => {
+    switch (currentStep) {
+      case STEPS.SELECT_CAMPAIGN:
+        return "Chọn chiến dịch hiến máu"
+      case STEPS.QUESTIONNAIRE:
+        return "Phiếu câu hỏi sức khỏe"
+      case STEPS.REVIEW:
+        return "Xác nhận thông tin"
+      case STEPS.SUCCESS:
+        return "Đăng ký thành công"
+      default:
+        return "Đăng ký hiến máu"
+    }
+  }
+
   const renderStepIndicator = () => {
-    const stepsArray = Object.values(STEPS).filter((step) => typeof step === 'number') as number[]
+    // const stepsArray = Object.values(STEPS).filter((step) => typeof step === 'number') as number[]
+    const stepTitles = ['Chọn chiến dịch', 'Khảo sát', 'Xác nhận', 'Hoàn tất']
 
     return (
-      <div className='mb-8'>
-        <div className='flex items-center mb-8'>
-          {stepsArray.map((step, index) => (
-            <React.Fragment key={step}>
-              <div className='flex flex-col items-center'>
-                <div
-                  className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                    currentStep === step
-                      ? 'bg-red-600 text-white font-bold' // Màu đậm hơn cho step hiện tại
-                      : currentStep > step
-                      ? 'bg-red-600 text-white' // Màu đỏ cho step đã đi qua
-                      : 'bg-gray-200 text-gray-600' // Màu xám cho step chưa đi đến
-                  }`}
-                >
-                  {step + 1}
-                </div>
-              </div>
-              {index < stepsArray.length - 1 && (
-                <div
-                  className={`flex-1 h-1 mx-2 transition-all duration-500 ease-in-out ${
-                    currentStep > step ? 'bg-red-600' : 'bg-gray-200'
-                  }`}
-                />
-              )}
-            </React.Fragment>
-          ))}
+      <div className='mb-10 px-1'>
+        <div className='flex justify-between items-center relative'>
+          {/* Thanh nối liền */}
+          <div className='absolute top-1/2 left-0 right-0 transform -translate-y-1/2 h-1 z-0 flex'>
+            {/* Đoạn 1 - luôn màu đỏ */}
+            <div className='flex-1 bg-red-600'></div>
+            {/* Đoạn 2 */}
+            <div className={`flex-1 ${currentStep >= STEPS.QUESTIONNAIRE ? 'bg-red-600' : 'bg-gray-200'}`}></div>
+            {/* Đoạn 3 */}
+            <div className={`flex-1 ${currentStep >= STEPS.REVIEW ? 'bg-red-600' : 'bg-gray-200'}`}></div>
+            {/* Đoạn 4 */}
+            <div className={`flex-1 ${currentStep >= STEPS.SUCCESS ? 'bg-red-600' : 'bg-gray-200'}`}></div>
+          </div>
+          
+          {/* Các bước */}
+          <div className='flex flex-col items-center z-10'>
+            <div className={`w-10 h-10 rounded-full flex items-center justify-center bg-red-600 text-white`}>
+              1
+            </div>
+            <span className={`mt-2 text-xs text-center w-24 ${currentStep === STEPS.SELECT_CAMPAIGN ? 'text-red-600 font-medium' : 'text-gray-500'}`}>
+              {stepTitles[0]}
+            </span>
+          </div>
+
+          <div className='flex flex-col items-center z-10'>
+            <div className={`w-10 h-10 rounded-full flex items-center justify-center 
+              ${currentStep >= STEPS.QUESTIONNAIRE ? 'bg-red-600 text-white' : 'bg-gray-200 text-gray-600'}`}
+            >
+              2
+            </div>
+            <span className={`mt-2 text-xs text-center w-24 ${currentStep === STEPS.QUESTIONNAIRE ? 'text-red-600 font-medium' : 'text-gray-500'}`}>
+              {stepTitles[1]}
+            </span>
+          </div>
+
+          <div className='flex flex-col items-center z-10'>
+            <div className={`w-10 h-10 rounded-full flex items-center justify-center 
+              ${currentStep >= STEPS.REVIEW ? 'bg-red-600 text-white' : 'bg-gray-200 text-gray-600'}`}
+            >
+              3
+            </div>
+            <span className={`mt-2 text-xs text-center w-24 ${currentStep === STEPS.REVIEW ? 'text-red-600 font-medium' : 'text-gray-500'}`}>
+              {stepTitles[2]}
+            </span>
+          </div>
+
+          <div className='flex flex-col items-center z-10'>
+            <div className={`w-10 h-10 rounded-full flex items-center justify-center 
+              ${currentStep >= STEPS.SUCCESS ? 'bg-red-600 text-white' : 'bg-gray-200 text-gray-600'}`}
+            >
+              4
+            </div>
+            <span className={`mt-2 text-xs text-center w-24 ${currentStep === STEPS.SUCCESS ? 'text-red-600 font-medium' : 'text-gray-500'}`}>
+              {stepTitles[3]}
+            </span>
+          </div>
         </div>
       </div>
     )
@@ -132,10 +179,28 @@ const BloodDonationRegistration: React.FC = () => {
   }
 
   return (
-    <div className='min-h-screen bg-gray-100 py-12'>
-      <div className='container mx-auto px-4'>
+    <div className='min-h-screen bg-gray-100'>
+      {/* Banner section */}
+      <div className='bg-gradient-to-r from-red-600 to-red-400 text-white p-8 relative'>
+        <div className='container mx-auto'>
+          <div className='flex flex-col items-center'>
+            <div className='h-24 w-24 bg-white rounded-full flex items-center justify-center shadow-md mb-4'>
+              <Droplet className='h-12 w-12 text-red-500' />
+            </div>
+            <h1 className='text-2xl font-bold mb-1'>{getStepTitle()}</h1>
+            <p className='text-center text-white/80 max-w-2xl'>
+              Mỗi giọt máu hiến tặng có thể cứu sống một người. Hãy đăng ký hiến máu để cùng chia sẻ yêu thương.
+            </p>
+          </div>
+        </div>
+        {/* Decorative elements */}
+        <div className='absolute -bottom-4 left-1/4 w-16 h-16 bg-red-400 rounded-full opacity-20'></div>
+        <div className='absolute top-8 right-1/4 w-12 h-12 bg-white rounded-full opacity-10'></div>
+        <div className='absolute bottom-6 right-10 w-20 h-20 bg-red-300 rounded-full opacity-15'></div>
+      </div>
+
+      <div className='container mx-auto px-4 py-8'>
         <div className='max-w-3xl mx-auto'>
-          <h1 className='text-2xl font-bold text-gray-900 mb-8'>Đăng ký hiến máu</h1>
           {renderStepIndicator()}
           {renderStep()}
         </div>
