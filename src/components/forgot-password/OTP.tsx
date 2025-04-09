@@ -89,7 +89,7 @@ export default function OTPInput() {
     } catch (error) {
       toast({
         title: 'Lỗi',
-        description: (error as any)?.response?.data?.message || 'Đã xảy ra lỗi không xác định.',
+        description: (error as any)?.response?.message || 'Đã xảy ra lỗi không xác định.',
         variant: 'destructive'
       })
     }

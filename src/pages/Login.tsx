@@ -112,6 +112,7 @@ export default function Login() {
                         </div>
                         <Input
                           {...field}
+
                           className='appearance-none block w-full pl-11 pr-4 py-3 border border-gray-200 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500 transition-all'
                           placeholder='Nhập số điện thoại'
                         />

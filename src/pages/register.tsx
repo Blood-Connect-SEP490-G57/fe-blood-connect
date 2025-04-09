@@ -17,6 +17,8 @@ import { motion } from 'framer-motion'
 export default function Register() {
   const { toast } = useToast()
   const navigate = useNavigate()
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
   const form = useForm<z.infer<typeof RegisterSchema>>({
     resolver: zodResolver(RegisterSchema),
@@ -29,10 +31,10 @@ export default function Register() {
   })
 
   const { mutate: register, isLoading } = useMutation((data: RegisterType) => registerUser(data), {
-    onSuccess: () => {
+    onSuccess: (response) => {
       toast({
         title: 'Đăng ký thành công',
-        description: 'Vui lòng kiểm tra gmail để xác thực tài khoản!',
+        description: response.data.message,
         variant: 'default'
       })
       setTimeout(() => {
@@ -172,6 +174,13 @@ export default function Register() {
                           className='appearance-none block w-full pl-11 pr-4 py-3 border border-gray-200 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500 transition-all'
                           placeholder='Nhập mật khẩu'
                         />
+                        <button
+                          type='button'
+                          onClick={() => setShowPassword(!showPassword)}
+                          className='absolute right-3 top-3 text-gray-500 hover:text-gray-700 focus:outline-none'
+                        >
+                          {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
+                        </button>
                       </div>
                     </FormControl>
                     <FormMessage className='text-red-500 text-sm mt-1' />
@@ -196,6 +205,13 @@ export default function Register() {
                           className='appearance-none block w-full pl-11 pr-4 py-3 border border-gray-200 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500 transition-all'
                           placeholder='Xác nhận mật khẩu'
                         />
+                        <button
+                          type='button'
+                          onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                          className='absolute right-3 top-3 text-gray-500 hover:text-gray-700 focus:outline-none'
+                        >
+                          {showConfirmPassword ? <Eye size={18} /> : <EyeOff size={18} />}
+                        </button>
                       </div>
                     </FormControl>
                     <FormMessage className='text-red-500 text-sm mt-1' />

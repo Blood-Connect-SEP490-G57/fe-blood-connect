@@ -29,11 +29,11 @@ const ForgotPassword: React.FC = () => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       setIsLoading(true)
-      await forgotPassword(values.email)
+      const response = await forgotPassword(values.email)
       localStorage.setItem('email', values.email)
       toast({
         title: 'Thành công',
-        description: 'Vui lòng kiểm tra điện thoại để nhận mã xác nhận',
+        description: response.message,
         variant: 'default'
       })
       navigate('/xac-thuc-otp')

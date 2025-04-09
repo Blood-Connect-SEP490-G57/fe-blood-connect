@@ -32,6 +32,8 @@ const resetPasswordSchema = z
 export default function ResetPassword() {
   const { toast } = useToast()
   const navigate = useNavigate()
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
   const form = useForm({
     resolver: zodResolver(resetPasswordSchema),
@@ -139,6 +141,13 @@ export default function ResetPassword() {
                           className='appearance-none block w-full pl-11 pr-4 py-3 border border-gray-200 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500 transition-all'
                           placeholder='Nhập mật khẩu mới'
                         />
+                        <button
+                          type='button'
+                          onClick={() => setShowPassword(!showPassword)}
+                          className='absolute right-3 top-3 text-gray-500 hover:text-gray-700 focus:outline-none'
+                        >
+                          {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
+                        </button>
                       </div>
                     </FormControl>
                     <FormMessage className='text-red-500 text-sm mt-1' />
@@ -163,6 +172,13 @@ export default function ResetPassword() {
                           className='appearance-none block w-full pl-11 pr-4 py-3 border border-gray-200 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500 transition-all'
                           placeholder='Xác nhận mật khẩu'
                         />
+                        <button
+                          type='button'
+                          onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                          className='absolute right-3 top-3 text-gray-500 hover:text-gray-700 focus:outline-none'
+                        >
+                          {showConfirmPassword ? <Eye size={18} /> : <EyeOff size={18} />}
+                        </button>
                       </div>
                     </FormControl>
                     <FormMessage className='text-red-500 text-sm mt-1' />
