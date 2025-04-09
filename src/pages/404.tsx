@@ -1,6 +1,5 @@
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 import { ArrowLeft, Home } from 'lucide-react'
 import { motion } from 'framer-motion'
@@ -20,7 +19,7 @@ const NotFoundPage: React.FC = () => {
         transition={{ duration: 0.6 }}
         className="w-full max-w-md z-10"
       >
-        <div className='w-full backdrop-blur-sm bg-white/70 p-8 text-center space-y-8'>
+        <div className='w-full backdrop-blur-sm bg-white/70 p-8 rounded-3xl text-center space-y-8 border border-gray-100 shadow-xl'>
           <motion.div 
             className='space-y-4'
             initial={{ opacity: 0, scale: 0.9 }}
