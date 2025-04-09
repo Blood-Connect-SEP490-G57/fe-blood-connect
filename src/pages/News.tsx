@@ -1,7 +1,8 @@
 import React from 'react'
-import { Calendar, ChevronRight, Search } from 'lucide-react'
+import { ChevronRight, Search, Newspaper, Clock, Tags, Filter } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { Card, CardContent } from '@/components/ui/card'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { getNews } from '@/api/news'
 import { NewsParams } from '@/schema/news-schema'
@@ -13,6 +14,7 @@ const NewsPage = () => {
   const queryClient = useQueryClient()
   const [searchTerm, setSearchTerm] = React.useState('')
   const [debouncedSearchTerm, setDebouncedSearchTerm] = React.useState('')
+  const [selectedCategory, setSelectedCategory] = React.useState('all')
 
   React.useEffect(() => {
     const timerId = setTimeout(() => {
@@ -59,65 +61,141 @@ const NewsPage = () => {
     }
   }, [searchTerm, debouncedSearchTerm, queryClient])
 
+  // Mock categories for demonstration
+  const categories = [
+    { id: 'all', name: 'Tất cả' },
+    { id: 'events', name: 'Sự kiện' },
+    { id: 'campaigns', name: 'Chiến dịch' },
+    { id: 'stories', name: 'Câu chuyện' }
+  ]
+
+  const formatDate = (dateString: string) => {
+    const options: Intl.DateTimeFormatOptions = { 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    };
+    return new Date(dateString).toLocaleDateString('vi-VN', options);
+  }
+
   if (isLoading) {
     return <Loading />
   }
 
   return (
-    <div className='min-h-screen bg-gray-100 py-12'>
-      <div className='container mx-auto px-4'>
-        {/* Header Section */}
-        <div className='text-center mb-12'>
-          <h1 className='text-4xl font-bold text-gray-900 mb-4'>Tin Tức & Sự Kiện</h1>
-          <p className='text-lg text-gray-600 max-w-2xl mx-auto'>
-            Cập nhật những thông tin mới nhất về hoạt động hiến máu và các sự kiện sắp diễn ra
-          </p>
-        </div>
-
-        {/* Search Section */}
-        <div className='mb-8 flex flex-col md:flex-row gap-4 justify-between items-center'>
-          <div className='relative w-full md:w-96'>
-            <Input
-              type='text'
-              placeholder='Tìm kiếm tin tức...'
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className='pl-10'
-            />
-            <Search className='absolute left-3 top-2.5 h-5 w-5 text-gray-400' />
+    <div className='min-h-screen bg-gray-100'>
+      {/* Banner section */}
+      <div className='bg-gradient-to-r from-red-600 to-red-400 text-white p-8 relative'>
+        <div className='container mx-auto'>
+          <div className='flex flex-col items-center'>
+            <div className='h-24 w-24 bg-white rounded-full flex items-center justify-center shadow-md mb-4'>
+              <Newspaper className='h-12 w-12 text-red-500' />
+            </div>
+            <h1 className='text-2xl font-bold mb-1'>Tin Tức & Sự Kiện</h1>
+            <p className='text-center text-white/80 max-w-2xl'>
+              Cập nhật những thông tin mới nhất về hoạt động hiến máu và các sự kiện sắp diễn ra
+            </p>
           </div>
         </div>
+      </div>
 
-        {/* News Grid */}
-        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'>
-          {news?.data.data.map((item) => (
-            <div
-              key={item.id}
-              className='bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow'
-            >
-              <img src={item.thumbnailUrl} alt={item.title} className='w-full h-48 object-cover' />
-              <div className='p-6'>
-                <div className='flex items-center gap-4 text-sm text-gray-500 mb-3'>
-                  <span className='inline-flex items-center'>
-                    <Calendar className='h-4 w-4 mr-1' />
-                    {new Date(item.createdAt).toLocaleDateString('vi-VN')}
-                  </span>
+      <div className='container mx-auto px-4 py-6'>
+        {/* Search and filter section */}
+        <Card className='overflow-hidden rounded-xl shadow-sm border-none mb-6'>
+          <CardContent className='p-4'>
+            <div className='flex flex-col space-y-4'>
+              <div className='relative'>
+                <Input
+                  type='text'
+                  placeholder='Tìm kiếm tin tức...'
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className='pl-10 pr-4 py-2 rounded-xl border border-gray-200 w-full focus:border-red-500 focus:ring focus:ring-red-200 focus:ring-opacity-50'
+                />
+                <Search className='absolute left-3 top-2.5 h-5 w-5 text-gray-400' />
+              </div>
+              
+              <div className='flex items-center space-x-1 overflow-x-auto pb-2 scrollbar-hide'>
+                <div className='flex items-center gap-1 mr-2'>
+                  <Filter className='h-4 w-4 text-gray-500' />
+                  <span className='text-sm font-medium text-gray-500'>Chủ đề:</span>
                 </div>
-                <h3 className='text-xl font-semibold mb-2 text-gray-900'>{item.title}</h3>
-                <div className='flex items-center justify-end'>
+                {categories.map(category => (
                   <Button
+                    key={category.id}
                     variant='ghost'
-                    className='text-red-600 hover:text-red-700 hover:bg-red-50'
-                    onClick={() => navigate(`/tin-tuc/${item.id}`)}
+                    size='sm'
+                    className={`rounded-full px-4 whitespace-nowrap ${
+                      selectedCategory === category.id 
+                        ? 'bg-red-100 text-red-600' 
+                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                    }`}
+                    onClick={() => setSelectedCategory(category.id)}
                   >
-                    Đọc thêm
-                    <ChevronRight className='ml-2 h-4 w-4' />
+                    {category.name}
                   </Button>
-                </div>
+                ))}
               </div>
             </div>
+          </CardContent>
+        </Card>
+
+        {/* News Grid */}
+        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
+          {news?.data.data.map((item) => (
+            <Card 
+              key={item.id}
+              className='overflow-hidden rounded-xl shadow-sm border-none transition-transform hover:scale-[1.02] hover:shadow-md cursor-pointer'
+              onClick={() => navigate(`/tin-tuc/${item.id}`)}
+            >
+              <div className='h-48 overflow-hidden relative'>
+                <img 
+                  src={item.thumbnailUrl} 
+                  alt={item.title} 
+                  className='w-full h-full object-cover'
+                />
+                <div className='absolute top-3 right-3'>
+                  <span className='px-3 py-1 bg-red-500/70 backdrop-blur-sm text-white text-xs font-medium rounded-full'>
+                    Tin tức
+                  </span>
+                </div>
+              </div>
+              
+              <CardContent className='p-5'>
+                <div className='flex items-center gap-2 text-sm text-gray-500 mb-3'>
+                  <Clock className='h-4 w-4 text-red-400' />
+                  <span>{formatDate(item.createdAt)}</span>
+                </div>
+                
+                <h3 className='text-lg font-medium text-gray-900 mb-3 line-clamp-2'>{item.title}</h3>
+                
+                <div className='flex justify-between items-center'>
+                  <div className='flex items-center gap-2'>
+                    <Tags className='h-4 w-4 text-gray-400' />
+                    <span className='text-xs text-gray-500'>Hiến máu</span>
+                  </div>
+                  
+                  <Button
+                    variant='ghost'
+                    size='sm'
+                    className='text-red-600 hover:text-red-700 hover:bg-red-50 p-0'
+                  >
+                    Đọc thêm
+                    <ChevronRight className='ml-1 h-4 w-4' />
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
           ))}
         </div>
+        
+        {news?.data.data.length === 0 && (
+          <div className='bg-white rounded-xl shadow-sm p-8 text-center'>
+            <Search className='h-12 w-12 text-gray-300 mx-auto mb-4' />
+            <h3 className='text-lg font-medium text-gray-900 mb-2'>Không tìm thấy kết quả</h3>
+            <p className='text-gray-500'>Không tìm thấy tin tức nào phù hợp với tìm kiếm của bạn.</p>
+          </div>
+        )}
       </div>
     </div>
   )

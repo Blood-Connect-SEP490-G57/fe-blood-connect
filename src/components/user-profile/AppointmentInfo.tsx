@@ -1,6 +1,6 @@
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Calendar, ChevronRight, ClipboardList, MapPin, User, Phone, Mail, Briefcase, School, Award, Calendar as CalendarIcon, Building } from 'lucide-react'
+import { Calendar, ChevronRight, MapPin, User, Phone, Mail, Briefcase, School, Award, Calendar as CalendarIcon, Building } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { getCurrent, updateinfor } from '@/api/appointment'
 import { format } from 'date-fns'
