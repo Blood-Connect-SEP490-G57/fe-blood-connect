@@ -8,7 +8,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
-import { User, Settings, LogOut, Menu, Bell, X, LogOutIcon, LogInIcon, UserPlusIcon, Home, Newspaper, HelpCircle, Phone, Calendar } from 'lucide-react'
+import { User, Settings, LogOut, Menu, Bell, LogInIcon, UserPlusIcon, Home, Newspaper, HelpCircle, Phone, Calendar } from 'lucide-react'
 import UserAvatar from '@/components/ui/user-avatar'
 import Notifications from '@/components/notification/Notifications'
 import { useAuth } from '@/components/authContext/AuthContext'

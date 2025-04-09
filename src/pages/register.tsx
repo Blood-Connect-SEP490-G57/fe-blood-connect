@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useToast } from '@/components/ui/use-toast'
 import * as z from 'zod'
-import { Loader2Icon, Lock, Mail, ArrowRight, ChevronLeft } from 'lucide-react'
+import { Loader2Icon, Lock, Mail, ArrowRight, ChevronLeft, Eye, EyeOff } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
@@ -13,6 +13,7 @@ import { useMutation } from '@tanstack/react-query'
 import { isAxiosError } from 'axios'
 import { User } from 'lucide-react'
 import { motion } from 'framer-motion'
+import { useState } from 'react'
 
 export default function Register() {
   const { toast } = useToast()

@@ -1,4 +1,4 @@
-import { Calendar, MapPin, Info, ChevronRight, Droplet, X } from 'lucide-react'
+import { Calendar, MapPin, Info, ChevronRight, Droplet } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { useEffect, useRef, useState } from 'react'
@@ -220,7 +220,7 @@ const DonationHistory = () => {
             <Card className='overflow-hidden rounded-xl shadow-sm border-none'>
               <CardContent className='p-0'>
                 <div className='divide-y'>
-                  {appointments.map((appointment, index) => (
+                  {appointments.map((appointment) => (
                     <div 
                       key={appointment.id} 
                       className='p-4 flex items-start justify-between'

@@ -6,9 +6,10 @@ import { Button } from '../ui/button'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
-import { Lock, ArrowRight, ChevronLeft } from 'lucide-react'
+import { Lock, ArrowRight, ChevronLeft, Eye, EyeOff } from 'lucide-react'
 import { resetPassword } from '@/api/auth'
 import { motion } from 'framer-motion'
+import { useState } from 'react'
 
 // Validation schema using Zod
 const resetPasswordSchema = z
