@@ -1,6 +1,6 @@
-import { Calendar, MapPin, Info } from 'lucide-react'
+import { Calendar, MapPin, Info, ChevronRight, Droplet, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { useEffect, useRef, useState } from 'react'
 import { getHistory } from '@/api/appointment'
 import { toast } from '@/components/ui/use-toast'
@@ -22,20 +22,58 @@ function CancelAppointmentModal({
   if (!isOpen) return null
 
   return (
-    <div className='fixed inset-0 flex items-center justify-center bg-black bg-opacity-50'>
-      <div className='bg-white p-6 rounded shadow-lg'>
-        <h2 className='text-lg font-bold mb-4'>Xác nhận hủy lịch hẹn</h2>
-        <p className='mb-4'>Bạn có chắc chắn muốn hủy lịch hẹn này không?</p>
-        <div className='flex justify-end space-x-2'>
-          <button onClick={onClose} className='px-4 py-2 bg-gray-300 rounded hover:bg-gray-400'>
-            Hủy bỏ
-          </button>
-          <button onClick={onConfirm} className='px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700'>
-            Xác nhận
-          </button>
+    <div className='fixed inset-0 flex items-center justify-center bg-black/50 z-50'>
+      <div className='bg-white rounded-xl shadow-lg w-11/12 max-w-md overflow-hidden'>
+        <div className='p-5 border-b'>
+          <h2 className='text-lg font-bold'>Xác nhận hủy lịch hẹn</h2>
+        </div>
+        <div className='p-5'>
+          <p className='mb-4 text-gray-600'>Bạn có chắc chắn muốn hủy lịch hẹn này không?</p>
+          <div className='flex justify-end space-x-2'>
+            <Button 
+              onClick={onClose} 
+              variant='outline'
+              className='px-5 py-2 rounded-xl border border-gray-300'
+            >
+              Hủy bỏ
+            </Button>
+            <Button 
+              onClick={onConfirm} 
+              className='px-5 py-2 bg-red-600 text-white rounded-xl hover:bg-red-700'
+            >
+              Xác nhận
+            </Button>
+          </div>
         </div>
       </div>
     </div>
+  )
+}
+
+// Status Badge component
+const StatusBadge = ({ status }: { status: string }) => {
+  let color = 'bg-gray-100 text-gray-800'
+  let label = status
+  
+  switch (status) {
+    case 'DONE':
+      color = 'bg-green-100 text-green-800'
+      label = 'Hoàn thành'
+      break
+    case 'BOOKING':
+      color = 'bg-yellow-100 text-yellow-800'
+      label = 'Đã đặt lịch'
+      break
+    case 'CANCELLED':
+      color = 'bg-red-100 text-red-800'
+      label = 'Đã hủy'
+      break
+  }
+  
+  return (
+    <span className={`px-3 py-1 rounded-full text-sm font-medium ${color}`}>
+      {label}
+    </span>
   )
 }
 
@@ -45,6 +83,7 @@ const DonationHistory = () => {
   const [error, setError] = useState<string | null>(null)
   const hasFetched = useRef(false)
   const [isModalOpen, setModalOpen] = useState(false)
+  const [selectedAppointment, setSelectedAppointment] = useState<AppointmentType | null>(null)
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -83,6 +122,14 @@ const DonationHistory = () => {
   const handleCancelAppointment = async (appointment: AppointmentType) => {
     try {
       await cancelAppointment(appointment.campaignId)
+      
+      // Update local state
+      setAppointments(appointments.map(app => 
+        app.id === appointment.id 
+          ? {...app, status: 'CANCELLED'} 
+          : app
+      ))
+      
       toast({
         title: 'Đã hủy lịch hẹn',
         description: 'Lịch hẹn của bạn đã được hủy thành công',
@@ -97,91 +144,144 @@ const DonationHistory = () => {
     }
     setModalOpen(false)
   }
+  
+  const handleOpenModal = (appointment: AppointmentType) => {
+    setSelectedAppointment(appointment)
+    setModalOpen(true)
+  }
+
+  const doneAppointments = appointments.filter(a => a.status === 'DONE').length
+  const upcomingAppointments = appointments.filter(a => a.status === 'BOOKING').length
+  const cancelledAppointments = appointments.filter(a => a.status === 'CANCELLED').length
 
   if (loading) return <Loading />
   if (error) return <Empty />
 
   return (
-    <div className='min-h-screen py-12 px-4 container mx-auto bg-white'>
-      <div className='text-center mb-8'>
-        <h1 className='text-4xl font-bold text-gray-900'>Lịch Sử Hiến Máu</h1>
-        <p className='text-lg text-gray-600'>Theo dõi lịch sử đặt hẹn và hiến máu của bạn</p>
-      </div>
-
-      <div className='grid grid-cols-1 md:grid-cols-3 gap-6 mb-8'>
-        <div className='p-6 bg-blue-100 rounded-lg shadow-sm text-blue-800'>
-          <h3 className='text-lg font-semibold'>Tổng lượt hiến máu</h3>
-          <p className='text-3xl font-bold'>{appointments.filter((a) => a.status === 'DONE').length}</p>
-        </div>
-
-        <div className='p-6 bg-yellow-100 rounded-lg shadow-sm text-yellow-800'>
-          <h3 className='text-lg font-semibold'>Lịch hẹn sắp tới</h3>
-          <p className='text-3xl font-bold'>{appointments.filter((a) => a.status === 'BOOKING').length}</p>
-        </div>
-
-        <div className='p-6 bg-red-100 rounded-lg shadow-sm text-red-800'>
-          <h3 className='text-lg font-semibold'>Lịch hẹn đã hủy</h3>
-          <p className='text-3xl font-bold'>{appointments.filter((a) => a.status === 'CANCELLED').length}</p>
+    <div className='min-h-screen bg-gray-100'>
+      {/* Banner */}
+      <div className='bg-gradient-to-r from-red-600 to-red-400 text-white p-8'>
+        <div className='container mx-auto'>
+          <div className='flex flex-col items-center'>
+            <div className='h-24 w-24 bg-white rounded-full flex items-center justify-center shadow-md mb-4'>
+              <Droplet className='h-12 w-12 text-red-500' />
+            </div>
+            <h1 className='text-2xl font-bold mb-1'>Lịch Sử Hiến Máu</h1>
+            <p className='text-center text-white/80'>Theo dõi lịch sử đặt hẹn và hiến máu của bạn</p>
+          </div>
         </div>
       </div>
 
-      <div className='grid grid-cols-1 gap-6'>
-        {appointments.map((appointment) => (
-          <Card key={appointment.id} className='p-6 shadow-md rounded-lg border'>
-            <div className='flex justify-end items-center'>
-              <span
-                className={`px-3 py-1 rounded-full text-sm font-semibold  
-                  ${
-                    appointment.status === 'DONE'
-                      ? 'bg-green-100 text-green-700'
-                      : appointment.status === 'BOOKING'
-                      ? 'bg-yellow-100 text-yellow-700'
-                      : appointment.status === 'CANCELLED'
-                      ? 'bg-red-100 text-red-700'
-                      : 'bg-gray-100 text-gray-700'
-                  }`}
-              >
-                {appointment.status === 'DONE'
-                  ? 'Hoàn thành'
-                  : appointment.status === 'BOOKING'
-                  ? 'Đã đặt lịch'
-                  : 'Đã hủy'}
-              </span>
-            </div>
-            <h3 className='text-xl font-semibold text-gray-900 flex items-center mt-3'>
-              <Calendar className='h-5 w-5 text-gray-500 mr-2' /> {formatExactDate(appointment.appointmentDate)}
-            </h3>
-
-            <p className='text-gray-700 flex items-center mt-2'>
-              <MapPin className='h-5 w-5 text-gray-500 mr-2' />
-              <span className='font-bold'>Địa điểm:</span> {appointment.location || 'Không có thông tin'}
-            </p>
-            {appointment.campaignName && (
-              <p className='text-gray-700 flex items-center mt-2'>
-                <Info className='h-5 w-5 text-gray-500 mr-2' />
-                <span className='font-bold'>Chiến dịch:</span> {appointment.campaignName}
-              </p>
-            )}
-            <div className='mt-4 flex justify-end space-x-2'>
-              {appointment.status === 'BOOKING' && (
-                <Button
-                  variant='outline'
-                  size='sm'
-                  className='text-red-600 border-red-600 hover:bg-red-500 hover:text-white'
-                  onClick={() => setModalOpen(true)}
-                >
-                  Hủy lịch hẹn
-                </Button>
-              )}
-            </div>
+      <div className='container mx-auto px-4 py-6'>
+        {/* Stats Cards */}
+        <div className='grid grid-cols-3 gap-3 mb-6'>
+          <Card className='overflow-hidden rounded-xl shadow-sm border-none'>
+            <CardContent className='p-4'>
+              <div className='flex flex-col items-center'>
+                <p className='text-sm text-gray-500 mb-1'>Hiến máu</p>
+                <p className='text-2xl font-bold text-green-600'>{doneAppointments}</p>
+              </div>
+            </CardContent>
           </Card>
-        ))}
+          
+          <Card className='overflow-hidden rounded-xl shadow-sm border-none'>
+            <CardContent className='p-4'>
+              <div className='flex flex-col items-center'>
+                <p className='text-sm text-gray-500 mb-1'>Sắp tới</p>
+                <p className='text-2xl font-bold text-yellow-600'>{upcomingAppointments}</p>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card className='overflow-hidden rounded-xl shadow-sm border-none'>
+            <CardContent className='p-4'>
+              <div className='flex flex-col items-center'>
+                <p className='text-sm text-gray-500 mb-1'>Đã hủy</p>
+                <p className='text-2xl font-bold text-red-600'>{cancelledAppointments}</p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Appointment List */}
+        <div className='space-y-4'>
+          <h2 className='text-lg font-semibold text-gray-700 mb-2 px-2'>Tất cả lịch hẹn</h2>
+          
+          {appointments.length === 0 ? (
+            <Card className='overflow-hidden rounded-xl shadow-sm border-none'>
+              <CardContent className='p-6 flex flex-col items-center'>
+                <div className='w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4'>
+                  <Calendar className='h-8 w-8 text-gray-400' />
+                </div>
+                <p className='text-gray-500 text-center'>Bạn chưa có lịch hẹn nào</p>
+              </CardContent>
+            </Card>
+          ) : (
+            <Card className='overflow-hidden rounded-xl shadow-sm border-none'>
+              <CardContent className='p-0'>
+                <div className='divide-y'>
+                  {appointments.map((appointment, index) => (
+                    <div 
+                      key={appointment.id} 
+                      className='p-4 flex items-start justify-between'
+                    >
+                      <div className='flex gap-3'>
+                        <div className={`w-10 h-10 rounded-full flex items-center justify-center
+                          ${appointment.status === 'DONE' ? 'bg-green-100' : 
+                            appointment.status === 'BOOKING' ? 'bg-yellow-100' : 'bg-red-100'}`}
+                        >
+                          <Calendar className={`h-5 w-5 
+                            ${appointment.status === 'DONE' ? 'text-green-600' : 
+                              appointment.status === 'BOOKING' ? 'text-yellow-600' : 'text-red-600'}`} 
+                          />
+                        </div>
+                        <div className='flex-1'>
+                          <div className='flex items-center justify-between mb-1'>
+                            <p className='font-medium'>{formatExactDate(appointment.appointmentDate)}</p>
+                            <StatusBadge status={appointment.status} />
+                          </div>
+                          <div className='flex flex-col space-y-1 text-sm text-gray-500'>
+                            <div className='flex items-center gap-1'>
+                              <MapPin className='h-3 w-3' />
+                              <span>{appointment.location || 'Không có thông tin'}</span>
+                            </div>
+                            {appointment.campaignName && (
+                              <div className='flex items-center gap-1'>
+                                <Info className='h-3 w-3' />
+                                <span>{appointment.campaignName}</span>
+                              </div>
+                            )}
+                          </div>
+                          
+                          {appointment.status === 'BOOKING' && (
+                            <Button
+                              variant='outline'
+                              size='sm'
+                              className='mt-2 text-red-600 border-red-600 hover:bg-red-50'
+                              onClick={() => handleOpenModal(appointment)}
+                            >
+                              Hủy lịch hẹn
+                            </Button>
+                          )}
+                        </div>
+                      </div>
+                      <ChevronRight className='h-5 w-5 text-gray-400 mt-2' />
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
+        </div>
       </div>
-      <CancelAppointmentModal
-        isOpen={isModalOpen}
-        onClose={() => setModalOpen(false)}
-        onConfirm={() => handleCancelAppointment(appointments[0])}
-      />
+
+      {selectedAppointment && (
+        <CancelAppointmentModal
+          isOpen={isModalOpen}
+          onClose={() => setModalOpen(false)}
+          onConfirm={() => handleCancelAppointment(selectedAppointment)}
+        />
+      )}
     </div>
   )
 }

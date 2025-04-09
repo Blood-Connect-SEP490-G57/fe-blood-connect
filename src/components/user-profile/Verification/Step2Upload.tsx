@@ -1,10 +1,11 @@
-import { Upload } from 'lucide-react'
+import { Upload, Camera, ChevronRight, X } from 'lucide-react'
 import { useDropzone } from 'react-dropzone'
 import { extractFront, extractBack } from '@/api/extract'
 import { useExtractStore } from '@/hooks/stores/useExtractStore'
 import Loading from '@/components/warnings/loading'
 import { useEffect, useState } from 'react'
 import ScrollToTop from '@/components/scrollToTop'
+import { Card, CardContent } from '@/components/ui/card'
 
 interface Step2UploadProps {
   formData: {
@@ -165,98 +166,169 @@ const Step2Upload: React.FC<Step2UploadProps> = ({ formData, setFormData, error,
   return (
     <div className='space-y-6'>
       <ScrollToTop />
-      <>
-        <h2 className='text-2xl font-heading font-semibold text-foreground'>Tải lên CCCD</h2>
-        <p>
-          Lưu ý: Ảnh cần rõ nét, không mờ, không bị chói hoặc che khuất thông tin. Chụp thẳng, không lệch góc, toàn bộ
-          CCCD phải nằm trong khung hình. Sử dụng định dạng JPG, PNG với độ phân giải cao. Tránh chỉnh sửa ảnh làm thay
-          đổi nội dung. Bảo mật thông tin, không chia sẻ ảnh CCCD nếu không cần thiết. Nếu bạn tải sai ảnh vui lòng tải
-          lại cả ảnh mặt trước và mặt sau.
+      <div className='text-center mb-6'>
+        <div className='flex items-center justify-center mb-4'>
+          <div className='w-16 h-16 bg-red-50 rounded-full flex items-center justify-center'>
+            <Camera className='h-8 w-8 text-red-500' />
+          </div>
+        </div>
+        <h2 className='text-xl font-semibold text-gray-900 mb-2'>Tải lên CCCD</h2>
+        <p className='text-sm text-gray-600 max-w-xl mx-auto'>
+          Vui lòng tải lên ảnh căn cước công dân (mặt trước và mặt sau) để xác thực thông tin.
         </p>
-        {/* Mặt trước */}
-        <div className='space-y-2'>
-          <p>Mặt trước CCCD:</p>
+      </div>
+
+      <Card className='overflow-hidden rounded-xl shadow-sm border-none mb-6'>
+        <CardContent className='p-5'>
+          <div className='space-y-4'>
+            <div className='flex items-center justify-between'>
+              <h3 className='font-medium text-gray-900'>Lưu ý khi chụp ảnh</h3>
+            </div>
+            <ul className='space-y-2'>
+              <li className='flex items-start gap-2 text-sm text-gray-600'>
+                <ChevronRight className='h-4 w-4 text-red-500 mt-0.5 flex-shrink-0' />
+                <span>Ảnh cần rõ nét, không mờ, không bị chói hoặc che khuất thông tin</span>
+              </li>
+              <li className='flex items-start gap-2 text-sm text-gray-600'>
+                <ChevronRight className='h-4 w-4 text-red-500 mt-0.5 flex-shrink-0' />
+                <span>Chụp thẳng, không lệch góc, toàn bộ CCCD phải nằm trong khung hình</span>
+              </li>
+              <li className='flex items-start gap-2 text-sm text-gray-600'>
+                <ChevronRight className='h-4 w-4 text-red-500 mt-0.5 flex-shrink-0' />
+                <span>Nếu tải sai ảnh, vui lòng tải lại cả ảnh mặt trước và mặt sau</span>
+              </li>
+            </ul>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Mặt trước */}
+      <Card className='overflow-hidden rounded-xl shadow-sm border-none mb-4'>
+        <CardContent className='p-5'>
+          <div className='flex items-center justify-between mb-4'>
+            <h3 className='font-medium text-gray-900'>Mặt trước CCCD</h3>
+            {formData.frontImage && (
+              <span className='px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full'>
+                Đã tải lên
+              </span>
+            )}
+          </div>
+          
           <div
             {...frontDropzone.getRootProps()}
-            className='border-2 border-dashed border-input rounded-lg p-8 text-center cursor-pointer'
+            className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors ${
+              formData.frontImage ? 'border-green-300 bg-green-50' : 'border-gray-300 hover:border-red-300 hover:bg-red-50'
+            }`}
           >
             <input {...frontDropzone.getInputProps()} />
             {uploadLoading.front ? (
               <Loading />
             ) : formData.frontImage ? (
-              <div className='space-y-2 flex flex-col items-center align-center'>
-                <img src={URL.createObjectURL(formData.frontImage)} alt='Front' className='w-40 h-40 rounded-lg' />
-                <p>Đã tải lên mặt trước</p>
-                <p className='text-sm text-gray-500'>{formData.frontImage.name}</p>
+              <div className='space-y-2 flex flex-col items-center'>
+                <img 
+                  src={URL.createObjectURL(formData.frontImage)} 
+                  alt='Front' 
+                  className='w-40 h-32 object-cover rounded-lg shadow-sm' 
+                />
+                <p className='text-sm text-gray-600 font-medium'>{formData.frontImage.name}</p>
                 <button
                   onClick={(e) => {
                     e.stopPropagation()
                     setFormData((prev: any) => ({ ...prev, frontImage: null }))
                   }}
-                  className='px-3 py-1 text-sm bg-red-100 text-red-600 rounded-md hover:bg-red-200'
+                  className='flex items-center gap-1 px-3 py-1.5 text-xs bg-red-100 text-red-600 rounded-full hover:bg-red-200'
                 >
-                  Xóa
+                  <X className='h-3 w-3' />
+                  <span>Xóa</span>
                 </button>
               </div>
             ) : (
               <>
-                <Upload className='mx-auto h-12 w-12 text-accent' />
-                <p className='mt-2'>Kéo thả hoặc click để tải lên ảnh mặt trước</p>
-                <p className='text-sm text-gray-500 mt-1'>Hỗ trợ: JPG, PNG (Tối đa 5MB)</p>
+                <Upload className='mx-auto h-10 w-10 text-red-400' />
+                <p className='mt-2 text-sm font-medium text-gray-700'>Tải lên ảnh mặt trước</p>
+                <p className='text-xs text-gray-500 mt-1'>Nhấp để chọn hoặc kéo thả (JPG, PNG - tối đa 5MB)</p>
               </>
             )}
           </div>
-        </div>
+        </CardContent>
+      </Card>
 
-        {/* Mặt sau */}
-        {formData.frontImage && (
-          <div className='space-y-2'>
-            <p>Mặt sau CCCD:</p>
-            <div
-              {...backDropzone.getRootProps()}
-              className='border-2 border-dashed border-input rounded-lg p-8 text-center cursor-pointer'
-            >
-              <input {...backDropzone.getInputProps()} />
-              {uploadLoading.back ? (
-                <Loading />
-              ) : formData.backImage ? (
-                <div className='space-y-2 flex flex-col items-center align-center'>
-                  <img src={URL.createObjectURL(formData.backImage)} alt='Back' className='w-40 h-40 rounded-lg' />
-                  <p>Đã tải lên mặt sau</p>
-                  <p className='text-sm text-gray-500'>{formData.backImage.name}</p>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      setFormData((prev: any) => ({ ...prev, backImage: null }))
-                    }}
-                    className='px-3 py-1 text-sm bg-red-100 text-red-600 rounded-md hover:bg-red-200'
-                  >
-                    Xóa
-                  </button>
-                </div>
-              ) : (
-                <>
-                  <Upload className='mx-auto h-12 w-12 text-accent' />
-                  <p className='mt-2'>Kéo thả hoặc click để tải lên ảnh mặt sau</p>
-                  <p className='text-sm text-gray-500 mt-1'>Hỗ trợ: JPG, PNG (Tối đa 5MB)</p>
-                </>
-              )}
-            </div>
+      {/* Mặt sau */}
+      <Card className={`overflow-hidden rounded-xl shadow-sm border-none mb-4 transition-opacity ${formData.frontImage ? 'opacity-100' : 'opacity-50'}`}>
+        <CardContent className='p-5'>
+          <div className='flex items-center justify-between mb-4'>
+            <h3 className='font-medium text-gray-900'>Mặt sau CCCD</h3>
+            {formData.backImage && (
+              <span className='px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full'>
+                Đã tải lên
+              </span>
+            )}
           </div>
-        )}
-        <button
-          onClick={onNext}
-          disabled={!formData.frontImage || !formData.backImage || uploadLoading.front || uploadLoading.back}
-          className={`w-full bg-primary text-white p-2 rounded ${
-            !formData.frontImage || !formData.backImage || uploadLoading.front || uploadLoading.back
-              ? 'opacity-50 cursor-not-allowed'
-              : ''
-          }`}
-        >
-          {uploadLoading.front || uploadLoading.back ? 'Đang xử lý...' : 'Tiếp theo'}
-        </button>
-        {error && <p className='text-red-500'>{error}</p>}
-      </>
+          
+          <div
+            {...(formData.frontImage ? backDropzone.getRootProps() : {})}
+            className={`border-2 border-dashed rounded-lg p-6 text-center ${
+              formData.frontImage 
+                ? `cursor-pointer ${formData.backImage ? 'border-green-300 bg-green-50' : 'border-gray-300 hover:border-red-300 hover:bg-red-50'}`
+                : 'border-gray-200 bg-gray-50 cursor-not-allowed'
+            }`}
+          >
+            {formData.frontImage && <input {...backDropzone.getInputProps()} />}
+            {uploadLoading.back ? (
+              <Loading />
+            ) : formData.backImage ? (
+              <div className='space-y-2 flex flex-col items-center'>
+                <img 
+                  src={URL.createObjectURL(formData.backImage)} 
+                  alt='Back' 
+                  className='w-40 h-32 object-cover rounded-lg shadow-sm' 
+                />
+                <p className='text-sm text-gray-600 font-medium'>{formData.backImage.name}</p>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    setFormData((prev: any) => ({ ...prev, backImage: null }))
+                  }}
+                  className='flex items-center gap-1 px-3 py-1.5 text-xs bg-red-100 text-red-600 rounded-full hover:bg-red-200'
+                >
+                  <X className='h-3 w-3' />
+                  <span>Xóa</span>
+                </button>
+              </div>
+            ) : formData.frontImage ? (
+              <>
+                <Upload className='mx-auto h-10 w-10 text-red-400' />
+                <p className='mt-2 text-sm font-medium text-gray-700'>Tải lên ảnh mặt sau</p>
+                <p className='text-xs text-gray-500 mt-1'>Nhấp để chọn hoặc kéo thả (JPG, PNG - tối đa 5MB)</p>
+              </>
+            ) : (
+              <>
+                <Upload className='mx-auto h-10 w-10 text-gray-300' />
+                <p className='mt-2 text-sm font-medium text-gray-400'>Tải lên ảnh mặt sau</p>
+                <p className='text-xs text-gray-400 mt-1'>Vui lòng tải lên mặt trước trước</p>
+              </>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+
+      {error && (
+        <div className='p-4 bg-red-50 text-red-600 rounded-lg text-sm'>
+          {error}
+        </div>
+      )}
+
+      <button
+        onClick={onNext}
+        disabled={!formData.frontImage || !formData.backImage || uploadLoading.front || uploadLoading.back}
+        className={`w-full py-4 text-white font-medium rounded-xl transition-colors ${
+          !formData.frontImage || !formData.backImage || uploadLoading.front || uploadLoading.back
+            ? 'bg-gray-300 cursor-not-allowed'
+            : 'bg-red-600 hover:bg-red-700'
+        }`}
+      >
+        {uploadLoading.front || uploadLoading.back ? 'Đang xử lý...' : 'Tiếp theo'}
+      </button>
     </div>
   )
 }
