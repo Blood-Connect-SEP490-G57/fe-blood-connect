@@ -174,8 +174,11 @@ const Header: React.FC = () => {
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                   <Button
                     variant='ghost'
-                    onClick={() => setIsMobileNotiOpen((prev) => !prev)}
-                    className='group relative rounded-full p-2 bg-red-50 border border-red-100 text-red-600 hover:bg-gradient-to-r from-red-600 to-red-500 hover:text-white hover:border-transparent'
+                    onClick={() => {
+                      setIsMobileNotiOpen((prev) => !prev)
+                      setIsMobileMenuOpen(false)
+                    }}
+                    className='group relative rounded-full p-2 bg-red-50 border border-red-100 text-red-600 hover:bg-red-100'
                   >
                     <div className='relative w-full h-full'>
                       <Bell className='group-hover:text-white w-5 h-5' />
@@ -276,6 +279,7 @@ const Header: React.FC = () => {
                   data-notifications-trigger
                   onClick={() => {
                     setIsMobileNotiOpen((prev) => !prev)
+                    setIsMobileMenuOpen(false)
                   }}
                   className='group relative rounded-full p-2 bg-red-50 border border-red-100 text-red-600 hover:bg-red-100'
                 >
@@ -316,106 +320,60 @@ const Header: React.FC = () => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 0.5 }}
                 exit={{ opacity: 0 }}
-                className="fixed inset-0 bg-black z-40"
+                className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
                 onClick={() => setIsMobileMenuOpen(false)}
               />
-              
               <motion.div
-                className='xl:hidden fixed top-0 right-0 h-full min-w-[280px] max-w-[85vw] w-72 
-                  bg-white shadow-xl z-50 mobile-menu overflow-auto'
-                initial={{ x: '100%' }}
-                animate={{ x: 0 }}
-                exit={{ x: '100%' }}
+                className="fixed top-[70px] right-0 max-h-[80vh] w-full max-w-sm z-50 overflow-auto rounded-tl-2xl rounded-bl-2xl bg-white/95 backdrop-blur-md shadow-xl"
+                initial={{ x: '100%', opacity: 0.5 }}
+                animate={{ x: 0, opacity: 1 }}
+                exit={{ x: '100%', opacity: 0.5 }}
                 transition={{ type: 'spring', stiffness: 300, damping: 30 }}
               >
-                <div className='flex flex-col h-full pb-6'>
-                  <div className='flex justify-between items-center p-4 border-b border-gray-100'>
-                    <span className='font-medium text-lg text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-500'>
-                      Giọt Máu Hy Vọng
-                    </span>
-                    <Button
-                      variant='ghost'
-                      size='sm'
-                      className='rounded-full p-1.5 text-gray-500 hover:bg-gray-100'
-                      onClick={() => setIsMobileMenuOpen(false)}
-                    >
-                      <X className='w-5 h-5' />
-                    </Button>
-                  </div>
-                  
-                  <div className='flex-1 overflow-y-auto py-4 px-3'>
-                    <div className='space-y-1'>
-                      {getFilteredNavigation()
-                        .filter((item) => {
-                          if (!isLoggedIn && (item.name === 'LỊCH HẸN CỦA TÔI' || item.name === 'LỊCH SỬ ĐẶT HẸN')) {
-                            return false
-                          }
-                          return true
-                        })
-                        .map((item) => (
-                          <motion.a
-                            key={item.name}
-                            href={item.href}
-                            className={`flex items-center rounded-xl py-2.5 px-4 transition-all ${
-                              isActive(item.href)
-                                ? 'bg-gradient-to-r from-red-600 to-red-500 text-white shadow-sm'
-                                : 'text-gray-700 hover:bg-red-50 hover:text-red-600'
-                            }`}
-                            onClick={() => setIsMobileMenuOpen(false)}
-                            whileHover={{ x: 4 }}
-                            whileTap={{ scale: 0.98 }}
-                          >
-                            {item.icon}
-                            {item.name}
-                          </motion.a>
-                        ))}
-                    </div>
-                  </div>
-                  
-                  <div className='px-4 py-2 border-t border-gray-100'>
-                    {isLoggedIn ? (
-                      <motion.button
-                        className='w-full flex items-center justify-center gap-2 bg-gradient-to-r from-red-600 to-red-500 text-white py-2.5 px-4 rounded-xl shadow-sm hover:from-red-700 hover:to-red-600 transition-all'
+                <div className="p-4 flex flex-col gap-2">
+                  {getFilteredNavigation()
+                    .filter((item) => {
+                      if (!isLoggedIn && (item.name === 'LỊCH HẸN CỦA TÔI' || item.name === 'LỊCH SỬ ĐẶT HẸN')) {
+                        return false
+                      }
+                      return true
+                    })
+                    .map((item, index) => (
+                      <motion.div
+                        key={item.name}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.05 }}
+                        className="flex items-center p-3 rounded-xl hover:bg-red-50 transition-all"
                         onClick={() => {
-                          handleLogout()
-                          setIsMobileMenuOpen(false)
+                          setIsMobileMenuOpen(false);
+                          navigate(item.href);
                         }}
-                        whileHover={{ y: -2 }}
-                        whileTap={{ y: 0 }}
                       >
-                        <LogOutIcon className='h-4 w-4' />
-                        <span>ĐĂNG XUẤT</span>
-                      </motion.button>
-                    ) : (
-                      <div className='flex flex-col space-y-2'>
-                        <motion.button
-                          className='w-full flex items-center justify-center gap-2 border border-red-500 text-red-600 py-2.5 px-4 rounded-xl hover:bg-red-50 transition-all'
-                          onClick={() => {
-                            handleLoginClick()
-                            setIsMobileMenuOpen(false)
-                          }}
-                          whileHover={{ y: -2 }}
-                          whileTap={{ y: 0 }}
-                        >
-                          <LogInIcon className='h-4 w-4' />
-                          <span>ĐĂNG NHẬP</span>
-                        </motion.button>
-                        
-                        <motion.button
-                          className='w-full flex items-center justify-center gap-2 bg-gradient-to-r from-red-600 to-red-500 text-white py-2.5 px-4 rounded-xl shadow-sm hover:from-red-700 hover:to-red-600 transition-all'
-                          onClick={() => {
-                            handleRegisterClick()
-                            setIsMobileMenuOpen(false)
-                          }}
-                          whileHover={{ y: -2 }}
-                          whileTap={{ y: 0 }}
-                        >
-                          <UserPlusIcon className='h-4 w-4' />
-                          <span>ĐĂNG KÝ</span>
-                        </motion.button>
-                      </div>
-                    )}
-                  </div>
+                        <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center mr-3">
+                          {item.icon}
+                        </div>
+                        <div>
+                          <div className="font-medium">{item.name}</div>
+                        </div>
+                      </motion.div>
+                    ))}
+                  <hr className="my-2" />
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: getFilteredNavigation().length * 0.05 }}
+                    className="flex items-center p-3 rounded-xl bg-red-50 hover:bg-red-100 transition-all"
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      handleLogout();
+                    }}
+                  >
+                    <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center mr-3">
+                      <LogOut className="h-5 w-5 text-red-500" />
+                    </div>
+                    <div className="font-medium">Logout</div>
+                  </motion.div>
                 </div>
               </motion.div>
             </>
@@ -425,20 +383,26 @@ const Header: React.FC = () => {
         {/* Mobile Notification */}
         <AnimatePresence>
           {isMobileNotiOpen && (
-            <motion.div
-              className='absolute right-0 mt-2 z-50'
-              style={{
-                maxHeight: '80vh',
-                minWidth: window.innerWidth < 780 ? '280px' : '400px',
-                maxWidth: '95vw'
-              }}
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.2 }}
-            >
-              <Notifications onClose={handleNotificationClose} />
-            </motion.div>
+            <>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 0.5 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
+                onClick={() => setIsMobileNotiOpen(false)}
+              />
+              <motion.div
+                className="fixed top-[70px] right-0 max-h-[80vh] w-full max-w-sm z-50 overflow-auto rounded-tl-2xl rounded-bl-2xl bg-white/95 backdrop-blur-md shadow-xl"
+                initial={{ x: '100%', opacity: 0.5 }}
+                animate={{ x: 0, opacity: 1 }}
+                exit={{ x: '100%', opacity: 0.5 }}
+                transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+              >
+                <div className="p-4">
+                  <Notifications onClose={handleNotificationClose} />
+                </div>
+              </motion.div>
+            </>
           )}
         </AnimatePresence>
       </div>
