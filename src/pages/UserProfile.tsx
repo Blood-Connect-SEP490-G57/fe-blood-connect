@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
-import { Calendar, CheckCircle, History, Info, User } from 'lucide-react'
+import { Calendar, CheckCircle, History, Info, User, ChevronRight } from 'lucide-react'
 import Profile from '@/components/user-profile/Profile'
 import AppointmentInfo from '@/components/user-profile/AppointmentInfo'
 import DonationHistory from '@/components/user-profile/DonationHistory'
 // import UserVerification from '@/components/user-profile/UserVerification'
 import { useVerification } from '@/components/verificationContext/VerificationContext'
 import Verification from '@/components/user-profile/Verification/Verification'
+import { motion, AnimatePresence } from 'framer-motion'
 
 const UserProfilePage: React.FC = () => {
   const [selectedOption, setSelectedOption] = useState<string>('thong-tin-ca-nhan')
@@ -56,63 +57,127 @@ const UserProfilePage: React.FC = () => {
     }
   }
 
+  const navigationItems = [
+    {
+      id: 'thong-tin-ca-nhan',
+      label: 'Thông tin cá nhân',
+      icon: <Info className='w-5 h-5' />,
+      color: 'bg-blue-100 text-blue-600'
+    },
+    {
+      id: 'lich-hen',
+      label: 'Lịch hẹn của tôi',
+      icon: <Calendar className='w-5 h-5' />,
+      color: 'bg-green-100 text-green-600'
+    },
+    {
+      id: 'lich-su-hien-mau',
+      label: 'Lịch sử đặt hẹn',
+      icon: <History className='w-5 h-5' />,
+      color: 'bg-purple-100 text-purple-600'
+    }
+  ]
+
+  // Conditionally add verification option if needed
+  if (isVerified === 'NONE') {
+    navigationItems.push({
+      id: 'xac-thuc-tai-khoan',
+      label: 'Xác thực tài khoản',
+      icon: <CheckCircle className='w-5 h-5' />,
+      color: 'bg-red-100 text-red-600'
+    })
+  }
+
   return (
-    <div className='flex flex-col md:flex-row min-h-screen bg-gray-100'>
-      {/* Sidebar */}
-      <div className='hidden md:flex md:w-1/4 p-4 bg-white shadow-lg sticky top-0 overflow-y-auto'>
-        <Card className='border-none w-full'>
-          <CardHeader>
-            <CardTitle className='text-xl text-red-600 flex items-center gap-2'>
-              <User className='w-5 h-5' />
-              Hồ sơ
-            </CardTitle>
-          </CardHeader>
-          <CardContent className='space-y-4'>
-            <button
-              className={`w-full text-left p-3 rounded-md flex items-center gap-2 ${
-                selectedOption === 'thong-tin-ca-nhan' ? 'bg-red-100' : ''
-              }`}
-              onClick={() => handleOptionClick('thong-tin-ca-nhan')}
-            >
-              <Info className='w-5 h-5' />
-              Thông tin cá nhân
-            </button>
-            <button
-              className={`w-full text-left p-3 rounded-md flex items-center gap-2 ${
-                selectedOption === 'lich-hen' ? 'bg-red-100' : ''
-              }`}
-              onClick={() => handleOptionClick('lich-hen')}
-            >
-              <Calendar className='w-5 h-5' />
-              Lịch hẹn của tôi
-            </button>
-            <button
-              className={`w-full text-left p-3 rounded-md flex items-center gap-2 ${
-                selectedOption === 'lich-su-hien-mau' ? 'bg-red-100' : ''
-              }`}
-              onClick={() => handleOptionClick('lich-su-hien-mau')}
-            >
-              <History className='w-5 h-5' />
-              Lịch sử đặt hẹn
-            </button>
+    <div className='min-h-screen bg-gradient-to-b from-gray-50 to-white relative overflow-hidden'>
+      {/* Decorative elements */}
+      <div className='absolute top-20 left-10 w-72 h-72 bg-red-50 rounded-full blur-3xl opacity-30 -z-10'></div>
+      <div className='absolute bottom-20 right-10 w-72 h-72 bg-red-50 rounded-full blur-3xl opacity-30 -z-10'></div>
+      
+      <div className='max-w-7xl mx-auto pt-20 pb-12 px-4'>
+        <motion.div 
+          className='flex flex-col md:flex-row gap-6 relative z-10'
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          {/* Sidebar for desktop */}
+          <div className='hidden md:block md:w-1/4 sticky top-24 h-fit'>
+            <Card className='rounded-3xl overflow-hidden border border-gray-100 bg-white/80 backdrop-blur-sm shadow-lg'>
+              <CardHeader className='pb-3 border-b border-gray-100'>
+                <CardTitle className='text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-500 flex items-center gap-2'>
+                  <div className='p-2 bg-red-100 rounded-full'>
+                    <User className='w-5 h-5 text-red-500' />
+                  </div>
+                  Hồ sơ của tôi
+                </CardTitle>
+              </CardHeader>
+              <CardContent className='p-4 space-y-3'>
+                {navigationItems.map((item) => (
+                  <motion.button
+                    key={item.id}
+                    className={`w-full text-left p-3.5 rounded-xl flex items-center justify-between transition-all duration-200 ${
+                      selectedOption === item.id
+                        ? 'bg-gradient-to-r from-red-500 to-red-600 text-white shadow-sm'
+                        : 'hover:bg-gray-50'
+                    }`}
+                    onClick={() => handleOptionClick(item.id)}
+                    whileHover={{ x: 4 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <div className='flex items-center gap-3'>
+                      <div className={`p-2 rounded-full ${selectedOption === item.id ? 'bg-white/20' : item.color}`}>
+                        {item.icon}
+                      </div>
+                      <span className='font-medium'>{item.label}</span>
+                    </div>
+                    {selectedOption === item.id && (
+                      <div className='text-white'>
+                        <ChevronRight className='w-5 h-5' />
+                      </div>
+                    )}
+                  </motion.button>
+                ))}
+              </CardContent>
+            </Card>
+          </div>
 
-            {isVerified === 'NONE' && (
-              <button
-                className={`w-full text-left p-3 rounded-md flex items-center gap-2 ${
-                  selectedOption === 'xac-thuc-tai-khoan' ? 'bg-red-100' : ''
-                }`}
-                onClick={() => handleOptionClick('xac-thuc-tai-khoan')}
-              >
-                <CheckCircle className='w-5 h-5' />
-                Xác thực tài khoản
-              </button>
-            )}
-          </CardContent>
-        </Card>
+          {/* Mobile navigation bar */}
+          <div className='md:hidden mb-4 overflow-x-auto'>
+            <div className='flex gap-3 p-1'>
+              {navigationItems.map((item) => (
+                <motion.button
+                  key={item.id}
+                  className={`flex-shrink-0 px-4 py-2.5 rounded-full transition-all ${
+                    selectedOption === item.id
+                      ? 'bg-gradient-to-r from-red-500 to-red-600 text-white shadow-sm'
+                      : 'bg-white text-gray-700 border border-gray-200 shadow-sm'
+                  }`}
+                  onClick={() => handleOptionClick(item.id)}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <span className='font-medium text-sm whitespace-nowrap'>{item.label}</span>
+                </motion.button>
+              ))}
+            </div>
+          </div>
+
+          {/* Main Content */}
+          <AnimatePresence mode='wait'>
+            <motion.div 
+              key={selectedOption}
+              className='w-full md:w-3/4'
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              {renderContent()}
+            </motion.div>
+          </AnimatePresence>
+        </motion.div>
       </div>
-
-      {/* Main Content */}
-      <div className='w-full md:w-3/4 p-6 md:p-8 lg:p-10'>{renderContent()}</div>
     </div>
   )
 }
