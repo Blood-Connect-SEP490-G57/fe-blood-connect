@@ -69,3 +69,10 @@ export const resetPassword = async (
   })
   return response.data
 }
+
+export const resendEmail = async (email: string) => {
+  const response = await axios.post('/auth/resend-verification', {
+    email: email
+  })
+  return response.data
+}

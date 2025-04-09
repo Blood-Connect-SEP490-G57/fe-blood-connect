@@ -1,9 +1,10 @@
 import VerifyFalse from '@/components/VerifyHandle/VerifyFalse'
 import VerifySuccess from '@/components/VerifyHandle/VerifySuccess'
-import { useParams } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
 
 export default function VerificationHandler() {
-  const { status } = useParams()
+  const [searchParams] = useSearchParams()
+  const status = searchParams.get('status') 
 
   if (status === 'success') {
     return <VerifySuccess />
