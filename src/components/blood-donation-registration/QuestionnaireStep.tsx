@@ -5,10 +5,11 @@ import { STEPS } from '@/pages/BloodDonationRegistration'
 import { useEffect, useRef, useState } from 'react'
 import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog'
 import { useNavigate } from 'react-router-dom'
-import { AlertTriangle } from 'lucide-react'
+import { AlertTriangle, ChevronLeft, ChevronRight, Clipboard, CheckCircle2 } from 'lucide-react'
 import { ValidRegisterDonate } from '@/api/campaign'
 import { useToast } from '@/components/ui/use-toast'
 import ScrollToTop from '../scrollToTop'
+import { Progress } from '@/components/ui/progress'
 
 type VerificationStatus = 'NOT_VERIFIED' | 'ALREADY_REGISTERED' | 'SUCCESS' | ''
 
@@ -37,6 +38,7 @@ const QuestionnaireStep: React.FC<QuestionnaireStepProps> = ({
 
   const answeredQuestions = Object.values(answers).filter((answer) => answer.value.trim() !== '').length
   const hasAllAnswers = answeredQuestions === totalQuestions && totalQuestions > 0
+  const progress = totalQuestions > 0 ? Math.round((answeredQuestions / totalQuestions) * 100) : 0
 
   useEffect(() => {
     if (hasFetched.current) return
@@ -106,7 +108,7 @@ const QuestionnaireStep: React.FC<QuestionnaireStepProps> = ({
     <>
       <ScrollToTop />
       <Dialog open={showVerificationDialog} onOpenChange={handleCloseDialog}>
-        <DialogContent className='sm:max-w-md'>
+        <DialogContent className='sm:max-w-md rounded-xl'>
           <div className='flex items-center gap-3 mb-2 text-red-600'>
             <AlertTriangle className='h-6 w-6' />
             <DialogTitle>Thông báo đăng ký</DialogTitle>
@@ -116,7 +118,7 @@ const QuestionnaireStep: React.FC<QuestionnaireStepProps> = ({
           <DialogFooter className='flex flex-col sm:flex-row gap-2 sm:gap-0'>
             <Button
               variant='outline'
-              className='w-full sm:w-auto'
+              className='w-full sm:w-auto rounded-lg'
               onClick={() => {
                 handleCloseDialog()
                 navigate('/')
@@ -125,7 +127,10 @@ const QuestionnaireStep: React.FC<QuestionnaireStepProps> = ({
               Đóng
             </Button>
             {(statusType === 'NOT_VERIFIED' || statusType === 'ALREADY_REGISTERED') && (
-              <Button className='w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white' onClick={handleRedirect}>
+              <Button 
+                className='w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white rounded-lg' 
+                onClick={handleRedirect}
+              >
                 {statusType === 'NOT_VERIFIED' ? 'Xác thực ngay' : 'Xem lịch sử'}
               </Button>
             )}
@@ -134,19 +139,38 @@ const QuestionnaireStep: React.FC<QuestionnaireStepProps> = ({
       </Dialog>
 
       <div className='space-y-6'>
-        <Card className='border-none shadow-lg mb-6'>
-          <CardHeader>
-            <CardTitle>Bảng câu hỏi sức khỏe</CardTitle>
-            <CardDescription>
-              Vui lòng trả lời tất cả các câu hỏi sau để đảm bảo bạn đủ điều kiện hiến máu
-              {totalQuestions > 0 && (
-                <span className='block mt-1 text-sm text-gray-500'>
-                  Đã trả lời: {answeredQuestions}/{totalQuestions} câu hỏi
-                </span>
-              )}
-            </CardDescription>
+        <Card className='overflow-hidden rounded-xl shadow-sm border-none'>
+          <CardHeader className='pb-4 border-b'>
+            <div className='flex items-center gap-3 mb-3'>
+              <div className='bg-red-100 rounded-lg p-2'>
+                <Clipboard className='h-5 w-5 text-red-600' />
+              </div>
+              <div>
+                <CardTitle>Bảng câu hỏi sức khỏe</CardTitle>
+                <CardDescription className='mt-1'>
+                  Vui lòng trả lời tất cả các câu hỏi sau để đảm bảo bạn đủ điều kiện hiến máu
+                </CardDescription>
+              </div>
+            </div>
+            
+            <div className='space-y-2'>
+              <div className='flex justify-between text-sm'>
+                <span className='text-gray-500'>Tiến độ hoàn thành</span>
+                <span className='font-medium text-gray-700'>{progress}%</span>
+              </div>
+              <div className='relative'>
+                <Progress value={progress} className='h-2' />
+                {progress === 100 && (
+                  <CheckCircle2 className='absolute -right-1 -top-1 h-4 w-4 text-green-500' />
+                )}
+              </div>
+              <div className='text-xs text-gray-500 text-right'>
+                Đã trả lời: <span className='font-medium'>{answeredQuestions}/{totalQuestions}</span> câu hỏi
+              </div>
+            </div>
           </CardHeader>
-          <CardContent>
+          
+          <CardContent className='p-6'>
             <Questionnaire
               questionSetId={questionSetId}
               onAnswerChange={handleAnswerChange}
@@ -156,16 +180,22 @@ const QuestionnaireStep: React.FC<QuestionnaireStepProps> = ({
           </CardContent>
         </Card>
 
-        <div className='flex justify-between py-4 border-t'>
-          <Button variant='outline' onClick={() => setCurrentStep(STEPS.SELECT_CAMPAIGN)}>
+        <div className='flex justify-between py-4'>
+          <Button 
+            variant='outline' 
+            onClick={() => setCurrentStep(STEPS.SELECT_CAMPAIGN)}
+            className='rounded-xl'
+          >
+            <ChevronLeft className='mr-2 h-4 w-4' />
             Quay lại
           </Button>
           <Button
-            className='bg-blue-600 text-white hover:bg-blue-700'
+            className='rounded-xl bg-gradient-to-r from-red-600 to-red-500 text-white hover:opacity-90 transition'
             onClick={handleContinue}
             disabled={isCheckingStatus || !hasAllAnswers}
           >
             Tiếp tục
+            <ChevronRight className='ml-2 h-4 w-4' />
           </Button>
         </div>
       </div>
