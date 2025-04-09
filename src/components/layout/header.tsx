@@ -191,34 +191,52 @@ const Header: React.FC = () => {
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                      <Button variant='ghost' className='relative rounded-full overflow-hidden p-0 h-10 w-10 border-2 border-red-100'>
+                      <Button variant='ghost' className='relative rounded-full overflow-hidden p-0 h-10 w-10 border-2 border-red-100 hover:border-red-200 transition-colors shadow-sm'>
                         <UserAvatar size='sm' />
                       </Button>
                     </motion.div>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent className='w-56 mt-1 rounded-xl overflow-hidden border border-gray-100 p-1' align='end' forceMount>
-                    <DropdownMenuItem 
-                      onClick={() => navigate('/trang-ca-nhan#thong-tin-ca-nhan')}
-                      className='rounded-lg hover:bg-red-50 focus:bg-red-50 hover:text-red-600 focus:text-red-600 gap-2 cursor-pointer p-2.5'
+                  <DropdownMenuContent className='w-64 mt-2 rounded-2xl backdrop-blur-sm bg-white/95 shadow-xl border border-gray-100 p-1.5 overflow-hidden' align='end' forceMount>
+                    <motion.div
+                      initial={{ opacity: 0, y: -5 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.2 }}
                     >
-                      <User className='h-4 w-4' />
-                      <span>Hồ sơ cá nhân</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem 
-                      onClick={() => navigate('/cai-dat')}
-                      className='rounded-lg hover:bg-red-50 focus:bg-red-50 hover:text-red-600 focus:text-red-600 gap-2 cursor-pointer p-2.5'
-                    >
-                      <Settings className='h-4 w-4' />
-                      <span>Cài đặt</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator className='my-1' />
-                    <DropdownMenuItem 
-                      className='rounded-lg hover:bg-red-50 focus:bg-red-50 text-red-600 gap-2 cursor-pointer p-2.5' 
-                      onClick={handleLogout}
-                    >
-                      <LogOut className='h-4 w-4' />
-                      <span>Đăng xuất</span>
-                    </DropdownMenuItem>
+                      <DropdownMenuItem 
+                        onClick={() => navigate('/trang-ca-nhan#thong-tin-ca-nhan')}
+                        className='rounded-xl hover:bg-red-50 focus:bg-red-50 hover:text-red-600 focus:text-red-600 gap-3 cursor-pointer p-3 mb-1 transition-all duration-200'
+                      >
+                        <div className='p-2 bg-red-100 rounded-full text-red-600'>
+                          <User className='h-4 w-4' />
+                        </div>
+                        <div className="flex flex-col">
+                          <span className="font-medium">Hồ sơ cá nhân</span>
+                          <span className="text-xs text-gray-500">Xem thông tin tài khoản</span>
+                        </div>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem 
+                        onClick={() => navigate('/cai-dat')}
+                        className='rounded-xl hover:bg-red-50 focus:bg-red-50 hover:text-red-600 focus:text-red-600 gap-3 cursor-pointer p-3 mb-1 transition-all duration-200'
+                      >
+                        <div className='p-2 bg-red-100 rounded-full text-red-600'>
+                          <Settings className='h-4 w-4' />
+                        </div>
+                        <div className="flex flex-col">
+                          <span className="font-medium">Cài đặt</span>
+                          <span className="text-xs text-gray-500">Tùy chỉnh tài khoản</span>
+                        </div>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator className='my-1.5 bg-gray-100' />
+                      <DropdownMenuItem 
+                        className='rounded-xl bg-red-50 hover:bg-red-100 focus:bg-red-100 text-red-600 gap-3 cursor-pointer p-3 transition-all duration-200' 
+                        onClick={handleLogout}
+                      >
+                        <div className='p-2 bg-white/80 backdrop-blur-sm rounded-full text-red-600 shadow-sm'>
+                          <LogOut className='h-4 w-4' />
+                        </div>
+                        <span className="font-medium">Đăng xuất</span>
+                      </DropdownMenuItem>
+                    </motion.div>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </>
