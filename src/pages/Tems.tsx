@@ -115,7 +115,7 @@ Mỗi đơn vị máu hiến tặng có thể cứu sống đến 3 người b�
 
       <div className="max-w-7xl mx-auto px-8 py-6">
         <motion.div 
-          className="max-w-3xl mx-auto space-y-4"
+          className="overflow-hidden rounded-xl shadow-sm border-none mb-6"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
