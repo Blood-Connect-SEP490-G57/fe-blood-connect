@@ -8,7 +8,20 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
-import { User, Settings, LogOut, Menu, Bell, LogInIcon, UserPlusIcon, Home, Newspaper, HelpCircle, Phone, Calendar } from 'lucide-react'
+import {
+  User,
+  Settings,
+  LogOut,
+  Menu,
+  Bell,
+  LogInIcon,
+  UserPlusIcon,
+  Home,
+  Newspaper,
+  HelpCircle,
+  Phone,
+  Calendar
+} from 'lucide-react'
 import UserAvatar from '@/components/ui/user-avatar'
 import Notifications from '@/components/notification/Notifications'
 import { useAuth } from '@/components/authContext/AuthContext'
@@ -31,7 +44,7 @@ const Header: React.FC = () => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 10)
     }
-    
+
     window.addEventListener('scroll', handleScroll)
     return () => {
       window.removeEventListener('scroll', handleScroll)
@@ -79,15 +92,15 @@ const Header: React.FC = () => {
   }
 
   const navigation = [
-    { name: 'TRANG CHỦ', href: '/', icon: <Home className="w-4 h-4 mr-2" /> },
-    { name: 'TIN TỨC', href: '/tin-tuc', icon: <Newspaper className="w-4 h-4 mr-2" /> },
-    { name: 'HỎI ĐÁP', href: '/cau-hoi-thuong-gap', icon: <HelpCircle className="w-4 h-4 mr-2" /> },
-    { name: 'LIÊN HỆ', href: '/lien-he', icon: <Phone className="w-4 h-4 mr-2" /> },
-    { name: 'ĐĂNG KÝ HIẾN MÁU', href: '/dang-ky-hien-mau', icon: <Calendar className="w-4 h-4 mr-2" /> },
-    { name: 'LỊCH HẸN CỦA TÔI', href: '/trang-ca-nhan#lich-hen', icon: <Calendar className="w-4 h-4 mr-2" /> },
-    { name: 'LỊCH SỬ ĐẶT HẸN', href: '/trang-ca-nhan#lich-su-hien-mau', icon: <Calendar className="w-4 h-4 mr-2" /> },
-    { name: 'THÔNG TIN CÁ NHÂN', href: '/trang-ca-nhan#thong-tin-ca-nhan', icon: <User className="w-4 h-4 mr-2" /> },
-    { name: 'CÀI ĐẶT', href: '/cai-dat', icon: <Settings className="w-4 h-4 mr-2" /> }
+    { name: 'TRANG CHỦ', href: '/', icon: <Home className='w-4 h-4 mr-2' /> },
+    { name: 'TIN TỨC', href: '/tin-tuc', icon: <Newspaper className='w-4 h-4 mr-2' /> },
+    { name: 'HỎI ĐÁP', href: '/cau-hoi-thuong-gap', icon: <HelpCircle className='w-4 h-4 mr-2' /> },
+    { name: 'LIÊN HỆ', href: '/lien-he', icon: <Phone className='w-4 h-4 mr-2' /> },
+    { name: 'ĐĂNG KÝ HIẾN MÁU', href: '/dang-ky-hien-mau', icon: <Calendar className='w-4 h-4 mr-2' /> },
+    { name: 'LỊCH HẸN CỦA TÔI', href: '/trang-ca-nhan#lich-hen', icon: <Calendar className='w-4 h-4 mr-2' /> },
+    { name: 'LỊCH SỬ ĐẶT HẸN', href: '/trang-ca-nhan#lich-su-hien-mau', icon: <Calendar className='w-4 h-4 mr-2' /> },
+    { name: 'THÔNG TIN CÁ NHÂN', href: '/trang-ca-nhan#thong-tin-ca-nhan', icon: <User className='w-4 h-4 mr-2' /> },
+    { name: 'CÀI ĐẶT', href: '/cai-dat', icon: <Settings className='w-4 h-4 mr-2' /> }
   ]
 
   // Add verification link dynamically if not verified
@@ -97,7 +110,7 @@ const Header: React.FC = () => {
       filteredNav.splice(8, 0, {
         name: 'XÁC THỰC TÀI KHOẢN',
         href: '/trang-ca-nhan#xac-thuc-tai-khoan',
-        icon: <User className="w-4 h-4 mr-2" />
+        icon: <User className='w-4 h-4 mr-2' />
       })
     }
     return filteredNav
@@ -117,17 +130,21 @@ const Header: React.FC = () => {
 
   // Get current page for active status
   const isActive = (path: string) => {
-    if (path === '/') {
-      return location.pathname === path
-    }
-    return location.pathname.startsWith(path)
+    const [basePath, hash] = path.split('#') // Tách pathname và hash
+    const isPathMatch = location.pathname === basePath // Kiểm tra pathname
+    const isHashMatch = !hash || location.hash === `#${hash}` // Kiểm tra hash (nếu có)
+    return isPathMatch && isHashMatch
   }
 
   return (
-    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-white/80 backdrop-blur-md shadow-sm' : 'bg-white shadow-sm'}`}>
+    <header
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        scrolled ? 'bg-white/80 backdrop-blur-md shadow-sm' : 'bg-white shadow-sm'
+      }`}
+    >
       <div className='max-w-7xl mx-auto px-4'>
         <div className='flex items-center justify-between h-16'>
-          <motion.div 
+          <motion.div
             className='flex items-center'
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -139,7 +156,7 @@ const Header: React.FC = () => {
               </span>
             </a>
           </motion.div>
-          
+
           {/* Desktop and Tablet Navigation */}
           <div className='hidden xl:flex items-center space-x-6'>
             {getFilteredNavigation()
@@ -152,12 +169,12 @@ const Header: React.FC = () => {
                 )
               })
               .map((item) => (
-                <motion.a 
-                  key={item.name} 
-                  href={item.href} 
+                <motion.a
+                  key={item.name}
+                  href={item.href}
                   className={`text-sm font-medium transition-colors px-3 py-2 rounded-full ${
-                    isActive(item.href) 
-                      ? 'text-white bg-gradient-to-r from-red-600 to-red-500 shadow-sm' 
+                    isActive(item.href)
+                      ? 'text-gray-700 underline underline-offset-4 decoration-2 decoration-red-500'
                       : 'text-gray-700 hover:text-red-600 hover:bg-red-50'
                   }`}
                   whileHover={{ scale: 1.05 }}
@@ -167,7 +184,7 @@ const Header: React.FC = () => {
                 </motion.a>
               ))}
           </div>
-          
+
           <div className='hidden xl:flex items-center space-x-3'>
             {isLoggedIn ? (
               <>
@@ -190,54 +207,61 @@ const Header: React.FC = () => {
                     </div>
                   </Button>
                 </motion.div>
-                
+
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                      <Button variant='ghost' className='relative rounded-full overflow-hidden p-0 h-10 w-10 border-2 border-red-100 hover:border-red-200 transition-colors shadow-sm'>
+                      <Button
+                        variant='ghost'
+                        className='relative rounded-full overflow-hidden p-0 h-10 w-10 border-2 border-red-100 hover:border-red-200 transition-colors shadow-sm'
+                      >
                         <UserAvatar size='sm' />
                       </Button>
                     </motion.div>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent className='w-64 mt-2 rounded-2xl backdrop-blur-sm bg-white/95 shadow-xl border border-gray-100 p-1.5 overflow-hidden' align='end' forceMount>
+                  <DropdownMenuContent
+                    className='w-64 mt-2 rounded-2xl backdrop-blur-sm bg-white/95 shadow-xl border border-gray-100 p-1.5 overflow-hidden'
+                    align='end'
+                    forceMount
+                  >
                     <motion.div
                       initial={{ opacity: 0, y: -5 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.2 }}
                     >
-                      <DropdownMenuItem 
+                      <DropdownMenuItem
                         onClick={() => navigate('/trang-ca-nhan#thong-tin-ca-nhan')}
                         className='rounded-xl hover:bg-red-50 focus:bg-red-50 hover:text-red-600 focus:text-red-600 gap-3 cursor-pointer p-3 mb-1 transition-all duration-200'
                       >
                         <div className='p-2 bg-red-100 rounded-full text-red-600'>
                           <User className='h-4 w-4' />
                         </div>
-                        <div className="flex flex-col">
-                          <span className="font-medium">Hồ sơ cá nhân</span>
-                          <span className="text-xs text-gray-500">Xem thông tin tài khoản</span>
+                        <div className='flex flex-col'>
+                          <span className='font-medium'>Hồ sơ cá nhân</span>
+                          <span className='text-xs text-gray-500'>Xem thông tin tài khoản</span>
                         </div>
                       </DropdownMenuItem>
-                      <DropdownMenuItem 
+                      <DropdownMenuItem
                         onClick={() => navigate('/cai-dat')}
                         className='rounded-xl hover:bg-red-50 focus:bg-red-50 hover:text-red-600 focus:text-red-600 gap-3 cursor-pointer p-3 mb-1 transition-all duration-200'
                       >
                         <div className='p-2 bg-red-100 rounded-full text-red-600'>
                           <Settings className='h-4 w-4' />
                         </div>
-                        <div className="flex flex-col">
-                          <span className="font-medium">Cài đặt</span>
-                          <span className="text-xs text-gray-500">Tùy chỉnh tài khoản</span>
+                        <div className='flex flex-col'>
+                          <span className='font-medium'>Cài đặt</span>
+                          <span className='text-xs text-gray-500'>Tùy chỉnh tài khoản</span>
                         </div>
                       </DropdownMenuItem>
                       <DropdownMenuSeparator className='my-1.5 bg-gray-100' />
-                      <DropdownMenuItem 
-                        className='rounded-xl bg-red-50 hover:bg-red-100 focus:bg-red-100 text-red-600 gap-3 cursor-pointer p-3 transition-all duration-200' 
+                      <DropdownMenuItem
+                        className='rounded-xl bg-red-50 hover:bg-red-100 focus:bg-red-100 text-red-600 gap-3 cursor-pointer p-3 transition-all duration-200'
                         onClick={handleLogout}
                       >
                         <div className='p-2 bg-white/80 backdrop-blur-sm rounded-full text-red-600 shadow-sm'>
                           <LogOut className='h-4 w-4' />
                         </div>
-                        <span className="font-medium">Đăng xuất</span>
+                        <span className='font-medium'>Đăng xuất</span>
                       </DropdownMenuItem>
                     </motion.div>
                   </DropdownMenuContent>
@@ -251,18 +275,18 @@ const Header: React.FC = () => {
                     className='rounded-full border-red-500 text-red-600 hover:bg-red-50 hover:text-red-700 transition-all'
                     onClick={handleLoginClick}
                   >
-                    <LogInIcon className="w-4 h-4 mr-1.5" />
+                    <LogInIcon className='w-4 h-4 mr-1.5' />
                     Đăng nhập
                   </Button>
                 </motion.div>
-                
+
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                   <Button
                     variant='default'
                     className='rounded-full bg-gradient-to-r from-red-600 to-red-500 text-white hover:from-red-700 hover:to-red-600 transition-all shadow-sm'
                     onClick={handleRegisterClick}
                   >
-                    <UserPlusIcon className="w-4 h-4 mr-1.5" />
+                    <UserPlusIcon className='w-4 h-4 mr-1.5' />
                     Đăng ký
                   </Button>
                 </motion.div>
@@ -294,7 +318,7 @@ const Header: React.FC = () => {
                 </Button>
               </motion.div>
             )}
-            
+
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Button
                 variant='ghost'
@@ -311,7 +335,7 @@ const Header: React.FC = () => {
             </motion.div>
           </div>
         </div>
-        
+
         {/* Mobile Navigation */}
         <AnimatePresence>
           {isMobileMenuOpen && (
@@ -320,17 +344,17 @@ const Header: React.FC = () => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 0.5 }}
                 exit={{ opacity: 0 }}
-                className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
+                className='fixed inset-0 bg-black/60 backdrop-blur-sm z-40'
                 onClick={() => setIsMobileMenuOpen(false)}
               />
               <motion.div
-                className="fixed top-[70px] right-0 max-h-[80vh] w-full max-w-sm z-50 overflow-auto rounded-tl-2xl rounded-bl-2xl bg-white/95 backdrop-blur-md shadow-xl"
+                className='fixed top-[70px] right-0 max-h-[80vh] w-full max-w-sm z-50 overflow-auto rounded-tl-2xl rounded-bl-2xl bg-white/95 backdrop-blur-md shadow-xl'
                 initial={{ x: '100%', opacity: 0.5 }}
                 animate={{ x: 0, opacity: 1 }}
                 exit={{ x: '100%', opacity: 0.5 }}
                 transition={{ type: 'spring', stiffness: 300, damping: 30 }}
               >
-                <div className="p-4 flex flex-col gap-2">
+                <div className='p-4 flex flex-col gap-2'>
                   {getFilteredNavigation()
                     .filter((item) => {
                       if (!isLoggedIn && (item.name === 'LỊCH HẸN CỦA TÔI' || item.name === 'LỊCH SỬ ĐẶT HẸN')) {
@@ -344,42 +368,42 @@ const Header: React.FC = () => {
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: index * 0.05 }}
-                        className="flex items-center p-3 rounded-xl hover:bg-red-50 transition-all"
+                        className='flex items-center p-3 rounded-xl hover:bg-red-50 transition-all'
                         onClick={() => {
-                          setIsMobileMenuOpen(false);
-                          navigate(item.href);
+                          setIsMobileMenuOpen(false)
+                          navigate(item.href)
                         }}
                       >
-                        <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center mr-3">
+                        <div className='w-10 h-10 rounded-full bg-red-100 flex items-center justify-center mr-3'>
                           {item.icon}
                         </div>
                         <div>
-                          <div className="font-medium">{item.name}</div>
+                          <div className='font-medium'>{item.name}</div>
                         </div>
                       </motion.div>
                     ))}
-                  <hr className="my-2" />
+                  <hr className='my-2' />
                   <motion.div
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: getFilteredNavigation().length * 0.05 }}
-                    className="flex items-center p-3 rounded-xl bg-red-50 hover:bg-red-100 transition-all"
+                    className='flex items-center p-3 rounded-xl bg-red-50 hover:bg-red-100 transition-all'
                     onClick={() => {
-                      setIsMobileMenuOpen(false);
-                      handleLogout();
+                      setIsMobileMenuOpen(false)
+                      handleLogout()
                     }}
                   >
-                    <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center mr-3">
-                      <LogOut className="h-5 w-5 text-red-500" />
+                    <div className='w-10 h-10 rounded-full bg-red-100 flex items-center justify-center mr-3'>
+                      <LogOut className='h-5 w-5 text-red-500' />
                     </div>
-                    <div className="font-medium">Logout</div>
+                    <div className='font-medium'>Logout</div>
                   </motion.div>
                 </div>
               </motion.div>
             </>
           )}
         </AnimatePresence>
-        
+
         {/* Mobile Notification */}
         <AnimatePresence>
           {isMobileNotiOpen && (
@@ -388,17 +412,17 @@ const Header: React.FC = () => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 0.5 }}
                 exit={{ opacity: 0 }}
-                className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
+                className='fixed inset-0 bg-black/60 backdrop-blur-sm z-40'
                 onClick={() => setIsMobileNotiOpen(false)}
               />
               <motion.div
-                className="fixed top-[70px] right-0 max-h-[80vh] w-full max-w-sm z-50 overflow-auto rounded-tl-2xl rounded-bl-2xl bg-white/95 backdrop-blur-md shadow-xl"
+                className='fixed top-[70px] right-0 max-h-[80vh] w-full max-w-sm z-50 overflow-auto rounded-tl-2xl rounded-bl-2xl bg-white/95 backdrop-blur-md shadow-xl'
                 initial={{ x: '100%', opacity: 0.5 }}
                 animate={{ x: 0, opacity: 1 }}
                 exit={{ x: '100%', opacity: 0.5 }}
                 transition={{ type: 'spring', stiffness: 300, damping: 30 }}
               >
-                <div className="p-4">
+                <div className='p-4'>
                   <Notifications onClose={handleNotificationClose} />
                 </div>
               </motion.div>
