@@ -151,9 +151,7 @@ const Header: React.FC = () => {
             transition={{ duration: 0.3 }}
           >
             <a href='/' className='flex items-center'>
-              <span className='text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-500 font-bold text-xl'>
-                Giọt Máu Hy Vọng
-              </span>
+              <img src="./images/icon/icon.png" alt="Giọt Máu Hy Vọng" className="h-12 w-12 ml-2" />
             </a>
           </motion.div>
 
@@ -357,7 +355,13 @@ const Header: React.FC = () => {
                 <div className='p-4 flex flex-col gap-2'>
                   {getFilteredNavigation()
                     .filter((item) => {
-                      if (!isLoggedIn && (item.name === 'LỊCH HẸN CỦA TÔI' || item.name === 'LỊCH SỬ ĐẶT HẸN')) {
+                      if (!isLoggedIn && (
+                        item.name === 'LỊCH HẸN CỦA TÔI' || 
+                        item.name === 'LỊCH SỬ ĐẶT HẸN' ||
+                        item.name === 'THÔNG TIN CÁ NHÂN' ||
+                        item.name === 'CÀI ĐẶT' ||
+                        item.name === 'XÁC THỰC TÀI KHOẢN'
+                      )) {
                         return false
                       }
                       return true
@@ -382,22 +386,61 @@ const Header: React.FC = () => {
                         </div>
                       </motion.div>
                     ))}
-                  <hr className='my-2' />
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: getFilteredNavigation().length * 0.05 }}
-                    className='flex items-center p-3 rounded-xl bg-red-50 hover:bg-red-100 transition-all'
-                    onClick={() => {
-                      setIsMobileMenuOpen(false)
-                      handleLogout()
-                    }}
-                  >
-                    <div className='w-10 h-10 rounded-full bg-red-100 flex items-center justify-center mr-3'>
-                      <LogOut className='h-5 w-5 text-red-500' />
-                    </div>
-                    <div className='font-medium'>Logout</div>
-                  </motion.div>
+                  
+                  {isLoggedIn ? (
+                    <>
+                      <hr className='my-2' />
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: getFilteredNavigation().length * 0.05 }}
+                        className='flex items-center p-3 rounded-xl bg-red-50 hover:bg-red-100 transition-all'
+                        onClick={() => {
+                          setIsMobileMenuOpen(false)
+                          handleLogout()
+                        }}
+                      >
+                        <div className='w-10 h-10 rounded-full bg-red-100 flex items-center justify-center mr-3'>
+                          <LogOut className='h-5 w-5 text-red-500' />
+                        </div>
+                        <div className='font-medium'>Đăng xuất</div>
+                      </motion.div>
+                    </>
+                  ) : (
+                    <>
+                      <hr className='my-2' />
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.2 }}
+                        className='flex items-center p-3 rounded-xl bg-red-50 hover:bg-red-100 transition-all'
+                        onClick={() => {
+                          setIsMobileMenuOpen(false)
+                          handleLoginClick()
+                        }}
+                      >
+                        <div className='w-10 h-10 rounded-full bg-red-100 flex items-center justify-center mr-3'>
+                          <LogInIcon className='h-5 w-5 text-red-500' />
+                        </div>
+                        <div className='font-medium'>Đăng nhập</div>
+                      </motion.div>
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.25 }}
+                        className='flex items-center p-3 rounded-xl bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 transition-all'
+                        onClick={() => {
+                          setIsMobileMenuOpen(false)
+                          handleRegisterClick()
+                        }}
+                      >
+                        <div className='w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center mr-3'>
+                          <UserPlusIcon className='h-5 w-5 text-white' />
+                        </div>
+                        <div className='font-medium text-white'>Đăng ký</div>
+                      </motion.div>
+                    </>
+                  )}
                 </div>
               </motion.div>
             </>

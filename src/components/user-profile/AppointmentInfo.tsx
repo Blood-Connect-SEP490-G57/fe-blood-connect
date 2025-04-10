@@ -567,17 +567,17 @@ const AppointmentInfo = () => {
                   </div>
                   {isEditing ? (
                     <div className='w-1/2'>
-                      <Select
-                        options={orgOptions}
-                        isSearchable
-                        placeholder='Tìm kiếm tổ chức...'
-                        value={orgOptions.find((option) => option.value === formData.organizationId) || null}
-                        onChange={(selectedOption) => {
-                          setFormData((prev) => ({
-                            ...prev,
-                            organizationId: selectedOption ? selectedOption.value : ''
-                          }))
-                        }}
+                    <Select
+                      options={orgOptions}
+                      isSearchable
+                      placeholder='Tìm kiếm tổ chức...'
+                      value={orgOptions.find((option) => option.value === formData.organizationId) || null}
+                      onChange={(selectedOption) => {
+                        setFormData((prev) => ({
+                          ...prev,
+                          organizationId: selectedOption ? selectedOption.value : ''
+                        }))
+                      }}
                         className='text-right'
                         styles={{
                           control: (provided) => ({
@@ -591,8 +591,8 @@ const AppointmentInfo = () => {
                   ) : (
                     <div className='flex items-center gap-2'>
                       <span className='text-sm text-gray-600'>
-                        {organizations.find((org) => org.id === userInfo.organizationId)?.name || 'Chưa cập nhật'}
-                      </span>
+                      {organizations.find((org) => org.id === userInfo.organizationId)?.name || 'Chưa cập nhật'}
+                    </span>
                       <ChevronRight className='h-4 w-4 text-gray-400' />
                     </div>
                   )}
@@ -642,7 +642,7 @@ const AppointmentInfo = () => {
               </div>
             </CardContent>
           </Card>
-        </div>
+                </div>
 
         {/* CCCD Information */}
         <div className='mb-6'>
@@ -665,11 +665,11 @@ const AppointmentInfo = () => {
                   <div className='flex items-center gap-3'>
                     <MapPin className='h-5 w-5 text-gray-500' />
                     <span className='text-sm font-medium text-gray-700'>Nơi cấp</span>
-                  </div>
+                </div>
                   <div className='flex items-center gap-2'>
                     <span className='text-sm text-gray-600'>{userInfo.issueLoc}</span>
                     <ChevronRight className='h-4 w-4 text-gray-400' />
-                  </div>
+                </div>
                 </div>
               </div>
             </CardContent>
@@ -677,29 +677,29 @@ const AppointmentInfo = () => {
         </div>
 
         <div className='py-4 space-y-4'>
-          {isEditing ? (
-            <>
-              <Button
+                {isEditing ? (
+                  <>
+                    <Button
                 onClick={updateUserInfo}
                 className='w-full bg-red-600 text-white hover:bg-red-700 py-5 rounded-xl'
               >
                 Lưu thay đổi
               </Button>
               <Button
-                onClick={() => setIsEditing(false)}
+                      onClick={() => setIsEditing(false)}
                 className='w-full bg-gray-200 text-gray-800 hover:bg-gray-300 py-5 rounded-xl'
-              >
-                Hủy
-              </Button>
-            </>
-          ) : (
-            <Button
-              onClick={() => setIsEditing(true)}
+                    >
+                      Hủy
+                    </Button>
+                  </>
+                ) : (
+                    <Button
+                      onClick={() => setIsEditing(true)}
               className='w-full bg-red-600 text-white hover:bg-red-700 py-5 rounded-xl'
-            >
-              Chỉnh sửa thông tin
-            </Button>
-          )}
+                    >
+                      Chỉnh sửa thông tin
+                    </Button>
+                )}
         </div>
       </div>
 
