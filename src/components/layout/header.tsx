@@ -198,7 +198,7 @@ const Header: React.FC = () => {
                     <div className='relative w-full h-full'>
                       <Bell className='group-hover:text-white w-5 h-5' />
                       {unreadCount > 0 && (
-                        <span className='absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full px-1.5 py-0.5 min-w-[18px] text-center'>
+                        <span className='absolute -top-2 -right-2 bg-red-600 text-white text-xs rounded-full px-1.5 py-0.5 min-w-[18px] text-center shadow-sm'>
                           {unreadCount}
                         </span>
                       )}

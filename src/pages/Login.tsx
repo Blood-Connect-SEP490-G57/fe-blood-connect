@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useToast } from '@/components/ui/use-toast'
 import * as z from 'zod'
-import { Loader2Icon, Phone, Lock, ArrowRight } from 'lucide-react'
+import { Loader2Icon, Lock, ArrowRight, User } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
@@ -97,17 +97,17 @@ export default function Login() {
                 name='username'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className='text-sm font-medium text-gray-700'>Số điện thoại</FormLabel>
+                    <FormLabel className='text-sm font-medium text-gray-700'>Tên đăng nhập</FormLabel>
                     <FormControl>
                       <div className='mt-1 relative'>
                         <div className='absolute left-3 top-3 p-1 rounded-full bg-red-50'>
-                          <Phone className='text-red-500' size={16} />
+                          <User className='text-red-500' size={16} />
                         </div>
                         <Input
                           {...field}
 
                           className='appearance-none block w-full pl-11 pr-4 py-3 border border-gray-200 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500 transition-all'
-                          placeholder='Nhập số điện thoại'
+                          placeholder='Nhập tên đăng nhập'
                         />
                       </div>
                     </FormControl>
