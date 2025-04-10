@@ -33,17 +33,11 @@ export default function Loading() {
             }}
             className='relative z-10'
           >
-            <svg
-              aria-hidden='true'
-              className='h-12 w-12 fill-red-600 drop-shadow-md'
-              viewBox='0 0 24 24'
-              xmlns='http://www.w3.org/2000/svg'
-            >
-              <path
-                d='M12 2C12 2 5 10 5 15C5 19.4183 8.58172 23 12 23C15.4183 23 19 19.4183 19 15C19 10 12 2 12 2Z'
-                fill='currentFill'
-              />
-            </svg>
+            <img 
+              src="./images/icon/icon.png" 
+              alt="Giọt Máu Hy Vọng" 
+              className="h-12 w-12 drop-shadow-md"
+            />
           </motion.div>
         </div>
 
@@ -58,30 +52,6 @@ export default function Loading() {
             Đang tải dữ liệu
           </p>
           
-          <div className='flex justify-center space-x-1 mt-1'>
-            {[0, 1, 2].map((index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, scale: 0 }}
-                animate={{ 
-                  opacity: 1, 
-                  scale: 1,
-                  y: [0, -10, 0]
-                }}
-                transition={{
-                  y: {
-                    repeat: Infinity,
-                    duration: 1,
-                    delay: index * 0.2,
-                    ease: "easeInOut"
-                  },
-                  opacity: { delay: 0.5 + (index * 0.1) },
-                  scale: { delay: 0.5 + (index * 0.1) }
-                }}
-                className='w-2 h-2 bg-gradient-to-r from-red-500 to-red-600 rounded-full'
-              />
-            ))}
-          </div>
         </motion.div>
       </motion.div>
       

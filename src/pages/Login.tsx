@@ -64,17 +64,10 @@ export default function Login() {
       <div className='absolute bottom-20 right-10 w-72 h-72 bg-red-50 rounded-full blur-3xl opacity-30 -z-10'></div>
       
       <div className='sm:mx-auto sm:w-full sm:max-w-md'>
-        Logo
-        <motion.div 
+        <div 
           className='flex justify-center mb-8'
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.5 }}
         >
-          <div className='w-24 h-24 bg-gradient-to-br from-red-500 to-red-600 rounded-3xl shadow-xl flex items-center justify-center'>
-            <span className='text-4xl'>🩸</span>
-          </div>
-        </motion.div>
+        </div>
 
         <motion.div
           initial={{ y: 20, opacity: 0 }}

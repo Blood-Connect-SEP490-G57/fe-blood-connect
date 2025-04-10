@@ -2,9 +2,19 @@ import { getNews, getNewsById } from '@/api/news'
 import Empty from '@/components/warnings/empty'
 import Loading from '@/components/warnings/loading'
 import { useQuery } from '@tanstack/react-query'
-import { Calendar, ArrowLeft, Clock, Share2, BookmarkPlus, ChevronRight } from 'lucide-react'
+import { 
+  Calendar, 
+  ArrowLeft, 
+  Clock, 
+  Share2, 
+  BookmarkPlus, 
+  ChevronRight, 
+  Newspaper, 
+  Tags 
+} from 'lucide-react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
+import { Button } from '@/components/ui/button'
 
 const NewsDetailPage = () => {
   const { id } = useParams()
@@ -35,7 +45,7 @@ const NewsDetailPage = () => {
   })
 
   const handleGoBack = () => {
-    navigate(-1)
+    navigate('/tin-tuc')
   }
 
   if (isLoading) return <Loading />
@@ -47,34 +57,50 @@ const NewsDetailPage = () => {
 
   // Format date like "12 Th03, 2024"
   const formatDate = (dateString: string) => {
-    const date = new Date(dateString)
-    const day = date.getDate()
-    const month = date.getMonth() + 1
-    const year = date.getFullYear()
-    return `${day} Th${month < 10 ? '0' + month : month}, ${year}`
+    const options: Intl.DateTimeFormatOptions = { 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    };
+    return new Date(dateString).toLocaleDateString('vi-VN', options);
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pt-20 pb-16">
-      <motion.div 
-        className="max-w-4xl mx-auto px-4"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-      >
-        {/* Back button */}
-        <button 
+    <div className="min-h-screen mt-10 bg-gray-100">
+      {/* Banner section - Matching the News page banner */}
+      <div className="bg-gradient-to-r from-red-600 to-red-400 text-white p-8 relative">
+        <div className="container mx-auto">
+          <div className="flex flex-col items-center">
+            <div className="h-24 w-24 bg-white rounded-full flex items-center justify-center shadow-md mb-4">
+              <Newspaper className="h-12 w-12 text-red-500" />
+            </div>
+            <h1 className="text-2xl font-bold mb-1">Chi Tiết Tin Tức</h1>
+            <p className="text-center text-white/80 max-w-2xl">
+              {news.title}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-8 py-6">
+        <Button
+          variant="ghost"
           onClick={handleGoBack}
-          className="mb-6 flex items-center text-gray-500 dark:text-gray-400 hover:text-red-500 dark:hover:text-red-400 transition-colors"
+          className="mb-6 flex items-center text-gray-500 hover:text-red-500 transition-colors"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
-          <span className="text-sm font-medium">Quay lại</span>
-        </button>
+          <span className="text-sm font-medium">Quay lại danh sách tin tức</span>
+        </Button>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Content Column */}
           <div className="lg:col-span-2">
-            <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-sm overflow-hidden">
+            <motion.div
+              className="bg-white rounded-xl shadow-sm overflow-hidden" 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+            >
               {/* Article thumbnail */}
               {news.thumbnailUrl && (
                 <div className="relative w-full h-64 sm:h-80 overflow-hidden">
@@ -83,66 +109,76 @@ const NewsDetailPage = () => {
                     alt={news.title} 
                     className="w-full h-full object-cover"
                   />
+                  <div className="absolute top-3 right-3">
+                    <span className="px-3 py-1 bg-red-500/70 backdrop-blur-sm text-white text-xs font-medium rounded-full">
+                      Tin tức
+                    </span>
+                  </div>
                 </div>
               )}
               
               {/* Article content */}
-              <div className="p-6 sm:p-8">
+              <div className="p-6">
                 {/* Article header */}
-                <div className="mb-8">
-                  <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-4 leading-tight">
+                <div className="mb-6">
+                  <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4 leading-tight">
                     {news.title}
                   </h1>
 
-                  <div className="flex items-center justify-between mb-6">
-                    <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-4 text-sm text-gray-500">
                       <span className="flex items-center">
-                        <Calendar className="h-4 w-4 mr-1.5 text-red-500 dark:text-red-400" />
+                        <Calendar className="h-4 w-4 mr-1.5 text-red-500" />
                         {formatDate(news.createdAt)}
                       </span>
                       <span className="flex items-center">
-                        <Clock className="h-4 w-4 mr-1.5 text-red-500 dark:text-red-400" />
+                        <Clock className="h-4 w-4 mr-1.5 text-red-500" />
                         {new Date(news.createdAt).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}
                       </span>
                     </div>
                     
                     <div className="flex items-center space-x-2">
-                      <button className="p-2 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 hover:bg-red-50 dark:hover:bg-red-900/30 hover:text-red-500 dark:hover:text-red-400 transition-colors">
+                      <button className="p-2 rounded-full bg-gray-100 text-gray-500 hover:bg-red-50 hover:text-red-500 transition-colors">
                         <BookmarkPlus className="h-4 w-4" />
                       </button>
-                      <button className="p-2 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 hover:bg-red-50 dark:hover:bg-red-900/30 hover:text-red-500 dark:hover:text-red-400 transition-colors">
+                      <button className="p-2 rounded-full bg-gray-100 text-gray-500 hover:bg-red-50 hover:text-red-500 transition-colors">
                         <Share2 className="h-4 w-4" />
                       </button>
                     </div>
                   </div>
 
-                  <div className="border-t border-gray-100 dark:border-gray-700 my-6"></div>
+                  <div className="flex items-center gap-2 mb-4">
+                    <Tags className="h-4 w-4 text-gray-400" />
+                    <span className="text-xs text-gray-500">Hiến máu</span>
+                  </div>
+
+                  <div className="border-t border-gray-100 my-4"></div>
                 </div>
                 
                 {/* Article body */}
-                <div className="prose prose-red max-w-none dark:prose-invert mb-8">
+                <div className="prose max-w-none mb-8">
                   <div 
                     dangerouslySetInnerHTML={{ __html: news.content }} 
-                    className="text-gray-700 dark:text-gray-300 leading-relaxed"
+                    className="text-gray-700 leading-relaxed"
                   />
                 </div>
 
                 {/* Article footer */}
-                <div className="border-t border-gray-100 dark:border-gray-700 pt-6 mt-8">
-                  <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
+                <div className="border-t border-gray-100 pt-6 mt-8">
+                  <div className="flex items-center justify-between text-sm text-gray-500">
                     <span>Đăng bởi: {news.createdBy || 'Admin'}</span>
                     <span>{formatDate(news.createdAt)}</span>
                   </div>
                 </div>
               </div>
-            </div>
+            </motion.div>
           </div>
 
           {/* Sidebar Column */}
           <div className="lg:col-span-1">
             <div className="sticky top-24">
-              <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-sm overflow-hidden p-6">
-                <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
+              <div className="bg-white rounded-xl shadow-sm overflow-hidden p-6">
+                <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center">
                   <span className="bg-red-500 w-1 h-6 rounded-full mr-3"></span>
                   Tin tức liên quan
                 </h2>
@@ -156,7 +192,7 @@ const NewsDetailPage = () => {
                       transition={{ type: "spring", stiffness: 400, damping: 17 }}
                     >
                       <Link to={`/tin-tuc/${item.id}`}>
-                        <div className="mb-2 overflow-hidden rounded-2xl">
+                        <div className="mb-2 overflow-hidden rounded-xl">
                           <img
                             src={item.thumbnailUrl}
                             alt={item.title}
@@ -165,14 +201,15 @@ const NewsDetailPage = () => {
                           />
                         </div>
                         <div className="flex items-center justify-between">
-                          <h3 className="text-sm font-medium text-gray-900 dark:text-white group-hover:text-red-500 dark:group-hover:text-red-400 transition-colors line-clamp-2">
+                          <h3 className="text-sm font-medium text-gray-900 group-hover:text-red-500 transition-colors line-clamp-2">
                             {item.title}
                           </h3>
-                          <ChevronRight className="h-4 w-4 text-gray-400 dark:text-gray-500 group-hover:text-red-500 dark:group-hover:text-red-400 transition-colors" />
+                          <ChevronRight className="h-4 w-4 text-gray-400 group-hover:text-red-500 transition-colors" />
                         </div>
-                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                          {formatDate(item.createdAt)}
-                        </p>
+                        <div className="flex items-center gap-2 text-xs text-gray-500 mt-1">
+                          <Clock className="h-3 w-3 text-red-400" />
+                          <span>{formatDate(item.createdAt)}</span>
+                        </div>
                       </Link>
                     </motion.div>
                   ))}
@@ -181,7 +218,7 @@ const NewsDetailPage = () => {
             </div>
           </div>
         </div>
-      </motion.div>
+      </div>
     </div>
   )
 }

@@ -97,6 +97,9 @@ const NewsPage = () => {
             </p>
           </div>
         </div>
+        <div className='absolute -bottom-0 left-1/4 w-16 h-16 bg-red-400 rounded-full opacity-20'></div>
+        <div className='absolute top-8 right-1/4 w-12 h-12 bg-white rounded-full opacity-10'></div>
+        <div className='absolute bottom-6 right-10 w-20 h-20 bg-red-300 rounded-full opacity-15'></div>
       </div>
 
       <div className='max-w-7xl mx-auto px-8 py-6'>
