@@ -1,6 +1,6 @@
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Calendar, ChevronRight, MapPin, User, Phone, Mail, Briefcase, School, Award, Calendar as CalendarIcon, Building } from 'lucide-react'
+import { Calendar, ChevronRight, MapPin, User, Phone, Mail, Briefcase, School, Award, Calendar as CalendarIcon, Building, Loader2 } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { getCurrent, updateinfor } from '@/api/appointment'
 import { format } from 'date-fns'
@@ -11,6 +11,7 @@ import Loading from '../warnings/loading'
 import Empty from '../warnings/empty'
 import AppointmentDetailsPopup from './AppointmentDetailsPopup'
 import { getOrganizationsByType } from '@/api/organization'
+import { staticJobApi } from '@/api/static'
 import Select from 'react-select'
 
 interface UserInfo {
@@ -27,7 +28,7 @@ interface UserInfo {
   studentId: string
   militaryId: string
   addressContact: string
-  phoneNumber: string
+  mobile: string
   email: string
   bloodGroup: string
 }
@@ -83,6 +84,11 @@ interface Organization {
   name: string
 }
 
+interface Job {
+  id: number;
+  job: string;
+}
+
 const AppointmentInfo = () => {
   const [data, setData] = useState<AppointmentData | null>(null)
   const [loading, setLoading] = useState(true)
@@ -90,6 +96,8 @@ const AppointmentInfo = () => {
   const hasFetched = useRef(false)
   const [isPopupOpen, setPopupOpen] = useState(false)
   const [organizations, setOrganizations] = useState<Organization[]>([])
+  const [jobs, setJobs] = useState<Job[]>([])
+  const [isLoadingJobs, setIsLoadingJobs] = useState(false)
 
   useEffect(() => {
     const fetchOrganizations = async () => {
@@ -103,6 +111,32 @@ const AppointmentInfo = () => {
     }
 
     fetchOrganizations()
+  }, [])
+
+  // Fetch jobs data
+  useEffect(() => {
+    const fetchJobData = async () => {
+      try {
+        setIsLoadingJobs(true)
+        const response = await staticJobApi()
+        if (response && response.data) {
+          setJobs(response.data)
+        } else {
+          console.error('Invalid job data response:', response)
+        }
+      } catch (error) {
+        console.error('Error fetching job data:', error)
+        toast({
+          title: 'Lỗi',
+          description: 'Không thể tải danh sách nghề nghiệp',
+          variant: 'destructive'
+        })
+      } finally {
+        setIsLoadingJobs(false)
+      }
+    }
+
+    fetchJobData()
   }, [])
 
   const orgOptions = organizations.map((org) => ({
@@ -163,7 +197,7 @@ const AppointmentInfo = () => {
         addressContact: data.userInfo.addressContact || '',
         studentId: data.userInfo.studentId || '',
         militaryId: data.userInfo.militaryId || '',
-        phoneNumber: data.userInfo.phoneNumber || '',
+        phoneNumber: data.userInfo.mobile || '',
         email: data.userInfo.email || ''
       })
     }
@@ -435,7 +469,7 @@ const AppointmentInfo = () => {
                     />
                   ) : (
                     <div className='flex items-center gap-2'>
-                      <span className='text-sm text-gray-600'>{userInfo.phoneNumber}</span>
+                      <span className='text-sm text-gray-600'>{userInfo.mobile}</span>
                       <ChevronRight className='h-4 w-4 text-gray-400' />
                     </div>
                   )}
@@ -478,13 +512,46 @@ const AppointmentInfo = () => {
                     <span className='text-sm font-medium text-gray-700'>Nghề nghiệp</span>
                   </div>
                   {isEditing ? (
-                    <input
-                      type='text'
-                      name='jobName'
-                      value={formData.jobName}
-                      onChange={handleInputChange}
-                      className='w-1/2 p-2 text-sm text-right border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500'
-                    />
+                    <div className='w-1/2'>
+                      {isLoadingJobs ? (
+                        <div className='flex justify-center'>
+                          <Loader2 className='h-5 w-5 text-gray-400 animate-spin' />
+                        </div>
+                      ) : (
+                        <Select
+                          options={jobs.map((jobItem) => ({
+                            value: jobItem.job,
+                            label: jobItem.job
+                          }))}
+                          value={formData.jobName ? { value: formData.jobName, label: formData.jobName } : null}
+                          onChange={(option) => {
+                            setFormData((prev) => ({
+                              ...prev,
+                              jobName: option ? option.value : ''
+                            }))
+                          }}
+                          placeholder="Chọn nghề nghiệp"
+                          isSearchable
+                          className="basic-select"
+                          classNamePrefix="select"
+                          styles={{
+                            control: (base) => ({
+                              ...base,
+                              borderRadius: '0.375rem',
+                              minHeight: '38px'
+                            }),
+                            placeholder: (base) => ({
+                              ...base,
+                              textAlign: 'right'
+                            }),
+                            singleValue: (base) => ({
+                              ...base,
+                              textAlign: 'right'
+                            })
+                          }}
+                        />
+                      )}
+                    </div>
                   ) : (
                     <div className='flex items-center gap-2'>
                       <span className='text-sm text-gray-600'>{userInfo.jobName}</span>

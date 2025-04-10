@@ -8,10 +8,17 @@ import { Input } from '@/components/ui/input'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { userDetailSchema, UserFullInfoResponseSchema } from '@/schema/user-schema'
 import { User as fetchUser, updateUserDetail } from '@/api/user'
+import { staticJobApi } from '@/api/static'
 import { toast } from '../ui/use-toast'
 import Loading from '../warnings/loading'
 import Empty from '../warnings/empty'
-import { ChevronRight, Info, User, Droplet, Briefcase, Phone, Mail, MapPin, School, Award } from 'lucide-react'
+import { ChevronRight, Info, User, Droplet, Briefcase, Phone, Mail, MapPin, School, Award, Loader2 } from 'lucide-react'
+import Select from 'react-select'
+
+interface Job {
+  id: number;
+  job: string;
+}
 
 const Profile = () => {
   // Scroll to top when component mounts
@@ -22,6 +29,8 @@ const Profile = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const hasFetched = useRef(false)
+  const [jobs, setJobs] = useState<Job[]>([])
+  const [isLoadingJobs, setIsLoadingJobs] = useState(false)
 
   const form = useForm<z.infer<typeof UserFullInfoResponseSchema>>({
     resolver: zodResolver(UserFullInfoResponseSchema),
@@ -104,6 +113,32 @@ const Profile = () => {
 
     fetchUserData()
   }, [form])
+
+  // Fetch job data
+  useEffect(() => {
+    const fetchJobData = async () => {
+      try {
+        setIsLoadingJobs(true)
+        const response = await staticJobApi()
+        if (response && response.data) {
+          setJobs(response.data)
+        } else {
+          console.error('Invalid job data response:', response)
+        }
+      } catch (error) {
+        console.error('Error fetching job data:', error)
+        toast({
+          title: 'Lỗi',
+          description: 'Không thể tải danh sách nghề nghiệp',
+          variant: 'destructive'
+        })
+      } finally {
+        setIsLoadingJobs(false)
+      }
+    }
+
+    fetchJobData()
+  }, [])
 
   const updateProfile = async (value: any) => {
     try {
@@ -272,7 +307,7 @@ const Profile = () => {
               </Card>
             </div>
 
-            {/* Work Information Group */}
+            {/* Work Information Group with updated FormField for job_name */}
             <div>
               <h2 className='text-lg font-semibold text-gray-700 mb-2 px-2'>Thông tin nghề nghiệp</h2>
               <Card className='overflow-hidden rounded-xl shadow-sm'>
@@ -289,11 +324,55 @@ const Profile = () => {
                               <FormLabel className='text-sm font-medium text-gray-700 m-0'>Nghề nghiệp</FormLabel>
                             </div>
                             <FormControl>
-                              <Input
-                                {...field}
-                                className='w-1/2 border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0'
-                                placeholder='Nhập nghề nghiệp'
-                              />
+                              <div className='w-1/2'>
+                                {isLoadingJobs ? (
+                                  <div className='flex justify-center'>
+                                    <Loader2 className='h-5 w-5 text-gray-400 animate-spin' />
+                                  </div>
+                                ) : (
+                                  <Select
+                                    inputId={field.name}
+                                    options={jobs.map((jobItem) => ({
+                                      value: jobItem.job,
+                                      label: jobItem.job
+                                    }))}
+                                    value={field.value ? { value: field.value, label: field.value } : null}
+                                    onChange={(option) => {
+                                      field.onChange(option ? option.value : '');
+                                    }}
+                                    placeholder="Chọn nghề nghiệp"
+                                    isClearable
+                                    isSearchable
+                                    styles={{
+                                      control: (base) => ({
+                                        ...base,
+                                        border: 'none',
+                                        boxShadow: 'none',
+                                        backgroundColor: 'transparent'
+                                      }),
+                                      indicatorSeparator: () => ({
+                                        display: 'none'
+                                      }),
+                                      dropdownIndicator: (base) => ({
+                                        ...base,
+                                        color: '#9CA3AF'
+                                      }),
+                                      placeholder: (base) => ({
+                                        ...base,
+                                        color: '#9CA3AF',
+                                        textAlign: 'right'
+                                      }),
+                                      singleValue: (base) => ({
+                                        ...base,
+                                        color: '#4B5563',
+                                        textAlign: 'right'
+                                      })
+                                    }}
+                                    className="basic-select"
+                                    classNamePrefix="select"
+                                  />
+                                )}
+                              </div>
                             </FormControl>
                           </div>
                           <FormMessage className='ml-8 text-xs' />
