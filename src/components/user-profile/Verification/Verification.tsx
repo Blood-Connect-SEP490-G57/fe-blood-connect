@@ -63,6 +63,51 @@ const Verification = () => {
     'Hoàn thành'
   ]
 
+  const renderStepIndicator = () => {
+    const stepsArray = [1, 2, 3, 4] // Các bước cố định
+    return (
+      <div className='mb-8'>
+        <div className='flex items-center mb-8'>
+          {stepsArray.map((stepNumber, index) => (
+            <React.Fragment key={stepNumber}>
+              <div className='flex flex-col items-center'>
+                <div
+                  className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                    step === stepNumber
+                      ? 'bg-red-600 text-white font-bold' // Màu đậm hơn cho step hiện tại
+                      : step > stepNumber
+                      ? 'bg-red-600 text-white' // Màu đỏ cho step đã đi qua
+                      : 'bg-gray-200 text-gray-600' // Màu xám cho step chưa đi đến
+                  }`}
+                >
+                  {stepNumber < step ? (
+                    <CheckCircle className='h-5 w-5' />
+                  ) : (
+                    <span className='font-medium'>{stepNumber}</span>
+                  )}
+                </div>
+                <span
+                  className={`text-xs font-medium mt-2 ${
+                    step >= stepNumber ? 'text-red-600' : 'text-gray-400'
+                  }`}
+                >
+                  {stepTitles[stepNumber - 1]}
+                </span>
+              </div>
+              {index < stepsArray.length - 1 && (
+                <div
+                  className={`flex-1 h-1 mx-2 transition-all duration-500 ease-in-out ${
+                    step > stepNumber ? 'bg-red-600' : 'bg-gray-200'
+                  }`}
+                />
+              )}
+            </React.Fragment>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
   const renderCurrentStep = () => {
     switch (step) {
       case 1:
@@ -97,7 +142,7 @@ const Verification = () => {
       
       {/* Banner section */}
       <motion.div 
-        className='bg-gradient-to-r from-red-500 to-red-600 text-white py-10 px-6 relative overflow-hidden'
+        className='bg-gradient-to-r from-red-500 to-red-600 text-white py-10 px-6 relative overflow-hidden border-b-2 border-red-700 rounded-b-3xl'
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
@@ -124,7 +169,7 @@ const Verification = () => {
         <div className='absolute bottom-0 right-0 w-40 h-40 bg-white/10 rounded-full translate-x-1/3 translate-y-1/3 blur-md'></div>
       </motion.div>
 
-      <div className='container mx-auto px-4 py-8'>
+      <div className='container bg-gray-100 mx-auto px-4 py-8 mb-4'>
         {/* Step indicator */}
         <motion.div 
           className='mb-8 px-4 pt-2'
@@ -132,45 +177,7 @@ const Verification = () => {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3, duration: 0.5 }}
         >
-          <div className='flex items-center justify-between max-w-2xl mx-auto'>
-            {[1, 2, 3, 4].map((stepNumber) => (
-              <motion.div 
-                key={stepNumber} 
-                className='flex flex-col items-center'
-                initial={{ y: 10, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.3 + (stepNumber * 0.1), duration: 0.3 }}
-              >
-                <div
-                  className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                    step >= stepNumber 
-                      ? 'bg-gradient-to-r from-red-500 to-red-600 text-white shadow-md' 
-                      : 'bg-white text-gray-400 border border-gray-200'
-                  } ${step === stepNumber ? 'ring-4 ring-red-100' : ''}`}
-                >
-                  {stepNumber < step ? (
-                    <CheckCircle className='h-5 w-5' />
-                  ) : (
-                    <span className="font-medium">{stepNumber}</span>
-                  )}
-                </div>
-                <span className={`text-xs font-medium mt-2 ${step >= stepNumber ? 'text-red-600' : 'text-gray-400'}`}>
-                  {stepTitles[stepNumber-1]}
-                </span>
-              </motion.div>
-            ))}
-          </div>
-          
-          {/* Progress bar */}
-          <div className='relative mt-6 max-w-2xl mx-auto'>
-            <div className='absolute h-1.5 bg-gray-100 rounded-full top-0 left-0 right-0'></div>
-            <motion.div 
-              className='absolute h-1.5 bg-gradient-to-r from-red-500 to-red-600 rounded-full top-0 left-0 shadow-sm'
-              initial={{ width: 0 }}
-              animate={{ width: `${((step - 1) / 3) * 100}%` }}
-              transition={{ duration: 0.5, ease: "easeInOut" }}
-            ></motion.div>
-          </div>
+          {renderStepIndicator()}
         </motion.div>
 
         {/* Current step content */}

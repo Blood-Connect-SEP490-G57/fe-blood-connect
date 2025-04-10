@@ -83,7 +83,7 @@ const NewsPage = () => {
   }
 
   return (
-    <div className='min-h-screen bg-gray-100'>
+    <div className='min-h-screen mt-10 bg-gray-100'>
       {/* Banner section */}
       <div className='bg-gradient-to-r from-red-600 to-red-400 text-white p-8 relative'>
         <div className='container mx-auto'>
@@ -99,7 +99,7 @@ const NewsPage = () => {
         </div>
       </div>
 
-      <div className='container mx-auto px-4 py-6'>
+      <div className='max-w-7xl mx-auto px-8 py-6'>
         {/* Search and filter section */}
         <Card className='overflow-hidden rounded-xl shadow-sm border-none mb-6'>
           <CardContent className='p-4'>

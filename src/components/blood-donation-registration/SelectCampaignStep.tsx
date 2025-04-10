@@ -114,7 +114,7 @@ const SelectCampaignStep = ({
           <div className='relative mt-4'>
             <Input
               type='text'
-              placeholder='Tìm kiếm theo tên hoặc địa điểm...'
+              placeholder='Tìm kiếm theo tên của buổi hiến máu ...'
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className='pl-10 pr-4 py-2 rounded-xl border border-gray-200 w-full focus:border-red-500 focus:ring focus:ring-red-200 focus:ring-opacity-50'
