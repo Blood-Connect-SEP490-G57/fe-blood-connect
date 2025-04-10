@@ -97,7 +97,7 @@ Mỗi đơn vị máu hiến tặng có thể cứu sống đến 3 người b�
     <div className="min-h-screen bg-gray-50 pt-10 pb-16">
       {/* Banner section */}
       <div className="bg-gradient-to-r from-red-600 to-red-400 text-white p-8 relative">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="container mx-auto">
           <div className="flex flex-col items-center">
             <div className="h-24 w-24 bg-white rounded-full flex items-center justify-center shadow-md mb-4">
               <FileText className="h-12 w-12 text-red-500" />
