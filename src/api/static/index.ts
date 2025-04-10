@@ -1,6 +1,6 @@
 import { apiGetCall } from '..'
 
-export const staticApi = async () => {
+export const staticJobApi = async () => {
   const response = await apiGetCall('api/static/jobs')
   return response.data
 }

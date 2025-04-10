@@ -5,6 +5,7 @@ import { createOrUpdateUserDetail, getCurrentUserDetail } from '@/api/user'
 import ScrollToTop from '@/components/scrollToTop'
 import { getDistricts, getListProvinces, getWards, Ward } from '@/api/address'
 import { getOrganizationsByType } from '@/api/organization'
+import { staticJobApi } from '@/api/static'
 import Select from 'react-select'
 import { Card, CardContent } from '@/components/ui/card'
 import {
@@ -18,7 +19,8 @@ import {
   Mail,
   School,
   Award,
-  Loader2
+  Loader2,
+  Briefcase
 } from 'lucide-react'
 import { toast } from '@/components/ui/use-toast'
 
@@ -34,6 +36,11 @@ interface Organization {
   id: string
   name: string
   type: string
+}
+
+interface Job {
+  id: number;
+  job: string;
 }
 
 const Step3ExtractedInfo: React.FC<Step2Props> = ({
@@ -56,7 +63,8 @@ const Step3ExtractedInfo: React.FC<Step2Props> = ({
   const [organizations, setOrganizations] = useState<Organization[]>([])
   const [showCardDetails, setShowCardDetails] = useState(true)
   const [isSubmitting, setIsSubmitting] = useState(false)
-
+  const [jobs, setJobs] = useState<Job[]>([])
+  const [isLoadingJobs, setIsLoadingJobs] = useState(false)
 
   const LoadingSpinner = () => (
     <div className='flex items-center justify-center py-8'>
@@ -149,7 +157,7 @@ const Step3ExtractedInfo: React.FC<Step2Props> = ({
         job_name: formData.jobName,
         student_id: formData.studentId,
         military_id: formData.militaryId,
-        address_contact: fullAddress, // Use the full address here
+        address_contact: fullAddress,
         time_donation: Number(formData.timeDonation),
         blood_group: formData.bloodGroup,
         organization_id: Number(formData.organizationId)
@@ -319,6 +327,32 @@ const Step3ExtractedInfo: React.FC<Step2Props> = ({
     }
 
     fetchOrganizations()
+  }, [])
+
+  // Add job data fetching
+  useEffect(() => {
+    const fetchJobData = async () => {
+      try {
+        setIsLoadingJobs(true)
+        const response = await staticJobApi()
+        if (response && response.data) {
+          setJobs(response.data)
+        } else {
+          console.error('Invalid job data response:', response)
+        }
+      } catch (error) {
+        console.error('Error fetching job data:', error)
+        toast({
+          title: 'Lỗi',
+          description: 'Không thể tải danh sách nghề nghiệp',
+          variant: 'destructive'
+        })
+      } finally {
+        setIsLoadingJobs(false)
+      }
+    }
+
+    fetchJobData()
   }, [])
 
   const orgOptions = organizations.map((org) => ({
@@ -553,33 +587,33 @@ const Step3ExtractedInfo: React.FC<Step2Props> = ({
             <h3 className='text-lg font-semibold text-gray-900'>Thông tin bổ sung</h3>
             <Card className='overflow-hidden rounded-xl shadow-sm border-none'>
               <CardContent className='p-5 divide-y space-y-4'>
-                {/* <div className='pb-4'>
+                <div className='pb-4'>
                   <FormField
                     label='Nghề nghiệp'
                     icon={<Briefcase className='h-5 w-5 text-gray-500' />}
                     required={false}
                   >
                     <Select
-                      options={job.map((jobItem) => ({
-                        value: jobItem.id,
+                      options={jobs.map((jobItem) => ({
+                        value: jobItem.job,
                         label: jobItem.job
                       }))}
                       isClearable
                       isSearchable
-                      isLoading={isLoadingJobs} // Hiển thị trạng thái loading
+                      isLoading={isLoadingJobs}
                       placeholder={isLoadingJobs ? 'Đang tải...' : 'Tìm kiếm nghề nghiệp...'}
-                      value={job.find((jobItem) => jobItem.id === formData.jobId) || null} // Giá trị mặc định
+                      value={formData.jobName ? { value: formData.jobName, label: formData.jobName } : null}
                       onChange={(selectedOption) =>
                         setFormData((prev: any) => ({
                           ...prev,
-                          jobId: selectedOption ? selectedOption.value : '' // Cập nhật jobId
+                          jobName: selectedOption ? selectedOption.value : ''
                         }))
                       }
                       className='basic-select'
                       classNamePrefix='select'
                     />
                   </FormField>
-                </div> */}
+                </div>
 
                 <div className='py-4'>
                   <FormField
