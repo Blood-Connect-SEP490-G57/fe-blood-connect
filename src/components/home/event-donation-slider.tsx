@@ -99,7 +99,7 @@ export default function EventDonationSlider() {
       
         {/* Slider Container */}
         <motion.div 
-          className='relative min-h-96 py-8 mb-8 rounded-3xl overflow-hidden shadow-2xl bg-white border border-gray-100'
+          className='relative min-h-[500px] py-8 mb-8 rounded-3xl overflow-hidden shadow-2xl bg-white border border-gray-100'
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}

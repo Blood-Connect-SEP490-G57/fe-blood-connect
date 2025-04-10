@@ -107,7 +107,7 @@ const BloodDonationSlider: React.FC = () => {
             <div className='w-24 h-1 bg-red-100 mx-auto rounded-full'></div>
           </motion.div>
 
-          <motion.div 
+          <motion.div
             className='relative overflow-hidden rounded-3xl shadow-2xl border border-gray-100 bg-white'
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -116,20 +116,20 @@ const BloodDonationSlider: React.FC = () => {
           >
             <div className='overflow-hidden'>
               <div
-                className='flex transition-transform duration-700 ease-in-out mb-6 w-full'
+                className='flex transition-transform duration-700 ease-in-out w-full'
                 style={{ transform: `translateX(-${currentSlide * 100}%)` }}
               >
                 {campaigns.map((campaign, idx) => (
-                  <motion.div 
-                    key={campaign.id} 
+                  <motion.div
+                    key={campaign.id}
                     className='w-full flex-shrink-0 flex-grow-0 basis-full'
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.1 * idx, duration: 0.4 }}
                   >
-                    <div className='flex flex-col md:flex-row'>
+                    <div className='grid grid-cols-1 md:grid-cols-2 h-full'>
                       {/* Hình ảnh */}
-                      <div className='w-full md:w-1/2 h-48 sm:h-64 md:h-96 relative overflow-hidden'>
+                      <div className='relative overflow-hidden'>
                         <img
                           src={'https://images.unsplash.com/photo-1615461066841-6116e61058f4'}
                           alt={campaign.name}
@@ -139,11 +139,11 @@ const BloodDonationSlider: React.FC = () => {
                       </div>
 
                       {/* Nội dung */}
-                      <div className='w-full md:w-1/2 p-6 sm:p-8 flex flex-col justify-center'>
+                      <div className='p-6 sm:p-8 flex flex-col justify-center'>
                         <h3 className='text-xl sm:text-2xl font-bold text-gray-800 mb-5'>{campaign.name}</h3>
 
                         <div className='space-y-4 text-sm sm:text-base'>
-                          <motion.div 
+                          <motion.div
                             className='flex items-start text-gray-700'
                             initial={{ opacity: 0, x: -10 }}
                             whileInView={{ opacity: 1, x: 0 }}
@@ -158,8 +158,8 @@ const BloodDonationSlider: React.FC = () => {
                               <p className='text-gray-600'>{campaign.location}</p>
                             </div>
                           </motion.div>
-                          
-                          <motion.div 
+
+                          <motion.div
                             className='flex items-start text-gray-700'
                             initial={{ opacity: 0, x: -10 }}
                             whileInView={{ opacity: 1, x: 0 }}
@@ -174,8 +174,8 @@ const BloodDonationSlider: React.FC = () => {
                               <p className='text-gray-600'>{formatDateTime(campaign.organizeTime)}</p>
                             </div>
                           </motion.div>
-                          
-                          <motion.div 
+
+                          <motion.div
                             className='flex items-start text-gray-700'
                             initial={{ opacity: 0, x: -10 }}
                             whileInView={{ opacity: 1, x: 0 }}
@@ -188,13 +188,14 @@ const BloodDonationSlider: React.FC = () => {
                             <div>
                               <p className='font-medium text-gray-900 mb-1'>Thời gian đăng ký</p>
                               <p className='text-gray-600'>
-                                Từ {formatDateTime(campaign.startReceiveTime)}<br />
+                                Từ {formatDateTime(campaign.startReceiveTime)}
+                                <br />
                                 Đến {formatDateTime(campaign.endReceiveTime)}
                               </p>
                             </div>
                           </motion.div>
-                                                    
-                          <motion.div 
+
+                          <motion.div
                             className='flex items-start text-gray-700'
                             initial={{ opacity: 0, x: -10 }}
                             whileInView={{ opacity: 1, x: 0 }}
@@ -209,8 +210,8 @@ const BloodDonationSlider: React.FC = () => {
                               <p className='text-gray-600'>{campaign.description}</p>
                             </div>
                           </motion.div>
-                          
-                          <motion.div 
+
+                          <motion.div
                             className='flex items-start text-gray-700'
                             initial={{ opacity: 0, x: -10 }}
                             whileInView={{ opacity: 1, x: 0 }}
@@ -223,18 +224,25 @@ const BloodDonationSlider: React.FC = () => {
                             <div>
                               <p className='font-medium text-gray-900 mb-1'>Số người tham gia</p>
                               <div className='flex items-center gap-2'>
-                                <span className='text-gray-600'>{campaign.appointmentCount} / {campaign.targetBloodUnits}</span>
+                                <span className='text-gray-600'>
+                                  {campaign.appointmentCount} / {campaign.targetBloodUnits}
+                                </span>
                                 <span className='inline-block h-2 w-2 rounded-full bg-red-500'></span>
-                                <span className='text-sm text-gray-500'>{Math.round((campaign.appointmentCount / campaign.targetBloodUnits) * 100)}%</span>
+                                <span className='text-sm text-gray-500'>
+                                  {Math.round((campaign.appointmentCount / campaign.targetBloodUnits) * 100)}%
+                                </span>
                               </div>
-                              
+
                               {/* Thanh Progress Bar */}
                               <div className='w-full bg-gray-100 rounded-full h-2 mt-2 overflow-hidden'>
                                 <motion.div
                                   className='h-full bg-gradient-to-r from-red-600 to-red-500'
                                   initial={{ width: 0 }}
-                                  animate={{ 
-                                    width: `${Math.min((campaign.appointmentCount / campaign.targetBloodUnits) * 100, 100)}%` 
+                                  animate={{
+                                    width: `${Math.min(
+                                      (campaign.appointmentCount / campaign.targetBloodUnits) * 100,
+                                      100
+                                    )}%`
                                   }}
                                   transition={{ duration: 1, delay: 0.6 }}
                                 />
@@ -242,7 +250,7 @@ const BloodDonationSlider: React.FC = () => {
                             </div>
                           </motion.div>
 
-                          <motion.div 
+                          <motion.div
                             className='flex justify-end pt-5 gap-3'
                             initial={{ opacity: 0, y: 10 }}
                             whileInView={{ opacity: 1, y: 0 }}
@@ -297,9 +305,7 @@ const BloodDonationSlider: React.FC = () => {
                     key={index}
                     onClick={() => setCurrentSlide(index)}
                     className={`w-2 h-2 rounded-full transition-all duration-200 ${
-                      index === currentSlide 
-                        ? 'bg-red-500 w-6'
-                        : 'bg-gray-300 hover:bg-gray-400'
+                      index === currentSlide ? 'bg-red-500 w-6' : 'bg-gray-300 hover:bg-gray-400'
                     }`}
                     aria-label={`Go to slide ${index + 1}`}
                   />
