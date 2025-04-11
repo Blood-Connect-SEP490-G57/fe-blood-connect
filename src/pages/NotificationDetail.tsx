@@ -90,7 +90,7 @@ const NotificationDetail = () => {
 
   if (isLoading) {
     return (
-      <div className='min-h-screen bg-gradient-to-b from-gray-50 to-white py-12'>
+      <div className='min-h-screen bg-gray-100 py-12'>
         <div className='container mx-auto px-4 max-w-4xl'>
           <Button variant='ghost' className='mb-6' disabled>
             <ArrowLeft className='h-4 w-4 mr-2' />

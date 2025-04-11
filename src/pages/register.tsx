@@ -59,7 +59,7 @@ export default function Register() {
   }
 
   return (
-    <div className='min-h-screen bg-gradient-to-b from-gray-50 to-white flex flex-col py-12 sm:px-6 lg:px-8 relative overflow-hidden'>
+    <div className='min-h-screen bg-gray-100 flex flex-col py-12 sm:px-6 lg:px-8 relative overflow-hidden'>
       {/* Decorative elements */}
       <div className='absolute top-20 right-10 w-72 h-72 bg-red-50 rounded-full blur-3xl opacity-30 -z-10'></div>
       <div className='absolute bottom-20 left-10 w-72 h-72 bg-red-50 rounded-full blur-3xl opacity-30 -z-10'></div>
@@ -89,7 +89,7 @@ export default function Register() {
             Đăng Ký
           </h2>
           <p className='mt-2 text-center text-sm text-gray-600'>
-            Chào mừng bạn đến với <span className='font-semibold text-red-600'>Giọt Máu Hi Vọng</span>
+            Chào mừng bạn đến với <span className='font-semibold text-red-600'>Giọt Máu Hy Vọng</span>
           </p>
         </motion.div>
       </div>
