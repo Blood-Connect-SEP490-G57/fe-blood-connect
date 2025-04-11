@@ -151,7 +151,7 @@ const Header: React.FC = () => {
             transition={{ duration: 0.3 }}
           >
             <a href='/' className='flex items-center'>
-              <img src="./images/icon/icon.png" alt="Giọt Máu Hy Vọng" className="h-12 w-12 ml-2" />
+              <img src='./images/icon/icon.png' alt='Giọt Máu Hy Vọng' className='h-12 w-12 ml-2' />
             </a>
           </motion.div>
 
@@ -355,13 +355,14 @@ const Header: React.FC = () => {
                 <div className='p-4 flex flex-col gap-2'>
                   {getFilteredNavigation()
                     .filter((item) => {
-                      if (!isLoggedIn && (
-                        item.name === 'LỊCH HẸN CỦA TÔI' || 
-                        item.name === 'LỊCH SỬ ĐẶT HẸN' ||
-                        item.name === 'THÔNG TIN CÁ NHÂN' ||
-                        item.name === 'CÀI ĐẶT' ||
-                        item.name === 'XÁC THỰC TÀI KHOẢN'
-                      )) {
+                      if (
+                        !isLoggedIn &&
+                        (item.name === 'LỊCH HẸN CỦA TÔI' ||
+                          item.name === 'LỊCH SỬ ĐẶT HẸN' ||
+                          item.name === 'THÔNG TIN CÁ NHÂN' ||
+                          item.name === 'CÀI ĐẶT' ||
+                          item.name === 'XÁC THỰC TÀI KHOẢN')
+                      ) {
                         return false
                       }
                       return true
@@ -379,14 +380,14 @@ const Header: React.FC = () => {
                         }}
                       >
                         <div className='w-10 h-10 rounded-full bg-red-100 flex items-center justify-center mr-3'>
-                          {item.icon}
+                          <span className='h-4 w-4'> {item.icon} </span>
                         </div>
                         <div>
                           <div className='font-medium'>{item.name}</div>
                         </div>
                       </motion.div>
                     ))}
-                  
+
                   {isLoggedIn ? (
                     <>
                       <hr className='my-2' />
@@ -465,7 +466,7 @@ const Header: React.FC = () => {
                 exit={{ x: '100%', opacity: 0.5 }}
                 transition={{ type: 'spring', stiffness: 300, damping: 30 }}
               >
-                <div className='p-4'>
+                <div className='p-2'>
                   <Notifications onClose={handleNotificationClose} />
                 </div>
               </motion.div>
