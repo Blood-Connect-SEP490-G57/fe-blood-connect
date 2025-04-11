@@ -1,6 +1,11 @@
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Calendar, ChevronRight, MapPin, User, Phone, Mail, Briefcase, School, Award, Calendar as CalendarIcon, Building, Loader2 } from 'lucide-react'
+import {
+  Calendar,
+  MapPin,
+  Calendar as CalendarIcon,
+  Loader2
+} from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { getCurrent, updateinfor } from '@/api/appointment'
 import { format } from 'date-fns'
@@ -85,8 +90,8 @@ interface Organization {
 }
 
 interface Job {
-  id: number;
-  job: string;
+  id: number
+  job: string
 }
 
 const AppointmentInfo = () => {
@@ -147,7 +152,7 @@ const AppointmentInfo = () => {
   useEffect(() => {
     if (hasFetched.current) return
     hasFetched.current = true
-    
+
     const fetchAppointmentInfo = async () => {
       try {
         setLoading(true)
@@ -233,7 +238,7 @@ const AppointmentInfo = () => {
   // Hiển thị trạng thái
   const renderStatusBadge = (status: string) => {
     const statusConfig: Record<string, { color: string; label: string }> = {
-      BOOKING: { color: 'bg-yellow-100 text-yellow-800', label: 'Đã đặt lịch' },
+      BOOKING: { color: 'bg-blue-100 text-blue-800', label: 'Đã đặt lịch' },
       COMPLETED: { color: 'bg-green-100 text-green-800', label: 'Hoàn thành' },
       CANCELLED: { color: 'bg-red-100 text-red-800', label: 'Đã hủy' },
       PENDING: { color: 'bg-gray-100 text-gray-800', label: 'Đang chờ' }
@@ -304,25 +309,23 @@ const AppointmentInfo = () => {
         { label: 'Địa điểm', value: data.campaign.location || 'Chưa cập nhật' }
       ]
     : []
-    
-  const hasAppointment = data.campaign !== null;
+
+  const hasAppointment = data.campaign !== null
 
   return (
     <div className='min-h-screen bg-gray-100'>
       {/* Banner section */}
-      <div className='bg-gradient-to-r from-red-600 to-red-400 text-white p-8 relative'>
+      <div className='bg-gradient-to-r from-red-600 to-red-400 text-white p-8 rounded-xl relative'>
         <div className='container mx-auto'>
           <div className='flex flex-col items-center'>
             <div className='h-24 w-24 bg-white rounded-full flex items-center justify-center shadow-md mb-4'>
               <Calendar className='h-12 w-12 text-red-500' />
             </div>
-            <h1 className='text-2xl font-bold mb-1'>{userInfo.fullName}</h1>
+            <h1 className='text-1xl font-bold mb-1'>{userInfo.fullName}</h1>
             <div className='flex items-center gap-2'>
               {hasAppointment ? (
                 <>
-                  <span className='px-2 py-1 rounded-full bg-white/20'>
-                    Đã đặt lịch hiến máu
-                  </span>
+                  <span className='px-2 py-1 text-sm rounded-full bg-white/20'>Đã đặt lịch hiến máu</span>
                 </>
               ) : (
                 <span>Chưa có lịch hiến máu</span>
@@ -332,40 +335,43 @@ const AppointmentInfo = () => {
         </div>
       </div>
 
-      <div className='container mx-auto px-4 py-6'>
+      <div className='py-2'>
         {/* Card for active appointment */}
         {hasAppointment && (
           <div className='mb-6'>
             <h2 className='text-lg font-semibold text-gray-700 mb-2 px-2'>Lịch hẹn hiện tại</h2>
             <Card className='overflow-hidden rounded-xl shadow-sm bg-white border-none'>
-              <CardContent className='p-4'>
+              <CardContent className='p-2'>
                 <div className='flex items-center justify-between mb-3'>
                   <h3 className='font-semibold text-red-600 flex items-center'>
-                    <CalendarIcon className='w-5 h-5 mr-2' />
-                    {data.campaign?.campaignName}
+                    <div>
+                      <CalendarIcon className='w-5 h-5 mr-2' />
+                    </div>
+                    <div>{data.campaign?.campaignName}</div>
                   </h3>
                   {renderStatusBadge(data.campaign?.status || '')}
                 </div>
                 <div className='space-y-3 mb-4'>
                   <div className='flex items-start gap-2'>
-                    <Calendar className='w-5 h-5 text-gray-500 mt-0.5' />
+                    <div>
+                      <Calendar className='w-5 h-5 text-gray-500 mt-0.5' />
+                    </div>
                     <div>
                       <span className='text-sm text-gray-500'>Thời gian</span>
                       <p className='font-medium'>{formatDateTime(data.campaign?.appointmentDate || '')}</p>
                     </div>
                   </div>
                   <div className='flex items-start gap-2'>
-                    <MapPin className='w-5 h-5 text-gray-500 mt-0.5' />
+                    <div>
+                      <MapPin className='w-5 h-5 text-gray-500 mt-0.5' />
+                    </div>
                     <div>
                       <span className='text-sm text-gray-500'>Địa điểm</span>
                       <p className='font-medium'>{data.campaign?.location || 'Chưa cập nhật'}</p>
                     </div>
                   </div>
                 </div>
-                <Button 
-                  onClick={() => setPopupOpen(true)}
-                  className='w-full bg-red-600 hover:bg-red-700 mt-2'
-                >
+                <Button onClick={() => setPopupOpen(true)} className='w-full bg-red-600 hover:bg-red-700 mt-2'>
                   Xem chi tiết phiếu đăng ký
                 </Button>
               </CardContent>
@@ -379,47 +385,41 @@ const AppointmentInfo = () => {
           <Card className='overflow-hidden rounded-xl shadow-sm border-none'>
             <CardContent className='p-0'>
               <div className='divide-y'>
-                <div className='p-4 flex items-center justify-between'>
+                <div className='p-2 flex items-center justify-between'>
                   <div className='flex items-center gap-3'>
-                    <User className='h-5 w-5 text-gray-500' />
-                    <span className='text-sm font-medium text-gray-700'>Họ và tên</span>
+                    <div>
+                      <span className='text-sm font-medium text-gray-700'>Họ và tên</span>
+                    </div>
                   </div>
                   <div className='flex items-center gap-2'>
                     <span className='text-sm text-gray-600'>{userInfo.fullName}</span>
-                    <ChevronRight className='h-4 w-4 text-gray-400' />
                   </div>
                 </div>
 
-                <div className='p-4 flex items-center justify-between'>
+                <div className='p-2 flex items-center justify-between'>
                   <div className='flex items-center gap-3'>
-                    <User className='h-5 w-5 text-gray-500' />
                     <span className='text-sm font-medium text-gray-700'>Số CCCD/Hộ chiếu</span>
                   </div>
                   <div className='flex items-center gap-2'>
                     <span className='text-sm text-gray-600'>{userInfo.identityNumber}</span>
-                    <ChevronRight className='h-4 w-4 text-gray-400' />
                   </div>
                 </div>
 
-                <div className='p-4 flex items-center justify-between'>
+                <div className='p-2 flex items-center justify-between'>
                   <div className='flex items-center gap-3'>
-                    <Calendar className='h-5 w-5 text-gray-500' />
                     <span className='text-sm font-medium text-gray-700'>Ngày sinh</span>
                   </div>
                   <div className='flex items-center gap-2'>
                     <span className='text-sm text-gray-600'>{formatDate(userInfo.dob)}</span>
-                    <ChevronRight className='h-4 w-4 text-gray-400' />
                   </div>
                 </div>
 
-                <div className='p-4 flex items-center justify-between'>
+                <div className='p-2 flex items-center justify-between'>
                   <div className='flex items-center gap-3'>
-                    <User className='h-5 w-5 text-gray-500' />
                     <span className='text-sm font-medium text-gray-700'>Giới tính</span>
                   </div>
                   <div className='flex items-center gap-2'>
                     <span className='text-sm text-gray-600'>{userInfo.gender}</span>
-                    <ChevronRight className='h-4 w-4 text-gray-400' />
                   </div>
                 </div>
               </div>
@@ -433,9 +433,8 @@ const AppointmentInfo = () => {
           <Card className='overflow-hidden rounded-xl shadow-sm border-none'>
             <CardContent className='p-0'>
               <div className='divide-y'>
-                <div className='p-4 flex items-center justify-between'>
+                <div className='p-2'>
                   <div className='flex items-center gap-3'>
-                    <MapPin className='h-5 w-5 text-gray-500' />
                     <span className='text-sm font-medium text-gray-700'>Địa chỉ liên hệ</span>
                   </div>
                   {isEditing ? (
@@ -444,19 +443,17 @@ const AppointmentInfo = () => {
                       name='addressContact'
                       value={formData.addressContact}
                       onChange={handleInputChange}
-                      className='w-1/2 p-2 text-sm text-right border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500'
+                      className='w-full p-2 text-sm text-right border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500'
                     />
                   ) : (
                     <div className='flex items-center gap-2'>
                       <span className='text-sm text-gray-600'>{userInfo.addressContact}</span>
-                      <ChevronRight className='h-4 w-4 text-gray-400' />
                     </div>
                   )}
                 </div>
 
-                <div className='p-4 flex items-center justify-between'>
+                <div className='p-2 flex items-center justify-between'>
                   <div className='flex items-center gap-3'>
-                    <Phone className='h-5 w-5 text-gray-500' />
                     <span className='text-sm font-medium text-gray-700'>Điện thoại</span>
                   </div>
                   {isEditing ? (
@@ -469,15 +466,13 @@ const AppointmentInfo = () => {
                     />
                   ) : (
                     <div className='flex items-center gap-2'>
-                      <span className='text-sm text-gray-600'>{userInfo.mobile}</span>
-                      <ChevronRight className='h-4 w-4 text-gray-400' />
+                      <span className='text-sm text-gray-600'>{userInfo.mobile || '-'}</span>
                     </div>
                   )}
                 </div>
 
-                <div className='p-4 flex items-center justify-between'>
+                <div className='p-2 flex items-center justify-between'>
                   <div className='flex items-center gap-3'>
-                    <Mail className='h-5 w-5 text-gray-500' />
                     <span className='text-sm font-medium text-gray-700'>Email</span>
                   </div>
                   {isEditing ? (
@@ -491,7 +486,6 @@ const AppointmentInfo = () => {
                   ) : (
                     <div className='flex items-center gap-2'>
                       <span className='text-sm text-gray-600'>{userInfo.email}</span>
-                      <ChevronRight className='h-4 w-4 text-gray-400' />
                     </div>
                   )}
                 </div>
@@ -506,9 +500,8 @@ const AppointmentInfo = () => {
           <Card className='overflow-hidden rounded-xl shadow-sm border-none'>
             <CardContent className='p-0'>
               <div className='divide-y'>
-                <div className='p-4 flex items-center justify-between'>
+                <div className='p-2 flex items-center justify-between'>
                   <div className='flex items-center gap-3'>
-                    <Briefcase className='h-5 w-5 text-gray-500' />
                     <span className='text-sm font-medium text-gray-700'>Nghề nghiệp</span>
                   </div>
                   {isEditing ? (
@@ -530,10 +523,10 @@ const AppointmentInfo = () => {
                               jobName: option ? option.value : ''
                             }))
                           }}
-                          placeholder="Chọn nghề nghiệp"
+                          placeholder='Chọn nghề nghiệp'
                           isSearchable
-                          className="basic-select"
-                          classNamePrefix="select"
+                          className='basic-select'
+                          classNamePrefix='select'
                           styles={{
                             control: (base) => ({
                               ...base,
@@ -547,7 +540,7 @@ const AppointmentInfo = () => {
                             singleValue: (base) => ({
                               ...base,
                               textAlign: 'right'
-                            })
+                            }),
                           }}
                         />
                       )}
@@ -555,29 +548,27 @@ const AppointmentInfo = () => {
                   ) : (
                     <div className='flex items-center gap-2'>
                       <span className='text-sm text-gray-600'>{userInfo.jobName}</span>
-                      <ChevronRight className='h-4 w-4 text-gray-400' />
                     </div>
                   )}
                 </div>
 
-                <div className='p-4 flex items-center justify-between'>
+                <div className='p-2 flex items-center justify-between'>
                   <div className='flex items-center gap-3'>
-                    <Building className='h-5 w-5 text-gray-500' />
                     <span className='text-sm font-medium text-gray-700'>Tổ chức</span>
                   </div>
                   {isEditing ? (
                     <div className='w-1/2'>
-                    <Select
-                      options={orgOptions}
-                      isSearchable
-                      placeholder='Tìm kiếm tổ chức...'
-                      value={orgOptions.find((option) => option.value === formData.organizationId) || null}
-                      onChange={(selectedOption) => {
-                        setFormData((prev) => ({
-                          ...prev,
-                          organizationId: selectedOption ? selectedOption.value : ''
-                        }))
-                      }}
+                      <Select
+                        options={orgOptions}
+                        isSearchable
+                        placeholder='Chọn tổ chức...'
+                        value={orgOptions.find((option) => option.value === formData.organizationId) || null}
+                        onChange={(selectedOption) => {
+                          setFormData((prev) => ({
+                            ...prev,
+                            organizationId: selectedOption ? selectedOption.value : ''
+                          }))
+                        }}
                         className='text-right'
                         styles={{
                           control: (provided) => ({
@@ -591,16 +582,14 @@ const AppointmentInfo = () => {
                   ) : (
                     <div className='flex items-center gap-2'>
                       <span className='text-sm text-gray-600'>
-                      {organizations.find((org) => org.id === userInfo.organizationId)?.name || 'Chưa cập nhật'}
-                    </span>
-                      <ChevronRight className='h-4 w-4 text-gray-400' />
+                        {organizations.find((org) => org.id === userInfo.organizationId)?.name || 'Chưa cập nhật'}
+                      </span>
                     </div>
                   )}
                 </div>
 
-                <div className='p-4 flex items-center justify-between'>
+                <div className='p-2 flex items-center justify-between'>
                   <div className='flex items-center gap-3'>
-                    <School className='h-5 w-5 text-gray-500' />
                     <span className='text-sm font-medium text-gray-700'>Mã sinh viên</span>
                   </div>
                   {isEditing ? (
@@ -614,14 +603,12 @@ const AppointmentInfo = () => {
                   ) : (
                     <div className='flex items-center gap-2'>
                       <span className='text-sm text-gray-600'>{userInfo.studentId || '-'}</span>
-                      <ChevronRight className='h-4 w-4 text-gray-400' />
                     </div>
                   )}
                 </div>
 
-                <div className='p-4 flex items-center justify-between'>
+                <div className='p-2 flex items-center justify-between'>
                   <div className='flex items-center gap-3'>
-                    <Award className='h-5 w-5 text-gray-500' />
                     <span className='text-sm font-medium text-gray-700'>Mã quân nhân</span>
                   </div>
                   {isEditing ? (
@@ -635,14 +622,13 @@ const AppointmentInfo = () => {
                   ) : (
                     <div className='flex items-center gap-2'>
                       <span className='text-sm text-gray-600'>{userInfo.militaryId || '-'}</span>
-                      <ChevronRight className='h-4 w-4 text-gray-400' />
                     </div>
                   )}
                 </div>
               </div>
             </CardContent>
           </Card>
-                </div>
+        </div>
 
         {/* CCCD Information */}
         <div className='mb-6'>
@@ -650,26 +636,22 @@ const AppointmentInfo = () => {
           <Card className='overflow-hidden rounded-xl shadow-sm border-none'>
             <CardContent className='p-0'>
               <div className='divide-y'>
-                <div className='p-4 flex items-center justify-between'>
+                <div className='p-2'>
                   <div className='flex items-center gap-3'>
-                    <MapPin className='h-5 w-5 text-gray-500' />
                     <span className='text-sm font-medium text-gray-700'>Địa chỉ thường trú</span>
                   </div>
                   <div className='flex items-center gap-2'>
                     <span className='text-sm text-gray-600'>{userInfo.address}</span>
-                    <ChevronRight className='h-4 w-4 text-gray-400' />
                   </div>
                 </div>
 
-                <div className='p-4 flex items-center justify-between'>
+                <div className='p-2'>
                   <div className='flex items-center gap-3'>
-                    <MapPin className='h-5 w-5 text-gray-500' />
                     <span className='text-sm font-medium text-gray-700'>Nơi cấp</span>
-                </div>
+                  </div>
                   <div className='flex items-center gap-2'>
                     <span className='text-sm text-gray-600'>{userInfo.issueLoc}</span>
-                    <ChevronRight className='h-4 w-4 text-gray-400' />
-                </div>
+                  </div>
                 </div>
               </div>
             </CardContent>
@@ -677,29 +659,29 @@ const AppointmentInfo = () => {
         </div>
 
         <div className='py-4 space-y-4'>
-                {isEditing ? (
-                  <>
-                    <Button
+          {isEditing ? (
+            <>
+              <Button
                 onClick={updateUserInfo}
                 className='w-full bg-red-600 text-white hover:bg-red-700 py-5 rounded-xl'
               >
                 Lưu thay đổi
               </Button>
               <Button
-                      onClick={() => setIsEditing(false)}
+                onClick={() => setIsEditing(false)}
                 className='w-full bg-gray-200 text-gray-800 hover:bg-gray-300 py-5 rounded-xl'
-                    >
-                      Hủy
-                    </Button>
-                  </>
-                ) : (
-                    <Button
-                      onClick={() => setIsEditing(true)}
+              >
+                Hủy
+              </Button>
+            </>
+          ) : (
+            <Button
+              onClick={() => setIsEditing(true)}
               className='w-full bg-red-600 text-white hover:bg-red-700 py-5 rounded-xl'
-                    >
-                      Chỉnh sửa thông tin
-                    </Button>
-                )}
+            >
+              Chỉnh sửa thông tin
+            </Button>
+          )}
         </div>
       </div>
 

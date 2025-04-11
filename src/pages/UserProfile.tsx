@@ -89,13 +89,13 @@ const UserProfilePage: React.FC = () => {
   }
 
   return (
-    <div className='min-h-screen bg-gradient-to-b from-gray-50 to-white relative overflow-hidden'>
+    <div className='min-h-screen bg-gray-100 relative overflow-hidden'>
       {/* Decorative elements */}
       <div className='absolute top-20 left-10 w-72 h-72 bg-red-50 rounded-full blur-3xl opacity-30 -z-10'></div>
       <div className='absolute bottom-20 right-10 w-72 h-72 bg-red-50 rounded-full blur-3xl opacity-30 -z-10'></div>
-      
-      <div className='max-w-7xl mx-auto pt-20 pb-12 px-4'>
-        <motion.div 
+
+      <div className='max-w-7xl mx-auto py-10 px-2 sm:px-4'>
+        <motion.div
           className='flex flex-col md:flex-row gap-6 relative z-10'
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -143,29 +143,10 @@ const UserProfilePage: React.FC = () => {
           </div>
 
           {/* Mobile navigation bar */}
-          <div className='md:hidden mb-4 overflow-x-auto'>
-            <div className='flex gap-3 p-1'>
-              {navigationItems.map((item) => (
-                <motion.button
-                  key={item.id}
-                  className={`flex-shrink-0 px-4 py-2.5 rounded-full transition-all ${
-                    selectedOption === item.id
-                      ? 'bg-gradient-to-r from-red-500 to-red-600 text-white shadow-sm'
-                      : 'bg-white text-gray-700 border border-gray-200 shadow-sm'
-                  }`}
-                  onClick={() => handleOptionClick(item.id)}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <span className='font-medium text-sm whitespace-nowrap'>{item.label}</span>
-                </motion.button>
-              ))}
-            </div>
-          </div>
 
           {/* Main Content */}
           <AnimatePresence mode='wait'>
-            <motion.div 
+            <motion.div
               key={selectedOption}
               className='w-full md:w-3/4'
               initial={{ opacity: 0, x: 20 }}
@@ -176,6 +157,25 @@ const UserProfilePage: React.FC = () => {
               {renderContent()}
             </motion.div>
           </AnimatePresence>
+          <div className='md:hidden fixed bottom-0 left-0 w-full bg-white shadow-lg border-t border-gray-200 z-50'>
+            <div className='flex justify-around'>
+              {navigationItems.map((item) => (
+                <motion.button
+                  key={item.id}
+                  className={`flex flex-col items-center justify-center px-4 py-2 transition-all ${
+                    selectedOption === item.id ? 'text-red-600' : 'text-gray-500 hover:text-gray-700'
+                  }`}
+                  onClick={() => handleOptionClick(item.id)}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <div className={`p-2 rounded-full ${selectedOption === item.id ? 'bg-red-100' : 'bg-gray-100'}`}>
+                    {item.icon}
+                  </div>
+                    <span className='text-xs font-medium'>{item.label.split(' ').slice(0, 2).join(' ')}</span>
+                </motion.button>
+              ))}
+            </div>
+          </div>
         </motion.div>
       </div>
     </div>

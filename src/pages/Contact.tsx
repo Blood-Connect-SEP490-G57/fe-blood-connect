@@ -89,7 +89,7 @@ const ContactPage = () => {
         <div className='absolute bottom-6 right-10 w-20 h-20 bg-red-300 rounded-full opacity-15'></div>
       </div>
 
-      <div className='max-w-7xl mx-auto px-8 py-6'>
+      <div className='max-w-7xl mx-auto px-2 py-6'>
         <div className='max-w-7xl mx-auto flex flex-col lg:flex-row gap-6'>
           {/* Contact Info */}
           <Card className='w-full lg:w-1/2 overflow-hidden rounded-xl shadow-sm border-none'>

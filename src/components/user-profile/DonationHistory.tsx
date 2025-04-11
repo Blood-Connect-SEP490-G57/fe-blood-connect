@@ -30,17 +30,10 @@ function CancelAppointmentModal({
         <div className='p-5'>
           <p className='mb-4 text-gray-600'>Bạn có chắc chắn muốn hủy lịch hẹn này không?</p>
           <div className='flex justify-end space-x-2'>
-            <Button 
-              onClick={onClose} 
-              variant='outline'
-              className='px-5 py-2 rounded-xl border border-gray-300'
-            >
+            <Button onClick={onClose} variant='outline' className='px-5 py-2 rounded-xl border border-gray-300'>
               Hủy bỏ
             </Button>
-            <Button 
-              onClick={onConfirm} 
-              className='px-5 py-2 bg-red-600 text-white rounded-xl hover:bg-red-700'
-            >
+            <Button onClick={onConfirm} className='px-5 py-2 bg-red-600 text-white rounded-xl hover:bg-red-700'>
               Xác nhận
             </Button>
           </div>
@@ -54,7 +47,7 @@ function CancelAppointmentModal({
 const StatusBadge = ({ status }: { status: string }) => {
   let color = 'bg-gray-100 text-gray-800'
   let label = status
-  
+
   switch (status) {
     case 'DONE':
       color = 'bg-green-100 text-green-800'
@@ -69,12 +62,8 @@ const StatusBadge = ({ status }: { status: string }) => {
       label = 'Đã hủy'
       break
   }
-  
-  return (
-    <span className={`px-3 py-1 rounded-full text-sm font-medium ${color}`}>
-      {label}
-    </span>
-  )
+
+  return <span className={`px-3 py-1 rounded-full text-sm font-medium ${color}`}>{label}</span>
 }
 
 const DonationHistory = () => {
@@ -122,14 +111,10 @@ const DonationHistory = () => {
   const handleCancelAppointment = async (appointment: AppointmentType) => {
     try {
       await cancelAppointment(appointment.campaignId)
-      
+
       // Update local state
-      setAppointments(appointments.map(app => 
-        app.id === appointment.id 
-          ? {...app, status: 'CANCELLED'} 
-          : app
-      ))
-      
+      setAppointments(appointments.map((app) => (app.id === appointment.id ? { ...app, status: 'CANCELLED' } : app)))
+
       toast({
         title: 'Đã hủy lịch hẹn',
         description: 'Lịch hẹn của bạn đã được hủy thành công',
@@ -144,15 +129,15 @@ const DonationHistory = () => {
     }
     setModalOpen(false)
   }
-  
+
   const handleOpenModal = (appointment: AppointmentType) => {
     setSelectedAppointment(appointment)
     setModalOpen(true)
   }
 
-  const doneAppointments = appointments.filter(a => a.status === 'DONE').length
-  const upcomingAppointments = appointments.filter(a => a.status === 'BOOKING').length
-  const cancelledAppointments = appointments.filter(a => a.status === 'CANCELLED').length
+  const doneAppointments = appointments.filter((a) => a.status === 'DONE').length
+  const upcomingAppointments = appointments.filter((a) => a.status === 'BOOKING').length
+  const cancelledAppointments = appointments.filter((a) => a.status === 'CANCELLED').length
 
   if (loading) return <Loading />
   if (error) return <Empty />
@@ -160,7 +145,7 @@ const DonationHistory = () => {
   return (
     <div className='min-h-screen bg-gray-100'>
       {/* Banner */}
-      <div className='bg-gradient-to-r from-red-600 to-red-400 text-white p-8'>
+      <div className='bg-gradient-to-r from-red-600 to-red-400 text-white rounded-xl p-8'>
         <div className='container mx-auto'>
           <div className='flex flex-col items-center'>
             <div className='h-24 w-24 bg-white rounded-full flex items-center justify-center shadow-md mb-4'>
@@ -172,7 +157,7 @@ const DonationHistory = () => {
         </div>
       </div>
 
-      <div className='container mx-auto px-4 py-6'>
+      <div className='py-2'>
         {/* Stats Cards */}
         <div className='grid grid-cols-3 gap-3 mb-6'>
           <Card className='overflow-hidden rounded-xl shadow-sm border-none'>
@@ -183,7 +168,7 @@ const DonationHistory = () => {
               </div>
             </CardContent>
           </Card>
-          
+
           <Card className='overflow-hidden rounded-xl shadow-sm border-none'>
             <CardContent className='p-4'>
               <div className='flex flex-col items-center'>
@@ -192,7 +177,7 @@ const DonationHistory = () => {
               </div>
             </CardContent>
           </Card>
-          
+
           <Card className='overflow-hidden rounded-xl shadow-sm border-none'>
             <CardContent className='p-4'>
               <div className='flex flex-col items-center'>
@@ -206,7 +191,7 @@ const DonationHistory = () => {
         {/* Appointment List */}
         <div className='space-y-4'>
           <h2 className='text-lg font-semibold text-gray-700 mb-2 px-2'>Tất cả lịch hẹn</h2>
-          
+
           {appointments.length === 0 ? (
             <Card className='overflow-hidden rounded-xl shadow-sm border-none'>
               <CardContent className='p-6 flex flex-col items-center'>
@@ -221,48 +206,66 @@ const DonationHistory = () => {
               <CardContent className='p-0'>
                 <div className='divide-y'>
                   {appointments.map((appointment) => (
-                    <div 
-                      key={appointment.id} 
-                      className='p-4 flex items-start justify-between'
-                    >
+                    <div key={appointment.id} className='p-4 flex items-start justify-between'>
                       <div className='flex gap-3'>
-                        <div className={`w-10 h-10 rounded-full flex items-center justify-center
-                          ${appointment.status === 'DONE' ? 'bg-green-100' : 
-                            appointment.status === 'BOOKING' ? 'bg-yellow-100' : 'bg-red-100'}`}
+                        <div
+                          className={`w-10 h-10 rounded-full flex items-center justify-center
+                          ${
+                            appointment.status === 'DONE'
+                              ? 'bg-green-100'
+                              : appointment.status === 'BOOKING'
+                              ? 'bg-yellow-100'
+                              : 'bg-red-100'
+                          }`}
                         >
-                          <Calendar className={`h-5 w-5 
-                            ${appointment.status === 'DONE' ? 'text-green-600' : 
-                              appointment.status === 'BOOKING' ? 'text-yellow-600' : 'text-red-600'}`} 
+                          <Calendar
+                            className={`h-5 w-5 
+                            ${
+                              appointment.status === 'DONE'
+                                ? 'text-green-600'
+                                : appointment.status === 'BOOKING'
+                                ? 'text-yellow-600'
+                                : 'text-red-600'
+                            }`}
                           />
                         </div>
                         <div className='flex-1'>
                           <div className='flex items-center justify-between mb-1'>
-                            <p className='font-medium'>{formatExactDate(appointment.appointmentDate)}</p>
+                            <p className='font-bold'>{formatExactDate(appointment.appointmentDate)}</p>
                             <StatusBadge status={appointment.status} />
                           </div>
-                          <div className='flex flex-col space-y-1 text-sm text-gray-500'>
+                          <div className='flex flex-col space-y-1 py-2 text-sm text-gray-500'>
                             <div className='flex items-center gap-1'>
-                              <MapPin className='h-3 w-3' />
-                              <span>{appointment.location || 'Không có thông tin'}</span>
+                              <div>
+                                <MapPin className='h-5 w-5' />
+                              </div>
+                              <div>
+                                <span>{appointment.location || 'Không có thông tin'}</span>
+                              </div>
                             </div>
                             {appointment.campaignName && (
                               <div className='flex items-center gap-1'>
-                                <Info className='h-3 w-3' />
-                                <span>{appointment.campaignName}</span>
+                                <div>
+                                  <Info className='h-5 w-5' />
+                                </div>
+                                <div>
+                                  <span>{appointment.campaignName}</span>
+                                </div>
                               </div>
                             )}
                           </div>
-                          
-                          {appointment.status === 'BOOKING' && (
-                            <Button
-                              variant='outline'
-                              size='sm'
-                              className='mt-2 text-red-600 border-red-600 hover:bg-red-50'
-                              onClick={() => handleOpenModal(appointment)}
-                            >
-                              Hủy lịch hẹn
-                            </Button>
-                          )}
+                          <div className='flex items-center justify-end mt-2'>
+                            {appointment.status === 'BOOKING' && (
+                              <Button
+                                variant='outline'
+                                size='sm'
+                                className='text-red-600 border-red-600 hover:bg-red-50'
+                                onClick={() => handleOpenModal(appointment)}
+                              >
+                                Hủy lịch hẹn
+                              </Button>
+                            )}
+                          </div>
                         </div>
                       </div>
                       <ChevronRight className='h-5 w-5 text-gray-400 mt-2' />
