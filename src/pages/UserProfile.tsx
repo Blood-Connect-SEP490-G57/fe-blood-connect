@@ -89,14 +89,14 @@ const UserProfilePage: React.FC = () => {
   }
 
   return (
-    <div className='min-h-screen bg-gray-100 relative overflow-hidden'>
+    <div className='min-h-screen bg-gray-100 relative overflow-hidden'> 
       {/* Decorative elements */}
       <div className='absolute top-20 left-10 w-72 h-72 bg-red-50 rounded-full blur-3xl opacity-30 -z-10'></div>
       <div className='absolute bottom-20 right-10 w-72 h-72 bg-red-50 rounded-full blur-3xl opacity-30 -z-10'></div>
 
       <div className='max-w-7xl mx-auto py-10 px-2 sm:px-4'>
         <motion.div
-          className='flex flex-col md:flex-row gap-6 relative z-10'
+          className='flex flex-col md:flex-row gap-6 relative'
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
@@ -157,7 +157,7 @@ const UserProfilePage: React.FC = () => {
               {renderContent()}
             </motion.div>
           </AnimatePresence>
-          <div className='md:hidden fixed bottom-0 left-0 w-full bg-white shadow-lg border-t border-gray-200 z-50'>
+          <div className='md:hidden fixed bottom-0 left-0 w-full bg-white shadow-lg border-t border-gray-200 z-[999]'> {/* Tăng z-index lên 999 */}
             <div className='flex justify-around'>
               {navigationItems.map((item) => (
                 <motion.button
