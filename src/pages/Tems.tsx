@@ -17,7 +17,7 @@ const Terms = () => {
     {
       id: 1,
       title: 'Điều khoản sử dụng',
-      icon: <FileText className="h-5 w-5" />,
+      icon: <FileText className='h-5 w-5' />,
       color: 'from-blue-500 to-blue-400',
       content: `Chào mừng bạn đến với ứng dụng Giọt Máu Hy Vọng. Bằng việc truy cập và sử dụng ứng dụng này, bạn đồng ý tuân thủ các điều khoản sử dụng được nêu dưới đây.
 
@@ -28,7 +28,7 @@ Bạn đồng ý sử dụng ứng dụng này một cách có trách nhiệm, k
     {
       id: 2,
       title: 'Bảo mật thông tin',
-      icon: <Shield className="h-5 w-5" />,
+      icon: <Shield className='h-5 w-5' />,
       color: 'from-red-500 to-red-400',
       content: `Chúng tôi cam kết bảo vệ thông tin cá nhân của bạn và tuân thủ các quy định về bảo vệ dữ liệu. Thông tin cá nhân của bạn, bao gồm thông tin sức khỏe, sẽ được sử dụng cho mục đích:
 
@@ -42,7 +42,7 @@ Chúng tôi không chia sẻ thông tin cá nhân của bạn với bên thứ b
     {
       id: 3,
       title: 'Quy định hiến máu',
-      icon: <Check className="h-5 w-5" />,
+      icon: <Check className='h-5 w-5' />,
       color: 'from-green-500 to-green-400',
       content: `Để đảm bảo an toàn cho cả người hiến máu và người nhận máu, người hiến máu cần đáp ứng các tiêu chuẩn sau:
 
@@ -58,7 +58,7 @@ Việc hiến máu là hoàn toàn tự nguyện và không vì mục đích th�
     {
       id: 4,
       title: 'Trách nhiệm người dùng',
-      icon: <AlertCircle className="h-5 w-5" />,
+      icon: <AlertCircle className='h-5 w-5' />,
       color: 'from-amber-500 to-amber-400',
       content: `Khi sử dụng ứng dụng Giọt Máu Hy Vọng, bạn có trách nhiệm:
 
@@ -73,7 +73,7 @@ Chúng tôi có quyền từ chối hoặc hạn chế quyền truy cập của 
     {
       id: 5,
       title: 'Lợi ích hiến máu',
-      icon: <Award className="h-5 w-5" />,
+      icon: <Award className='h-5 w-5' />,
       color: 'from-purple-500 to-purple-400',
       content: `Hiến máu không chỉ giúp cứu sống người khác mà còn mang lại nhiều lợi ích cho chính người hiến:
 
@@ -88,34 +88,32 @@ Mỗi đơn vị máu hiến tặng có thể cứu sống đến 3 người b�
   ]
 
   const toggleItem = (id: number) => {
-    setOpenItems((prev) =>
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
-    )
+    setOpenItems((prev) => (prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]))
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-10 pb-16">
+    <div className='min-h-screen bg-gray-100 pt-10'>
       {/* Banner section */}
-      <div className="bg-gradient-to-r from-red-600 to-red-400 text-white p-8 relative">
-        <div className="container mx-auto">
-          <div className="flex flex-col items-center">
-            <div className="h-24 w-24 bg-white rounded-full flex items-center justify-center shadow-md mb-4">
-              <FileText className="h-12 w-12 text-red-500" />
+      <div className='bg-gradient-to-r from-red-600 to-red-400 text-white p-8 relative'>
+        <div className='container mx-auto'>
+          <div className='flex flex-col items-center'>
+            <div className='h-24 w-24 bg-white rounded-full flex items-center justify-center shadow-md mb-4'>
+              <FileText className='h-12 w-12 text-red-500' />
             </div>
-            <h1 className="text-2xl font-bold mb-1">Điều Khoản & Điều Kiện</h1>
-            <p className="text-center text-white/80 max-w-2xl">
+            <h1 className='text-2xl font-bold mb-1'>Điều Khoản & Điều Kiện</h1>
+            <p className='text-center text-white/80 max-w-2xl'>
               Các quy định và điều khoản khi sử dụng dịch vụ hiến máu của chúng tôi
             </p>
           </div>
         </div>
-        <div className="absolute -bottom-0 left-1/4 w-16 h-16 bg-red-400 rounded-full opacity-20"></div>
-        <div className="absolute top-8 right-1/4 w-12 h-12 bg-white rounded-full opacity-10"></div>
-        <div className="absolute bottom-6 right-10 w-20 h-20 bg-red-300 rounded-full opacity-15"></div>
+        <div className='absolute -bottom-0 left-1/4 w-16 h-16 bg-red-400 rounded-full opacity-20'></div>
+        <div className='absolute top-8 right-1/4 w-12 h-12 bg-white rounded-full opacity-10'></div>
+        <div className='absolute bottom-6 right-10 w-20 h-20 bg-red-300 rounded-full opacity-15'></div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-8 py-6">
-        <motion.div 
-          className="overflow-hidden rounded-xl shadow-sm border-none mb-6"
+      <div className='max-w-7xl mx-auto px-8 py-6'>
+        <motion.div
+          className='overflow-hidden rounded-xl shadow-sm border-none mb-6'
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
@@ -123,44 +121,40 @@ Mỗi đơn vị máu hiến tặng có thể cứu sống đến 3 người b�
           {termItems.map((item) => (
             <motion.div
               key={item.id}
-              className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100"
+              className='bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 mt-4'
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
-              whileHover={{ y: -2, boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.05)" }}
+              whileHover={{ y: -2, boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.05)' }}
             >
               <button
-                className="w-full p-5 flex justify-between items-center focus:outline-none"
+                className='w-full p-5 flex justify-between items-center focus:outline-none'
                 onClick={() => toggleItem(item.id)}
               >
-                <div className="flex items-center gap-3">
-                  <div className={`rounded-full p-2 bg-gradient-to-r ${item.color} text-white`}>
-                    {item.icon}
-                  </div>
-                  <h3 className="text-lg font-semibold text-gray-900">{item.title}</h3>
+                <div className='flex items-center gap-3'>
+                  <div className={`rounded-full p-2 bg-gradient-to-r ${item.color} text-white`}>{item.icon}</div>
+                  <h3 className='text-lg font-semibold text-gray-900'>{item.title}</h3>
                 </div>
-                <div className="bg-gray-100 rounded-full p-1.5 transition-transform duration-200 ease-in-out transform">
+                <div className='bg-gray-100 rounded-full p-1.5 transition-transform duration-200 ease-in-out transform'>
                   {openItems.includes(item.id) ? (
-                    <ChevronUp className="h-5 w-5 text-gray-500" />
+                    <ChevronUp className='h-5 w-5 text-gray-500' />
                   ) : (
-                    <ChevronDown className="h-5 w-5 text-gray-500" />
+                    <ChevronDown className='h-5 w-5 text-gray-500' />
                   )}
                 </div>
               </button>
-              
+
               <AnimatePresence>
                 {openItems.includes(item.id) && (
-                  <motion.div 
+                  <motion.div
                     initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
+                    animate={{ height: 'auto', opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.3, ease: "easeInOut" }}
-                    className="overflow-hidden"
+                    transition={{ duration: 0.3, ease: 'easeInOut' }}
+                    className='overflow-hidden'
                   >
-                    <div className="px-5 py-4 border-t border-gray-100">
-                      <p className="text-gray-700 whitespace-pre-line leading-relaxed text-sm">
-                        {item.content}
-                      </p>
+                    <div className='px-5 py-4 border-t border-gray-100'>
+                      <p className='text-gray-700 whitespace-pre-line leading-relaxed text-sm'>{item.content}</p>
                     </div>
                   </motion.div>
                 )}

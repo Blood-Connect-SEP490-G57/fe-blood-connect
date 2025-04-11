@@ -76,7 +76,7 @@ export default function EventDonationSlider() {
   return (
     <div className='py-16 bg-gradient-to-b from-white to-gray-50 overflow-hidden'>
       <motion.div 
-        className='max-w-7xl mx-auto px-4 sm:px-6 relative'
+        className='max-w-7xl mx-auto px-2 relative'
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true }}

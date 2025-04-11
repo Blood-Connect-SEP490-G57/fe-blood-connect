@@ -12,12 +12,12 @@ import { staticJobApi } from '@/api/static'
 import { toast } from '../ui/use-toast'
 import Loading from '../warnings/loading'
 import Empty from '../warnings/empty'
-import {Info, User, Droplet, Briefcase, Phone, Mail, MapPin, School, Award, Loader2 } from 'lucide-react'
 import Select from 'react-select'
+import { Droplet, User } from 'lucide-react'
 
 interface Job {
-  id: number;
-  job: string;
+  id: number
+  job: string
 }
 
 const Profile = () => {
@@ -30,7 +30,6 @@ const Profile = () => {
   const [error, setError] = useState<string | null>(null)
   const hasFetched = useRef(false)
   const [jobs, setJobs] = useState<Job[]>([])
-  const [isLoadingJobs, setIsLoadingJobs] = useState(false)
 
   const form = useForm<z.infer<typeof UserFullInfoResponseSchema>>({
     resolver: zodResolver(UserFullInfoResponseSchema),
@@ -118,7 +117,6 @@ const Profile = () => {
   useEffect(() => {
     const fetchJobData = async () => {
       try {
-        setIsLoadingJobs(true)
         const response = await staticJobApi()
         if (response && response.data) {
           setJobs(response.data)
@@ -132,11 +130,8 @@ const Profile = () => {
           description: 'Không thể tải danh sách nghề nghiệp',
           variant: 'destructive'
         })
-      } finally {
-        setIsLoadingJobs(false)
       }
     }
-
     fetchJobData()
   }, [])
 
@@ -166,7 +161,7 @@ const Profile = () => {
     }
   }
 
-  const onSubmit = async () => {
+  const onSubmit: () => Promise<void> = async () => {
     const formattedValues = {
       email: form2.getValues('email'),
       job: form2.getValues('job_name'),
@@ -213,13 +208,13 @@ const Profile = () => {
           <Card className='overflow-hidden rounded-xl shadow-sm border-none'>
             <CardContent className='p-0'>
               <div className='divide-y'>
-                <InfoItem icon={<User className='h-5 w-5 text-gray-500' />} label="Họ và tên" value={form.getValues('full_name')} />
-                <InfoItem icon={<Info className='h-5 w-5 text-gray-500' />} label="Số CCCD" value={form.getValues('card_id')} />
-                <InfoItem icon={<Info className='h-5 w-5 text-gray-500' />} label="Ngày sinh" value={form.getValues('dob')} />
-                <InfoItem icon={<Info className='h-5 w-5 text-gray-500' />} label="Giới tính" value={form.getValues('gender')} />
-                <InfoItem icon={<Info className='h-5 w-5 text-gray-500' />} label="Quốc gia" value={form.getValues('national')} />
-                <InfoItem icon={<MapPin className='h-5 w-5 text-gray-500' />} label="Quê quán" value={form.getValues('home')} />
-                <InfoItem icon={<MapPin className='h-5 w-5 text-gray-500' />} label="Địa chỉ thường trú" value={form.getValues('address')} />
+                <InfoItem label='Họ và tên' value={form.getValues('full_name')} />
+                <InfoItem label='Số CCCD' value={form.getValues('card_id')} />
+                <InfoItem label='Ngày sinh' value={form.getValues('dob')} />
+                <InfoItem label='Giới tính' value={form.getValues('gender')} />
+                <InfoItem label='Quốc gia' value={form.getValues('national')} />
+                <InfoItem label='Quê quán' value={form.getValues('home')} />
+                <InfoItem label='Địa chỉ thường trú' value={form.getValues('address')} />
               </div>
             </CardContent>
           </Card>
@@ -240,7 +235,6 @@ const Profile = () => {
                         <FormItem className='p-4'>
                           <div className='flex items-center justify-between'>
                             <div className='flex items-center gap-3'>
-                              <MapPin className='h-5 w-5 text-gray-500' />
                               <FormLabel className='text-sm font-medium text-gray-700 m-0'>Địa chỉ liên hệ</FormLabel>
                             </div>
                             <FormControl>
@@ -255,7 +249,7 @@ const Profile = () => {
                         </FormItem>
                       )}
                     />
-                    
+
                     <FormField
                       control={form2.control}
                       name='mobile'
@@ -263,8 +257,9 @@ const Profile = () => {
                         <FormItem className='p-4'>
                           <div className='flex items-center justify-between'>
                             <div className='flex items-center gap-3'>
-                              <Phone className='h-5 w-5 text-gray-500' />
-                              <FormLabel className='text-sm font-medium text-gray-700 m-0'>Điện thoại di động</FormLabel>
+                              <FormLabel className='text-sm font-medium text-gray-700 m-0'>
+                                Điện thoại di động
+                              </FormLabel>
                             </div>
                             <FormControl>
                               <Input
@@ -278,7 +273,7 @@ const Profile = () => {
                         </FormItem>
                       )}
                     />
-                    
+
                     <FormField
                       control={form2.control}
                       name='email'
@@ -286,7 +281,6 @@ const Profile = () => {
                         <FormItem className='p-4'>
                           <div className='flex items-center justify-between'>
                             <div className='flex items-center gap-3'>
-                              <Mail className='h-5 w-5 text-gray-500' />
                               <FormLabel className='text-sm font-medium text-gray-700 m-0'>Email</FormLabel>
                             </div>
                             <FormControl>
@@ -320,58 +314,27 @@ const Profile = () => {
                         <FormItem className='p-4'>
                           <div className='flex items-center justify-between'>
                             <div className='flex items-center gap-3'>
-                              <Briefcase className='h-5 w-5 text-gray-500' />
                               <FormLabel className='text-sm font-medium text-gray-700 m-0'>Nghề nghiệp</FormLabel>
                             </div>
                             <FormControl>
                               <div className='w-1/2'>
-                                {isLoadingJobs ? (
-                                  <div className='flex justify-center'>
-                                    <Loader2 className='h-5 w-5 text-gray-400 animate-spin' />
-                                  </div>
-                                ) : (
-                                  <Select
-                                    inputId={field.name}
-                                    options={jobs.map((jobItem) => ({
-                                      value: jobItem.job,
-                                      label: jobItem.job
-                                    }))}
-                                    value={field.value ? { value: field.value, label: field.value } : null}
-                                    onChange={(option) => {
-                                      field.onChange(option ? option.value : '');
-                                    }}
-                                    placeholder="Chọn nghề nghiệp"
-                                    isClearable
-                                    isSearchable
-                                    styles={{
-                                      control: (base) => ({
-                                        ...base,
-                                        border: 'none',
-                                        boxShadow: 'none',
-                                        backgroundColor: 'transparent'
-                                      }),
-                                      indicatorSeparator: () => ({
-                                        display: 'none'
-                                      }),
-                                      dropdownIndicator: (base) => ({
-                                        ...base,
-                                        color: '#9CA3AF'
-                                      }),
-                                      placeholder: (base) => ({
-                                        ...base,
-                                        color: '#9CA3AF',
-                                        textAlign: 'right'
-                                      }),
-                                      singleValue: (base) => ({
-                                        ...base,
-                                        color: '#4B5563',
-                                        textAlign: 'right'
-                                      })
-                                    }}
-                                    className="basic-select"
-                                    classNamePrefix="select"
-                                  />
-                                )}
+                                <Select
+                                  inputId={field.name}
+                                  options={jobs.map((jobItem) => ({
+                                    value: jobItem.job,
+                                    label: jobItem.job
+                                  }))}
+                                  value={field.value ? { value: field.value, label: field.value } : null}
+                                  onChange={(option) => {
+                                    field.onChange(option ? option.value : '')
+                                  }}
+                                  placeholder='Nghề nghiệp'
+                                  isClearable
+                                  isSearchable
+                                  
+                                  className='basic-select'
+                                  classNamePrefix='select'
+                                />
                               </div>
                             </FormControl>
                           </div>
@@ -379,7 +342,7 @@ const Profile = () => {
                         </FormItem>
                       )}
                     />
-                    
+
                     <FormField
                       control={form2.control}
                       name='student_id'
@@ -387,7 +350,6 @@ const Profile = () => {
                         <FormItem className='p-4'>
                           <div className='flex items-center justify-between'>
                             <div className='flex items-center gap-3'>
-                              <School className='h-5 w-5 text-gray-500' />
                               <FormLabel className='text-sm font-medium text-gray-700 m-0'>Mã sinh viên</FormLabel>
                             </div>
                             <FormControl>
@@ -402,7 +364,7 @@ const Profile = () => {
                         </FormItem>
                       )}
                     />
-                    
+
                     <FormField
                       control={form2.control}
                       name='military_id'
@@ -410,7 +372,6 @@ const Profile = () => {
                         <FormItem className='p-4'>
                           <div className='flex items-center justify-between'>
                             <div className='flex items-center gap-3'>
-                              <Award className='h-5 w-5 text-gray-500' />
                               <FormLabel className='text-sm font-medium text-gray-700 m-0'>Mã quân nhân</FormLabel>
                             </div>
                             <FormControl>
@@ -443,10 +404,9 @@ const Profile = () => {
 }
 
 // Helper component for read-only info items
-const InfoItem = ({ icon, label, value }: { icon: React.ReactNode, label: string, value: string | number }) => (
+const InfoItem = ({ label, value }: { label: string; value: string | number }) => (
   <div className='p-4 flex items-center justify-between'>
     <div className='flex items-center gap-3'>
-      {icon}
       <span className='text-sm font-medium text-gray-700'>{label}</span>
     </div>
     <div className='flex items-center gap-2'>

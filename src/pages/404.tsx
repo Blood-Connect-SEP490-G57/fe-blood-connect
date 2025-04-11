@@ -8,7 +8,7 @@ const NotFoundPage: React.FC = () => {
   const navigate = useNavigate()
 
   return (
-    <div className='min-h-screen bg-gradient-to-b from-gray-50 to-white relative overflow-hidden flex items-center justify-center py-12 px-4'>
+    <div className='min-h-screen bg-gray-100 relative overflow-hidden flex items-center justify-center py-12 px-4'>
       {/* Decorative elements */}
       <div className='absolute top-20 right-10 w-72 h-72 bg-red-50 rounded-full blur-3xl opacity-30 -z-10'></div>
       <div className='absolute bottom-20 left-10 w-72 h-72 bg-red-50 rounded-full blur-3xl opacity-30 -z-10'></div>

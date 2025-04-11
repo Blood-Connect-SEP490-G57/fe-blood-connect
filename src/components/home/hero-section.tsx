@@ -57,7 +57,7 @@ const HeroSection: React.FC = () => {
       <div className='absolute bottom-20 right-[15%] w-32 h-32 bg-red-300 opacity-20 rounded-full blur-xl'></div>
       <div className='absolute top-40 right-[20%] w-16 h-16 bg-red-200 opacity-20 rounded-full blur-md'></div>
 
-      <div className='max-w-7xl mx-auto px-4 sm:px-6 relative'>
+      <div className='max-w-7xl mx-auto px-2 relative'>
         <div className='flex flex-col lg:flex-row items-center justify-between gap-12'>
           {/* Left Content */}
           <motion.div 

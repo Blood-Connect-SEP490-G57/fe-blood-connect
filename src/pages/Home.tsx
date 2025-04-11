@@ -9,7 +9,7 @@ import { motion } from 'framer-motion'
 
 const Home: React.FC = () => {
   return (
-    <motion.div 
+    <motion.div
       className='min-h-screen bg-gray-50'
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -17,29 +17,28 @@ const Home: React.FC = () => {
     >
       <div className='fixed top-[20%] left-[5%] w-32 h-32 bg-red-100 rounded-full blur-3xl opacity-30 -z-10'></div>
       <div className='fixed top-[70%] right-[10%] w-40 h-40 bg-red-200 rounded-full blur-3xl opacity-20 -z-10'></div>
-      
+
       <HeroSection />
-      
+
       <div className='h-2 bg-gradient-to-r from-red-50 via-gray-100 to-red-50'></div>
-      
+
       <BloodDonationSlider />
-      
+
       <div className='h-2 bg-gradient-to-r from-red-50 via-gray-100 to-red-50'></div>
-      
+
       <BloodDonationCriteria />
-      
+
       <div className='h-2 bg-gradient-to-r from-red-50 via-gray-100 to-red-50'></div>
-      
+
       <BloodDonationBenefits />
-      
+
       <div className='h-2 bg-gradient-to-r from-red-50 via-gray-100 to-red-50'></div>
-      
+
       <AdviceSection />
-      
+
       <div className='h-2 bg-gradient-to-r from-red-50 via-gray-100 to-red-50'></div>
-      
+
       <EventDonationSlider />
-      
     </motion.div>
   )
 }

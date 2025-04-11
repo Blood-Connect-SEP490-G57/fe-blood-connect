@@ -99,17 +99,17 @@ export default function NotificationList({ onClose }: { onClose?: () => void }) 
     { label: 'Sự kiện', value: 'Sự kiện', type: NotificationType.EVENT },
     { label: 'Tin tức', value: 'Tin tức', type: NotificationType.NEWS }
   ]
-  
+
   // Check if notifications has data
   const hasNotifications = notifications?.data?.data && notifications.data.data.length > 0
 
   return (
-    <div className='min-h-screen bg-gradient-to-b from-gray-50 to-white'>
+    <div className='min-h-screen bg-gray-100'>
       <div className='absolute top-20 left-10 w-72 h-72 bg-red-50 rounded-full blur-3xl opacity-30 -z-10'></div>
       <div className='absolute bottom-20 right-10 w-72 h-72 bg-red-50 rounded-full blur-3xl opacity-30 -z-10'></div>
-      
+
       <div ref={containerRef} className='container mx-auto px-4 max-w-4xl pt-24 pb-16 relative z-10'>
-        <motion.div 
+        <motion.div
           className='space-y-6'
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -153,7 +153,7 @@ export default function NotificationList({ onClose }: { onClose?: () => void }) 
           </div>
 
           {!hasNotifications ? (
-            <motion.div 
+            <motion.div
               className='flex flex-col items-center justify-center py-16 text-gray-500 bg-white/80 backdrop-blur-sm rounded-3xl shadow-sm border border-gray-100'
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -170,7 +170,7 @@ export default function NotificationList({ onClose }: { onClose?: () => void }) 
               </p>
             </motion.div>
           ) : (
-            <AnimatePresence mode="popLayout">
+            <AnimatePresence mode='popLayout'>
               <div className='space-y-4'>
                 {notifications.data.data.map((notification, index) => (
                   <motion.div
@@ -180,7 +180,7 @@ export default function NotificationList({ onClose }: { onClose?: () => void }) 
                     exit={{ opacity: 0, scale: 0.95 }}
                     transition={{ delay: index * 0.05, duration: 0.2 }}
                   >
-                    <Card 
+                    <Card
                       className={`overflow-hidden transition-all duration-200 hover:shadow-md ${
                         notification.status ? 'bg-white' : 'bg-gradient-to-r from-red-50 to-white'
                       } border border-gray-100 rounded-2xl p-0`}
@@ -260,7 +260,7 @@ export default function NotificationList({ onClose }: { onClose?: () => void }) 
               </div>
             </AnimatePresence>
           )}
-          
+
           {hasNotifications && (
             <div className='flex justify-center mt-8'>
               <motion.button
