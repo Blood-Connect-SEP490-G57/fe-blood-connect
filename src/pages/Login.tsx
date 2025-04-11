@@ -89,7 +89,7 @@ export default function Login() {
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.3, duration: 0.5 }}
       >
-        <div className='bg-white/70 backdrop-blur-sm py-8 px-6 shadow-xl rounded-3xl sm:px-10 border border-gray-100'>
+        <div className='bg-white/70 backdrop-blur-sm py-8 px-6 sm:shadow-xl rounded-3xl sm:px-10 border border-gray-100'>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
               <FormField

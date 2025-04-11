@@ -172,7 +172,7 @@ const Settings = () => {
                             )}
                           />
                           <DialogFooter>
-                            <Button variant='outline' onClick={() => setIsChangingPassword(false)}>
+                            <Button className='mt-2' variant='outline' onClick={() => setIsChangingPassword(false)}>
                               Hủy
                             </Button>
                             <Button

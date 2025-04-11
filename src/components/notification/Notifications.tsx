@@ -126,31 +126,33 @@ export default function Notifications({ onClose }: { onClose?: () => void }) {
   return (
     <motion.div
       ref={containerRef}
-      className='h-full min-w-[250px] lg:min-w-[300px] w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg bg-white/95 backdrop-blur-md rounded-3xl shadow-xl border border-gray-100 overflow-hidden max-h-[80vh]'
+      className='h-full min-w-[250px] lg:min-w-[300px] w-full md:max-w-md lg:max-w-lg bg-white/95 backdrop-blur-md overflow-hidden max-h-[80vh]'
       initial={{ opacity: 0, y: -20, scale: 0.95 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: -20, scale: 0.95 }}
       transition={{ type: 'spring', damping: 25, stiffness: 300 }}
     >
       <div className='px-5 py-4 bg-gradient-to-b from-red-50 to-white'>
-        <div className='flex justify-between items-center'>
+        <div>
           <div className='flex items-center gap-2'>
             <div className='p-2 bg-red-100 rounded-full text-red-600'>
               <Bell className='h-5 w-5' />
             </div>
             <h1 className='text-xl font-bold text-gray-800'>Thông báo</h1>
           </div>
-          <motion.button
-            className='text-red-600 text-sm font-medium flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-red-50 hover:bg-red-100 transition-colors'
-            onClick={() => {
-              handleMarkAllAsRead()
-            }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <CheckCircle className='h-3.5 w-3.5' />
-            <span>Đánh dấu đã đọc</span>
-          </motion.button>
+          <div className='flex items-center mt-2'>
+            <motion.button
+              className='text-red-600 text-sm font-medium flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-red-50 hover:bg-red-100 transition-colors'
+              onClick={() => {
+                handleMarkAllAsRead()
+              }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <CheckCircle className='h-3.5 w-3.5' />
+              <span>Đánh dấu đã đọc</span>
+            </motion.button>
+          </div>
         </div>
 
         {/* Filter buttons */}
@@ -160,7 +162,7 @@ export default function Notifications({ onClose }: { onClose?: () => void }) {
               key={button.value}
               className={`px-3 py-1.5 rounded-full text-xs font-medium min-w-max transition-all ${
                 filter === button.value
-                  ? 'bg-gradient-to-r from-red-500 to-red-600 text-white shadow-sm'
+                  ? 'bg-gradient-to-r from-red-500 to-red-600 text-white'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
               onClick={() => {
@@ -177,7 +179,7 @@ export default function Notifications({ onClose }: { onClose?: () => void }) {
 
       <div className='overflow-y-auto max-h-[calc(80vh-120px)] py-3 px-5 space-y-3'>
         {notifications?.data.data.length === 0 ? (
-          <motion.div 
+          <motion.div
             className='flex flex-col items-center justify-center py-8 text-gray-500'
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -249,7 +251,10 @@ export default function Notifications({ onClose }: { onClose?: () => void }) {
                             <MoreVertical className='h-4 w-4 text-gray-500' />
                           </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent className='min-w-[160px] p-1.5 rounded-xl shadow-lg border border-gray-100' align='end'>
+                        <DropdownMenuContent
+                          className='min-w-[160px] p-1.5 rounded-xl shadow-lg border border-gray-100'
+                          align='end'
+                        >
                           <DropdownMenuItem
                             className='rounded-lg cursor-pointer flex items-center gap-2 py-2 px-3 hover:bg-gray-100'
                             onClick={() => {

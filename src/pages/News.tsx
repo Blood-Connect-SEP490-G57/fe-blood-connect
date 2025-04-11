@@ -102,7 +102,7 @@ const NewsPage = () => {
         <div className='absolute bottom-6 right-10 w-20 h-20 bg-red-300 rounded-full opacity-15'></div>
       </div>
 
-      <div className='max-w-7xl mx-auto px-8 py-6'>
+      <div className='max-w-7xl mx-auto px-2 sm:px-4 py-6'>
         {/* Search and filter section */}
         <Card className='overflow-hidden rounded-xl shadow-sm border-none mb-6'>
           <CardContent className='p-4'>

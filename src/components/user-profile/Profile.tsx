@@ -12,7 +12,7 @@ import { staticJobApi } from '@/api/static'
 import { toast } from '../ui/use-toast'
 import Loading from '../warnings/loading'
 import Empty from '../warnings/empty'
-import { ChevronRight, Info, User, Droplet, Briefcase, Phone, Mail, MapPin, School, Award, Loader2 } from 'lucide-react'
+import {Info, User, Droplet, Briefcase, Phone, Mail, MapPin, School, Award, Loader2 } from 'lucide-react'
 import Select from 'react-select'
 
 interface Job {
@@ -189,7 +189,7 @@ const Profile = () => {
   return (
     <div className='min-h-screen bg-gray-100'>
       {/* Banner section */}
-      <div className='bg-gradient-to-r from-red-600 to-red-400 text-white p-8 relative'>
+      <div className='bg-gradient-to-r from-red-600 to-red-400 text-white p-8 relative rounded-xl border-2 border-red-500'>
         <div className='container mx-auto'>
           <div className='flex flex-col items-center'>
             <div className='h-24 w-24 bg-white rounded-full flex items-center justify-center shadow-md mb-4'>
@@ -206,11 +206,11 @@ const Profile = () => {
         </div>
       </div>
 
-      <div className='container mx-auto px-4 py-6'>
+      <div className='py-2'>
         {/* Personal Information Group */}
         <div className='mb-6'>
           <h2 className='text-lg font-semibold text-gray-700 mb-2 px-2'>Thông tin cá nhân</h2>
-          <Card className='overflow-hidden rounded-xl shadow-sm'>
+          <Card className='overflow-hidden rounded-xl shadow-sm border-none'>
             <CardContent className='p-0'>
               <div className='divide-y'>
                 <InfoItem icon={<User className='h-5 w-5 text-gray-500' />} label="Họ và tên" value={form.getValues('full_name')} />
@@ -227,10 +227,10 @@ const Profile = () => {
 
         {/* Contact Information Group */}
         <Form {...form2}>
-          <form onSubmit={form2.handleSubmit(onSubmit)} className='space-y-6'>
+          <form onSubmit={form2.handleSubmit(onSubmit)} className='space-y-6 '>
             <div>
               <h2 className='text-lg font-semibold text-gray-700 mb-2 px-2'>Thông tin liên hệ</h2>
-              <Card className='overflow-hidden rounded-xl shadow-sm'>
+              <Card className='overflow-hidden rounded-xl shadow-sm border-none'>
                 <CardContent className='p-0'>
                   <div className='divide-y'>
                     <FormField
@@ -309,8 +309,8 @@ const Profile = () => {
 
             {/* Work Information Group with updated FormField for job_name */}
             <div>
-              <h2 className='text-lg font-semibold text-gray-700 mb-2 px-2'>Thông tin nghề nghiệp</h2>
-              <Card className='overflow-hidden rounded-xl shadow-sm'>
+              <h2 className='text-lg font-semibold text-gray-700 mb-2 px-2 '>Thông tin nghề nghiệp</h2>
+              <Card className='overflow-hidden rounded-xl shadow-sm border-none'>
                 <CardContent className='p-0'>
                   <div className='divide-y'>
                     <FormField
@@ -451,7 +451,6 @@ const InfoItem = ({ icon, label, value }: { icon: React.ReactNode, label: string
     </div>
     <div className='flex items-center gap-2'>
       <span className='text-sm text-gray-600'>{value}</span>
-      <ChevronRight className='h-4 w-4 text-gray-400' />
     </div>
   </div>
 )

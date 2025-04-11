@@ -176,7 +176,7 @@ const Footer: React.FC = () => {
         </motion.div>
         
         <motion.div 
-          className='border-t border-gray-700/50 mt-12 pt-8 text-center'
+          className='border-t border-gray-700/50 mb-10 sm:mb-2 mt-12 pt-8 text-center'
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
