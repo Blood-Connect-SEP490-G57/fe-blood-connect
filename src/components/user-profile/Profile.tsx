@@ -166,7 +166,7 @@ const Profile = () => {
     }
   }
 
-  const onSubmit = async () => {
+  const onSubmit: () => Promise<void> = async () => {
     const formattedValues = {
       email: form2.getValues('email'),
       job: form2.getValues('job_name'),
