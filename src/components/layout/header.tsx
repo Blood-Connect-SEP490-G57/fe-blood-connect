@@ -367,12 +367,9 @@ const Header: React.FC = () => {
                       }
                       return true
                     })
-                    .map((item, index) => (
+                    .map((item) => (
                       <motion.div
                         key={item.name}
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: index * 0.05 }}
                         className='flex items-center p-3 rounded-xl hover:bg-red-50 transition-all'
                         onClick={() => {
                           setIsMobileMenuOpen(false)
@@ -392,9 +389,6 @@ const Header: React.FC = () => {
                     <>
                       <hr className='my-2' />
                       <motion.div
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: getFilteredNavigation().length * 0.05 }}
                         className='flex items-center p-3 rounded-xl bg-red-50 hover:bg-red-100 transition-all'
                         onClick={() => {
                           setIsMobileMenuOpen(false)
@@ -411,9 +405,6 @@ const Header: React.FC = () => {
                     <>
                       <hr className='my-2' />
                       <motion.div
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.2 }}
                         className='flex items-center p-3 rounded-xl bg-red-50 hover:bg-red-100 transition-all'
                         onClick={() => {
                           setIsMobileMenuOpen(false)
@@ -426,9 +417,6 @@ const Header: React.FC = () => {
                         <div className='font-medium'>Đăng nhập</div>
                       </motion.div>
                       <motion.div
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.25 }}
                         className='flex items-center p-3 rounded-xl bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 transition-all'
                         onClick={() => {
                           setIsMobileMenuOpen(false)
