@@ -1,6 +1,6 @@
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Calendar, MapPin, Calendar as CalendarIcon, Briefcase } from 'lucide-react'
+import { Calendar, MapPin, Calendar as CalendarIcon, Briefcase, Building } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { getCurrent, updateinfor } from '@/api/appointment'
 import { format } from 'date-fns'
@@ -11,10 +11,10 @@ import Loading from '../warnings/loading'
 import Empty from '../warnings/empty'
 import AppointmentDetailsPopup from './AppointmentDetailsPopup'
 import { getOrganizationsByType } from '@/api/organization'
-import Select from 'react-select'
 import JobSelector from '@/components/job/JobSelector'
 import AddressSelector from '@/components/address/AddressSelector'
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
+import OrganizationSelector from '@/components/organization/OrganizationSelector'
 
 interface UserInfo {
   userId: string
@@ -107,11 +107,6 @@ const AppointmentInfo = () => {
 
     fetchOrganizations()
   }, [])
-
-  const orgOptions = organizations.map((org) => ({
-    value: org.id,
-    label: org.name
-  }))
 
   useEffect(() => {
     if (hasFetched.current) return
@@ -402,8 +397,8 @@ const AppointmentInfo = () => {
                     <div className='flex items-center gap-3'>
                       <span className='text-sm font-medium text-gray-700'>Địa chỉ liên hệ</span>
                     </div>
-                    <div className='flex items-center gap-2'>
-                      <span className='text-sm text-gray-600'>{userInfo.addressContact}</span>
+                    <div className='flex items-center justify-end gap-2'>
+                      <span className='text-sm text-gray-600 text-end'>{userInfo.addressContact}</span>
                       {isEditing && (
                         <Dialog>
                           <DialogTrigger asChild>
@@ -513,26 +508,29 @@ const AppointmentInfo = () => {
                   </div>
                   {isEditing ? (
                     <div className='w-1/2'>
-                      <Select
-                        options={orgOptions}
-                        isSearchable
-                        placeholder='Chọn tổ chức...'
-                        value={orgOptions.find((option) => option.value === formData.organizationId) || null}
-                        onChange={(selectedOption) => {
-                          setFormData((prev) => ({
-                            ...prev,
-                            organizationId: selectedOption ? selectedOption.value : ''
-                          }))
-                        }}
-                        className='text-right'
-                        styles={{
-                          control: (provided) => ({
-                            ...provided,
-                            borderRadius: '0.375rem',
-                            minHeight: '38px'
-                          })
-                        }}
-                      />
+                      <div className='flex items-center justify-end gap-2'>
+                        <span className='text-sm text-gray-600'>
+                          {organizations.find((org) => org.id === formData.organizationId)?.name || 'Chưa cập nhật'}
+                        </span>
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <Button variant='ghost' size='icon' className='ml-1'>
+                              <Building className='h-4 w-4 text-red-500' />
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent className='sm:max-w-md'>
+                            <OrganizationSelector
+                              initialOrganization={formData.organizationId}
+                              onOrganizationSelect={(organizationId) => {
+                                setFormData((prev) => ({
+                                  ...prev,
+                                  organizationId: organizationId
+                                }))
+                              }}
+                            />
+                          </DialogContent>
+                        </Dialog>
+                      </div>
                     </div>
                   ) : (
                     <div className='flex items-center gap-2'>
