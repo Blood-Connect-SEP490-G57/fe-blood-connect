@@ -8,19 +8,13 @@ import { Input } from '@/components/ui/input'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { userDetailSchema, UserFullInfoResponseSchema } from '@/schema/user-schema'
 import { User as fetchUser, updateUserDetail } from '@/api/user'
-import { staticJobApi } from '@/api/static'
 import { toast } from '../ui/use-toast'
 import Loading from '../warnings/loading'
 import Empty from '../warnings/empty'
-import Select from 'react-select'
-import { Droplet, User, MapPin } from 'lucide-react'
+import { Droplet, User, MapPin, Briefcase } from 'lucide-react'
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
 import AddressSelector from '../address/AddressSelector'
-
-interface Job {
-  id: number
-  job: string
-}
+import JobSelector from '../job/JobSelector'
 
 const Profile = () => {
   // Scroll to top when component mounts
@@ -31,7 +25,7 @@ const Profile = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const hasFetched = useRef(false)
-  const [jobs, setJobs] = useState<Job[]>([])
+  const [isEdit, setIsEdit] = useState(false)
 
   const form = useForm<z.infer<typeof UserFullInfoResponseSchema>>({
     resolver: zodResolver(UserFullInfoResponseSchema),
@@ -115,28 +109,6 @@ const Profile = () => {
     fetchUserData()
   }, [form])
 
-  // Fetch job data
-  useEffect(() => {
-    const fetchJobData = async () => {
-      try {
-        const response = await staticJobApi()
-        if (response && response.data) {
-          setJobs(response.data)
-        } else {
-          console.error('Invalid job data response:', response)
-        }
-      } catch (error) {
-        console.error('Error fetching job data:', error)
-        toast({
-          title: 'Lỗi',
-          description: 'Không thể tải danh sách nghề nghiệp',
-          variant: 'destructive'
-        })
-      }
-    }
-    fetchJobData()
-  }, [])
-
   const updateProfile = async (value: any) => {
     try {
       const response = await updateUserDetail(value)
@@ -163,7 +135,15 @@ const Profile = () => {
     }
   }
 
-  const onSubmit: () => Promise<void> = async () => {
+  const handleEditToggle = () => {
+    if (isEdit) {
+      // Reset form về giá trị ban đầu khi hủy chỉnh sửa
+      form2.reset()
+    }
+    setIsEdit(!isEdit)
+  }
+
+  const onSubmit = async () => {
     const formattedValues = {
       email: form2.getValues('email'),
       job: form2.getValues('job_name'),
@@ -171,8 +151,8 @@ const Profile = () => {
       military: form2.getValues('military_id'),
       address: form2.getValues('address_contact')
     }
-    console.log(formattedValues)
     await updateProfile(formattedValues)
+    setIsEdit(false) // Tắt chế độ chỉnh sửa sau khi lưu
   }
 
   if (loading) {
@@ -234,34 +214,31 @@ const Profile = () => {
                       control={form2.control}
                       name='address_contact'
                       render={({ field }) => (
-                        <FormItem className='p-4'>
+                        <FormItem className='p-2'>
                           <div className='flex items-center justify-between'>
                             <div className='flex items-center gap-3'>
                               <FormLabel className='text-sm font-medium text-gray-700 m-0'>Địa chỉ liên hệ</FormLabel>
                             </div>
                             <FormControl>
-                              <div className='w-1/2 flex items-center justify-end'>
-                                <Input
-                                  {...field}
-                                  className='border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0'
-                                  placeholder='Nhập địa chỉ'
-                                  readOnly
-                                />
-                                <Dialog>
-                                  <DialogTrigger asChild>
-                                    <Button variant="ghost" size="icon" className="ml-1">
-                                      <MapPin className="h-4 w-4 text-red-500" />
-                                    </Button>
-                                  </DialogTrigger>
-                                  <DialogContent className="sm:max-w-md">
-                                    <AddressSelector 
-                                      onAddressSelect={(address) => {
-                                        field.onChange(address);
-                                      }}
-                                      initialAddress={field.value}
-                                    />
-                                  </DialogContent>
-                                </Dialog>
+                              <div className='flex items-center justify-between'>
+                                <span className='text-sm text-gray-600 '>{field.value || 'Chưa có địa chỉ'}</span>
+                                {isEdit && (
+                                  <Dialog>
+                                    <DialogTrigger asChild>
+                                      <Button variant='ghost' size='icon' className='ml-1'>
+                                        <MapPin className='h-4 w-4 text-red-500' />
+                                      </Button>
+                                    </DialogTrigger>
+                                    <DialogContent className='sm:max-w-md'>
+                                      <AddressSelector
+                                        onAddressSelect={(address) => {
+                                          field.onChange(address)
+                                        }}
+                                        initialAddress={field.value}
+                                      />
+                                    </DialogContent>
+                                  </Dialog>
+                                )}
                               </div>
                             </FormControl>
                           </div>
@@ -274,7 +251,7 @@ const Profile = () => {
                       control={form2.control}
                       name='mobile'
                       render={({ field }) => (
-                        <FormItem className='p-4'>
+                        <FormItem className='p-2'>
                           <div className='flex items-center justify-between'>
                             <div className='flex items-center gap-3'>
                               <FormLabel className='text-sm font-medium text-gray-700 m-0'>
@@ -282,11 +259,16 @@ const Profile = () => {
                               </FormLabel>
                             </div>
                             <FormControl>
-                              <Input
-                                {...field}
-                                className='w-1/2 border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0'
-                                placeholder='Nhập số điện thoại'
-                              />
+                              {isEdit ? (
+                                <Input
+                                  {...field}
+                                  type='tel'
+                                  className='w-1/2 border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0'
+                                  placeholder='Nhập số điện thoại'
+                                />
+                              ) : (
+                                <span className='text-sm text-gray-600'>{field.value || 'Chưa có điện thoại'}</span>
+                              )}
                             </FormControl>
                           </div>
                           <FormMessage className='ml-8 text-xs' />
@@ -298,18 +280,23 @@ const Profile = () => {
                       control={form2.control}
                       name='email'
                       render={({ field }) => (
-                        <FormItem className='p-4'>
+                        <FormItem className='p-2'>
                           <div className='flex items-center justify-between'>
                             <div className='flex items-center gap-3'>
                               <FormLabel className='text-sm font-medium text-gray-700 m-0'>Email</FormLabel>
                             </div>
                             <FormControl>
-                              <Input
-                                {...field}
-                                type='email'
-                                className='w-1/2 border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0'
-                                placeholder='Nhập email'
-                              />
+                              {isEdit ? (
+                                <Input
+                                  {...field}
+                                  type='email'
+                                  className='w-1/2 border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0'
+                                  placeholder='Nhập email'
+                                  readOnly={!isEdit}
+                                />
+                              ) : (
+                                <span className='text-sm text-gray-600 '>{field.value || 'Chưa có email'}</span>
+                              )}
                             </FormControl>
                           </div>
                           <FormMessage className='ml-8 text-xs' />
@@ -331,34 +318,35 @@ const Profile = () => {
                       control={form2.control}
                       name='job_name'
                       render={({ field }) => (
-                        <FormItem className='p-4'>
+                        <FormItem className='p-2'>
                           <div className='flex items-center justify-between'>
                             <div className='flex items-center gap-3'>
                               <FormLabel className='text-sm font-medium text-gray-700 m-0'>Nghề nghiệp</FormLabel>
                             </div>
                             <FormControl>
-                              <div className='w-1/2'>
-                                <Select
-                                  inputId={field.name}
-                                  options={jobs.map((jobItem) => ({
-                                    value: jobItem.job,
-                                    label: jobItem.job
-                                  }))}
-                                  value={field.value ? { value: field.value, label: field.value } : null}
-                                  onChange={(option) => {
-                                    field.onChange(option ? option.value : '')
-                                  }}
-                                  placeholder='Nghề nghiệp'
-                                  isClearable
-                                  isSearchable
-                                  
-                                  className='basic-select'
-                                  classNamePrefix='select'
-                                />
+                              <div className='flex items-center justify-between'>
+                                <span className='text-sm text-gray-600 '>{field.value || 'Chưa có nghề nghiệp'}</span>
+                                {isEdit && (
+                                  <Dialog>
+                                    <DialogTrigger>
+                                      <Button variant='ghost' size='icon' className='ml-1'>
+                                        <Briefcase className='h-4 w-4 text-red-500' />
+                                      </Button>
+                                    </DialogTrigger>
+                                    <DialogContent className='sm:max-w-md'>
+                                      <JobSelector
+                                        onJobSelect={(job) => {
+                                          field.onChange(job)
+                                        }}
+                                        initialJob={field.value}
+                                      />
+                                    </DialogContent>
+                                  </Dialog>
+                                )}
                               </div>
                             </FormControl>
+                            <FormMessage className='ml-8 text-xs' />
                           </div>
-                          <FormMessage className='ml-8 text-xs' />
                         </FormItem>
                       )}
                     />
@@ -367,17 +355,22 @@ const Profile = () => {
                       control={form2.control}
                       name='student_id'
                       render={({ field }) => (
-                        <FormItem className='p-4'>
+                        <FormItem className='p-2'>
                           <div className='flex items-center justify-between'>
                             <div className='flex items-center gap-3'>
                               <FormLabel className='text-sm font-medium text-gray-700 m-0'>Mã sinh viên</FormLabel>
                             </div>
                             <FormControl>
-                              <Input
-                                {...field}
-                                className='w-1/2 border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0'
-                                placeholder='Nhập mã sinh viên'
-                              />
+                              {isEdit ? (
+                                <Input
+                                  {...field}
+                                  className='w-1/2 border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0'
+                                  placeholder='Nhập mã sinh viên'
+                                  readOnly={!isEdit}
+                                />
+                              ) : (
+                                <span className='text-sm text-gray-600'>{field.value || '-'}</span>
+                              )}
                             </FormControl>
                           </div>
                           <FormMessage className='ml-8 text-xs' />
@@ -389,17 +382,22 @@ const Profile = () => {
                       control={form2.control}
                       name='military_id'
                       render={({ field }) => (
-                        <FormItem className='p-4'>
+                        <FormItem className='p-2'>
                           <div className='flex items-center justify-between'>
                             <div className='flex items-center gap-3'>
                               <FormLabel className='text-sm font-medium text-gray-700 m-0'>Mã quân nhân</FormLabel>
                             </div>
                             <FormControl>
-                              <Input
-                                {...field}
-                                className='w-1/2 border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0'
-                                placeholder='Nhập mã quân nhân'
-                              />
+                              {isEdit ? (
+                                <Input
+                                  {...field}
+                                  className='w-1/2 border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0'
+                                  placeholder='Nhập mã quân nhân'
+                                  readOnly={!isEdit}
+                                />
+                              ) : (
+                                <span className='text-sm text-gray-600'>{field.value || '-'}</span>
+                              )}
                             </FormControl>
                           </div>
                           <FormMessage className='ml-8 text-xs' />
@@ -410,14 +408,28 @@ const Profile = () => {
                 </CardContent>
               </Card>
             </div>
-
-            <div className='py-4'>
-              <Button type='submit' className='w-full bg-red-600 text-white hover:bg-red-700 py-6 rounded-xl'>
-                Lưu thay đổi
-              </Button>
-            </div>
           </form>
         </Form>
+        <div className='flex justify-end mt-4 px-2 gap-2'>
+          {isEdit ? (
+            <>
+              <Button onClick={handleEditToggle} variant='outline' className='border-gray-300 hover:bg-gray-100'>
+                Hủy
+              </Button>
+              <Button onClick={form2.handleSubmit(onSubmit)} className='bg-red-600 text-white hover:bg-red-700'>
+                Lưu thay đổi
+              </Button>
+            </>
+          ) : (
+            <Button
+              onClick={handleEditToggle}
+              variant='outline'
+              className='border-red-500 text-red-500 hover:bg-red-50'
+            >
+              Chỉnh sửa thông tin
+            </Button>
+          )}
+        </div>
       </div>
     </div>
   )
@@ -425,7 +437,7 @@ const Profile = () => {
 
 // Helper component for read-only info items
 const InfoItem = ({ label, value }: { label: string; value: string | number }) => (
-  <div className='p-4 flex items-center justify-between'>
+  <div className='p-2 flex items-center justify-between'>
     <div className='flex items-center gap-3'>
       <span className='text-sm font-medium text-gray-700'>{label}</span>
     </div>

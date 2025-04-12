@@ -5,9 +5,10 @@ import { createOrUpdateUserDetail, getCurrentUserDetail } from '@/api/user'
 import ScrollToTop from '@/components/scrollToTop'
 import { getDistricts, getListProvinces, getWards, Ward } from '@/api/address'
 import { getOrganizationsByType } from '@/api/organization'
-import { staticJobApi } from '@/api/static'
 import Select from 'react-select'
 import { Card, CardContent } from '@/components/ui/card'
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
+import { Button } from '@/components/ui/button'
 import {
   CheckCircle,
   ChevronDown,
@@ -23,6 +24,8 @@ import {
   Briefcase
 } from 'lucide-react'
 import { toast } from '@/components/ui/use-toast'
+import JobSelector from '@/components/job/JobSelector'
+import AddressSelector from '@/components/address/AddressSelector'
 
 interface Step2Props {
   formData: any
@@ -36,11 +39,6 @@ interface Organization {
   id: string
   name: string
   type: string
-}
-
-interface Job {
-  id: number;
-  job: string;
 }
 
 const Step3ExtractedInfo: React.FC<Step2Props> = ({
@@ -63,8 +61,6 @@ const Step3ExtractedInfo: React.FC<Step2Props> = ({
   const [organizations, setOrganizations] = useState<Organization[]>([])
   const [showCardDetails, setShowCardDetails] = useState(true)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [jobs, setJobs] = useState<Job[]>([])
-  const [isLoadingJobs, setIsLoadingJobs] = useState(false)
 
   const LoadingSpinner = () => (
     <div className='flex items-center justify-center py-8'>
@@ -329,32 +325,6 @@ const Step3ExtractedInfo: React.FC<Step2Props> = ({
     fetchOrganizations()
   }, [])
 
-  // Add job data fetching
-  useEffect(() => {
-    const fetchJobData = async () => {
-      try {
-        setIsLoadingJobs(true)
-        const response = await staticJobApi()
-        if (response && response.data) {
-          setJobs(response.data)
-        } else {
-          console.error('Invalid job data response:', response)
-        }
-      } catch (error) {
-        console.error('Error fetching job data:', error)
-        toast({
-          title: 'Lỗi',
-          description: 'Không thể tải danh sách nghề nghiệp',
-          variant: 'destructive'
-        })
-      } finally {
-        setIsLoadingJobs(false)
-      }
-    }
-
-    fetchJobData()
-  }, [])
-
   const orgOptions = organizations.map((org) => ({
     value: org.id,
     label: org.name
@@ -567,15 +537,24 @@ const Step3ExtractedInfo: React.FC<Step2Props> = ({
                     required={true}
                     error={fieldErrors.contact}
                   >
-                    <input
-                      type='text'
-                      value={contact}
-                      onChange={(e) => setContact(e.target.value)}
-                      placeholder='Nhập số nhà, đường, thôn xóm...'
-                      className={`w-full p-2 rounded border ${
-                        fieldErrors.contact ? 'border-red-500' : 'border-gray-300'
-                      } focus:outline-none focus:ring-2 focus:ring-red-500`}
-                    />
+                    <div className='flex items-center justify-between'>
+                      <span className='text-sm text-gray-600'>{contact || 'Chưa có địa chỉ'}</span>
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button variant='ghost' size='icon' className='ml-1'>
+                            <MapPin className='h-4 w-4 text-red-500' />
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className='sm:max-w-md'>
+                          <AddressSelector
+                            onAddressSelect={(address) => {
+                              setContact(address)
+                            }}
+                            initialAddress={contact}
+                          />
+                        </DialogContent>
+                      </Dialog>
+                    </div>
                   </FormField>
                 </div>
               </CardContent>
@@ -593,25 +572,24 @@ const Step3ExtractedInfo: React.FC<Step2Props> = ({
                     icon={<Briefcase className='h-5 w-5 text-gray-500' />}
                     required={false}
                   >
-                    <Select
-                      options={jobs.map((jobItem) => ({
-                        value: jobItem.job,
-                        label: jobItem.job
-                      }))}
-                      isClearable
-                      isSearchable
-                      isLoading={isLoadingJobs}
-                      placeholder={isLoadingJobs ? 'Đang tải...' : 'Tìm kiếm nghề nghiệp...'}
-                      value={formData.jobName ? { value: formData.jobName, label: formData.jobName } : null}
-                      onChange={(selectedOption) =>
-                        setFormData((prev: any) => ({
-                          ...prev,
-                          jobName: selectedOption ? selectedOption.value : ''
-                        }))
-                      }
-                      className='basic-select'
-                      classNamePrefix='select'
-                    />
+                    <div className='flex items-center justify-between'>
+                      <span className='text-sm text-gray-600'>{formData.jobName || 'Chưa có nghề nghiệp'}</span>
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button variant='ghost' size='icon' className='ml-1'>
+                            <Briefcase className='h-4 w-4 text-red-500' />
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className='sm:max-w-md'>
+                          <JobSelector
+                            onJobSelect={(job) => {
+                              setFormData((prev: any) => ({ ...prev, jobName: job }))
+                            }}
+                            initialJob={formData.jobName}
+                          />
+                        </DialogContent>
+                      </Dialog>
+                    </div>
                   </FormField>
                 </div>
 
