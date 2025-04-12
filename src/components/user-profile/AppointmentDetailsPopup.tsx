@@ -1,6 +1,6 @@
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { ClipboardList, Calendar, X, MapPin, ChevronRight } from 'lucide-react'
+import { ClipboardList, Calendar, X, MapPin } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
 interface AppointmentDetailsPopupProps {
@@ -33,14 +33,14 @@ const AppointmentDetailsPopup = ({
         {/* Header */}
         <div className='bg-white p-4 sticky top-0 z-10 border-b flex items-center justify-between'>
           <h2 className='text-lg font-semibold'>Chi tiết đăng ký hiến máu</h2>
-          <button 
-            onClick={onClose} 
+          <button
+            onClick={onClose}
             className='w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-gray-500 hover:bg-gray-200'
           >
             <X size={18} />
           </button>
         </div>
-        
+
         {/* Content */}
         <div className='p-4 overflow-y-auto'>
           {appointmentItems.length > 0 ? (
@@ -54,23 +54,24 @@ const AppointmentDetailsPopup = ({
                       <span className='text-sm font-medium'>Trạng thái</span>
                       {renderStatusBadge(status)}
                     </div>
-                    
+
                     <div className='divide-y'>
                       {appointmentItems.map((item, index) => (
                         <div key={index} className='p-4 flex items-center justify-between'>
                           <div className='flex items-center gap-3'>
                             {index === 0 ? (
-                              <ClipboardList className='h-5 w-5 text-gray-500' />
+                              <ClipboardList className='h-6 w-6 text-gray-500' />
                             ) : index === 1 ? (
-                              <Calendar className='h-5 w-5 text-gray-500' />
+                              <Calendar className='h-6 w-6 text-gray-500' />
                             ) : (
-                              <MapPin className='h-5 w-5 text-gray-500' />
+                              <div>
+                                <MapPin className='h-6 w-6 text-gray-500' />
+                              </div>
                             )}
                             <span className='text-sm font-medium text-gray-700'>{item.label}</span>
                           </div>
                           <div className='flex items-center gap-2'>
                             <span className='text-sm text-gray-600'>{item.value}</span>
-                            <ChevronRight className='h-4 w-4 text-gray-400' />
                           </div>
                         </div>
                       ))}
@@ -78,7 +79,7 @@ const AppointmentDetailsPopup = ({
                   </CardContent>
                 </Card>
               </div>
-              
+
               {/* Health Questionnaire Details */}
               {groupedSections.length > 0 && (
                 <div className='mb-6'>
@@ -92,14 +93,14 @@ const AppointmentDetailsPopup = ({
                             <div key={answer.id} className='p-4'>
                               <div className='flex items-start justify-between'>
                                 <span className='text-sm text-gray-700 pr-4'>{answer.content}</span>
-                                <span className={`text-sm font-medium ${answer.answer ? 'text-green-600' : 'text-red-600'}`}>
+                                <span
+                                  className={`text-sm font-medium ${answer.answer ? 'text-green-600' : 'text-red-600'}`}
+                                >
                                   {answer.answer ? 'Có' : 'Không'}
                                 </span>
                               </div>
                               {answer.detail && (
-                                <div className='mt-2 text-sm text-gray-500 italic pl-0'>
-                                  Chi tiết: {answer.detail}
-                                </div>
+                                <div className='mt-2 text-sm text-gray-500 italic pl-0'>Chi tiết: {answer.detail}</div>
                               )}
                             </div>
                           ))}
@@ -116,9 +117,11 @@ const AppointmentDetailsPopup = ({
                 <Calendar className='w-10 h-10 text-gray-400' />
               </div>
               <h3 className='text-lg font-medium text-gray-800 mb-2'>Chưa có phiếu đăng ký</h3>
-              <p className='text-gray-500 text-center mb-6'>Bạn chưa đăng ký hiến máu. Hãy đăng ký ngay để tham gia hiến máu.</p>
-              <Button 
-                onClick={() => navigate('/dang-ky-hien-mau')} 
+              <p className='text-gray-500 text-center mb-6'>
+                Bạn chưa đăng ký hiến máu. Hãy đăng ký ngay để tham gia hiến máu.
+              </p>
+              <Button
+                onClick={() => navigate('/dang-ky-hien-mau')}
                 className='bg-red-600 hover:bg-red-700 text-white py-5 px-6 rounded-xl w-full md:w-auto'
               >
                 Đăng ký ngay
@@ -126,14 +129,11 @@ const AppointmentDetailsPopup = ({
             </div>
           )}
         </div>
-        
+
         {/* Footer */}
         {appointmentItems.length > 0 && (
           <div className='p-4 bg-white border-t sticky bottom-0'>
-            <Button 
-              onClick={onClose} 
-              className='w-full bg-gray-200 hover:bg-gray-300 text-gray-800 py-5 rounded-xl'
-            >
+            <Button onClick={onClose} className='w-full bg-gray-200 hover:bg-gray-300 text-gray-800 py-5 rounded-xl'>
               Đóng
             </Button>
           </div>

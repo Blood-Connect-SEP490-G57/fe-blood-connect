@@ -5,7 +5,6 @@ import { createOrUpdateUserDetail, getCurrentUserDetail } from '@/api/user'
 import ScrollToTop from '@/components/scrollToTop'
 import { getDistricts, getListProvinces, getWards, Ward } from '@/api/address'
 import { getOrganizationsByType } from '@/api/organization'
-import Select from 'react-select'
 import { Card, CardContent } from '@/components/ui/card'
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
@@ -26,6 +25,7 @@ import {
 import { toast } from '@/components/ui/use-toast'
 import JobSelector from '@/components/job/JobSelector'
 import AddressSelector from '@/components/address/AddressSelector'
+import OrganizationSelector from '@/components/organization/OrganizationSelector'
 
 interface Step2Props {
   formData: any
@@ -325,11 +325,6 @@ const Step3ExtractedInfo: React.FC<Step2Props> = ({
     fetchOrganizations()
   }, [])
 
-  const orgOptions = organizations.map((org) => ({
-    value: org.id,
-    label: org.name
-  }))
-
   return (
     <div className='space-y-6'>
       <ScrollToTop />
@@ -599,21 +594,29 @@ const Step3ExtractedInfo: React.FC<Step2Props> = ({
                     icon={<Building className='h-5 w-5 text-gray-500' />}
                     required={false}
                   >
-                    <Select
-                      options={orgOptions}
-                      isClearable
-                      isSearchable
-                      placeholder='Tìm kiếm tổ chức...'
-                      value={orgOptions.find((option) => option.value === formData.organizationId) || null}
-                      onChange={(selectedOption) =>
-                        setFormData((prev: any) => ({
-                          ...prev,
-                          organizationId: selectedOption ? selectedOption.value : ''
-                        }))
-                      }
-                      className='basic-select'
-                      classNamePrefix='select'
-                    />
+                    <div className='flex items-center justify-between'>
+                      <span className='text-sm text-gray-600'>
+                        {organizations.find((org) => org.id === formData.organizationId)?.name || 'Chưa có tổ chức'}
+                      </span>
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button variant='ghost' size='icon' className='ml-1'>
+                            <Building className='h-4 w-4 text-red-500' />
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className='sm:max-w-md'>
+                          <OrganizationSelector
+                            initialOrganization={formData.organizationId}
+                            onOrganizationSelect={(organizationId) => {
+                              setFormData((prev: any) => ({
+                                ...prev,
+                                organizationId: organizationId
+                              }))
+                            }}
+                          />
+                        </DialogContent>
+                      </Dialog>
+                    </div>
                   </FormField>
                 </div>
 
