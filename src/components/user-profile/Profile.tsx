@@ -13,7 +13,9 @@ import { toast } from '../ui/use-toast'
 import Loading from '../warnings/loading'
 import Empty from '../warnings/empty'
 import Select from 'react-select'
-import { Droplet, User } from 'lucide-react'
+import { Droplet, User, MapPin } from 'lucide-react'
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
+import AddressSelector from '../address/AddressSelector'
 
 interface Job {
   id: number
@@ -238,11 +240,29 @@ const Profile = () => {
                               <FormLabel className='text-sm font-medium text-gray-700 m-0'>Địa chỉ liên hệ</FormLabel>
                             </div>
                             <FormControl>
-                              <Input
-                                {...field}
-                                className='w-1/2 border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0'
-                                placeholder='Nhập địa chỉ'
-                              />
+                              <div className='w-1/2 flex items-center justify-end'>
+                                <Input
+                                  {...field}
+                                  className='border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0'
+                                  placeholder='Nhập địa chỉ'
+                                  readOnly
+                                />
+                                <Dialog>
+                                  <DialogTrigger asChild>
+                                    <Button variant="ghost" size="icon" className="ml-1">
+                                      <MapPin className="h-4 w-4 text-red-500" />
+                                    </Button>
+                                  </DialogTrigger>
+                                  <DialogContent className="sm:max-w-md">
+                                    <AddressSelector 
+                                      onAddressSelect={(address) => {
+                                        field.onChange(address);
+                                      }}
+                                      initialAddress={field.value}
+                                    />
+                                  </DialogContent>
+                                </Dialog>
+                              </div>
                             </FormControl>
                           </div>
                           <FormMessage className='ml-8 text-xs' />
