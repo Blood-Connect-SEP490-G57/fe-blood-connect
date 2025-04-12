@@ -91,8 +91,7 @@ const BloodDonationSlider: React.FC = () => {
           <h2 className='text-2xl font-bold text-gray-700'>Không có sự kiện nào</h2>
         </div>
       ) : (
-        <div className='max-w-7xl mx-auto px-2 relative'>
-          {/* iOS style decorative elements */}
+        <div className='max-w-7xl px-2 mx-auto relative'>
           <div className='absolute top-0 left-[20%] w-32 h-32 bg-red-100 rounded-full blur-3xl opacity-30 -z-10'></div>
           <div className='absolute bottom-0 right-[10%] w-40 h-40 bg-red-50 rounded-full blur-3xl opacity-40 -z-10'></div>
 

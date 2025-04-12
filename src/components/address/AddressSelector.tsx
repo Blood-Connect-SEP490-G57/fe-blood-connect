@@ -106,7 +106,7 @@ const AddressSelector: React.FC<AddressSelectorProps> = ({ onAddressSelect, init
     .join(", ");
 
   return (
-    <div className="max-w-md mx-auto p-4 border rounded shadow-md bg-white">
+    <div className=" bg-gray-50">
       <label className="text-sm text-gray-500">Địa chỉ cụ thể</label>
       <div className="mt-1">
         <input 

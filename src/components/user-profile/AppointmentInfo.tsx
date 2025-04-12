@@ -1,11 +1,6 @@
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import {
-  Calendar,
-  MapPin,
-  Calendar as CalendarIcon,
-  Loader2
-} from 'lucide-react'
+import { Calendar, MapPin, Calendar as CalendarIcon, Briefcase } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { getCurrent, updateinfor } from '@/api/appointment'
 import { format } from 'date-fns'
@@ -16,8 +11,10 @@ import Loading from '../warnings/loading'
 import Empty from '../warnings/empty'
 import AppointmentDetailsPopup from './AppointmentDetailsPopup'
 import { getOrganizationsByType } from '@/api/organization'
-import { staticJobApi } from '@/api/static'
 import Select from 'react-select'
+import JobSelector from '@/components/job/JobSelector'
+import AddressSelector from '@/components/address/AddressSelector'
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
 
 interface UserInfo {
   userId: string
@@ -89,11 +86,6 @@ interface Organization {
   name: string
 }
 
-interface Job {
-  id: number
-  job: string
-}
-
 const AppointmentInfo = () => {
   const [data, setData] = useState<AppointmentData | null>(null)
   const [loading, setLoading] = useState(true)
@@ -101,8 +93,6 @@ const AppointmentInfo = () => {
   const hasFetched = useRef(false)
   const [isPopupOpen, setPopupOpen] = useState(false)
   const [organizations, setOrganizations] = useState<Organization[]>([])
-  const [jobs, setJobs] = useState<Job[]>([])
-  const [isLoadingJobs, setIsLoadingJobs] = useState(false)
 
   useEffect(() => {
     const fetchOrganizations = async () => {
@@ -116,32 +106,6 @@ const AppointmentInfo = () => {
     }
 
     fetchOrganizations()
-  }, [])
-
-  // Fetch jobs data
-  useEffect(() => {
-    const fetchJobData = async () => {
-      try {
-        setIsLoadingJobs(true)
-        const response = await staticJobApi()
-        if (response && response.data) {
-          setJobs(response.data)
-        } else {
-          console.error('Invalid job data response:', response)
-        }
-      } catch (error) {
-        console.error('Error fetching job data:', error)
-        toast({
-          title: 'Lỗi',
-          description: 'Không thể tải danh sách nghề nghiệp',
-          variant: 'destructive'
-        })
-      } finally {
-        setIsLoadingJobs(false)
-      }
-    }
-
-    fetchJobData()
   }, [])
 
   const orgOptions = organizations.map((org) => ({
@@ -434,22 +398,34 @@ const AppointmentInfo = () => {
             <CardContent className='p-0'>
               <div className='divide-y'>
                 <div className='p-2'>
-                  <div className='flex items-center gap-3'>
-                    <span className='text-sm font-medium text-gray-700'>Địa chỉ liên hệ</span>
-                  </div>
-                  {isEditing ? (
-                    <input
-                      type='text'
-                      name='addressContact'
-                      value={formData.addressContact}
-                      onChange={handleInputChange}
-                      className='w-full p-2 text-sm text-right border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500'
-                    />
-                  ) : (
+                  <div className='flex items-center justify-between'>
+                    <div className='flex items-center gap-3'>
+                      <span className='text-sm font-medium text-gray-700'>Địa chỉ liên hệ</span>
+                    </div>
                     <div className='flex items-center gap-2'>
                       <span className='text-sm text-gray-600'>{userInfo.addressContact}</span>
+                      {isEditing && (
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <Button variant='ghost' size='icon' className='ml-1'>
+                              <MapPin className='h-4 w-4 text-red-500' />
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent className='sm:max-w-md'>
+                            <AddressSelector
+                              initialAddress={formData.addressContact}
+                              onAddressSelect={(address) => {
+                                setFormData((prev) => ({
+                                  ...prev,
+                                  addressContact: address
+                                }))
+                              }}
+                            />
+                          </DialogContent>
+                        </Dialog>
+                      )}
                     </div>
-                  )}
+                  </div>
                 </div>
 
                 <div className='p-2 flex items-center justify-between'>
@@ -500,56 +476,35 @@ const AppointmentInfo = () => {
           <Card className='overflow-hidden rounded-xl shadow-sm border-none'>
             <CardContent className='p-0'>
               <div className='divide-y'>
-                <div className='p-2 flex items-center justify-between'>
-                  <div className='flex items-center gap-3'>
-                    <span className='text-sm font-medium text-gray-700'>Nghề nghiệp</span>
-                  </div>
-                  {isEditing ? (
-                    <div className='w-1/2'>
-                      {isLoadingJobs ? (
-                        <div className='flex justify-center'>
-                          <Loader2 className='h-5 w-5 text-gray-400 animate-spin' />
-                        </div>
-                      ) : (
-                        <Select
-                          options={jobs.map((jobItem) => ({
-                            value: jobItem.job,
-                            label: jobItem.job
-                          }))}
-                          value={formData.jobName ? { value: formData.jobName, label: formData.jobName } : null}
-                          onChange={(option) => {
-                            setFormData((prev) => ({
-                              ...prev,
-                              jobName: option ? option.value : ''
-                            }))
-                          }}
-                          placeholder='Chọn nghề nghiệp'
-                          isSearchable
-                          className='basic-select'
-                          classNamePrefix='select'
-                          styles={{
-                            control: (base) => ({
-                              ...base,
-                              borderRadius: '0.375rem',
-                              minHeight: '38px'
-                            }),
-                            placeholder: (base) => ({
-                              ...base,
-                              textAlign: 'right'
-                            }),
-                            singleValue: (base) => ({
-                              ...base,
-                              textAlign: 'right'
-                            }),
-                          }}
-                        />
-                      )}
+                <div className='p-2'>
+                  <div className='flex items-center justify-between'>
+                    <div className='flex items-center gap-3'>
+                      <span className='text-sm font-medium text-gray-700'>Nghề nghiệp</span>
                     </div>
-                  ) : (
                     <div className='flex items-center gap-2'>
                       <span className='text-sm text-gray-600'>{userInfo.jobName}</span>
+                      {isEditing && (
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <Button variant='ghost' size='icon' className='ml-1'>
+                              <Briefcase className='h-4 w-4 text-red-500' />
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent className='sm:max-w-md'>
+                            <JobSelector
+                              initialJob={formData.jobName}
+                              onJobSelect={(job) => {
+                                setFormData((prev) => ({
+                                  ...prev,
+                                  jobName: job
+                                }))
+                              }}
+                            />
+                          </DialogContent>
+                        </Dialog>
+                      )}
                     </div>
-                  )}
+                  </div>
                 </div>
 
                 <div className='p-2 flex items-center justify-between'>
