@@ -5,7 +5,6 @@ import { useExtractStore } from '@/hooks/stores/useExtractStore'
 import Loading from '@/components/warnings/loading'
 import { useEffect, useState } from 'react'
 import ScrollToTop from '@/components/scrollToTop'
-import { Card, CardContent } from '@/components/ui/card'
 
 interface Step2UploadProps {
   formData: {
@@ -164,7 +163,7 @@ const Step2Upload: React.FC<Step2UploadProps> = ({ formData, setFormData, error,
   })
 
   return (
-    <div className='space-y-6'>
+    <div className='space-y-6 mt-2'>
       <ScrollToTop />
       <div className='text-center mb-6'>
         <div className='flex items-center justify-center mb-4'>
@@ -178,46 +177,44 @@ const Step2Upload: React.FC<Step2UploadProps> = ({ formData, setFormData, error,
         </p>
       </div>
 
-      <Card className='overflow-hidden rounded-xl shadow-sm border-none mb-6'>
-        <CardContent className='p-5'>
-          <div className='space-y-4'>
-            <div className='flex items-center justify-between'>
-              <h3 className='font-medium text-gray-900'>Lưu ý khi chụp ảnh</h3>
-            </div>
-            <ul className='space-y-2'>
-              <li className='flex items-start gap-2 text-sm text-gray-600'>
-                <ChevronRight className='h-4 w-4 text-red-500 mt-0.5 flex-shrink-0' />
-                <span>Ảnh cần rõ nét, không mờ, không bị chói hoặc che khuất thông tin</span>
-              </li>
-              <li className='flex items-start gap-2 text-sm text-gray-600'>
-                <ChevronRight className='h-4 w-4 text-red-500 mt-0.5 flex-shrink-0' />
-                <span>Chụp thẳng, không lệch góc, toàn bộ CCCD phải nằm trong khung hình</span>
-              </li>
-              <li className='flex items-start gap-2 text-sm text-gray-600'>
-                <ChevronRight className='h-4 w-4 text-red-500 mt-0.5 flex-shrink-0' />
-                <span>Nếu tải sai ảnh, vui lòng tải lại cả ảnh mặt trước và mặt sau</span>
-              </li>
-            </ul>
+      <div className='p-5 mb-6'>
+        <div className='space-y-4'>
+          <div className='flex items-center justify-between'>
+            <h3 className='font-medium text-gray-900'>Lưu ý khi chụp ảnh</h3>
           </div>
-        </CardContent>
-      </Card>
+          <ul className='space-y-2'>
+            <li className='flex items-start gap-2 text-sm text-gray-600'>
+              <ChevronRight className='h-4 w-4 text-red-500 mt-0.5 flex-shrink-0' />
+              <span>Ảnh cần rõ nét, không mờ, không bị chói hoặc che khuất thông tin</span>
+            </li>
+            <li className='flex items-start gap-2 text-sm text-gray-600'>
+              <ChevronRight className='h-4 w-4 text-red-500 mt-0.5 flex-shrink-0' />
+              <span>Chụp thẳng, không lệch góc, toàn bộ CCCD phải nằm trong khung hình</span>
+            </li>
+            <li className='flex items-start gap-2 text-sm text-gray-600'>
+              <ChevronRight className='h-4 w-4 text-red-500 mt-0.5 flex-shrink-0' />
+              <span>Nếu tải sai ảnh, vui lòng tải lại cả ảnh mặt trước và mặt sau</span>
+            </li>
+          </ul>
+        </div>
+      </div>
 
       {/* Mặt trước */}
-      <Card className='overflow-hidden rounded-xl shadow-sm border-none mb-4'>
-        <CardContent className='p-5'>
+      <div className='mb-4'>
+        <div className='p-5'>
           <div className='flex items-center justify-between mb-4'>
             <h3 className='font-medium text-gray-900'>Mặt trước CCCD</h3>
             {formData.frontImage && (
-              <span className='px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full'>
-                Đã tải lên
-              </span>
+              <span className='px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full'>Đã tải lên</span>
             )}
           </div>
-          
+
           <div
             {...frontDropzone.getRootProps()}
             className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors ${
-              formData.frontImage ? 'border-green-300 bg-green-50' : 'border-gray-300 hover:border-red-300 hover:bg-red-50'
+              formData.frontImage
+                ? 'border-green-300 bg-green-50'
+                : 'border-gray-300 hover:border-red-300 hover:bg-red-50'
             }`}
           >
             <input {...frontDropzone.getInputProps()} />
@@ -225,10 +222,10 @@ const Step2Upload: React.FC<Step2UploadProps> = ({ formData, setFormData, error,
               <Loading />
             ) : formData.frontImage ? (
               <div className='space-y-2 flex flex-col items-center'>
-                <img 
-                  src={URL.createObjectURL(formData.frontImage)} 
-                  alt='Front' 
-                  className='w-40 h-32 object-cover rounded-lg shadow-sm' 
+                <img
+                  src={URL.createObjectURL(formData.frontImage)}
+                  alt='Front'
+                  className='w-40 h-32 object-cover rounded-lg shadow-sm'
                 />
                 <p className='text-sm text-gray-600 font-medium'>{formData.frontImage.name}</p>
                 <button
@@ -250,26 +247,28 @@ const Step2Upload: React.FC<Step2UploadProps> = ({ formData, setFormData, error,
               </>
             )}
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       {/* Mặt sau */}
-      <Card className={`overflow-hidden rounded-xl shadow-sm border-none mb-4 transition-opacity ${formData.frontImage ? 'opacity-100' : 'opacity-50'}`}>
-        <CardContent className='p-5'>
+      <div className={`mb-4 transition-opacity ${formData.frontImage ? 'opacity-100' : 'opacity-50'}`}>
+        <div className='p-5'>
           <div className='flex items-center justify-between mb-4'>
             <h3 className='font-medium text-gray-900'>Mặt sau CCCD</h3>
             {formData.backImage && (
-              <span className='px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full'>
-                Đã tải lên
-              </span>
+              <span className='px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full'>Đã tải lên</span>
             )}
           </div>
-          
+
           <div
             {...(formData.frontImage ? backDropzone.getRootProps() : {})}
             className={`border-2 border-dashed rounded-lg p-6 text-center ${
-              formData.frontImage 
-                ? `cursor-pointer ${formData.backImage ? 'border-green-300 bg-green-50' : 'border-gray-300 hover:border-red-300 hover:bg-red-50'}`
+              formData.frontImage
+                ? `cursor-pointer ${
+                    formData.backImage
+                      ? 'border-green-300 bg-green-50'
+                      : 'border-gray-300 hover:border-red-300 hover:bg-red-50'
+                  }`
                 : 'border-gray-200 bg-gray-50 cursor-not-allowed'
             }`}
           >
@@ -278,10 +277,10 @@ const Step2Upload: React.FC<Step2UploadProps> = ({ formData, setFormData, error,
               <Loading />
             ) : formData.backImage ? (
               <div className='space-y-2 flex flex-col items-center'>
-                <img 
-                  src={URL.createObjectURL(formData.backImage)} 
-                  alt='Back' 
-                  className='w-40 h-32 object-cover rounded-lg shadow-sm' 
+                <img
+                  src={URL.createObjectURL(formData.backImage)}
+                  alt='Back'
+                  className='w-40 h-32 object-cover rounded-lg shadow-sm'
                 />
                 <p className='text-sm text-gray-600 font-medium'>{formData.backImage.name}</p>
                 <button
@@ -309,26 +308,27 @@ const Step2Upload: React.FC<Step2UploadProps> = ({ formData, setFormData, error,
               </>
             )}
           </div>
-        </CardContent>
-      </Card>
-
-      {error && (
-        <div className='p-4 bg-red-50 text-red-600 rounded-lg text-sm'>
-          {error}
         </div>
-      )}
+      </div>
 
-      <button
-        onClick={onNext}
-        disabled={!formData.frontImage || !formData.backImage || uploadLoading.front || uploadLoading.back}
-        className={`w-full py-4 text-white font-medium rounded-xl transition-colors ${
-          !formData.frontImage || !formData.backImage || uploadLoading.front || uploadLoading.back
-            ? 'bg-gray-300 cursor-not-allowed'
-            : 'bg-red-600 hover:bg-red-700'
-        }`}
-      >
-        {uploadLoading.front || uploadLoading.back ? 'Đang xử lý...' : 'Tiếp theo'}
-      </button>
+      {error && <div className='p-4 bg-red-50 text-red-600 rounded-lg text-sm'>{error}</div>}
+
+      <div>
+        <button className='flex items-center gap-1 px-3 py-1.5 text-xs bg-gray-100 text-gray-600 rounded-full hover:bg-gray-200'>
+          <span>Quay lại</span>
+        </button>
+        <button
+          onClick={onNext}
+          disabled={!formData.frontImage || !formData.backImage || uploadLoading.front || uploadLoading.back}
+          className={`w-full py-4 text-white font-medium rounded-xl transition-colors ${
+            !formData.frontImage || !formData.backImage || uploadLoading.front || uploadLoading.back
+              ? 'bg-gray-300 cursor-not-allowed'
+              : 'bg-red-600 hover:bg-red-700'
+          }`}
+        >
+          {uploadLoading.front || uploadLoading.back ? 'Đang xử lý...' : 'Tiếp theo'}
+        </button>
+      </div>
     </div>
   )
 }

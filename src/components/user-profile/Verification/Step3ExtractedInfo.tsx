@@ -3,7 +3,6 @@ import { useExtractStore } from '@/hooks/stores/useExtractStore'
 import { getExtractById, updateExtractStatus } from '@/api/extract'
 import { createOrUpdateUserDetail, getCurrentUserDetail } from '@/api/user'
 import ScrollToTop from '@/components/scrollToTop'
-import { getDistricts, getListProvinces, getWards, Ward } from '@/api/address'
 import { getOrganizationsByType } from '@/api/organization'
 import { Card, CardContent } from '@/components/ui/card'
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
@@ -51,13 +50,7 @@ const Step3ExtractedInfo: React.FC<Step2Props> = ({
 }) => {
   const { extractId, cardDetails, setLoading, setError } = useExtractStore()
   const [fieldErrors, setFieldErrors] = React.useState<Record<string, string>>({})
-  const [provinces, setProvinces] = React.useState<any[]>([])
-  const [districts, setDistricts] = React.useState<any[]>([])
   const [contact, setContact] = React.useState<string>('')
-  const [selectedProvince, setSelectedProvince] = React.useState<string>('')
-  const [selectedDistrict, setSelectedDistrict] = React.useState<string>('')
-  const [wards, setWards] = React.useState<Ward[]>([])
-  const [selectedWard, setSelectedWard] = React.useState<string>('')
   const [organizations, setOrganizations] = useState<Organization[]>([])
   const [showCardDetails, setShowCardDetails] = useState(true)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -98,36 +91,6 @@ const Step3ExtractedInfo: React.FC<Step2Props> = ({
       return
     }
 
-    if (!selectedProvince) {
-      errors.province = 'Vui lòng chọn tỉnh/thành phố'
-      toast({
-        title: 'Lỗi',
-        description: 'Vui lòng chọn tỉnh/thành phố',
-        variant: 'destructive'
-      })
-      return
-    }
-
-    if (!selectedDistrict) {
-      errors.district = 'Vui lòng chọn quận/huyện'
-      toast({
-        title: 'Lỗi',
-        description: 'Vui lòng chọn quận/huyện',
-        variant: 'destructive'
-      })
-      return
-    }
-
-    if (!selectedWard) {
-      errors.ward = 'Vui lòng chọn phường/xã'
-      toast({
-        title: 'Lỗi',
-        description: 'Vui lòng chọn phường/xã',
-        variant: 'destructive'
-      })
-      return
-    }
-
     if (!extractId) {
       errors.extractId = 'Không tìm thấy thông tin CCCD'
     }
@@ -140,20 +103,14 @@ const Step3ExtractedInfo: React.FC<Step2Props> = ({
     try {
       setLoading(true)
       setIsSubmitting(true)
-      setFieldErrors({}) // Clear errors if no issues
-
-      // Concatenate full address
-      const provinceName = provinces.find((p) => p.code.toString() === selectedProvince)?.name || ''
-      const districtName = districts.find((d) => d.code.toString() === selectedDistrict)?.name || ''
-      const wardName = wards.find((w) => w.code.toString() === selectedWard)?.name || ''
-      const fullAddress = `${contact}, ${wardName}, ${districtName}, ${provinceName}`
+      setFieldErrors({})
 
       const userDetailData = {
         email: formData.email,
         job_name: formData.jobName,
         student_id: formData.studentId,
         military_id: formData.militaryId,
-        address_contact: fullAddress,
+        address_contact: contact, // Sử dụng trực tiếp giá trị contact từ AddressSelector
         time_donation: Number(formData.timeDonation),
         blood_group: formData.bloodGroup,
         organization_id: Number(formData.organizationId)
@@ -252,64 +209,6 @@ const Step3ExtractedInfo: React.FC<Step2Props> = ({
     fetchExtractedInfo()
   }, [extractId])
 
-  // Fetch provinces and districts when the component mounts
-  React.useEffect(() => {
-    const fetchProvinces = async () => {
-      try {
-        const response = await getListProvinces()
-        setProvinces(response)
-      } catch (error) {
-        console.error('Error fetching provinces:', error)
-        toast({
-          title: 'Lỗi',
-          description: 'Không thể tải danh sách tỉnh/thành phố',
-          variant: 'destructive'
-        })
-      }
-    }
-    fetchProvinces()
-  }, [])
-
-  React.useEffect(() => {
-    const fetchDistricts = async () => {
-      if (!selectedProvince) return // Chỉ gọi API khi đã chọn tỉnh/thành phố
-      try {
-        const response = await getDistricts()
-        const filteredDistricts = response.filter((district) => district.province_code.toString() === selectedProvince)
-        setDistricts(filteredDistricts)
-      } catch (error) {
-        console.error('Error fetching districts:', error)
-        toast({
-          title: 'Lỗi',
-          description: 'Không thể tải danh sách quận/huyện',
-          variant: 'destructive'
-        })
-      }
-    }
-
-    fetchDistricts()
-  }, [selectedProvince])
-
-  React.useEffect(() => {
-    const fetchWards = async () => {
-      if (!selectedDistrict) return
-      try {
-        const response = await getWards()
-        const filteredWards = response.filter((ward) => ward.district_code.toString() === selectedDistrict)
-        setWards(filteredWards)
-      } catch (error) {
-        console.error('Error fetching wards:', error)
-        toast({
-          title: 'Lỗi',
-          description: 'Không thể tải danh sách phường/xã',
-          variant: 'destructive'
-        })
-      }
-    }
-
-    fetchWards()
-  }, [selectedDistrict])
-
   useEffect(() => {
     const fetchOrganizations = async () => {
       try {
@@ -326,9 +225,8 @@ const Step3ExtractedInfo: React.FC<Step2Props> = ({
   }, [])
 
   return (
-    <div className='space-y-6'>
+    <div className='space-y-6 mt-2'>
       <ScrollToTop />
-
       <div className='text-center mb-6'>
         <div className='flex items-center justify-center mb-4'>
           <div className='w-16 h-16 bg-red-50 rounded-full flex items-center justify-center'>
@@ -452,78 +350,6 @@ const Step3ExtractedInfo: React.FC<Step2Props> = ({
                       } focus:outline-none focus:ring-2 focus:ring-red-500`}
                     />
                   </FormField>
-                </div>
-
-                <div className='py-4'>
-                  <div className='flex items-center justify-between'>
-                    <FormField
-                      label='Tỉnh/Thành phố'
-                      icon={<MapPin className='h-5 w-5 text-gray-500' />}
-                      required={true}
-                      error={fieldErrors.province}
-                    >
-                      <select
-                        value={selectedProvince}
-                        onChange={(e) => setSelectedProvince(e.target.value)}
-                        className={`w-full p-2 rounded border ${
-                          fieldErrors.province ? 'border-red-500' : 'border-gray-300'
-                        } focus:outline-none focus:ring-2 focus:ring-red-500`}
-                      >
-                        <option value=''>Chọn tỉnh/thành phố</option>
-                        {provinces.map((province) => (
-                          <option key={province.code} value={province.code}>
-                            {province.name}
-                          </option>
-                        ))}
-                      </select>
-                    </FormField>
-
-                    <FormField
-                      label='Quận/Huyện'
-                      icon={<MapPin className='h-5 w-5 text-gray-500' />}
-                      required={true}
-                      error={fieldErrors.district}
-                    >
-                      <select
-                        value={selectedDistrict}
-                        onChange={(e) => setSelectedDistrict(e.target.value)}
-                        className={`w-full p-2 rounded border ${
-                          fieldErrors.district ? 'border-red-500' : 'border-gray-300'
-                        } focus:outline-none focus:ring-2 focus:ring-red-500`}
-                        disabled={!selectedProvince}
-                      >
-                        <option value=''>Chọn quận/huyện</option>
-                        {districts.map((district) => (
-                          <option key={district.code} value={district.code}>
-                            {district.name}
-                          </option>
-                        ))}
-                      </select>
-                    </FormField>
-
-                    <FormField
-                      label='Phường/Xã'
-                      icon={<MapPin className='h-5 w-5 text-gray-500' />}
-                      required={true}
-                      error={fieldErrors.ward}
-                    >
-                      <select
-                        value={selectedWard}
-                        onChange={(e) => setSelectedWard(e.target.value)}
-                        className={`w-full p-2 rounded border ${
-                          fieldErrors.ward ? 'border-red-500' : 'border-gray-300'
-                        } focus:outline-none focus:ring-2 focus:ring-red-500`}
-                        disabled={!selectedDistrict}
-                      >
-                        <option value=''>Chọn phường/xã</option>
-                        {wards.map((ward) => (
-                          <option key={ward.code} value={ward.code}>
-                            {ward.name}
-                          </option>
-                        ))}
-                      </select>
-                    </FormField>
-                  </div>
                 </div>
                 <div className='py-4'>
                   <FormField
@@ -678,7 +504,7 @@ const Step3ExtractedInfo: React.FC<Step2Props> = ({
             </Card>
           </div>
 
-          <div className='flex justify-between'>
+          <div className='flex justify-between p-4'>
             <button
               onClick={onPrev}
               className='px-4 py-3 bg-gray-100 text-gray-800 rounded-xl hover:bg-gray-200 transition-colors'

@@ -1,4 +1,4 @@
-import { Calendar, MapPin, Info, ChevronRight, Droplet } from 'lucide-react'
+import { Calendar, MapPin, Info, Droplet } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { useEffect, useRef, useState } from 'react'
@@ -204,19 +204,34 @@ const DonationHistory = () => {
               </CardContent>
             </Card>
           ) : (
-            <Card className='overflow-hidden rounded-xl shadow-sm border-none'>
+            <Card className='overflow-hidden mb-4 rounded-xl shadow-sm border-none'>
               <CardContent className='p-0'>
                 <div className='divide-y'>
                   {appointments.map((appointment) => (
-                    <div key={appointment.id} className='p-4 md:p-6 flex items-start justify-between hover:bg-gray-50 transition-colors'>
+                    <div
+                      key={appointment.id}
+                      className='p-4 md:p-6 flex items-start justify-between hover:bg-gray-50 transition-colors mb-2 last:mb-0'
+                    >
                       <div className='flex gap-3 md:gap-6 flex-1'>
-                        <div className={`w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center
-                          ${appointment.status === 'DONE' ? 'bg-green-100' : 
-                            appointment.status === 'BOOKING' ? 'bg-yellow-100' : 'bg-red-100'}`}
+                        <div
+                          className={`w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center
+                          ${
+                            appointment.status === 'DONE'
+                              ? 'bg-green-100'
+                              : appointment.status === 'BOOKING'
+                              ? 'bg-yellow-100'
+                              : 'bg-red-100'
+                          }`}
                         >
-                          <Calendar className={`h-5 w-5 md:h-6 md:w-6 
-                            ${appointment.status === 'DONE' ? 'text-green-600' : 
-                              appointment.status === 'BOOKING' ? 'text-yellow-600' : 'text-red-600'}`}
+                          <Calendar
+                            className={`h-5 w-5 md:h-6 md:w-6 
+                            ${
+                              appointment.status === 'DONE'
+                                ? 'text-green-600'
+                                : appointment.status === 'BOOKING'
+                                ? 'text-yellow-600'
+                                : 'text-red-600'
+                            }`}
                           />
                         </div>
                         <div className='flex-1'>
@@ -226,17 +241,31 @@ const DonationHistory = () => {
                           </div>
                           <div className='flex flex-col space-y-1 py-2 text-sm md:text-base text-gray-500'>
                             <div className='flex items-center gap-2'>
-                              <MapPin className='h-5 w-5 md:h-6 md:w-6' />
+                              <div>
+                                <MapPin className='h-5 w-5' />
+                              </div>
                               <span>{appointment.location || 'Không có thông tin'}</span>
                             </div>
                             {appointment.campaignName && (
                               <div className='flex items-center gap-2'>
-                                <Info className='h-5 w-5 md:h-6 md:w-6' />
+                                <div>
+                                  <Info className='h-5 w-5' />
+                                </div>
                                 <span>{appointment.campaignName}</span>
                               </div>
                             )}
                           </div>
-                          <div className='flex items-center justify-end mt-2'>
+                          <div className='flex items-center justify-end mt-2 gap-2'>
+                            <Button
+                              variant='outline'
+                              size='sm'
+                              className='text-gray-600 border-gray-300 hover:bg-gray-50 md:text-base md:px-6'
+                              onClick={() => {
+                                window.location.hash = 'lich-hen'
+                              }}
+                            >
+                              Xem lịch hẹn
+                            </Button>
                             {appointment.status === 'BOOKING' && (
                               <Button
                                 variant='outline'
@@ -250,7 +279,6 @@ const DonationHistory = () => {
                           </div>
                         </div>
                       </div>
-                      <ChevronRight className='h-5 w-5 md:h-6 md:w-6 text-gray-400 mt-2' />
                     </div>
                   ))}
                 </div>

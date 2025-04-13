@@ -590,20 +590,16 @@ const AppointmentInfo = () => {
             <CardContent className='p-0'>
               <div className='divide-y'>
                 <div className='p-2'>
-                  <div className='flex items-center gap-3'>
+                  <div className='flex justify-between items-center gap-3'>
                     <span className='text-sm font-medium text-gray-700'>Địa chỉ thường trú</span>
-                  </div>
-                  <div className='flex items-center gap-2'>
                     <span className='text-sm text-gray-600'>{userInfo.address}</span>
                   </div>
                 </div>
 
                 <div className='p-2'>
-                  <div className='flex items-center gap-3'>
+                  <div className='flex items-center justify-between gap-3'>
                     <span className='text-sm font-medium text-gray-700'>Nơi cấp</span>
-                  </div>
-                  <div className='flex items-center gap-2'>
-                    <span className='text-sm text-gray-600'>{userInfo.issueLoc}</span>
+                    <span className='text-sm text-gray-600'>{userInfo.issueLoc.toLocaleLowerCase()}</span>
                   </div>
                 </div>
               </div>

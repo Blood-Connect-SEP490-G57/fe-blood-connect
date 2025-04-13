@@ -91,29 +91,41 @@ const Header: React.FC = () => {
     navigate('/dang-nhap')
   }
 
-  const navigation = [
+  // Base navigation items excluding verification
+  const baseNavigation = [
     { name: 'TRANG CHỦ', href: '/', icon: <Home className='w-4 h-4 mr-2' /> },
     { name: 'TIN TỨC', href: '/tin-tuc', icon: <Newspaper className='w-4 h-4 mr-2' /> },
     { name: 'HỎI ĐÁP', href: '/cau-hoi-thuong-gap', icon: <HelpCircle className='w-4 h-4 mr-2' /> },
     { name: 'LIÊN HỆ', href: '/lien-he', icon: <Phone className='w-4 h-4 mr-2' /> },
-    { name: 'ĐĂNG KÝ HIẾN MÁU', href: '/dang-ky-hien-mau', icon: <Calendar className='w-4 h-4 mr-2' /> },
-    { name: 'LỊCH HẸN CỦA TÔI', href: '/trang-ca-nhan#lich-hen', icon: <Calendar className='w-4 h-4 mr-2' /> },
-    { name: 'LỊCH SỬ ĐẶT HẸN', href: '/trang-ca-nhan#lich-su-hien-mau', icon: <Calendar className='w-4 h-4 mr-2' /> },
-    { name: 'THÔNG TIN CÁ NHÂN', href: '/trang-ca-nhan#thong-tin-ca-nhan', icon: <User className='w-4 h-4 mr-2' /> },
-    { name: 'CÀI ĐẶT', href: '/cai-dat', icon: <Settings className='w-4 h-4 mr-2' /> }
+    { name: 'ĐĂNG KÝ HIẾN MÁU', href: '/dang-ky-hien-mau', icon: <Calendar className='w-4 h-4 mr-2' /> }
   ]
 
-  // Add verification link dynamically if not verified
+  // User-specific navigation items
+  const userNavigation = isLoggedIn
+    ? [
+        // { name: 'LỊCH HẸN CỦA TÔI', href: '/trang-ca-nhan#lich-hen', icon: <Calendar className='w-4 h-4 mr-2' /> },
+        { name: 'LỊCH SỬ ĐẶT HẸN', href: '/trang-ca-nhan#lich-su-hien-mau', icon: <Calendar className='w-4 h-4 mr-2' /> },
+        { name: 'THÔNG TIN CÁ NHÂN', href: '/trang-ca-nhan#thong-tin-ca-nhan', icon: <User className='w-4 h-4 mr-2' /> },
+        { name: 'CÀI ĐẶT', href: '/cai-dat', icon: <Settings className='w-4 h-4 mr-2' /> }
+      ]
+    : []
+
+  // Add verification link if needed
   const getFilteredNavigation = () => {
-    const filteredNav = [...navigation]
-    if (isVerified === 'NONE' && isLoggedIn) {
-      filteredNav.splice(8, 0, {
-        name: 'XÁC THỰC TÀI KHOẢN',
-        href: '/trang-ca-nhan#xac-thuc-tai-khoan',
-        icon: <User className='w-4 h-4 mr-2' />
-      })
+    let navigation = [...baseNavigation]
+    
+    if (isLoggedIn) {
+      if (isVerified === 'NONE') {
+        navigation.push({
+          name: 'XÁC THỰC TÀI KHOẢN',
+          href: '/trang-ca-nhan#xac-thuc-tai-khoan',
+          icon: <User className='w-4 h-4 mr-2' />
+        })
+      }
+      navigation = [...navigation, ...userNavigation]
     }
-    return filteredNav
+    
+    return navigation
   }
 
   const handleLoginClick = () => {
@@ -370,7 +382,7 @@ const Header: React.FC = () => {
                     .map((item) => (
                       <motion.div
                         key={item.name}
-                        className='flex items-center p-3 rounded-xl hover:bg-red-50 transition-all'
+                        className='flex items-center p-3 rounded-xl hover:bg-red-50 transition-all cursor-pointer'
                         onClick={() => {
                           setIsMobileMenuOpen(false)
                           navigate(item.href)

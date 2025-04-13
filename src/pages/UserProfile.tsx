@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
-import { Calendar, CheckCircle, History, Info, User, ChevronRight } from 'lucide-react'
+import { CheckCircle, History, Info, User, ChevronRight } from 'lucide-react'
 import Profile from '@/components/user-profile/Profile'
 import AppointmentInfo from '@/components/user-profile/AppointmentInfo'
 import DonationHistory from '@/components/user-profile/DonationHistory'
@@ -64,12 +64,12 @@ const UserProfilePage: React.FC = () => {
       icon: <Info className='w-5 h-5' />,
       color: 'bg-blue-100 text-blue-600'
     },
-    {
-      id: 'lich-hen',
-      label: 'Lịch hẹn của tôi',
-      icon: <Calendar className='w-5 h-5' />,
-      color: 'bg-green-100 text-green-600'
-    },
+    // {
+    //   id: 'lich-hen',
+    //   label: 'Lịch hẹn của tôi',
+    //   icon: <Calendar className='w-5 h-5' />,
+    //   color: 'bg-green-100 text-green-600'
+    // },
     {
       id: 'lich-su-hien-mau',
       label: 'Lịch sử đặt hẹn',

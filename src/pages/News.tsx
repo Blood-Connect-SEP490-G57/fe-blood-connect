@@ -1,5 +1,5 @@
 import React from 'react'
-import { ChevronRight, Search, Newspaper, Clock, Tags, Filter } from 'lucide-react'
+import { ChevronRight, Search, Newspaper, Clock, Tags } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent } from '@/components/ui/card'
@@ -14,7 +14,6 @@ const NewsPage = () => {
   const queryClient = useQueryClient()
   const [searchTerm, setSearchTerm] = React.useState('')
   const [debouncedSearchTerm, setDebouncedSearchTerm] = React.useState('')
-  const [selectedCategory, setSelectedCategory] = React.useState('all')
 
   React.useEffect(() => {
     const timerId = setTimeout(() => {
@@ -61,13 +60,6 @@ const NewsPage = () => {
     }
   }, [searchTerm, debouncedSearchTerm, queryClient])
 
-  // Mock categories for demonstration
-  const categories = [
-    { id: 'all', name: 'Tất cả' },
-    { id: 'events', name: 'Sự kiện' },
-    { id: 'campaigns', name: 'Chiến dịch' },
-    { id: 'stories', name: 'Câu chuyện' }
-  ]
 
   const formatDate = (dateString: string) => {
     const options: Intl.DateTimeFormatOptions = { 
@@ -116,28 +108,6 @@ const NewsPage = () => {
                   className='pl-10 pr-4 py-2 rounded-xl border border-gray-200 w-full focus:border-red-500 focus:ring focus:ring-red-200 focus:ring-opacity-50'
                 />
                 <Search className='absolute left-3 top-2.5 h-5 w-5 text-gray-400' />
-              </div>
-              
-              <div className='flex items-center space-x-1 overflow-x-auto pb-2 scrollbar-hide'>
-                <div className='flex items-center gap-1 mr-2'>
-                  <Filter className='h-4 w-4 text-gray-500' />
-                  <span className='text-sm font-medium text-gray-500'>Chủ đề:</span>
-                </div>
-                {categories.map(category => (
-                  <Button
-                    key={category.id}
-                    variant='ghost'
-                    size='sm'
-                    className={`rounded-full px-4 whitespace-nowrap ${
-                      selectedCategory === category.id 
-                        ? 'bg-red-100 text-red-600' 
-                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                    }`}
-                    onClick={() => setSelectedCategory(category.id)}
-                  >
-                    {category.name}
-                  </Button>
-                ))}
               </div>
             </div>
           </CardContent>
