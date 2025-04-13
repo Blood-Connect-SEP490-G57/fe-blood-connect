@@ -57,10 +57,10 @@ export default function ShareLink({ selectedCampaign }: { selectedCampaign: Camp
     <div className='relative flex flex-col items-center mr-4'>
       <button
         onClick={toggleIcons}
-        className='flex items-center gap-2 p-3 bg-blue-600 text-white rounded hover:bg-blue-700 transition-transform transform hover:scale-110 shadow-lg focus:outline-none'
+        className='flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-red-600 to-red-500 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 font-medium'
         aria-label='Chia sẻ'
       >
-        <Share2 size={24} />
+        <Share2 size={20} />
         <p>Chia sẻ ngay</p>
       </button>
 
@@ -69,7 +69,7 @@ export default function ShareLink({ selectedCampaign }: { selectedCampaign: Camp
           ref={dropdownRef}
           tabIndex={0}
           onBlur={handleBlur}
-          className='absolute top-full mt-2 flex space-x-3 p-3 bg-white border border-gray-200 rounded-lg shadow-lg z-10'
+          className='absolute top-full mt-2 flex space-x-3 p-3 bg-white border border-gray-200 rounded-lg shadow-lg'
         >
           <button
             onClick={shareToFacebook}

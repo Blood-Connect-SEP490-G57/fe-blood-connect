@@ -1,11 +1,10 @@
 import { Dispatch, SetStateAction, useState, useEffect, useRef } from 'react'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import CampaignDetails from '@/components/blood-donation-registration/campaign-details'
 import { STEPS } from '@/pages/BloodDonationRegistration'
 import { Question as fetchQuestions, getAnswersByCampaignId, submitAnswers } from '@/api/campaign'
 import { toast } from '@/components/ui/use-toast'
-import { ChevronLeft, CheckCircle, ClipboardList, AlertTriangle, Calendar } from 'lucide-react'
+import { ChevronLeft, CheckCircle, ClipboardList, AlertTriangle } from 'lucide-react'
 import { Question, QuestionSet, Section } from '@/schema/question-schema'
 import { AnswerType, ApiAnswerType } from '@/schema/answer-schema'
 import ScrollToTop from '../scrollToTop'
@@ -23,7 +22,6 @@ type Campaign = {
   organizeTime: string
   description: string
   targetBloodUnits: number
-  officialDocumentUrl: string
   currentDonors?: number
   maxDonors?: number
   requirements?: string[]
@@ -168,27 +166,28 @@ const ReviewStep: React.FC<ReviewStepProps> = ({ selectedCampaign, questionSetId
       return Object.values(groupedAnswers)
         .sort((a, b) => a.questionInfo.order - b.questionInfo.order)
         .map(({ questionInfo, answers }) => (
-          <div key={questionInfo.id} className='flex flex-col space-y-2 border-b border-gray-100 pb-4 last:border-b-0 last:pb-0'>
+          <div
+            key={questionInfo.id}
+            className='flex flex-col space-y-2 border-b border-gray-100 pb-4 last:border-b-0 last:pb-0'
+          >
             <div className='flex items-start gap-3'>
-              <Badge variant="outline" className='bg-red-50 text-red-600 border-red-100 font-medium'>
+              <Badge variant='outline' className='bg-red-50 text-red-600 border-red-100 font-medium'>
                 {questionInfo.order}
               </Badge>
               <div className='flex-1'>
-                <div className='text-gray-800 font-medium'>
-                  {questionInfo.content}
-                </div>
+                <div className='text-gray-800 font-medium'>{questionInfo.content}</div>
                 <div className='pl-0 mt-2 space-y-2'>
                   {answers.map((answer) => (
                     <div key={answer.questionId} className='text-sm'>
                       <div className='flex items-start'>
                         <div className='mt-1.5 mr-2 h-1.5 w-1.5 rounded-full bg-red-500 flex-shrink-0'></div>
                         <div>
-                          <span className={`font-medium ${answer.answer === 'true' ? 'text-green-600' : 'text-gray-700'}`}>
+                          <span
+                            className={`font-medium ${answer.answer === 'true' ? 'text-green-600' : 'text-gray-700'}`}
+                          >
                             {answer.answer === 'true' ? 'Có' : 'Không'}
                           </span>
-                          {answer.detail && (
-                            <div className='text-gray-600 italic mt-1 ml-0'>{answer.detail}</div>
-                          )}
+                          {answer.detail && <div className='text-gray-600 italic mt-1 ml-0'>{answer.detail}</div>}
                         </div>
                       </div>
                     </div>
@@ -253,48 +252,38 @@ const ReviewStep: React.FC<ReviewStepProps> = ({ selectedCampaign, questionSetId
       .filter((group): group is SectionGroup => group !== null)
 
     return groupedBySection.map(({ section, answers: sectionAnswers }, sectionIndex) => (
-      <motion.div 
-        key={section.id} 
+      <motion.div
+        key={section.id}
         className='space-y-4 border-b border-gray-100 pb-4 last:border-b-0 last:pb-0 mb-4'
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: sectionIndex * 0.1 }}
       >
         <div className='flex items-center'>
-          <Badge className='bg-red-100 text-red-600 border-none'>
-            Phần {section.order}
-          </Badge>
+          <Badge className='bg-red-100 text-red-600 border-none'>Phần {section.order}</Badge>
           <h4 className='font-medium text-gray-800 ml-2'>{section.name}</h4>
         </div>
-        
+
         <div className='space-y-4 pl-2 mt-2'>
           {sectionAnswers.map(({ question, apiAnswer }, questionIndex) => (
-            <motion.div 
-              key={question.id} 
+            <motion.div
+              key={question.id}
               className='pl-4 border-l-2 border-red-100'
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: (sectionIndex * 0.1) + (questionIndex * 0.05) }}
+              transition={{ delay: sectionIndex * 0.1 + questionIndex * 0.05 }}
             >
               <div className='flex items-start gap-2'>
-                <Badge variant="outline" className='bg-red-50 text-red-600 border-red-100 font-medium'>
+                <Badge variant='outline' className='bg-red-50 text-red-600 border-red-100 font-medium'>
                   {question.order}
                 </Badge>
                 <div className='flex-1'>
-                  <div className='text-sm text-gray-800'>
-                    {question.content}
-                  </div>
+                  <div className='text-sm text-gray-800'>{question.content}</div>
                   <div className='mt-2 pl-0 flex items-start gap-2'>
-                    <span 
-                      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                        apiAnswer.answer === 'true' 
-                          ? 'bg-green-100 text-green-800' 
-                          : 'bg-gray-100 text-gray-800'
-                      }`}
-                    >
+                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium `}>
                       {apiAnswer.answer === 'true' ? 'Có' : 'Không'}
                     </span>
-                    
+
                     {apiAnswer.detail && (
                       <span className='text-gray-600 italic text-xs flex-1'>
                         <span className='font-medium text-gray-700'>Chi tiết:</span> {apiAnswer.detail}
@@ -313,7 +302,7 @@ const ReviewStep: React.FC<ReviewStepProps> = ({ selectedCampaign, questionSetId
   if (loading) {
     return (
       <div className='flex flex-col items-center justify-center py-12 space-y-4'>
-        <div className="w-16 h-16 border-4 border-red-200 border-t-red-600 rounded-full animate-spin"></div>
+        <div className='w-16 h-16 border-4 border-red-200 border-t-red-600 rounded-full animate-spin'></div>
         <p className='text-gray-700 font-medium'>Đang tải thông tin...</p>
         <p className='text-gray-500 text-sm'>Vui lòng đợi trong giây lát</p>
       </div>
@@ -323,44 +312,36 @@ const ReviewStep: React.FC<ReviewStepProps> = ({ selectedCampaign, questionSetId
   return (
     <div>
       <ScrollToTop />
-      <Card className='overflow-hidden rounded-xl shadow-sm border-none'>
-        <CardHeader className='border-b bg-gradient-to-r from-red-50 to-white pb-6'>
+      <div className='overflow-hidden rounded-xl shadow-sm border border-gray-100'>
+        <div className='p-4'>
           <div className='flex items-center gap-3 mb-2'>
             <div className='bg-red-100 rounded-full p-2'>
               <ClipboardList className='h-5 w-5 text-red-600' />
             </div>
             <div>
-              <CardTitle>Xác nhận thông tin</CardTitle>
-              <CardDescription className='mt-0.5'>
+              <h2 className='font-semibold text-gray-900'>Xác nhận thông tin</h2>
+              <p className='text-sm text-gray-500 mt-0.5'>
                 {hasApiData
                   ? 'Thông tin đăng ký hiến máu của bạn'
                   : 'Vui lòng kiểm tra lại thông tin đăng ký hiến máu của bạn'}
-              </CardDescription>
+              </p>
             </div>
           </div>
-          
+
           {hasApiData && (
             <Badge className='bg-green-100 text-green-700 border-green-200 mt-2'>
               <CheckCircle className='mr-1 h-3 w-3' />
               Đã đăng ký
             </Badge>
           )}
-        </CardHeader>
-        
-        <CardContent className='p-6 space-y-6'>
+        </div>
+
+        <div>
           {/* Campaign info */}
           {selectedCampaign ? (
-            <div className='space-y-4'>
-              <div className='flex items-center gap-2'>
-                <Calendar className='h-5 w-5 text-red-500' />
-                <h3 className='font-medium text-gray-900'>Thông tin buổi hiến máu</h3>
-              </div>
-              <div className='rounded-xl overflow-hidden'>
-                <CampaignDetails campaign={selectedCampaign} />
-              </div>
-            </div>
+            <CampaignDetails campaign={selectedCampaign} />
           ) : (
-            <div className='bg-yellow-50 p-4 rounded-xl'>
+            <div className='bg-yellow-50 rounded-xl'>
               <div className='flex items-center gap-2 text-yellow-700'>
                 <AlertTriangle className='h-5 w-5 text-yellow-600' />
                 <p className='font-medium'>Không tìm thấy thông tin buổi hiến máu</p>
@@ -369,24 +350,22 @@ const ReviewStep: React.FC<ReviewStepProps> = ({ selectedCampaign, questionSetId
           )}
 
           {/* Answers display */}
-          <div className='space-y-4'>
+          <div className='space-y-4 mt-6 bg-white p-4 rounded-xl'>
             <div className='flex items-center gap-2'>
               <ClipboardList className='h-5 w-5 text-red-500' />
               <h3 className='font-medium text-gray-900'>Câu trả lời của bạn</h3>
             </div>
-            <Card className='overflow-hidden rounded-xl shadow-sm border-none'>
-              <CardContent className='p-5 divide-y divide-gray-100'>
-                {renderAnswers()}
-              </CardContent>
-            </Card>
+            <div>
+              <div className='p-4 divide-y divide-gray-100'>{renderAnswers()}</div>
+            </div>
           </div>
 
           {/* Navigation buttons */}
           <div className='flex justify-between pt-4'>
             {!hasApiData && (
-              <Button 
-                variant='outline' 
-                onClick={() => setCurrentStep(STEPS.QUESTIONNAIRE)} 
+              <Button
+                variant='outline'
+                onClick={() => setCurrentStep(STEPS.QUESTIONNAIRE)}
                 disabled={submitting}
                 className='rounded-xl'
               >
@@ -411,8 +390,8 @@ const ReviewStep: React.FC<ReviewStepProps> = ({ selectedCampaign, questionSetId
               )}
             </Button>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   )
 }

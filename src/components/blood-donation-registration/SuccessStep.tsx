@@ -37,7 +37,7 @@ const SuccessStep: FC<SuccessStepProps> = ({ navigate }) => {
         
         <CardContent className='p-0'>
           <motion.div
-            className='mx-auto w-28 h-28 -mt-14 bg-white rounded-full flex items-center justify-center shadow-lg border-4 border-white'
+            className='mx-auto w-20 h-20 -mt-8 bg-white rounded-full flex items-center justify-center shadow-lg border-4 border-white'
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ type: 'spring', stiffness: 200, delay: 0.2 }}
@@ -50,7 +50,7 @@ const SuccessStep: FC<SuccessStepProps> = ({ navigate }) => {
                 rotate: { delay: 0.8, duration: 0.5 }
               }}
             >
-              <CheckCircle className='h-16 w-16 text-green-500' strokeWidth={1.5} />
+              <CheckCircle className='h-14 w-14 text-green-500' strokeWidth={1.5} />
             </motion.div>
           </motion.div>
 

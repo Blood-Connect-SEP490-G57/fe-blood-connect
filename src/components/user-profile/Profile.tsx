@@ -172,12 +172,16 @@ const Profile = () => {
             <div className='h-24 w-24 bg-white rounded-full flex items-center justify-center shadow-md mb-4'>
               <User className='h-12 w-12 text-red-500' />
             </div>
-            <h1 className='text-2xl font-bold mb-1'>{form.getValues('full_name')}</h1>
-            <div className='flex items-center gap-2'>
-              <Droplet className='h-4 w-4' />
-              <span>Nhóm máu: {form.getValues('blood_group')}</span>
+            <h1 className='text-xl font-bold mb-1'>{form.getValues('full_name')}</h1>
+            <div className='flex items-center gap-1'>
+              <div className='flex items-center gap-1'>
+                <Droplet className='h-4 w-4' />
+                <span>Nhóm máu: {form.getValues('blood_group')}</span>
+              </div>
               <span className='mx-2'>•</span>
-              <span>Đã hiến {form.getValues('time_donation')} lần</span>
+              <div>
+                <span>Đã hiến {form.getValues('time_donation')} lần</span>
+              </div>
             </div>
           </div>
         </div>
@@ -221,7 +225,7 @@ const Profile = () => {
                             </div>
                             <FormControl>
                               <div className='flex items-center justify-between'>
-                                <span className='text-sm text-gray-600 '>{field.value || 'Chưa có địa chỉ'}</span>
+                                <span className='text-sm text-gray-600 text-end'>{field.value || 'Chưa có địa chỉ'}</span>
                                 {isEdit && (
                                   <Dialog>
                                     <DialogTrigger asChild>
@@ -438,11 +442,11 @@ const Profile = () => {
 // Helper component for read-only info items
 const InfoItem = ({ label, value }: { label: string; value: string | number }) => (
   <div className='p-2 flex items-center justify-between'>
-    <div className='flex items-center gap-3'>
+    <div className='flex items-center'>
       <span className='text-sm font-medium text-gray-700'>{label}</span>
     </div>
-    <div className='flex items-center gap-2'>
-      <span className='text-sm text-gray-600'>{value}</span>
+    <div className='flex items-center justify-end'>
+      <span className='text-sm text-gray-600 text-end'>{value}</span>
     </div>
   </div>
 )

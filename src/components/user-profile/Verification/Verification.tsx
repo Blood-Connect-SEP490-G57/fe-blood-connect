@@ -67,7 +67,7 @@ const Verification = () => {
     const stepsArray = [1, 2, 3, 4] // Các bước cố định
     return (
       <div className='mb-8'>
-        <div className='flex items-center mb-8'>
+        <div className='flex items-center'>
           {stepsArray.map((stepNumber, index) => (
             <React.Fragment key={stepNumber}>
               <div className='flex flex-col items-center'>
@@ -80,14 +80,14 @@ const Verification = () => {
                       : 'bg-gray-200 text-gray-600' // Màu xám cho step chưa đi đến
                   }`}
                 >
-                  {stepNumber < step ? (
+                  {stepNumber < step || stepNumber === 4 ? (
                     <CheckCircle className='h-5 w-5' />
                   ) : (
                     <span className='font-medium'>{stepNumber}</span>
                   )}
                 </div>
                 <span
-                  className={`text-xs font-medium mt-2 ${
+                  className={`text-xs text-center font-medium mt-2 ${
                     step >= stepNumber ? 'text-red-600' : 'text-gray-400'
                   }`}
                 >
@@ -147,7 +147,7 @@ const Verification = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <div className='container mx-auto relative z-10'>
+        <div className='mx-auto relative z-10'>
           <div className='flex flex-col items-center'>
             <motion.div 
               className='h-24 w-24 bg-white/90 backdrop-blur-sm rounded-3xl flex items-center justify-center shadow-lg mb-5'
@@ -169,7 +169,7 @@ const Verification = () => {
         <div className='absolute bottom-0 right-0 w-40 h-40 bg-white/10 rounded-full translate-x-1/3 translate-y-1/3 blur-md'></div>
       </motion.div>
 
-      <div className='container bg-gray-100 mx-auto px-4 py-8 mb-4'>
+      <div className='bg-gray-100 mx-auto mt-4 mb-4'>
         {/* Step indicator */}
         <motion.div 
           className='mb-8 px-4 pt-2'
@@ -182,7 +182,7 @@ const Verification = () => {
 
         {/* Current step content */}
         <motion.div 
-          className='bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl p-6 md:p-8 max-w-4xl mx-auto border border-gray-100'
+          className='bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl max-w-4xl mx-auto border border-gray-100'
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.4, duration: 0.5 }}
