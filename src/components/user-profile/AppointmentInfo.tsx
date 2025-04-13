@@ -1,7 +1,7 @@
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Calendar, MapPin, Calendar as CalendarIcon, Briefcase, Building } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
+import { Calendar, MapPin, Calendar as CalendarIcon, Briefcase, Building, ArrowLeft } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import { getCurrent, updateinfor } from '@/api/appointment'
 import { format } from 'date-fns'
 import { vi } from 'date-fns/locale'
@@ -30,7 +30,7 @@ interface UserInfo {
   studentId: string
   militaryId: string
   addressContact: string
-  mobile: string
+  phoneNumber: string
   email: string
   bloodGroup: string
 }
@@ -86,11 +86,14 @@ interface Organization {
   name: string
 }
 
-const AppointmentInfo = () => {
+interface AppointmentInfoProps {
+  appointmentId?: string | null
+}
+
+const AppointmentInfo = ({ appointmentId }: AppointmentInfoProps) => {
   const [data, setData] = useState<AppointmentData | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const hasFetched = useRef(false)
   const [isPopupOpen, setPopupOpen] = useState(false)
   const [organizations, setOrganizations] = useState<Organization[]>([])
 
@@ -109,13 +112,15 @@ const AppointmentInfo = () => {
   }, [])
 
   useEffect(() => {
-    if (hasFetched.current) return
-    hasFetched.current = true
-
     const fetchAppointmentInfo = async () => {
       try {
         setLoading(true)
-        const response = await getCurrent()
+        if (!appointmentId) {
+          setError('Không tìm thấy thông tin lịch hẹn')
+          return
+        }
+
+        const response = await getCurrent(appointmentId)
 
         if (response.success && response.data) {
           setData({
@@ -135,7 +140,7 @@ const AppointmentInfo = () => {
     }
 
     fetchAppointmentInfo()
-  }, [])
+  }, [appointmentId])
 
   // Hàm chỉnh sửa thông tin cá nhân
   const [isEditing, setIsEditing] = useState(false) // Trạng thái chỉnh sửa
@@ -153,16 +158,17 @@ const AppointmentInfo = () => {
 
   useEffect(() => {
     if (data?.userInfo) {
+      const userInfo = data.userInfo as any
       setFormData({
-        userId: data.userInfo.userId || '',
-        jobName: data.userInfo.jobName || '',
-        organizationId: data.userInfo.organizationId || '',
-        bloodGroup: data.userInfo.bloodGroup || '',
-        addressContact: data.userInfo.addressContact || '',
-        studentId: data.userInfo.studentId || '',
-        militaryId: data.userInfo.militaryId || '',
-        phoneNumber: data.userInfo.mobile || '',
-        email: data.userInfo.email || ''
+        userId: userInfo.userId || '',
+        jobName: userInfo.jobName || '',
+        organizationId: userInfo.organizationId || '',
+        bloodGroup: userInfo.bloodGroup || '',
+        addressContact: userInfo.addressContact || '',
+        studentId: userInfo.studentId || '',
+        militaryId: userInfo.militaryId || '',
+        phoneNumber: userInfo.phoneNumber || '',
+        email: userInfo.email || ''
       })
     }
   }, [data])
@@ -250,6 +256,10 @@ const AppointmentInfo = () => {
     }
   }
 
+  const handleBackToHistory = () => {
+    window.location.hash = 'lich-su-hien-mau'
+  }
+
   if (loading) {
     return <Loading />
   }
@@ -275,6 +285,14 @@ const AppointmentInfo = () => {
     <div className='min-h-screen bg-gray-100'>
       {/* Banner section */}
       <div className='bg-gradient-to-r from-red-600 to-red-400 text-white p-8 rounded-xl relative'>
+        <Button
+          variant='ghost'
+          size='icon'
+          className='absolute top-4 left-4 text-white hover:bg-white/20'
+          onClick={handleBackToHistory}
+        >
+          <ArrowLeft className='h-6 w-6' />
+        </Button>
         <div className='container mx-auto'>
           <div className='flex flex-col items-center'>
             <div className='h-24 w-24 bg-white rounded-full flex items-center justify-center shadow-md mb-4'>
@@ -294,13 +312,13 @@ const AppointmentInfo = () => {
         </div>
       </div>
 
-      <div className='py-2'>
+      <div className='py-2 '>
         {/* Card for active appointment */}
         {hasAppointment && (
           <div className='mb-6'>
             <h2 className='text-lg font-semibold text-gray-700 mb-2 px-2'>Lịch hẹn hiện tại</h2>
             <Card className='overflow-hidden rounded-xl shadow-sm bg-white border-none'>
-              <CardContent className='p-2'>
+              <CardContent className='p-2 sm:p-4'>
                 <div className='flex items-center justify-between mb-3'>
                   <h3 className='font-semibold text-red-600 flex items-center'>
                     <div>
@@ -344,41 +362,41 @@ const AppointmentInfo = () => {
           <Card className='overflow-hidden rounded-xl shadow-sm border-none'>
             <CardContent className='p-0'>
               <div className='divide-y'>
-                <div className='p-2 flex items-center justify-between'>
+                <div className='p-2 sm:p-4 flex items-center justify-between'>
                   <div className='flex items-center gap-3'>
                     <div>
                       <span className='text-sm font-medium text-gray-700'>Họ và tên</span>
                     </div>
                   </div>
                   <div className='flex items-center gap-2'>
-                    <span className='text-sm text-gray-600'>{userInfo.fullName}</span>
+                    <span className='text-xs sm:text-sm text-gray-600'>{userInfo.fullName}</span>
                   </div>
                 </div>
 
-                <div className='p-2 flex items-center justify-between'>
+                <div className='p-2 sm:p-4  flex items-center justify-between'>
                   <div className='flex items-center gap-3'>
                     <span className='text-sm font-medium text-gray-700'>Số CCCD/Hộ chiếu</span>
                   </div>
                   <div className='flex items-center gap-2'>
-                    <span className='text-sm text-gray-600'>{userInfo.identityNumber}</span>
+                    <span className='text-xs sm:text-sm text-gray-600'>{userInfo.identityNumber}</span>
                   </div>
                 </div>
 
-                <div className='p-2 flex items-center justify-between'>
+                <div className='p-2 sm:p-4 flex items-center justify-between'>
                   <div className='flex items-center gap-3'>
                     <span className='text-sm font-medium text-gray-700'>Ngày sinh</span>
                   </div>
                   <div className='flex items-center gap-2'>
-                    <span className='text-sm text-gray-600'>{formatDate(userInfo.dob)}</span>
+                    <span className='text-xs sm:text-sm text-gray-600'>{formatDate(userInfo.dob)}</span>
                   </div>
                 </div>
 
-                <div className='p-2 flex items-center justify-between'>
+                <div className='p-2 sm:p-4 flex items-center justify-between'>
                   <div className='flex items-center gap-3'>
                     <span className='text-sm font-medium text-gray-700'>Giới tính</span>
                   </div>
                   <div className='flex items-center gap-2'>
-                    <span className='text-sm text-gray-600'>{userInfo.gender}</span>
+                    <span className='text-xs sm:text-sm text-gray-600'>{userInfo.gender}</span>
                   </div>
                 </div>
               </div>
@@ -392,13 +410,22 @@ const AppointmentInfo = () => {
           <Card className='overflow-hidden rounded-xl shadow-sm border-none'>
             <CardContent className='p-0'>
               <div className='divide-y'>
-                <div className='p-2'>
+                <div className='p-2 sm:p-4'>
                   <div className='flex items-center justify-between'>
                     <div className='flex items-center gap-3'>
                       <span className='text-sm font-medium text-gray-700'>Địa chỉ liên hệ</span>
                     </div>
                     <div className='flex items-center justify-end gap-2'>
-                      <span className='text-sm text-gray-600 text-end'>{userInfo.addressContact}</span>
+                      <span className='text-xs sm:text-sm text-gray-600'>
+                        {userInfo.addressContact
+                          ? userInfo.addressContact.split(',').map((part, index) => (
+                              <span key={index}>
+                                {part.trim()}
+                                {index < 3 && <br />}
+                              </span>
+                            ))
+                          : 'Chưa có địa chỉ'}
+                      </span>
                       {isEditing && (
                         <Dialog>
                           <DialogTrigger asChild>
@@ -423,13 +450,13 @@ const AppointmentInfo = () => {
                   </div>
                 </div>
 
-                <div className='p-2 flex items-center justify-between'>
+                <div className='p-2 sm:p-4 flex items-center justify-between'>
                   <div className='flex items-center gap-3'>
                     <span className='text-sm font-medium text-gray-700'>Điện thoại</span>
                   </div>
                   {isEditing ? (
                     <input
-                      type='text'
+                      type='number'
                       name='phoneNumber'
                       value={formData.phoneNumber}
                       onChange={handleInputChange}
@@ -437,12 +464,12 @@ const AppointmentInfo = () => {
                     />
                   ) : (
                     <div className='flex items-center gap-2'>
-                      <span className='text-sm text-gray-600'>{userInfo.mobile || '-'}</span>
+                      <span className='text-xs sm:text-sm text-gray-600'>{userInfo.phoneNumber}</span>
                     </div>
                   )}
                 </div>
 
-                <div className='p-2 flex items-center justify-between'>
+                <div className='p-2 sm:p-4 flex items-center justify-between'>
                   <div className='flex items-center gap-3'>
                     <span className='text-sm font-medium text-gray-700'>Email</span>
                   </div>
@@ -456,7 +483,7 @@ const AppointmentInfo = () => {
                     />
                   ) : (
                     <div className='flex items-center gap-2'>
-                      <span className='text-sm text-gray-600'>{userInfo.email}</span>
+                      <span className='text-xs sm:text-sm text-gray-600'>{userInfo.email}</span>
                     </div>
                   )}
                 </div>
@@ -471,13 +498,13 @@ const AppointmentInfo = () => {
           <Card className='overflow-hidden rounded-xl shadow-sm border-none'>
             <CardContent className='p-0'>
               <div className='divide-y'>
-                <div className='p-2'>
+                <div className='p-2 sm:p-4'>
                   <div className='flex items-center justify-between'>
                     <div className='flex items-center gap-3'>
                       <span className='text-sm font-medium text-gray-700'>Nghề nghiệp</span>
                     </div>
                     <div className='flex items-center gap-2'>
-                      <span className='text-sm text-gray-600'>{userInfo.jobName}</span>
+                      <span className='text-xs sm:text-sm text-gray-600'>{userInfo.jobName}</span>
                       {isEditing && (
                         <Dialog>
                           <DialogTrigger asChild>
@@ -502,14 +529,14 @@ const AppointmentInfo = () => {
                   </div>
                 </div>
 
-                <div className='p-2 flex items-center justify-between'>
+                <div className='p-2  sm:p-4 flex items-center justify-between'>
                   <div className='flex items-center gap-3'>
                     <span className='text-sm font-medium text-gray-700'>Tổ chức</span>
                   </div>
                   {isEditing ? (
                     <div className='w-1/2'>
                       <div className='flex items-center justify-end gap-2'>
-                        <span className='text-sm text-gray-600'>
+                        <span className='text-sm sm:text-sm text-gray-600'>
                           {organizations.find((org) => org.id === formData.organizationId)?.name || 'Chưa cập nhật'}
                         </span>
                         <Dialog>
@@ -534,14 +561,14 @@ const AppointmentInfo = () => {
                     </div>
                   ) : (
                     <div className='flex items-center gap-2'>
-                      <span className='text-sm text-gray-600'>
+                      <span className='text-xs sm:text-sm text-gray-600'>
                         {organizations.find((org) => org.id === userInfo.organizationId)?.name || 'Chưa cập nhật'}
                       </span>
                     </div>
                   )}
                 </div>
 
-                <div className='p-2 flex items-center justify-between'>
+                <div className='p-2 sm:p-4 flex items-center justify-between'>
                   <div className='flex items-center gap-3'>
                     <span className='text-sm font-medium text-gray-700'>Mã sinh viên</span>
                   </div>
@@ -555,12 +582,12 @@ const AppointmentInfo = () => {
                     />
                   ) : (
                     <div className='flex items-center gap-2'>
-                      <span className='text-sm text-gray-600'>{userInfo.studentId || '-'}</span>
+                      <span className='text-xs sm:text-sm text-gray-600'>{userInfo.studentId || '-'}</span>
                     </div>
                   )}
                 </div>
 
-                <div className='p-2 flex items-center justify-between'>
+                <div className='p-2 sm:p-4 flex items-center justify-between'>
                   <div className='flex items-center gap-3'>
                     <span className='text-sm font-medium text-gray-700'>Mã quân nhân</span>
                   </div>
@@ -574,7 +601,7 @@ const AppointmentInfo = () => {
                     />
                   ) : (
                     <div className='flex items-center gap-2'>
-                      <span className='text-sm text-gray-600'>{userInfo.militaryId || '-'}</span>
+                      <span className='text-xs sm:text-sm text-gray-600'>{userInfo.militaryId || '-'}</span>
                     </div>
                   )}
                 </div>
@@ -589,17 +616,28 @@ const AppointmentInfo = () => {
           <Card className='overflow-hidden rounded-xl shadow-sm border-none'>
             <CardContent className='p-0'>
               <div className='divide-y'>
-                <div className='p-2'>
+                <div className='p-2 sm:p-4'>
                   <div className='flex justify-between items-center gap-3'>
                     <span className='text-sm font-medium text-gray-700'>Địa chỉ thường trú</span>
-                    <span className='text-sm text-gray-600'>{userInfo.address}</span>
+                    <span className='text-xs sm:text-sm text-gray-600'>
+                      {userInfo.address
+                        ? userInfo.address.split(',').map((part, index) => (
+                            <>
+                              {part.trim()}
+                              {index < 3 && <br />}
+                            </>
+                          ))
+                        : 'Chưa có địa chỉ'}
+                    </span>
                   </div>
                 </div>
 
-                <div className='p-2'>
+                <div className='p-2 sm:p-4'>
                   <div className='flex items-center justify-between gap-3'>
                     <span className='text-sm font-medium text-gray-700'>Nơi cấp</span>
-                    <span className='text-sm text-gray-600'>{userInfo.issueLoc.toLocaleLowerCase()}</span>
+                    <span className='text-xs sm:text-sm text-gray-600'>
+                      {userInfo.issueLoc.charAt(0) + userInfo.issueLoc.slice(1).toLowerCase()}
+                    </span>
                   </div>
                 </div>
               </div>

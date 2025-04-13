@@ -11,7 +11,7 @@ import { User as fetchUser, updateUserDetail } from '@/api/user'
 import { toast } from '../ui/use-toast'
 import Loading from '../warnings/loading'
 import Empty from '../warnings/empty'
-import { Droplet, User, MapPin, Briefcase } from 'lucide-react'
+import { User, MapPin, Briefcase } from 'lucide-react'
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
 import AddressSelector from '../address/AddressSelector'
 import JobSelector from '../job/JobSelector'
@@ -137,7 +137,6 @@ const Profile = () => {
 
   const handleEditToggle = () => {
     if (isEdit) {
-      // Reset form về giá trị ban đầu khi hủy chỉnh sửa
       form2.reset()
     }
     setIsEdit(!isEdit)
@@ -145,14 +144,18 @@ const Profile = () => {
 
   const onSubmit = async () => {
     const formattedValues = {
+      mobile: form2.getValues('mobile'),
       email: form2.getValues('email'),
-      job: form2.getValues('job_name'),
-      student: form2.getValues('student_id'),
-      military: form2.getValues('military_id'),
-      address: form2.getValues('address_contact')
+      job_name: form2.getValues('job_name'),
+      student_id: form2.getValues('student_id'), 
+      military_id: form2.getValues('military_id'),
+      address_contact: form2.getValues('address_contact'),
+      organization_id: form.getValues('organization_id'),
+      time_donation: form.getValues('time_donation'),
+      blood_group: form.getValues('blood_group')
     }
     await updateProfile(formattedValues)
-    setIsEdit(false) // Tắt chế độ chỉnh sửa sau khi lưu
+    setIsEdit(false)
   }
 
   if (loading) {
@@ -175,12 +178,11 @@ const Profile = () => {
             <h1 className='text-xl font-bold mb-1'>{form.getValues('full_name')}</h1>
             <div className='flex items-center gap-1'>
               <div className='flex items-center gap-1'>
-                <Droplet className='h-4 w-4' />
-                <span>Nhóm máu: {form.getValues('blood_group')}</span>
+                <span className='text-xs'>Nhóm máu: {form.getValues('blood_group')}</span>
               </div>
               <span className='mx-2'>•</span>
               <div>
-                <span>Đã hiến {form.getValues('time_donation')} lần</span>
+                <span className='text-xs'>Đã hiến {form.getValues('time_donation')} lần</span>
               </div>
             </div>
           </div>
@@ -199,8 +201,8 @@ const Profile = () => {
                 <InfoItem label='Ngày sinh' value={form.getValues('dob')} />
                 <InfoItem label='Giới tính' value={form.getValues('gender')} />
                 <InfoItem label='Quốc gia' value={form.getValues('national')} />
-                <InfoItem label='Quê quán' value={form.getValues('home')} />
-                <InfoItem label='Địa chỉ thường trú' value={form.getValues('address')} />
+                <InfoItem label='Quê quán' value={form.getValues('home')} isAddress={true} />
+                <InfoItem label='Địa chỉ thường trú' value={form.getValues('address')} isAddress={true} />
               </div>
             </CardContent>
           </Card>
@@ -218,14 +220,23 @@ const Profile = () => {
                       control={form2.control}
                       name='address_contact'
                       render={({ field }) => (
-                        <FormItem className='p-2'>
+                        <FormItem className='p-2 sm:p-4'>
                           <div className='flex items-center justify-between'>
                             <div className='flex items-center gap-3'>
                               <FormLabel className='text-sm font-medium text-gray-700 m-0'>Địa chỉ liên hệ</FormLabel>
                             </div>
                             <FormControl>
                               <div className='flex items-center justify-between'>
-                                <span className='text-sm text-gray-600 text-end'>{field.value || 'Chưa có địa chỉ'}</span>
+                                <span className='text-xs text-gray-600 text-end'>
+                                  {field.value
+                                    ? field.value.split(',').map((part, index) => (
+                                        <>
+                                          {part.trim()}
+                                          {index < 3 && <br />}
+                                        </>
+                                      ))
+                                    : 'Chưa có địa chỉ'}
+                                </span>
                                 {isEdit && (
                                   <Dialog>
                                     <DialogTrigger asChild>
@@ -255,7 +266,7 @@ const Profile = () => {
                       control={form2.control}
                       name='mobile'
                       render={({ field }) => (
-                        <FormItem className='p-2'>
+                        <FormItem className='p-2 sm:p-4'>
                           <div className='flex items-center justify-between'>
                             <div className='flex items-center gap-3'>
                               <FormLabel className='text-sm font-medium text-gray-700 m-0'>
@@ -271,7 +282,7 @@ const Profile = () => {
                                   placeholder='Nhập số điện thoại'
                                 />
                               ) : (
-                                <span className='text-sm text-gray-600'>{field.value || 'Chưa có điện thoại'}</span>
+                                <span className='text-xs text-gray-600'>{field.value || 'Chưa có điện thoại'}</span>
                               )}
                             </FormControl>
                           </div>
@@ -284,7 +295,7 @@ const Profile = () => {
                       control={form2.control}
                       name='email'
                       render={({ field }) => (
-                        <FormItem className='p-2'>
+                        <FormItem className='p-2 sm:p-4'>
                           <div className='flex items-center justify-between'>
                             <div className='flex items-center gap-3'>
                               <FormLabel className='text-sm font-medium text-gray-700 m-0'>Email</FormLabel>
@@ -299,7 +310,7 @@ const Profile = () => {
                                   readOnly={!isEdit}
                                 />
                               ) : (
-                                <span className='text-sm text-gray-600 '>{field.value || 'Chưa có email'}</span>
+                                <span className='text-xs text-gray-600 '>{field.value || 'Chưa có email'}</span>
                               )}
                             </FormControl>
                           </div>
@@ -322,14 +333,14 @@ const Profile = () => {
                       control={form2.control}
                       name='job_name'
                       render={({ field }) => (
-                        <FormItem className='p-2'>
+                        <FormItem className='p-2 sm:p-4'>
                           <div className='flex items-center justify-between'>
                             <div className='flex items-center gap-3'>
                               <FormLabel className='text-sm font-medium text-gray-700 m-0'>Nghề nghiệp</FormLabel>
                             </div>
                             <FormControl>
                               <div className='flex items-center justify-between'>
-                                <span className='text-sm text-gray-600 '>{field.value || 'Chưa có nghề nghiệp'}</span>
+                                <span className='text-xs text-gray-600 '>{field.value || 'Chưa có nghề nghiệp'}</span>
                                 {isEdit && (
                                   <Dialog>
                                     <DialogTrigger>
@@ -359,7 +370,7 @@ const Profile = () => {
                       control={form2.control}
                       name='student_id'
                       render={({ field }) => (
-                        <FormItem className='p-2'>
+                        <FormItem className='p-2 sm:p-4'>
                           <div className='flex items-center justify-between'>
                             <div className='flex items-center gap-3'>
                               <FormLabel className='text-sm font-medium text-gray-700 m-0'>Mã sinh viên</FormLabel>
@@ -373,7 +384,7 @@ const Profile = () => {
                                   readOnly={!isEdit}
                                 />
                               ) : (
-                                <span className='text-sm text-gray-600'>{field.value || '-'}</span>
+                                <span className='text-xs text-gray-600'>{field.value || '-'}</span>
                               )}
                             </FormControl>
                           </div>
@@ -386,7 +397,7 @@ const Profile = () => {
                       control={form2.control}
                       name='military_id'
                       render={({ field }) => (
-                        <FormItem className='p-2'>
+                        <FormItem className='p-2 sm:p-4'>
                           <div className='flex items-center justify-between'>
                             <div className='flex items-center gap-3'>
                               <FormLabel className='text-sm font-medium text-gray-700 m-0'>Mã quân nhân</FormLabel>
@@ -400,7 +411,7 @@ const Profile = () => {
                                   readOnly={!isEdit}
                                 />
                               ) : (
-                                <span className='text-sm text-gray-600'>{field.value || '-'}</span>
+                                <span className='text-xs text-gray-600'>{field.value || '-'}</span>
                               )}
                             </FormControl>
                           </div>
@@ -439,14 +450,35 @@ const Profile = () => {
   )
 }
 
-// Helper component for read-only info items
-const InfoItem = ({ label, value }: { label: string; value: string | number }) => (
-  <div className='p-2 flex items-center justify-between'>
+// Thay đổi component InfoItem để hỗ trợ hiển thị địa chỉ nhiều dòng
+const InfoItem = ({
+  label,
+  value,
+  isAddress = false
+}: {
+  label: string
+  value: string | number
+  isAddress?: boolean
+}) => (
+  <div className='p-2 sm:p-4 flex items-center justify-between'>
     <div className='flex items-center'>
       <span className='text-sm font-medium text-gray-700'>{label}</span>
     </div>
     <div className='flex items-center justify-end'>
-      <span className='text-sm text-gray-600 text-end'>{value}</span>
+      {isAddress ? (
+        <span className='text-xs text-gray-600 text-end'>
+          {String(value)
+            .split(',')
+            .map((part, index) => (
+              <>
+                {part.trim()}
+                {index < 3 && <br />}
+              </>
+            ))}
+        </span>
+      ) : (
+        <span className='text-xs text-gray-600 text-end'>{value}</span>
+      )}
     </div>
   </div>
 )

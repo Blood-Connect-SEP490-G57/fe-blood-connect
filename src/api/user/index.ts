@@ -39,7 +39,17 @@ export const createOrUpdateUserDetail = async (request: UserDetailType) => {
 }
 
 export const updateUserDetail = async (data: any) => {
-  const response = await axios.put('/api/users/update-detail', data, {
+  const response = await axios.put('/api/users/update-detail', {
+    mobile: data.mobile,
+    email: data.email,
+    job_name: data.job_name,
+    student_id: data.student_id,
+    military_id: data.military_id,
+    address_contact: data.address_contact,
+    time_donation: data.time_donation || 0,
+    blood_group: data.blood_group || '',
+    organization_id: data.organization_id || null
+  }, {
     headers: {
       Authorization: `Bearer ${localStorage.getItem('access_token')}`
     }

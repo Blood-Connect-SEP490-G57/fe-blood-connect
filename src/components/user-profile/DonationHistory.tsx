@@ -135,6 +135,10 @@ const DonationHistory = () => {
     setModalOpen(true)
   }
 
+  const handleViewAppointment = (appointment: AppointmentType) => {
+    window.location.hash = `xem-lich-hen-${appointment.id}`
+  }
+
   const doneAppointments = appointments.filter((a) => a.status === 'DONE').length
   const upcomingAppointments = appointments.filter((a) => a.status === 'BOOKING').length
   const cancelledAppointments = appointments.filter((a) => a.status === 'CANCELLED').length
@@ -260,9 +264,7 @@ const DonationHistory = () => {
                               variant='outline'
                               size='sm'
                               className='text-gray-600 border-gray-300 hover:bg-gray-50 md:text-base md:px-6'
-                              onClick={() => {
-                                window.location.hash = 'lich-hen'
-                              }}
+                              onClick={() => handleViewAppointment(appointment)}
                             >
                               Xem lịch hẹn
                             </Button>
