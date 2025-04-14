@@ -103,7 +103,6 @@ const Header: React.FC = () => {
   // User-specific navigation items
   const userNavigation = isLoggedIn
     ? [
-        // { name: 'LỊCH HẸN CỦA TÔI', href: '/trang-ca-nhan#lich-hen', icon: <Calendar className='w-4 h-4 mr-2' /> },
         { name: 'LỊCH SỬ ĐẶT HẸN', href: '/trang-ca-nhan#lich-su-hien-mau', icon: <Calendar className='w-4 h-4 mr-2' /> },
         { name: 'THÔNG TIN CÁ NHÂN', href: '/trang-ca-nhan#thong-tin-ca-nhan', icon: <User className='w-4 h-4 mr-2' /> },
         { name: 'CÀI ĐẶT', href: '/cai-dat', icon: <Settings className='w-4 h-4 mr-2' /> }
