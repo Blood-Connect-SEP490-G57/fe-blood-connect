@@ -59,7 +59,7 @@ export default function Register() {
   }
 
   return (
-    <div className='min-h-screen bg-gray-100 flex flex-col py-12 sm:px-6 lg:px-8 relative overflow-hidden'>
+    <div className='min-h-screen bg-gray-100 py-12 flex flex-col justify-center relative overflow-hidden'>
       {/* Decorative elements */}
       <div className='absolute top-20 right-10 w-72 h-72 bg-red-50 rounded-full blur-3xl opacity-30 -z-10'></div>
       <div className='absolute bottom-20 left-10 w-72 h-72 bg-red-50 rounded-full blur-3xl opacity-30 -z-10'></div>
@@ -164,7 +164,7 @@ export default function Register() {
                         </div>
                         <Input
                           {...field}
-                          type='password'
+                          type={showPassword ? 'text' : 'password'}
                           className='appearance-none block w-full pl-11 pr-4 py-3 border border-gray-200 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500 transition-all'
                           placeholder='Nhập mật khẩu'
                         />
@@ -195,7 +195,7 @@ export default function Register() {
                         </div>
                         <Input
                           {...field}
-                          type='password'
+                          type={showConfirmPassword ? 'text' : 'password'}
                           className='appearance-none block w-full pl-11 pr-4 py-3 border border-gray-200 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500 transition-all'
                           placeholder='Xác nhận mật khẩu'
                         />
