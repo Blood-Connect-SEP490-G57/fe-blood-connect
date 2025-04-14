@@ -1,6 +1,6 @@
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Calendar, MapPin, Calendar as CalendarIcon, Briefcase, Building, ArrowLeft } from 'lucide-react'
+import { Calendar, MapPin, Briefcase, Building, ArrowLeft } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { getCurrent, updateinfor } from '@/api/appointment'
 import { format } from 'date-fns'
@@ -321,12 +321,8 @@ const AppointmentInfo = ({ appointmentId }: AppointmentInfoProps) => {
               <CardContent className='p-2 sm:p-4'>
                 <div className='flex items-center justify-between mb-3'>
                   <h3 className='font-semibold text-red-600 flex items-center'>
-                    <div>
-                      <CalendarIcon className='w-5 h-5 mr-2' />
-                    </div>
                     <div>{data.campaign?.campaignName}</div>
                   </h3>
-                  {renderStatusBadge(data.campaign?.status || '')}
                 </div>
                 <div className='space-y-3 mb-4'>
                   <div className='flex items-start gap-2'>
