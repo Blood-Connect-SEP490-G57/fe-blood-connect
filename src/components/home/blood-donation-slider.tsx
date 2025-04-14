@@ -85,7 +85,7 @@ const BloodDonationSlider: React.FC = () => {
   }
 
   return (
-    <div className='py-16 bg-gradient-to-b from-gray-50 to-white' id='blood-donation-slider'>
+    <div className='py-8 bg-gradient-to-b from-gray-50 to-white' id='blood-donation-slider'>
       {campaigns.length === 0 ? (
         <div className='text-center py-12'>
           <h2 className='text-2xl font-bold text-gray-700'>Không có sự kiện nào</h2>
@@ -299,9 +299,9 @@ const BloodDonationSlider: React.FC = () => {
             {/* iOS style indicators */}
             {campaigns.length > 1 && (
               <div className='absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2'>
-                {campaigns.map((_, index) => (
+                {campaigns.map((campaign, index) => (
                   <button
-                    key={index}
+                    key={campaign.id}
                     onClick={() => setCurrentSlide(index)}
                     className={`w-2 h-2 rounded-full transition-all duration-200 ${
                       index === currentSlide ? 'bg-red-500 w-6' : 'bg-gray-300 hover:bg-gray-400'

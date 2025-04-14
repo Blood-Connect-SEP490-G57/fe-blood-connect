@@ -1,6 +1,6 @@
 import React from 'react'
 import { Button } from '@/components/ui/button'
-import { ArrowRight, Heart, Users, ChevronDown } from 'lucide-react'
+import { Heart, Users, ChevronDown } from 'lucide-react'
 import { motion } from 'framer-motion'
 
 const HeroSection: React.FC = () => {
@@ -40,7 +40,7 @@ const HeroSection: React.FC = () => {
   }
 
   return (
-    <section className='relative pt-16 pb-24 overflow-hidden bg-gradient-to-br from-red-500 via-red-600 to-red-500'>
+    <section className='relative pt-20 pb-4 overflow-hidden bg-gradient-to-br from-red-500 via-red-600 to-red-500'>
       {/* Background Pattern - iOS style subtle pattern */}
       <div className='absolute inset-0 opacity-10'>
         <div
@@ -91,38 +91,38 @@ const HeroSection: React.FC = () => {
               </span>
             </h1>
 
-            <p className='text-base lg:text-lg mb-8 text-red-50 leading-relaxed max-w-xl opacity-90'>
+            <p className='text-base lg:text-lg mb-8 text-red-50 leading-relaxed max-w-xl opacity-90 text-justify'>
               Mỗi giọt máu hiến tặng là một cơ hội để cứu sống người khác. Hãy chung tay vì một cộng đồng khỏe mạnh và
               nhân ái.
             </p>
 
             <div className='flex flex-wrap gap-4'>
-              <Button
+                <Button
                 size='lg'
-                className='bg-white text-red-600 hover:bg-red-50 rounded-full shadow-lg group transition-all duration-300 font-medium'
+                className='bg-white text-red-600 hover:bg-red-50 rounded-full shadow-lg group transition-all duration-300 font-medium px-8'
                 onClick={scrollToRegister}
-              >
+                >
                 Đăng Ký Ngay
-                <ArrowRight className='ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform' />
-              </Button>
-              <Button
+                </Button>
+                <Button
                 size='lg'
                 variant='outline'
-                className='bg-transparent border-white text-white hover:bg-white/10 rounded-full shadow-md transition-all duration-300'
+                className='bg-transparent border-white text-white hover:bg-white/10 rounded-full shadow-md transition-all duration-300 px-8'
                 onClick={scrollToLearnMore}
-              >
+                >
                 Tìm Hiểu Thêm
-              </Button>
+                </Button>
             </div>
 
             {/* Stats with iOS styling */}
-            <div className='grid grid-cols-3 gap-6 mt-12 pt-8 border-t border-white/20'>
+            <div className='grid grid-cols-3 mt-4 pt-4 border-t border-white/20'>
               {stats.map((stat, index) => (
                 <motion.div 
-                  key={index}
+                  key={stat.value + stat.label}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.4, delay: 0.1 * index + 0.3 }}
+                  className='flex flex-col items-center text-center'
                 >
                   <div className='text-3xl font-bold'>{stat.value}</div>
                   <div className='text-red-100 mt-1 text-sm'>{stat.label}</div>
@@ -161,7 +161,7 @@ const HeroImage: React.FC = () => {
       subtitle: '3 người/ngày'
     },
     {
-      position: '-top-6 -right-6',
+      position: '-top-6 -right-4',
       icon: <Users className='h-5 w-5 text-red-600' />,
       title: 'Tình nguyện viên',
       subtitle: '500+ người'

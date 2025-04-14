@@ -103,7 +103,7 @@ const ForgotPassword: React.FC = () => {
                     <FormLabel className='text-sm font-medium text-gray-700'>Gmail</FormLabel>
                     <FormControl>
                       <div className='mt-1 relative'>
-                        <div className='absolute left-3 top-3 p-1 rounded-full bg-red-50'>
+                        <div className='absolute left-3 top-2 p-1 rounded-full bg-red-50'>
                           <Mail className='text-red-500' size={16} />
                         </div>
                         <Input

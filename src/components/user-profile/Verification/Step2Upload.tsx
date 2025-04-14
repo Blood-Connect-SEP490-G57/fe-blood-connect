@@ -17,6 +17,7 @@ interface Step2UploadProps {
   setFormData: React.Dispatch<React.SetStateAction<any>>
   error: string | null
   onNext: () => void
+  onPrev: () => void
 }
 
 interface LoadingState {
@@ -24,7 +25,7 @@ interface LoadingState {
   back: boolean
 }
 
-const Step2Upload: React.FC<Step2UploadProps> = ({ formData, setFormData, error, onNext }) => {
+const Step2Upload: React.FC<Step2UploadProps> = ({ formData, setFormData, error, onNext, onPrev}) => {
   const { setExtractId, setCardDetails, setError } = useExtractStore()
   const [uploadLoading, setUploadLoading] = useState<LoadingState>({
     front: false,
@@ -163,9 +164,9 @@ const Step2Upload: React.FC<Step2UploadProps> = ({ formData, setFormData, error,
   })
 
   return (
-    <div className='space-y-6 mt-2'>
+    <div className='mt-2'>
       <ScrollToTop />
-      <div className='text-center mb-6'>
+      <div className='text-center mb-4'>
         <div className='flex items-center justify-center mb-4'>
           <div className='w-16 h-16 bg-red-50 rounded-full flex items-center justify-center'>
             <Camera className='h-8 w-8 text-red-500' />
@@ -177,7 +178,7 @@ const Step2Upload: React.FC<Step2UploadProps> = ({ formData, setFormData, error,
         </p>
       </div>
 
-      <div className='p-5 mb-6'>
+      <div className='p-5'>
         <div className='space-y-4'>
           <div className='flex items-center justify-between'>
             <h3 className='font-medium text-gray-900'>Lưu ý khi chụp ảnh</h3>
@@ -251,7 +252,7 @@ const Step2Upload: React.FC<Step2UploadProps> = ({ formData, setFormData, error,
       </div>
 
       {/* Mặt sau */}
-      <div className={`mb-4 transition-opacity ${formData.frontImage ? 'opacity-100' : 'opacity-50'}`}>
+      <div className={`transition-opacity ${formData.frontImage ? 'opacity-100' : 'opacity-50'}`}>
         <div className='p-5'>
           <div className='flex items-center justify-between mb-4'>
             <h3 className='font-medium text-gray-900'>Mặt sau CCCD</h3>
@@ -313,17 +314,20 @@ const Step2Upload: React.FC<Step2UploadProps> = ({ formData, setFormData, error,
 
       {error && <div className='p-4 bg-red-50 text-red-600 rounded-lg text-sm'>{error}</div>}
 
-      <div>
-        <button className='flex items-center gap-1 px-3 py-1.5 text-xs bg-gray-100 text-gray-600 rounded-full hover:bg-gray-200'>
+      <div className='flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-0 sm:p-4'>
+        <button
+          className='w-full sm:w-auto flex items-center gap-1 px-6 py-3 text-sm font-medium rounded-lg transition-colors bg-gray-100 text-gray-600 hover:bg-gray-200'
+          onClick={onPrev}
+        >
           <span>Quay lại</span>
         </button>
         <button
           onClick={onNext}
           disabled={!formData.frontImage || !formData.backImage || uploadLoading.front || uploadLoading.back}
-          className={`w-full py-4 text-white font-medium rounded-xl transition-colors ${
+          className={`w-full sm:w-auto flex items-center gap-1 px-6 py-3 text-sm font-medium rounded-lg transition-colors ${
             !formData.frontImage || !formData.backImage || uploadLoading.front || uploadLoading.back
-              ? 'bg-gray-300 cursor-not-allowed'
-              : 'bg-red-600 hover:bg-red-700'
+              ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+              : 'bg-red-600 text-white hover:bg-red-700'
           }`}
         >
           {uploadLoading.front || uploadLoading.back ? 'Đang xử lý...' : 'Tiếp theo'}

@@ -1,7 +1,8 @@
-import React from 'react'
-import { Check, Home, Calendar } from 'lucide-react'
+import React, { useEffect, useState } from 'react'
+import { Check } from 'lucide-react'
 import ScrollToTop from '@/components/scrollToTop'
 import { Card, CardContent } from '@/components/ui/card'
+import { CheckExtractStatus } from '@/api/extract'
 
 interface Step3CompleteProps {
   onHomeClick: () => void
@@ -9,8 +10,24 @@ interface Step3CompleteProps {
 }
 
 const Step4Complete: React.FC<Step3CompleteProps> = ({ onHomeClick, onRegisterClick }) => {
+  const [verificationStatus, setVerificationStatus] = useState<string>('pending')
+
+  const checkStatus = async (): Promise<void> => {
+    try {
+      const response = await CheckExtractStatus()
+      setVerificationStatus(response.data.status)
+    } catch (error) {
+      console.error('Error checking status:', error)
+      setVerificationStatus('error')
+    }
+  }
+
+  useEffect(() => {
+    checkStatus()
+  }, [])
+
   return (
-    <div className='space-y-8 max-w-md mx-auto'>
+    <div className='space-y-8 max-w-md mx-auto sm:p-4'>
       <ScrollToTop />
 
       <div className='flex flex-col items-center justify-center text-center space-y-4'>
@@ -30,8 +47,8 @@ const Step4Complete: React.FC<Step3CompleteProps> = ({ onHomeClick, onRegisterCl
             <h3 className='font-medium text-gray-900'>Thông tin tài khoản</h3>
             <div className='flex items-center justify-between p-3 bg-green-50 rounded-lg'>
               <span className='text-sm text-green-700'>Trạng thái xác thực</span>
-              <span className='px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full font-medium'>
-                Đã xác thực
+              <span className={`px-2 py-1 text-xs rounded-full font-medium `}>
+                {verificationStatus === 'EXTRACTED' ? 'Đã xác thực' : 'Chờ xác thực'}
               </span>
             </div>
             <p className='text-sm text-gray-600'>
@@ -42,12 +59,11 @@ const Step4Complete: React.FC<Step3CompleteProps> = ({ onHomeClick, onRegisterCl
         </CardContent>
       </Card>
 
-      <div className='grid grid-cols-2 gap-4 p-4'>
+      <div className='grid grid-cols-2 gap-4'>
         <button
           onClick={onHomeClick}
           className='bg-gray-100 hover:bg-gray-200 text-gray-800 py-4 px-5 rounded-xl transition-colors flex items-center justify-center gap-2'
         >
-          <Home className='h-4 w-4' />
           <div>
             <span>Trang chủ</span>
           </div>
@@ -56,7 +72,6 @@ const Step4Complete: React.FC<Step3CompleteProps> = ({ onHomeClick, onRegisterCl
           onClick={onRegisterClick}
           className='bg-red-600 hover:bg-red-700 text-white py-4 px-5 rounded-xl transition-colors flex items-center justify-center gap-2'
         >
-          <Calendar className='h-5 w-5' />
           <div>
             <span>Đăng ký hiến máu</span>
           </div>

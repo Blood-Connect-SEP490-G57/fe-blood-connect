@@ -4,11 +4,9 @@ import { getExtractById, updateExtractStatus } from '@/api/extract'
 import { createOrUpdateUserDetail, getCurrentUserDetail } from '@/api/user'
 import ScrollToTop from '@/components/scrollToTop'
 import { getOrganizationsByType } from '@/api/organization'
-import { Card, CardContent } from '@/components/ui/card'
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import {
-  CheckCircle,
   ChevronDown,
   FileText,
   Info,
@@ -225,7 +223,7 @@ const Step3ExtractedInfo: React.FC<Step2Props> = ({
   }, [])
 
   return (
-    <div className='space-y-6 mt-2'>
+    <div className='space-y-6 p-2 sm:p-4'>
       <ScrollToTop />
       <div className='text-center mb-6'>
         <div className='flex items-center justify-center mb-4'>
@@ -257,285 +255,232 @@ const Step3ExtractedInfo: React.FC<Step2Props> = ({
             </div>
 
             {showCardDetails && (
-              <Card className='overflow-hidden rounded-xl shadow-sm border-none'>
-                <CardContent className='p-0'>
-                  <div className='divide-y'>
-                    <InfoItem
-                      icon={<Info className='h-5 w-5 text-gray-500' />}
-                      label='Số CCCD'
-                      value={formData.cardId || '-'}
-                    />
-                    <InfoItem
-                      icon={<Info className='h-5 w-5 text-gray-500' />}
-                      label='Họ và tên'
-                      value={cardDetails.name || '-'}
-                    />
-                    <InfoItem
-                      icon={<Info className='h-5 w-5 text-gray-500' />}
-                      label='Ngày sinh'
-                      value={cardDetails.dob || '-'}
-                    />
-                    <InfoItem
-                      icon={<Info className='h-5 w-5 text-gray-500' />}
-                      label='Giới tính'
-                      value={cardDetails.gender || '-'}
-                    />
-                    <InfoItem
-                      icon={<Info className='h-5 w-5 text-gray-500' />}
-                      label='Quốc tịch'
-                      value={cardDetails.national || '-'}
-                    />
-                    <InfoItem
-                      icon={<MapPin className='h-5 w-5 text-gray-500' />}
-                      label='Quê quán'
-                      value={cardDetails.home || '-'}
-                    />
-                    <InfoItem
-                      icon={<MapPin className='h-5 w-5 text-gray-500' />}
-                      label='Địa chỉ thường trú'
-                      value={cardDetails.address || '-'}
-                    />
-                    <InfoItem
-                      icon={<Info className='h-5 w-5 text-gray-500' />}
-                      label='Ngày cấp'
-                      value={cardDetails.issueDate || '-'}
-                    />
-                    <InfoItem
-                      icon={<Info className='h-5 w-5 text-gray-500' />}
-                      label='Ngày hết hạn'
-                      value={cardDetails.doe || '-'}
-                    />
-                    <InfoItem
-                      icon={<Info className='h-5 w-5 text-gray-500' />}
-                      label='Nơi cấp'
-                      value={cardDetails.issueLoc || '-'}
-                    />
-                  </div>
-                </CardContent>
-              </Card>
+              <div className='divide-y bg-white rounded-xl'>
+                <InfoItem label='Số CCCD' value={formData.cardId || '-'} />
+                <InfoItem label='Họ và tên' value={cardDetails.name || '-'} />
+                <InfoItem label='Ngày sinh' value={cardDetails.dob || '-'} />
+                <InfoItem label='Giới tính' value={cardDetails.gender || '-'} />
+                <InfoItem label='Quốc tịch' value={cardDetails.national || '-'} />
+                <InfoItem label='Quê quán' value={cardDetails.home || '-'} />
+                <InfoItem label='Địa chỉ thường trú' value={cardDetails.address || '-'} />
+                <InfoItem label='Ngày cấp' value={cardDetails.issueDate || '-'} />
+                <InfoItem label='Ngày hết hạn' value={cardDetails.doe || '-'} />
+                <InfoItem label='Nơi cấp' value={cardDetails.issueLoc || '-'} />
+              </div>
             )}
           </div>
 
           {/* Contact Information */}
           <div className='space-y-4'>
             <h3 className='text-lg font-semibold text-gray-900'>Thông tin liên hệ</h3>
-            <Card className='overflow-hidden rounded-xl shadow-sm border-none'>
-              <CardContent className='p-5 divide-y space-y-4'>
-                <div className='pb-4'>
-                  <FormField label='Email' icon={<Mail className='h-5 w-5 text-gray-500' />} required={false}>
-                    <input
-                      type='email'
-                      value={formData.email}
-                      onChange={(e) => setFormData((prev: any) => ({ ...prev, email: e.target.value }))}
-                      placeholder='Nhập email'
-                      className='w-full p-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-500'
-                    />
-                  </FormField>
-                </div>
+            <div className='bg-white sm:p-4'>
+              <div className='mb-2'>
+                <FormField label='Email' icon={<Mail className='h-5 w-5 text-gray-500' />} required={false}>
+                  <input
+                    type='email'
+                    value={formData.email}
+                    onChange={(e) => setFormData((prev: any) => ({ ...prev, email: e.target.value }))}
+                    placeholder='Nhập email'
+                    className='w-full p-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-500'
+                  />
+                </FormField>
+              </div>
 
-                <div className='py-4'>
-                  <FormField
-                    label='Số điện thoại'
-                    icon={<Phone className='h-5 w-5 text-gray-500' />}
-                    required={true}
-                    error={fieldErrors.mobile}
-                  >
-                    <input
-                      type='tel'
-                      value={formData.mobile}
-                      onChange={(e) => setFormData((prev: any) => ({ ...prev, mobile: e.target.value }))}
-                      placeholder='Nhập số điện thoại'
-                      className={`w-full p-2 rounded border ${
-                        fieldErrors.mobile ? 'border-red-500' : 'border-gray-300'
-                      } focus:outline-none focus:ring-2 focus:ring-red-500`}
-                    />
-                  </FormField>
-                </div>
-                <div className='py-4'>
-                  <FormField
-                    label='Địa chỉ liên hệ'
-                    icon={<MapPin className='h-5 w-5 text-gray-500' />}
-                    required={true}
-                    error={fieldErrors.contact}
-                  >
-                    <div className='flex items-center justify-between'>
-                      {contact ? (
-                        <span className='text-xs text-gray-600 text-end'>
-                          {contact.split(',').map((part, index) => (
-                            <React.Fragment key={index}>
-                              {part.trim()}
-                              {index < 3 && <br />}
-                            </React.Fragment>
-                          ))}
-                        </span>
-                      ) : (
-                        'Chưa có địa chỉ'
-                      )}
-                      <Dialog>
-                        <DialogTrigger asChild>
-                          <Button variant='ghost' size='icon' className='ml-1'>
-                            <MapPin className='h-4 w-4 text-red-500' />
-                          </Button>
-                        </DialogTrigger>
-                        <DialogContent className='sm:max-w-md'>
-                          <AddressSelector
-                            onAddressSelect={(address) => {
-                              setContact(address)
-                            }}
-                            initialAddress={contact}
-                          />
-                        </DialogContent>
-                      </Dialog>
-                    </div>
-                  </FormField>
-                </div>
-              </CardContent>
-            </Card>
+              <div className='mb-2'>
+                <FormField
+                  label='Số điện thoại'
+                  icon={<Phone className='h-5 w-5 text-gray-500' />}
+                  required={true}
+                  error={fieldErrors.mobile}
+                >
+                  <input
+                    type='tel'
+                    value={formData.mobile}
+                    onChange={(e) => setFormData((prev: any) => ({ ...prev, mobile: e.target.value }))}
+                    placeholder='Nhập số điện thoại'
+                    className={`w-full p-2 rounded border ${
+                      fieldErrors.mobile ? 'border-red-500' : 'border-gray-300'
+                    } focus:outline-none focus:ring-2 focus:ring-red-500`}
+                  />
+                </FormField>
+              </div>
+              <div className='mb-2'>
+                <FormField
+                  label='Địa chỉ liên hệ'
+                  icon={<MapPin className='h-5 w-5 text-gray-500' />}
+                  required={true}
+                  error={fieldErrors.contact}
+                >
+                  <div className='flex items-center justify-end'>
+                    {contact ? (
+                      <span className='text-xs sm:text-sm text-gray-600 text-end'>
+                        {contact.split(',').map((part, index) => (
+                          <React.Fragment key={index}>
+                            {part.trim()}
+                            {index < 3 && <br />}
+                          </React.Fragment>
+                        ))}
+                      </span>
+                    ) : (
+                      'Chưa có địa chỉ'
+                    )}
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button variant='ghost' size='icon' className='ml-1'>
+                          <MapPin className='h-5 w-5 text-red-500' />
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className='sm:max-w-md'>
+                        <AddressSelector
+                          onAddressSelect={(address) => {
+                            setContact(address)
+                          }}
+                          initialAddress={contact}
+                        />
+                      </DialogContent>
+                    </Dialog>
+                  </div>
+                </FormField>
+              </div>
+            </div>
           </div>
 
           {/* Additional Information */}
           <div className='space-y-4'>
             <h3 className='text-lg font-semibold text-gray-900'>Thông tin bổ sung</h3>
-            <Card className='overflow-hidden rounded-xl shadow-sm border-none'>
-              <CardContent className='p-5 divide-y space-y-4'>
-                <div className='pb-4'>
-                  <FormField
-                    label='Nghề nghiệp'
-                    icon={<Briefcase className='h-5 w-5 text-gray-500' />}
-                    required={false}
+            <div className='divide-y space-y-4 bg-white rounded-xl'>
+              <div>
+                <FormField label='Nghề nghiệp' icon={<Briefcase className='h-5 w-5 text-gray-500' />} required={false}>
+                  <div className='flex items-center justify-between'>
+                    <span className='text-sm text-gray-600'>{formData.jobName || 'Chưa có nghề nghiệp'}</span>
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button variant='ghost' size='icon' className='ml-1'>
+                          <Briefcase className='h-4 w-4 text-red-500' />
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className='sm:max-w-md'>
+                        <JobSelector
+                          onJobSelect={(job) => {
+                            setFormData((prev: any) => ({ ...prev, jobName: job }))
+                          }}
+                          initialJob={formData.jobName}
+                        />
+                      </DialogContent>
+                    </Dialog>
+                  </div>
+                </FormField>
+              </div>
+
+              <div>
+                <FormField
+                  label='Đơn vị trực thuộc'
+                  icon={<Building className='h-5 w-5 text-gray-500' />}
+                  required={false}
+                >
+                  <div className='flex items-center justify-between'>
+                    <span className='text-xs sm:text-sm text-gray-600'>
+                      {organizations.find((org) => org.id === formData.organizationId)?.name || 'Chưa có tổ chức'}
+                    </span>
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button variant='ghost' size='icon' className='ml-1'>
+                          <Building className='h-4 w-4 text-red-500' />
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className='sm:max-w-md'>
+                        <OrganizationSelector
+                          initialOrganization={formData.organizationId}
+                          onOrganizationSelect={(organizationId) => {
+                            setFormData((prev: any) => ({
+                              ...prev,
+                              organizationId: organizationId
+                            }))
+                          }}
+                        />
+                      </DialogContent>
+                    </Dialog>
+                  </div>
+                </FormField>
+              </div>
+
+              <div>
+                <FormField label='Mã sinh viên' icon={<School className='h-5 w-5 text-gray-500' />} required={false}>
+                  <input
+                    type='text'
+                    value={formData.studentId}
+                    onChange={(e) => setFormData((prev: any) => ({ ...prev, studentId: e.target.value }))}
+                    placeholder='Nhập mã sinh viên (nếu có)'
+                    className='w-full p-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-500'
+                  />
+                </FormField>
+              </div>
+
+              <div>
+                <FormField label='Mã quân nhân' icon={<Award className='h-5 w-5 text-gray-500' />} required={false}>
+                  <input
+                    type='text'
+                    value={formData.militaryId}
+                    onChange={(e) => setFormData((prev: any) => ({ ...prev, militaryId: e.target.value }))}
+                    placeholder='Nhập mã quân nhân (nếu có)'
+                    className='w-full p-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-500'
+                  />
+                </FormField>
+              </div>
+
+              <div>
+                <FormField label='Số lần hiến máu' icon={<Info className='h-5 w-5 text-gray-500' />} required={false}>
+                  <input
+                    type='number'
+                    value={formData.timeDonation || ''}
+                    onChange={(e) => setFormData((prev: any) => ({ ...prev, timeDonation: e.target.value }))}
+                    placeholder='Nhập số lần hiến máu'
+                    className='w-full p-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-500'
+                    min='0'
+                  />
+                </FormField>
+              </div>
+
+              <div>
+                <FormField label='Nhóm máu' icon={<Info className='h-5 w-5 text-gray-500' />} required={false}>
+                  <select
+                    value={formData.bloodGroup}
+                    onChange={onInputChange}
+                    name='bloodGroup'
+                    className='w-full p-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-500'
                   >
-                    <div className='flex items-center justify-between'>
-                      <span className='text-sm text-gray-600'>{formData.jobName || 'Chưa có nghề nghiệp'}</span>
-                      <Dialog>
-                        <DialogTrigger asChild>
-                          <Button variant='ghost' size='icon' className='ml-1'>
-                            <Briefcase className='h-4 w-4 text-red-500' />
-                          </Button>
-                        </DialogTrigger>
-                        <DialogContent className='sm:max-w-md'>
-                          <JobSelector
-                            onJobSelect={(job) => {
-                              setFormData((prev: any) => ({ ...prev, jobName: job }))
-                            }}
-                            initialJob={formData.jobName}
-                          />
-                        </DialogContent>
-                      </Dialog>
-                    </div>
-                  </FormField>
-                </div>
-
-                <div className='py-4'>
-                  <FormField
-                    label='Đơn vị trực thuộc'
-                    icon={<Building className='h-5 w-5 text-gray-500' />}
-                    required={false}
-                  >
-                    <div className='flex items-center justify-between'>
-                      <span className='text-sm text-gray-600'>
-                        {organizations.find((org) => org.id === formData.organizationId)?.name || 'Chưa có tổ chức'}
-                      </span>
-                      <Dialog>
-                        <DialogTrigger asChild>
-                          <Button variant='ghost' size='icon' className='ml-1'>
-                            <Building className='h-4 w-4 text-red-500' />
-                          </Button>
-                        </DialogTrigger>
-                        <DialogContent className='sm:max-w-md'>
-                          <OrganizationSelector
-                            initialOrganization={formData.organizationId}
-                            onOrganizationSelect={(organizationId) => {
-                              setFormData((prev: any) => ({
-                                ...prev,
-                                organizationId: organizationId
-                              }))
-                            }}
-                          />
-                        </DialogContent>
-                      </Dialog>
-                    </div>
-                  </FormField>
-                </div>
-
-                <div className='py-4'>
-                  <FormField label='Mã sinh viên' icon={<School className='h-5 w-5 text-gray-500' />} required={false}>
-                    <input
-                      type='text'
-                      value={formData.studentId}
-                      onChange={(e) => setFormData((prev: any) => ({ ...prev, studentId: e.target.value }))}
-                      placeholder='Nhập mã sinh viên (nếu có)'
-                      className='w-full p-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-500'
-                    />
-                  </FormField>
-                </div>
-
-                <div className='py-4'>
-                  <FormField label='Mã quân nhân' icon={<Award className='h-5 w-5 text-gray-500' />} required={false}>
-                    <input
-                      type='text'
-                      value={formData.militaryId}
-                      onChange={(e) => setFormData((prev: any) => ({ ...prev, militaryId: e.target.value }))}
-                      placeholder='Nhập mã quân nhân (nếu có)'
-                      className='w-full p-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-500'
-                    />
-                  </FormField>
-                </div>
-
-                <div className='py-4'>
-                  <FormField label='Số lần hiến máu' icon={<Info className='h-5 w-5 text-gray-500' />} required={false}>
-                    <input
-                      type='number'
-                      value={formData.timeDonation || ''}
-                      onChange={(e) => setFormData((prev: any) => ({ ...prev, timeDonation: e.target.value }))}
-                      placeholder='Nhập số lần hiến máu'
-                      className='w-full p-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-500'
-                      min='0'
-                    />
-                  </FormField>
-                </div>
-
-                <div className='py-4'>
-                  <FormField label='Nhóm máu' icon={<Info className='h-5 w-5 text-gray-500' />} required={false}>
-                    <select
-                      value={formData.bloodGroup}
-                      onChange={onInputChange}
-                      name='bloodGroup'
-                      className='w-full p-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-500'
-                    >
-                      <option value=''>Chọn nhóm máu</option>
-                      {['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'].map((group) => (
-                        <option key={group} value={group}>
-                          {group}
-                        </option>
-                      ))}
-                    </select>
-                  </FormField>
-                </div>
-              </CardContent>
-            </Card>
+                    <option value=''>Chọn nhóm máu</option>
+                    {['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'].map((group) => (
+                      <option key={group} value={group}>
+                        {group}
+                      </option>
+                    ))}
+                  </select>
+                </FormField>
+              </div>
+            </div>
           </div>
-
-          <div className='flex justify-between p-4'>
+          <div className='flex justify-between p-2'>
             <button
               onClick={onPrev}
-              className='px-4 py-3 bg-gray-100 text-gray-800 rounded-xl hover:bg-gray-200 transition-colors'
+              className='px-4 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-all shadow-sm'
             >
               Quay lại
             </button>
             <button
               onClick={handleConfirm}
-              className='px-8 py-3 bg-red-600 text-white rounded-xl hover:bg-red-700 transition-colors flex items-center gap-2'
+              className={`px-8 py-3 rounded-lg transition-all shadow-sm flex items-center gap-2 ${
+                isSubmitting ? 'bg-red-400 text-white cursor-not-allowed' : 'bg-red-600 text-white hover:bg-red-700'
+              }`}
               disabled={isSubmitting}
             >
               {isSubmitting ? (
                 <>
-                  <Loader2 className='h-4 w-4 animate-spin' />
                   <span>Đang xử lý...</span>
                 </>
               ) : (
                 <>
-                  <CheckCircle className='h-4 w-4' />
-                  <span>Xác nhận thông tin</span>
+                  <span>Xác nhận</span>
                 </>
               )}
             </button>
@@ -559,21 +504,30 @@ const Step3ExtractedInfo: React.FC<Step2Props> = ({
 }
 
 // Helper components
-const InfoItem = ({ icon, label, value }: { icon: React.ReactNode; label: string; value: string | number | null }) => (
-  <div className='p-4 flex items-center justify-between'>
+const InfoItem = ({ label, value }: { label: string; value: string | number | null }) => (
+  <div className='p-2 sm:p-4 flex items-center justify-between'>
     <div className='flex items-center gap-3'>
-      {icon}
       <span className='text-sm font-medium text-gray-700'>{label}</span>
     </div>
-    <div className='flex items-center gap-2'>
-      <span className='text-sm text-gray-600'>{value || '-'}</span>
+    <div className='flex items-center justify-end'>
+      {typeof value === 'string' && value.includes(',') ? (
+        <span className='text-xs sm:text-sm text-gray-600 text-end'>
+          {value.split(',').map((part, index) => (
+            <React.Fragment key={index}>
+              {part.trim()}
+              {index < value.split(',').length - 1 && <br />}
+            </React.Fragment>
+          ))}
+        </span>
+      ) : (
+        <span className='text-xs max-w-[200px] sm:text-sm text-gray-600 text-end'>{value || '-'}</span>
+      )}
     </div>
   </div>
 )
 
 const FormField = ({
   label,
-  icon,
   required,
   error,
   children
@@ -587,7 +541,6 @@ const FormField = ({
   <div>
     <div className='flex items-center justify-between mb-2'>
       <div className='flex items-center gap-2'>
-        {icon}
         <label className='text-sm font-medium text-gray-700'>
           {label}
           {required && <span className='text-red-500 ml-1'>*</span>}

@@ -167,6 +167,25 @@ const FAQPage = () => {
           ))}
         </div>
 
+        {/* Filter buttons */}
+        <div className="flex flex-nowrap overflow-x-auto space-x-2 pb-4">
+          {faqs.map((category) => (
+            <Button
+              key={category.category}
+              variant={activeCategory === category.category ? 'default' : 'outline'}
+              className={`whitespace-nowrap ${
+                activeCategory === category.category
+                  ? 'bg-red-600 text-white hover:bg-red-700'
+                  : 'hover:bg-red-50 hover:text-red-600'
+              }`}
+              onClick={() => setActiveCategory(category.category)}
+            >
+              {categoryIcons[category.category] || <HelpCircle className='w-4 h-4 mr-2' />}
+              {category.category}
+            </Button>
+          ))}
+        </div>
+
         {/* FAQ Sections */}
         <div className='max-w-7xl mx-auto space-y-8'>
           {filteredFaqs.map(

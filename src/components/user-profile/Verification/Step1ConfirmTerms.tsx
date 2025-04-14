@@ -9,7 +9,7 @@ const Step1ConfirmTerms: React.FC<Step1ConfirmTermsProps> = ({ onNext }) => {
   const [isChecked, setIsChecked] = useState(false)
 
   return (
-    <div className='flex flex-col space-y-6'>
+    <div className='flex flex-col sm:p-4 space-y-6'>
       <div className='text-center space-y-4'>
         <div className='flex items-center justify-center'>
           <div className='w-16 h-16 bg-red-50 rounded-full flex items-center justify-center'>
@@ -23,7 +23,7 @@ const Step1ConfirmTerms: React.FC<Step1ConfirmTermsProps> = ({ onNext }) => {
         </p>
       </div>
 
-      <div className='rounded-xl shadow-sm border bg-white'>
+      <div className='rounded-xl shadow-sm border'>
         <div className='p-5 border-b'>
           <h3 className='text-lg font-medium text-gray-900'>Điều khoản sử dụng</h3>
         </div>

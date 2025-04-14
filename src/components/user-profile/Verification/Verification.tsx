@@ -56,12 +56,7 @@ const Verification = () => {
   const prevStep = (): void => setStep((prev) => prev - 1)
 
   // Step titles for display
-  const stepTitles = [
-    'Xác nhận điều khoản',
-    'Tải lên CCCD',
-    'Xác thực thông tin',
-    'Hoàn thành'
-  ]
+  const stepTitles = ['Xác nhận điều khoản', 'Tải lên CCCD', 'Xác thực thông tin', 'Hoàn thành']
 
   const renderStepIndicator = () => {
     const stepsArray = [1, 2, 3, 4] // Các bước cố định
@@ -73,17 +68,17 @@ const Verification = () => {
               <div className='flex flex-col items-center'>
                 <div
                   className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                    step === stepNumber
-                      ? 'bg-red-600 text-white font-bold' // Màu đậm hơn cho step hiện tại
-                      : step > stepNumber
-                      ? 'bg-red-600 text-white' // Màu đỏ cho step đã đi qua
-                      : 'bg-gray-200 text-gray-600' // Màu xám cho step chưa đi đến
+                  step === stepNumber
+                    ? 'bg-red-600 text-white font-bold' // Màu đậm hơn cho step hiện tại
+                    : step > stepNumber && !(stepNumber === 4 && isLoading)
+                    ? 'bg-red-600 text-white' // Màu đỏ cho step đã đi qua
+                    : 'bg-gray-200 text-gray-600' // Màu xám cho step chưa đi đến
                   }`}
                 >
-                  {stepNumber < step || stepNumber === 4 ? (
-                    <CheckCircle className='h-5 w-5' />
+                  {stepNumber < step || (stepNumber === 4 && !isLoading) ? (
+                  <CheckCircle className='h-5 w-5' />
                   ) : (
-                    <span className='font-medium'>{stepNumber}</span>
+                  <span className='font-medium'>{stepNumber}</span>
                   )}
                 </div>
                 <span
@@ -113,7 +108,15 @@ const Verification = () => {
       case 1:
         return <Step1ConfirmTerms onNext={nextStep} />
       case 2:
-        return <Step2Upload formData={formData} setFormData={setFormData} error={storeError} onNext={nextStep} />
+        return (
+          <Step2Upload
+            formData={formData}
+            setFormData={setFormData}
+            error={storeError}
+            onNext={nextStep}
+            onPrev={prevStep}
+          />
+        )
       case 3:
         return (
           <Step3ExtractedInfo
@@ -135,13 +138,13 @@ const Verification = () => {
   return (
     <div className='min-h-screen bg-gradient-to-b from-gray-50 to-white relative overflow-hidden'>
       <ScrollToTop />
-      
+
       {/* Decorative elements */}
       <div className='absolute top-20 left-10 w-72 h-72 bg-red-50 rounded-full blur-3xl opacity-30 -z-10'></div>
       <div className='absolute bottom-20 right-10 w-72 h-72 bg-red-50 rounded-full blur-3xl opacity-30 -z-10'></div>
-      
+
       {/* Banner section */}
-      <motion.div 
+      <motion.div
         className='bg-gradient-to-r from-red-500 to-red-600 text-white py-10 px-6 relative overflow-hidden border-b-2 border-red-700 rounded-b-3xl'
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -149,7 +152,7 @@ const Verification = () => {
       >
         <div className='mx-auto relative z-10'>
           <div className='flex flex-col items-center'>
-            <motion.div 
+            <motion.div
               className='h-24 w-24 bg-white/90 backdrop-blur-sm rounded-3xl flex items-center justify-center shadow-lg mb-5'
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
@@ -159,11 +162,11 @@ const Verification = () => {
             </motion.div>
             <h1 className='text-2xl font-bold mb-2'>Xác thực tài khoản</h1>
             <p className='text-center text-white/90'>
-              Bước {step}/4: {stepTitles[step-1]}
+              Bước {step}/4: {stepTitles[step - 1]}
             </p>
           </div>
         </div>
-        
+
         {/* Decorative circles for banner */}
         <div className='absolute top-0 left-0 w-32 h-32 bg-white/10 rounded-full -translate-x-1/2 -translate-y-1/2 blur-md'></div>
         <div className='absolute bottom-0 right-0 w-40 h-40 bg-white/10 rounded-full translate-x-1/3 translate-y-1/3 blur-md'></div>
@@ -171,7 +174,7 @@ const Verification = () => {
 
       <div className='bg-gray-100 mx-auto mt-4 mb-4'>
         {/* Step indicator */}
-        <motion.div 
+        <motion.div
           className='mb-8 px-4 pt-2'
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -181,7 +184,7 @@ const Verification = () => {
         </motion.div>
 
         {/* Current step content */}
-        <motion.div 
+        <motion.div
           className='bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl max-w-4xl mx-auto border border-gray-100'
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}

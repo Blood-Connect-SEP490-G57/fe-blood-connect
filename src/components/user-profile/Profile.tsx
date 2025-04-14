@@ -15,6 +15,7 @@ import { User, MapPin, Briefcase } from 'lucide-react'
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
 import AddressSelector from '../address/AddressSelector'
 import JobSelector from '../job/JobSelector'
+import React from 'react'
 
 const Profile = () => {
   // Scroll to top when component mounts
@@ -230,10 +231,10 @@ const Profile = () => {
                                 <span className='text-xs text-gray-600 text-end'>
                                   {field.value
                                     ? field.value.split(',').map((part, index) => (
-                                        <>
+                                        <React.Fragment key={index}>
                                           {part.trim()}
                                           {index < 3 && <br />}
-                                        </>
+                                        </React.Fragment>
                                       ))
                                     : 'Chưa có địa chỉ'}
                                 </span>
@@ -467,13 +468,13 @@ const InfoItem = ({
     <div className='flex items-center justify-end'>
       {isAddress ? (
         <span className='text-xs text-gray-600 text-end'>
-          {String(value)
+          {String(value) 
             .split(',')
             .map((part, index) => (
-              <>
+              <React.Fragment key={index}>
                 {part.trim()}
                 {index < 3 && <br />}
-              </>
+              </React.Fragment>
             ))}
         </span>
       ) : (
