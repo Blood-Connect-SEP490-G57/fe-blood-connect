@@ -359,7 +359,18 @@ const Step3ExtractedInfo: React.FC<Step2Props> = ({
                     error={fieldErrors.contact}
                   >
                     <div className='flex items-center justify-between'>
-                      <span className='text-sm text-gray-600'>{contact || 'Chưa có địa chỉ'}</span>
+                      {contact ? (
+                        <span className='text-xs text-gray-600 text-end'>
+                          {contact.split(',').map((part, index) => (
+                            <React.Fragment key={index}>
+                              {part.trim()}
+                              {index < 3 && <br />}
+                            </React.Fragment>
+                          ))}
+                        </span>
+                      ) : (
+                        'Chưa có địa chỉ'
+                      )}
                       <Dialog>
                         <DialogTrigger asChild>
                           <Button variant='ghost' size='icon' className='ml-1'>

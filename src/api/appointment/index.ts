@@ -1,7 +1,7 @@
 import axios from 'axios'
 
-export const getCurrent = async (): Promise<any> => {
-  const response = await axios.get('/api/appointments/current', {
+export const getCurrent = async (appointmentId: string): Promise<any> => {
+  const response = await axios.get(`/api/appointments/${appointmentId}`, {
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${localStorage.getItem('access_token')}`
@@ -31,7 +31,8 @@ export const updateinfor = async (payload: any): Promise<any> => {
       militaryId: payload.militaryId,
       addressContact: payload.addressContact,
       bloodGroup: payload.bloodGroup,
-      organizationId: payload.organizationId
+      organizationId: payload.organizationId,
+      phoneNumber: payload.phoneNumber
     },
     {
       headers: {
