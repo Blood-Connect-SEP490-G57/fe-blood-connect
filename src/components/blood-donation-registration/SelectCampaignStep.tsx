@@ -1,14 +1,12 @@
 import { Button } from '@/components/ui/button'
-import { ChevronRight, MapPin, Calendar, Clock, Users, SearchIcon } from 'lucide-react'
+import { ChevronRight, MapPin, Calendar, Clock, Users } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-// import CampaignDetails from '@/components/blood-donation-registration/campaign-details'
 import { Dispatch, SetStateAction, useState, useEffect, useRef } from 'react'
 import { Step } from '@/pages/BloodDonationRegistration'
 import { Campaign as fetchCampaigns } from '@/api/campaign'
 import { CampaignResponse } from '@/schema/campaign-schema'
 import ScrollToTop from '../scrollToTop'
-import { Input } from '@/components/ui/input'
 import { motion } from 'framer-motion'
 
 const SelectCampaignStep = ({
@@ -23,14 +21,12 @@ const SelectCampaignStep = ({
   setQuestionSetId: (id: number) => void
 }) => {
   const [campaigns, setCampaigns] = useState<CampaignResponse[]>([])
-  const [filteredCampaigns, setFilteredCampaigns] = useState<CampaignResponse[]>([])
-  const [searchTerm, setSearchTerm] = useState('')
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const hasFetched = useRef(false)
 
   useEffect(() => {
-    if (hasFetched.current) return // Nếu đã fetch thì không gọi lại
+    if (hasFetched.current) return
     hasFetched.current = true
 
     const fetchCampaignData = async () => {
@@ -38,7 +34,6 @@ const SelectCampaignStep = ({
         const response = await fetchCampaigns()
         if (Array.isArray(response)) {
           setCampaigns(response)
-          setFilteredCampaigns(response)
         } else {
           setError('Dữ liệu trả về không hợp lệ')
         }
@@ -52,19 +47,6 @@ const SelectCampaignStep = ({
 
     fetchCampaignData()
   }, [])
-
-  useEffect(() => {
-    if (searchTerm.trim() === '') {
-      setFilteredCampaigns(campaigns)
-    } else {
-      const filtered = campaigns.filter(
-        campaign => 
-          campaign.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          campaign.location.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-      setFilteredCampaigns(filtered)
-    }
-  }, [searchTerm, campaigns])
 
   const formatDate = (dateString: string) => {
     const options: Intl.DateTimeFormatOptions = { 
@@ -110,31 +92,12 @@ const SelectCampaignStep = ({
         <CardHeader className='pb-3'>
           <CardTitle>Chọn buổi hiến máu</CardTitle>
           <CardDescription>Chọn buổi hiến máu phù hợp với lịch của bạn</CardDescription>
-          
-          <div className='relative mt-4'>
-            <Input
-              type='text'
-              placeholder='Tìm kiếm theo tên của buổi hiến máu ...'
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className='pl-10 pr-4 py-2 rounded-xl border border-gray-200 w-full focus:border-red-500 focus:ring focus:ring-red-200 focus:ring-opacity-50'
-            />
-            <SearchIcon className='absolute left-3 top-2.5 h-5 w-5 text-gray-400' />
-            {searchTerm && (
-              <button 
-                className='absolute right-3 top-2.5 text-gray-400 hover:text-gray-600'
-                onClick={() => setSearchTerm('')}
-              >
-                ✕
-              </button>
-            )}
-          </div>
         </CardHeader>
 
         <CardContent className='pt-2'>
-          {filteredCampaigns.length > 0 ? (
+          {campaigns.length > 0 ? (
             <div className='space-y-4 max-h-[60vh] overflow-y-auto pr-1 pb-2'>
-              {filteredCampaigns.map((campaign, index) => (
+              {campaigns.map((campaign, index) => (
                 <motion.div
                   key={campaign.id}
                   initial={{ opacity: 0, y: 20 }}
@@ -195,9 +158,8 @@ const SelectCampaignStep = ({
             </div>
           ) : (
             <div className='py-12 text-center'>
-              <SearchIcon className='mx-auto h-12 w-12 text-gray-300' />
-              <h3 className='mt-4 text-lg font-medium text-gray-900'>Không tìm thấy chiến dịch</h3>
-              <p className='mt-2 text-gray-500'>Không tìm thấy chiến dịch nào phù hợp với tìm kiếm của bạn.</p>
+              <h3 className='mt-4 text-lg font-medium text-gray-900'>Không có chiến dịch nào</h3>
+              <p className='mt-2 text-gray-500'>Hiện tại không có chiến dịch hiến máu nào đang diễn ra.</p>
             </div>
           )}
         </CardContent>
