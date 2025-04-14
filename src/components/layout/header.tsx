@@ -28,12 +28,13 @@ import { useAuth } from '@/components/authContext/AuthContext'
 import { useVerification } from '../verificationContext/VerificationContext'
 import { useUnreadNotifications } from '@/hooks/useUnreadNotifications'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useMenuStore } from '@/hooks/stores/menuStore'
 
 const Header: React.FC = () => {
   const navigate = useNavigate()
   const location = useLocation()
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isMobileNotiOpen, setIsMobileNotiOpen] = useState(false)
+  const { isHeaderMenuOpen, setHeaderMenuOpen } = useMenuStore()
   const { isLoggedIn, setIsLoggedIn } = useAuth()
   const { isVerified } = useVerification()
   const { unreadCount } = useUnreadNotifications()
@@ -59,25 +60,25 @@ const Header: React.FC = () => {
         location.hash === '#lich-su-hien-mau' ||
         location.hash === '#xac-thuc-tai-khoan')
     ) {
-      setIsMobileMenuOpen(false)
+      setHeaderMenuOpen(false)
       setIsMobileNotiOpen(false)
     }
   }, [location])
 
   useEffect(() => {
-    setIsMobileMenuOpen(false)
+    setHeaderMenuOpen(false)
     setIsMobileNotiOpen(false)
   }, [location])
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (event.target instanceof Element && !event.target.closest('.mobile-menu') && isMobileMenuOpen) {
-        setIsMobileMenuOpen(false)
+      if (event.target instanceof Element && !event.target.closest('.mobile-menu') && isHeaderMenuOpen) {
+        setHeaderMenuOpen(false)
       }
     }
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [isMobileMenuOpen])
+  }, [isHeaderMenuOpen, setHeaderMenuOpen])
 
   useEffect(() => {
     const token = localStorage.getItem('access_token')
@@ -202,7 +203,7 @@ const Header: React.FC = () => {
                     variant='ghost'
                     onClick={() => {
                       setIsMobileNotiOpen((prev) => !prev)
-                      setIsMobileMenuOpen(false)
+                      setHeaderMenuOpen(false)
                     }}
                     className='group relative rounded-full p-2 bg-red-50 border border-red-100 text-red-600 hover:bg-red-100'
                   >
@@ -312,7 +313,7 @@ const Header: React.FC = () => {
                   data-notifications-trigger
                   onClick={() => {
                     setIsMobileNotiOpen((prev) => !prev)
-                    setIsMobileMenuOpen(false)
+                    setHeaderMenuOpen(false)
                   }}
                   className='group relative rounded-full p-2 bg-red-50 border border-red-100 text-red-600 hover:bg-red-100'
                 >
@@ -333,7 +334,7 @@ const Header: React.FC = () => {
                 variant='ghost'
                 size='sm'
                 onClick={() => {
-                  setIsMobileMenuOpen(!isMobileMenuOpen)
+                  setHeaderMenuOpen(!isHeaderMenuOpen)
                   setIsMobileNotiOpen(false)
                 }}
                 className='rounded-full p-2 text-red-600 hover:bg-red-50'
@@ -347,14 +348,14 @@ const Header: React.FC = () => {
 
         {/* Mobile Navigation */}
         <AnimatePresence>
-          {isMobileMenuOpen && (
+          {isHeaderMenuOpen && (
             <>
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 0.5 }}
                 exit={{ opacity: 0 }}
                 className='fixed inset-0 bg-black/60 backdrop-blur-sm z-40'
-                onClick={() => setIsMobileMenuOpen(false)}
+                onClick={() => setHeaderMenuOpen(false)}
               />
               <motion.div
                 className='fixed top-[70px] right-0 max-h-[80vh] w-full max-w-sm z-50 overflow-auto rounded-tl-2xl rounded-bl-2xl bg-white/95 backdrop-blur-md shadow-xl'
@@ -383,7 +384,7 @@ const Header: React.FC = () => {
                         key={item.name}
                         className='flex items-center p-3 rounded-xl hover:bg-red-50 transition-all cursor-pointer'
                         onClick={() => {
-                          setIsMobileMenuOpen(false)
+                          setHeaderMenuOpen(false)
                           navigate(item.href)
                         }}
                       >
@@ -402,7 +403,7 @@ const Header: React.FC = () => {
                       <motion.div
                         className='flex items-center p-3 rounded-xl bg-red-50 hover:bg-red-100 transition-all'
                         onClick={() => {
-                          setIsMobileMenuOpen(false)
+                          setHeaderMenuOpen(false)
                           handleLogout()
                         }}
                       >
@@ -418,7 +419,7 @@ const Header: React.FC = () => {
                       <motion.div
                         className='flex items-center p-3 rounded-xl bg-red-50 hover:bg-red-100 transition-all'
                         onClick={() => {
-                          setIsMobileMenuOpen(false)
+                          setHeaderMenuOpen(false)
                           handleLoginClick()
                         }}
                       >
@@ -430,7 +431,7 @@ const Header: React.FC = () => {
                       <motion.div
                         className='flex items-center p-3 rounded-xl bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 transition-all'
                         onClick={() => {
-                          setIsMobileMenuOpen(false)
+                          setHeaderMenuOpen(false)
                           handleRegisterClick()
                         }}
                       >

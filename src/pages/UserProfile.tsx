@@ -7,11 +7,13 @@ import { useVerification } from '@/components/verificationContext/VerificationCo
 import Verification from '@/components/user-profile/Verification/Verification'
 import { motion, AnimatePresence } from 'framer-motion'
 import AppointmentInfo from '@/components/user-profile/AppointmentInfo'
+import { useMenuStore } from '@/hooks/stores/menuStore'
 
 const UserProfilePage: React.FC = () => {
   const [selectedOption, setSelectedOption] = useState<string>('thong-tin-ca-nhan')
   const { isVerified } = useVerification()
   const [appointmentId, setAppointmentId] = useState<string | null>(null)
+  const { isHeaderMenuOpen } = useMenuStore()
 
   useEffect(() => {
     console.log('UserProfile - Current verification status:', isVerified)
@@ -157,25 +159,28 @@ const UserProfilePage: React.FC = () => {
               {renderContent()}
             </motion.div>
           </AnimatePresence>
-          <div className='lg:hidden fixed bottom-0 left-0 w-full bg-white shadow-lg border-t border-gray-200 z-[999]'>
-            <div className='flex justify-around'>
-              {navigationItems.map((item) => (
-                <motion.button
-                  key={item.id}
-                  className={`flex flex-col items-center justify-center px-4 py-2 transition-all ${
-                    selectedOption === item.id ? 'text-red-600' : 'text-gray-500 hover:text-gray-700'
-                  }`}
-                  onClick={() => handleOptionClick(item.id)}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <div className={`p-2 rounded-full ${selectedOption === item.id ? 'bg-red-100' : 'bg-gray-100'}`}>
-                    {item.icon}
-                  </div>
-                  <span className='text-xs font-medium'>{item.label.split(' ').slice(0, 2).join(' ')}</span>
-                </motion.button>
-              ))}
+          {/* Mobile menu - hide when header menu is open */}
+          {!isHeaderMenuOpen && (
+            <div className='lg:hidden fixed bottom-0 left-0 w-full bg-white shadow-lg border-t border-gray-200 z-[999]'>
+              <div className='flex justify-around'>
+                {navigationItems.map((item) => (
+                  <motion.button
+                    key={item.id}
+                    className={`flex flex-col items-center justify-center px-4 py-2 transition-all ${
+                      selectedOption === item.id ? 'text-red-600' : 'text-gray-500 hover:text-gray-700'
+                    }`}
+                    onClick={() => handleOptionClick(item.id)}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <div className={`p-2 rounded-full ${selectedOption === item.id ? 'bg-red-100' : 'bg-gray-100'}`}>
+                      {item.icon}
+                    </div>
+                    <span className='text-xs font-medium'>{item.label.split(' ').slice(0, 2).join(' ')}</span>
+                  </motion.button>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
         </motion.div>
       </div>
     </div>
