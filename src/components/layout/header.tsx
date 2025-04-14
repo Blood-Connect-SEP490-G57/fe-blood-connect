@@ -40,6 +40,19 @@ const Header: React.FC = () => {
   const { unreadCount } = useUnreadNotifications()
   const [scrolled, setScrolled] = useState(false)
 
+  // Prevent body scrolling when menu or notifications are open
+  useEffect(() => {
+    if (isHeaderMenuOpen || isMobileNotiOpen) {
+      document.body.classList.add('overflow-hidden')
+    } else {
+      document.body.classList.remove('overflow-hidden')
+    }
+
+    return () => {
+      document.body.classList.remove('overflow-hidden')
+    }
+  }, [isHeaderMenuOpen, isMobileNotiOpen])
+
   // Monitor scrolling for glass effect
   useEffect(() => {
     const handleScroll = () => {
