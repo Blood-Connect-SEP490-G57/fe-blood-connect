@@ -42,7 +42,7 @@ const itemVariants = {
 
 const EventsSection: React.FC<EventsSectionProps> = ({ events }) => {
   return (
-    <section className='py-16 relative overflow-hidden bg-gradient-to-b from-white to-gray-50'>
+    <section className='py-8 relative overflow-hidden bg-gradient-to-b from-white to-gray-50'>
       {/* Decorative elements */}
       <div className='absolute top-20 left-10 w-64 h-64 bg-red-100 rounded-full blur-3xl opacity-30 -z-10'></div>
       <div className='absolute bottom-20 right-10 w-64 h-64 bg-red-50 rounded-full blur-3xl opacity-30 -z-10'></div>

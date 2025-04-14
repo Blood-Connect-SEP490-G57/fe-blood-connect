@@ -40,7 +40,7 @@ const BloodDonationCriteria = () => {
   ]
 
   return (
-    <div className='pt-16 pb-20 bg-gradient-to-br from-red-500 via-red-600 to-red-500 relative overflow-hidden' id='blood-donation-criteria'>
+    <div className='py-8 bg-gradient-to-br from-red-500 via-red-600 to-red-500 relative overflow-hidden' id='blood-donation-criteria'>
       {/* iOS style blur circles */}
       <div className='absolute top-0 left-[10%] w-32 h-32 bg-white/10 rounded-full blur-xl'></div>
       <div className='absolute bottom-0 right-[10%] w-40 h-40 bg-red-400/20 rounded-full blur-2xl'></div>

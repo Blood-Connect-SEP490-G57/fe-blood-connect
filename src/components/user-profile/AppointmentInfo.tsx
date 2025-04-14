@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react'
 import { getCurrent, updateinfor } from '@/api/appointment'
 import { format } from 'date-fns'
 import { vi } from 'date-fns/locale'
-import { Badge } from '@/components/ui/badge'
 import { toast } from '../ui/use-toast'
 import Loading from '../warnings/loading'
 import Empty from '../warnings/empty'
@@ -202,16 +201,16 @@ const AppointmentInfo = ({ appointmentId }: AppointmentInfoProps) => {
 
   // Hiển thị trạng thái
   const renderStatusBadge = (status: string) => {
-    const statusConfig: Record<string, { color: string; label: string }> = {
-      BOOKING: { color: 'bg-blue-100 text-blue-800', label: 'Đã đặt lịch' },
-      COMPLETED: { color: 'bg-green-100 text-green-800', label: 'Hoàn thành' },
-      CANCELLED: { color: 'bg-red-100 text-red-800', label: 'Đã hủy' },
-      PENDING: { color: 'bg-gray-100 text-gray-800', label: 'Đang chờ' }
+    const statusConfig: Record<string, { label: string }> = {
+      BOOKING: { label: 'Đã đặt lịch' },
+      COMPLETED: { label: 'Hoàn thành' },
+      CANCELLED: { label: 'Đã hủy' },
+      PENDING: { label: 'Đang chờ' }
     }
 
-    const config = statusConfig[status] || { color: 'bg-gray-100 text-gray-800', label: status }
+    const config = statusConfig[status] || { label: status }
 
-    return <Badge className={`${config.color} font-medium`}>{config.label}</Badge>
+    return <span className={`font-medium`}>{config.label}</span>
   }
 
   // Nhóm câu trả lời theo section
@@ -302,7 +301,7 @@ const AppointmentInfo = ({ appointmentId }: AppointmentInfoProps) => {
             <div className='flex items-center gap-2'>
               {hasAppointment ? (
                 <>
-                  <span className='px-2 py-1 text-sm rounded-full bg-white/20'>Đã đặt lịch hiến máu</span>
+                  <span className='px-2 py-1 text-sm rounded-full bg-white/20'>{renderStatusBadge(data.campaign?.status || '')}</span>
                 </>
               ) : (
                 <span>Chưa có lịch hiến máu</span>
@@ -618,10 +617,10 @@ const AppointmentInfo = ({ appointmentId }: AppointmentInfoProps) => {
                     <span className='text-xs sm:text-sm text-gray-600'>
                       {userInfo.address
                         ? userInfo.address.split(',').map((part, index) => (
-                            <>
+                            <span key={`address-part-${index}`}>
                               {part.trim()}
                               {index < 3 && <br />}
-                            </>
+                            </span>
                           ))
                         : 'Chưa có địa chỉ'}
                     </span>

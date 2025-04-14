@@ -118,7 +118,7 @@ const BloodDonationBenefits: React.FC = () => {
   }, [])
 
   return (
-    <div className='py-16 sm:py-24 bg-gradient-to-b from-white to-gray-50 overflow-hidden relative'>
+    <div className='py-8 bg-gradient-to-b from-white to-gray-50 overflow-hidden relative'>
       {/* iOS style decorative elements */}
       <div className='absolute top-40 left-10 w-72 h-72 bg-red-100 rounded-full blur-3xl opacity-30 -z-10'></div>
       <div className='absolute bottom-40 right-10 w-72 h-72 bg-red-50 rounded-full blur-3xl opacity-30 -z-10'></div>
@@ -132,9 +132,6 @@ const BloodDonationBenefits: React.FC = () => {
           transition={{ duration: 0.6 }}
         >
           <h2 className='text-3xl sm:text-4xl font-bold text-red-600 mb-4'>Quyền lợi của người hiến máu</h2>
-          <p className='text-gray-600 max-w-2xl mx-auto'>
-            Hiến máu không chỉ giúp cứu sống người khác mà còn mang lại nhiều lợi ích cho chính người hiến
-          </p>
           <div className='w-24 h-1 bg-red-100 mx-auto mt-4 rounded-full'></div>
         </motion.div>
 
@@ -261,9 +258,9 @@ const BloodDonationBenefits: React.FC = () => {
 
             <div className='flex justify-between items-center mt-6 pt-4 border-t border-gray-100'>
               <div className='flex space-x-2'>
-                {slides.map((_, index) => (
+                {slides.map((slide, index) => (
                   <button
-                    key={index}
+                    key={slide.title}
                     className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
                       index === currentSlide ? 'bg-red-500 w-6' : 'bg-gray-300 hover:bg-gray-400'
                     }`}
