@@ -84,19 +84,19 @@ const HeroSection: React.FC = () => {
               <span>Mỗi giọt máu là một món quà của sự sống</span>
             </div>
 
-            <h1 className='text-4xl lg:text-5xl font-bold mb-6 leading-tight'>
+            <h1 className='text-4xl lg:text-5xl font-bold mb-6 leading-tight text-center lg:text-left'>
               Giọt Máu Hi Vọng
               <span className='block text-xl lg:text-2xl font-normal mt-3 text-red-50 opacity-90'>
-                Kết nối yêu thương - Lan tỏa sự sống
+              Kết nối yêu thương - Lan tỏa sự sống
               </span>
             </h1>
 
-            <p className='text-base lg:text-lg mb-8 text-red-50 leading-relaxed max-w-xl opacity-90 text-justify'>
+            <p className='text-base lg:text-lg mb-8 text-red-50 max-w-xl opacity-90 text-center lg:text-left'>
               Mỗi giọt máu hiến tặng là một cơ hội để cứu sống người khác. Hãy chung tay vì một cộng đồng khỏe mạnh và
               nhân ái.
             </p>
 
-            <div className='flex flex-wrap gap-4'>
+            <div className='flex flex-wrap gap-4 justify-center lg:justify-start'>
                 <Button
                 size='lg'
                 className='bg-white text-red-600 hover:bg-red-50 rounded-full shadow-lg group transition-all duration-300 font-medium px-8'
@@ -155,13 +155,13 @@ const HeroSection: React.FC = () => {
 const HeroImage: React.FC = () => {
   const floatingCards = [
     {
-      position: '-bottom-6 -left-6',
+      position: 'lg:-bottom-4 lg:-left-6 bottom-2 left-2',
       icon: <Heart className='h-5 w-5 text-red-600' />,
       title: 'Cứu sống',
       subtitle: '3 người/ngày'
     },
     {
-      position: '-top-6 -right-4',
+      position: 'lg:-top-6 lg:-right-6 top-2 right-2',
       icon: <Users className='h-5 w-5 text-red-600' />,
       title: 'Tình nguyện viên',
       subtitle: '500+ người'
