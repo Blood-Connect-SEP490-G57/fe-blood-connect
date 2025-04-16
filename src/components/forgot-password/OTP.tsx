@@ -42,10 +42,7 @@ export default function OTPInput() {
         description: response.message,
         variant: 'default'
       })
-      localStorage.setItem('resetToken', response.data.resetToken)
-      setTimeout(() => {
-        navigate('/thay-doi-mat-khau')
-      }, 2000)
+      navigate('/thay-doi-mat-khau')
     } catch (error) {
       toast({
         title: 'Lỗi',
@@ -102,7 +99,7 @@ export default function OTPInput() {
       {/* Decorative elements */}
       <div className='absolute top-20 right-10 w-72 h-72 bg-red-50 rounded-full blur-3xl opacity-30 -z-10'></div>
       <div className='absolute bottom-20 left-10 w-72 h-72 bg-red-50 rounded-full blur-3xl opacity-30 -z-10'></div>
-      
+
       {/* Back button */}
       <motion.button
         onClick={() => navigate(-1)}
@@ -110,11 +107,11 @@ export default function OTPInput() {
         whileHover={{ x: -2 }}
         whileTap={{ scale: 0.95 }}
       >
-        <ChevronLeft className="w-5 h-5" />
+        <ChevronLeft className='w-5 h-5' />
       </motion.button>
-      
+
       <div className='w-full max-w-md space-y-8 z-10'>
-        <motion.div 
+        <motion.div
           className='flex flex-col items-center'
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -128,9 +125,7 @@ export default function OTPInput() {
             <h2 className='mt-6 text-center text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-500'>
               Xác Nhận OTP
             </h2>
-            <p className='mt-2 text-center text-sm text-gray-600'>
-              Nhập mã OTP được gửi đến email của bạn
-            </p>
+            <p className='mt-2 text-center text-sm text-gray-600'>Nhập mã OTP được gửi đến email của bạn</p>
           </motion.div>
         </motion.div>
 
@@ -150,12 +145,12 @@ export default function OTPInput() {
                 <p className='font-medium text-gray-800'>{emailAddress}</p>
               </div>
             </div>
-            
+
             <div className='space-y-3'>
               <label className='block text-sm font-medium text-gray-700'>
                 Mã OTP <span className='text-red-500'>*</span>
               </label>
-              
+
               <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -189,14 +184,14 @@ export default function OTPInput() {
                 />
               </motion.div>
             </div>
-            
+
             <motion.div className='pt-2 space-y-3'>
               <motion.button
                 onClick={handleSubmit}
                 disabled={isLoading}
                 className={`w-full py-3 px-4 rounded-xl font-medium flex items-center justify-center gap-2 shadow-sm transition-all ${
-                  isLoading 
-                    ? 'bg-gray-200 text-gray-500 cursor-not-allowed' 
+                  isLoading
+                    ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
                     : 'bg-gradient-to-r from-red-500 to-red-600 text-white hover:shadow-md'
                 }`}
                 whileHover={!isLoading ? { scale: 1.02 } : undefined}
@@ -214,7 +209,7 @@ export default function OTPInput() {
                   </>
                 )}
               </motion.button>
-              
+
               <motion.button
                 onClick={handleResendOtp}
                 disabled={countdown > 0}

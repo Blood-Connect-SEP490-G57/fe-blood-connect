@@ -111,7 +111,7 @@ export default function Register() {
                     <FormLabel className='text-sm font-medium text-gray-700'>Tên đăng nhập</FormLabel>
                     <FormControl>
                       <div className='mt-1 relative'>
-                        <div className='absolute left-3 top-3 p-1 rounded-full bg-red-50'>
+                        <div className='absolute left-3 top-2 p-1 rounded-full bg-red-50'>
                           <User className='text-red-500' size={16} />
                         </div>
                         <Input
@@ -136,7 +136,7 @@ export default function Register() {
                     </FormLabel>
                     <FormControl>
                       <div className='mt-1 relative'>
-                        <div className='absolute left-3 top-3 p-1 rounded-full bg-red-50'>
+                        <div className='absolute left-3 top-2 p-1 rounded-full bg-red-50'>
                           <Mail className='text-red-500' size={16} />
                         </div>
                         <Input
@@ -159,7 +159,7 @@ export default function Register() {
                     <FormLabel className='text-sm font-medium text-gray-700'>Mật khẩu</FormLabel>
                     <FormControl>
                       <div className='mt-1 relative'>
-                        <div className='absolute left-3 top-3 p-1 rounded-full bg-red-50'>
+                        <div className='absolute left-3 top-2 p-1 rounded-full bg-red-50'>
                           <Lock className='text-red-500' size={16} />
                         </div>
                         <Input
@@ -190,7 +190,7 @@ export default function Register() {
                     <FormLabel className='text-sm font-medium text-gray-700'>Xác nhận mật khẩu</FormLabel>
                     <FormControl>
                       <div className='mt-1 relative'>
-                        <div className='absolute left-3 top-3 p-1 rounded-full bg-red-50'>
+                        <div className='absolute left-3 top-2 p-1 rounded-full bg-red-50'>
                           <Lock className='text-red-500' size={16} />
                         </div>
                         <Input
