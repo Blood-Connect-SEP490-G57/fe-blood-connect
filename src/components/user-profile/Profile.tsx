@@ -184,13 +184,13 @@ const Profile = () => {
               <User className='h-12 w-12 text-red-500' />
             </div>
             <h1 className='text-xl font-bold mb-1'>{form.getValues('full_name')}</h1>
-            <div className='flex items-center gap-1'>
+            <div className='flex items-center gap-2 text-sm'>
               <div className='flex items-center gap-1'>
-                <span className='text-xs sm:text-sm'>Nhóm máu: {form.getValues('blood_group')}</span>
+                <span>Nhóm máu: {form.getValues('blood_group')}</span>
               </div>
-              <span className='mx-2'>•</span>
-              <div>
-                <span className='text-xs sm:text-sm'>Đã hiến {form.getValues('time_donation')} lần</span>
+              <span className='text-white'>•</span>
+              <div className='flex items-center gap-1'>
+                <span>Đã hiến {form.getValues('time_donation')} lần</span>
               </div>
             </div>
           </div>
@@ -293,7 +293,9 @@ const Profile = () => {
                                   placeholder='Nhập số điện thoại'
                                 />
                               ) : (
-                                <span className='text-xs sm:text-sm text-gray-600'>{field.value || 'Chưa có điện thoại'}</span>
+                                <span className='text-xs sm:text-sm text-gray-600'>
+                                  {field.value || 'Chưa có điện thoại'}
+                                </span>
                               )}
                             </FormControl>
                           </div>
@@ -321,7 +323,9 @@ const Profile = () => {
                                   readOnly={!isEdit}
                                 />
                               ) : (
-                                <span className='text-xs sm:text-sm text-gray-600 '>{field.value || 'Chưa có email'}</span>
+                                <span className='text-xs sm:text-sm text-gray-600 '>
+                                  {field.value || 'Chưa có email'}
+                                </span>
                               )}
                             </FormControl>
                           </div>
@@ -351,7 +355,9 @@ const Profile = () => {
                             </div>
                             <FormControl>
                               <div className='flex items-center justify-between'>
-                                <span className='text-xs sm:text-sm text-gray-600 '>{field.value || 'Chưa có nghề nghiệp'}</span>
+                                <span className='text-xs sm:text-sm text-gray-600 '>
+                                  {field.value || 'Chưa có nghề nghiệp'}
+                                </span>
                                 {isEdit && (
                                   <Dialog>
                                     <DialogTrigger>
@@ -455,7 +461,9 @@ const Profile = () => {
                             </div>
                             <FormControl>
                               <div className='flex items-center justify-between'>
-                                <span className='text-xs sm:text-sm text-gray-600 '>{field.value || 'Chưa có tổ chức'}</span>
+                                <span className='text-xs sm:text-sm text-gray-600 '>
+                                  {field.value || 'Chưa có tổ chức'}
+                                </span>
                                 {isEdit && (
                                   <Dialog>
                                     <DialogTrigger>
@@ -470,8 +478,8 @@ const Profile = () => {
                                       <OrganizationSelector
                                         initialOrganization={form.getValues('organization_name')}
                                         onOrganizationSelect={(organization) => {
-                                          form.setValue('organization_name', organization.name);
-                                          form.setValue('organization_id', organization.id);
+                                          form.setValue('organization_name', organization.name)
+                                          form.setValue('organization_id', organization.id)
                                         }}
                                       />
                                     </DialogContent>
