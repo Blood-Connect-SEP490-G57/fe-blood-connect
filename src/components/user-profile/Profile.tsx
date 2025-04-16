@@ -57,7 +57,9 @@ const Profile = () => {
       address: '',
       doe: '',
       issue_loc: '',
-      issue_date: ''
+      issue_date: '',
+      organization_id: 0,
+      organization_name: ''
     }
   })
 
@@ -69,7 +71,9 @@ const Profile = () => {
       job_name: '',
       student_id: '',
       military_id: '',
-      address_contact: ''
+      address_contact: '',
+      organization_id: 0,
+      organization_name: ''
     }
   })
 
@@ -90,7 +94,9 @@ const Profile = () => {
           gender: response.gender || '',
           national: response.national || '',
           address: response.address || '',
-          home: response.home || ''
+          home: response.home || '',
+          organization_id: response.organization_id || 0,
+          organization_name: response.organization_name || ''
         })
         form2.reset({
           email: response.email || '',
@@ -149,7 +155,7 @@ const Profile = () => {
       mobile: form2.getValues('mobile'),
       email: form2.getValues('email'),
       job_name: form2.getValues('job_name'),
-      student_id: form2.getValues('student_id'), 
+      student_id: form2.getValues('student_id'),
       military_id: form2.getValues('military_id'),
       address_contact: form2.getValues('address_contact'),
       organization_id: form.getValues('organization_id'),
@@ -180,11 +186,11 @@ const Profile = () => {
             <h1 className='text-xl font-bold mb-1'>{form.getValues('full_name')}</h1>
             <div className='flex items-center gap-1'>
               <div className='flex items-center gap-1'>
-                <span className='text-xs'>Nhóm máu: {form.getValues('blood_group')}</span>
+                <span className='text-xs sm:text-sm'>Nhóm máu: {form.getValues('blood_group')}</span>
               </div>
               <span className='mx-2'>•</span>
               <div>
-                <span className='text-xs'>Đã hiến {form.getValues('time_donation')} lần</span>
+                <span className='text-xs sm:text-sm'>Đã hiến {form.getValues('time_donation')} lần</span>
               </div>
             </div>
           </div>
@@ -212,7 +218,7 @@ const Profile = () => {
 
         {/* Contact Information Group */}
         <Form {...form2}>
-          <form onSubmit={form2.handleSubmit(onSubmit)} className='space-y-6 '>
+          <form className='space-y-6 '>
             <div>
               <h2 className='text-lg font-semibold text-gray-700 mb-2 px-2'>Thông tin liên hệ</h2>
               <Card className='overflow-hidden rounded-xl shadow-sm border-none'>
@@ -229,7 +235,7 @@ const Profile = () => {
                             </div>
                             <FormControl>
                               <div className='flex items-center justify-between'>
-                                <span className='text-xs text-gray-600 text-end'>
+                                <span className='text-xs sm:text-sm text-gray-600 text-end'>
                                   {field.value
                                     ? field.value.split(',').map((part, index) => (
                                         <React.Fragment key={index}>
@@ -246,8 +252,10 @@ const Profile = () => {
                                         <MapPin className='h-4 w-4 text-red-500' />
                                       </Button>
                                     </DialogTrigger>
-                                    <DialogContent className='sm:max-w-md' aria-describedby="dialog-address-select">
-                                      <div id="dialog-address-select" className="sr-only">Chọn địa chỉ liên hệ của bạn</div>
+                                    <DialogContent className='sm:max-w-md' aria-describedby='dialog-address-select'>
+                                      <div id='dialog-address-select' className='sr-only'>
+                                        Chọn địa chỉ liên hệ của bạn
+                                      </div>
                                       <AddressSelector
                                         onAddressSelect={(address) => {
                                           field.onChange(address)
@@ -285,7 +293,7 @@ const Profile = () => {
                                   placeholder='Nhập số điện thoại'
                                 />
                               ) : (
-                                <span className='text-xs text-gray-600'>{field.value || 'Chưa có điện thoại'}</span>
+                                <span className='text-xs sm:text-sm text-gray-600'>{field.value || 'Chưa có điện thoại'}</span>
                               )}
                             </FormControl>
                           </div>
@@ -313,7 +321,7 @@ const Profile = () => {
                                   readOnly={!isEdit}
                                 />
                               ) : (
-                                <span className='text-xs text-gray-600 '>{field.value || 'Chưa có email'}</span>
+                                <span className='text-xs sm:text-sm text-gray-600 '>{field.value || 'Chưa có email'}</span>
                               )}
                             </FormControl>
                           </div>
@@ -343,7 +351,7 @@ const Profile = () => {
                             </div>
                             <FormControl>
                               <div className='flex items-center justify-between'>
-                                <span className='text-xs text-gray-600 '>{field.value || 'Chưa có nghề nghiệp'}</span>
+                                <span className='text-xs sm:text-sm text-gray-600 '>{field.value || 'Chưa có nghề nghiệp'}</span>
                                 {isEdit && (
                                   <Dialog>
                                     <DialogTrigger>
@@ -351,13 +359,15 @@ const Profile = () => {
                                         <Briefcase className='h-4 w-4 text-red-500' />
                                       </Button>
                                     </DialogTrigger>
-                                    <DialogContent className='sm:max-w-md' aria-describedby="dialog-profile-job-select">
-                                      <div id="dialog-profile-job-select" className="sr-only">Chọn nghề nghiệp của bạn</div>
+                                    <DialogContent className='sm:max-w-md' aria-describedby='dialog-profile-job-select'>
+                                      <div id='dialog-profile-job-select' className='sr-only'>
+                                        Chọn nghề nghiệp của bạn
+                                      </div>
                                       <JobSelector
+                                        initialJob={form2.getValues('job_name')}
                                         onJobSelect={(job) => {
-                                          field.onChange(job)
+                                          form2.setValue('job_name', job)
                                         }}
-                                        initialJob={field.value}
                                       />
                                     </DialogContent>
                                   </Dialog>
@@ -388,7 +398,7 @@ const Profile = () => {
                                   readOnly={!isEdit}
                                 />
                               ) : (
-                                <span className='text-xs text-gray-600'>{field.value || '-'}</span>
+                                <span className='text-xs sm:text-sm text-gray-600'>{field.value || '-'}</span>
                               )}
                             </FormControl>
                           </div>
@@ -415,7 +425,7 @@ const Profile = () => {
                                   readOnly={!isEdit}
                                 />
                               ) : (
-                                <span className='text-xs text-gray-600'>{field.value || '-'}</span>
+                                <span className='text-xs sm:text-sm text-gray-600'>{field.value || '-'}</span>
                               )}
                             </FormControl>
                           </div>
@@ -436,7 +446,7 @@ const Profile = () => {
                   <div className='divide-y'>
                     <FormField
                       control={form.control}
-                      name='organization_id'
+                      name='organization_name'
                       render={({ field }) => (
                         <FormItem className='p-2 sm:p-4'>
                           <div className='flex items-center justify-between'>
@@ -445,7 +455,7 @@ const Profile = () => {
                             </div>
                             <FormControl>
                               <div className='flex items-center justify-between'>
-                                <span className='text-xs text-gray-600 '>{field.value || 'Chưa có tổ chức'}</span>
+                                <span className='text-xs sm:text-sm text-gray-600 '>{field.value || 'Chưa có tổ chức'}</span>
                                 {isEdit && (
                                   <Dialog>
                                     <DialogTrigger>
@@ -453,13 +463,16 @@ const Profile = () => {
                                         <Building className='h-4 w-4 text-red-500' />
                                       </Button>
                                     </DialogTrigger>
-                                    <DialogContent className='sm:max-w-md' aria-describedby="dialog-profile-org-select">
-                                      <div id="dialog-profile-org-select" className="sr-only">Chọn tổ chức của bạn</div>
+                                    <DialogContent className='sm:max-w-md' aria-describedby='dialog-profile-org-select'>
+                                      <div id='dialog-profile-org-select' className='sr-only'>
+                                        Chọn tổ chức của bạn
+                                      </div>
                                       <OrganizationSelector
+                                        initialOrganization={form.getValues('organization_name')}
                                         onOrganizationSelect={(organization) => {
-                                          field.onChange(organization)
+                                          form.setValue('organization_name', organization.name);
+                                          form.setValue('organization_id', organization.id);
                                         }}
-                                        initialOrganization={String(field.value)}
                                       />
                                     </DialogContent>
                                   </Dialog>
@@ -518,8 +531,8 @@ const InfoItem = ({
     </div>
     <div className='flex items-center justify-end'>
       {isAddress ? (
-        <span className='text-xs text-gray-600 text-end'>
-          {String(value) 
+        <span className='text-xs sm:text-sm text-gray-600 text-end'>
+          {String(value)
             .split(',')
             .map((part, index) => (
               <React.Fragment key={index}>
@@ -529,7 +542,7 @@ const InfoItem = ({
             ))}
         </span>
       ) : (
-        <span className='text-xs text-gray-600 text-end'>{value}</span>
+        <span className='text-xs sm:text-sm text-gray-600 text-end'>{value}</span>
       )}
     </div>
   </div>

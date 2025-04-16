@@ -9,7 +9,6 @@ import { toast } from '../ui/use-toast'
 import Loading from '../warnings/loading'
 import Empty from '../warnings/empty'
 import AppointmentDetailsPopup from './AppointmentDetailsPopup'
-import { getOrganizationsByType } from '@/api/organization'
 import JobSelector from '@/components/job/JobSelector'
 import AddressSelector from '@/components/address/AddressSelector'
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
@@ -80,11 +79,6 @@ interface AppointmentData {
   } | null
 }
 
-interface Organization {
-  id: string
-  name: string
-}
-
 interface AppointmentInfoProps {
   appointmentId?: string | null
 }
@@ -94,21 +88,6 @@ const AppointmentInfo = ({ appointmentId }: AppointmentInfoProps) => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [isPopupOpen, setPopupOpen] = useState(false)
-  const [organizations, setOrganizations] = useState<Organization[]>([])
-
-  useEffect(() => {
-    const fetchOrganizations = async () => {
-      try {
-        const response = await getOrganizationsByType()
-        setOrganizations(Array.isArray(response.data) ? response.data : [])
-      } catch (err) {
-        console.error('Error fetching organizations:', err)
-        setOrganizations([])
-      }
-    }
-
-    fetchOrganizations()
-  }, [])
 
   useEffect(() => {
     const fetchAppointmentInfo = async () => {
@@ -152,7 +131,8 @@ const AppointmentInfo = ({ appointmentId }: AppointmentInfoProps) => {
     addressContact: '',
     bloodGroup: '',
     jobName: '',
-    organizationId: ''
+    organization_id: 0,
+    organizationName: ''
   })
 
   useEffect(() => {
@@ -161,13 +141,14 @@ const AppointmentInfo = ({ appointmentId }: AppointmentInfoProps) => {
       setFormData({
         userId: userInfo.userId || '',
         jobName: userInfo.jobName || '',
-        organizationId: userInfo.organizationId || '',
+        organization_id: userInfo.organizationId || '',
         bloodGroup: userInfo.bloodGroup || '',
         addressContact: userInfo.addressContact || '',
         studentId: userInfo.studentId || '',
         militaryId: userInfo.militaryId || '',
         phoneNumber: userInfo.phoneNumber || '',
-        email: userInfo.email || ''
+        email: userInfo.email || '',
+        organizationName: userInfo.organizationName || ''
       })
     }
   }, [data])
@@ -301,7 +282,9 @@ const AppointmentInfo = ({ appointmentId }: AppointmentInfoProps) => {
             <div className='flex items-center gap-2'>
               {hasAppointment ? (
                 <>
-                  <span className='px-2 py-1 text-sm rounded-full bg-white/20'>{renderStatusBadge(data.campaign?.status || '')}</span>
+                  <span className='px-2 py-1 text-sm rounded-full bg-white/20'>
+                    {renderStatusBadge(data.campaign?.status || '')}
+                  </span>
                 </>
               ) : (
                 <span>Chưa có lịch hiến máu</span>
@@ -428,8 +411,10 @@ const AppointmentInfo = ({ appointmentId }: AppointmentInfoProps) => {
                               <MapPin className='h-4 w-4 text-red-500' />
                             </Button>
                           </DialogTrigger>
-                          <DialogContent className='sm:max-w-md' aria-describedby="dialog-address-select">
-                            <div id="dialog-address-select" className="sr-only">Chọn địa chỉ liên hệ của bạn</div>
+                          <DialogContent className='sm:max-w-md' aria-describedby='dialog-address-select'>
+                            <div id='dialog-address-select' className='sr-only'>
+                              Chọn địa chỉ liên hệ của bạn
+                            </div>
                             <AddressSelector
                               initialAddress={formData.addressContact}
                               onAddressSelect={(address) => {
@@ -500,7 +485,7 @@ const AppointmentInfo = ({ appointmentId }: AppointmentInfoProps) => {
                       <span className='text-sm font-medium text-gray-700'>Nghề nghiệp</span>
                     </div>
                     <div className='flex items-center gap-2'>
-                      <span className='text-xs sm:text-sm text-gray-600'>{userInfo.jobName}</span>
+                      <span className='text-xs sm:text-sm text-gray-600'>{formData.jobName}</span>
                       {isEditing && (
                         <Dialog>
                           <DialogTrigger asChild>
@@ -508,8 +493,10 @@ const AppointmentInfo = ({ appointmentId }: AppointmentInfoProps) => {
                               <Briefcase className='h-4 w-4 text-red-500' />
                             </Button>
                           </DialogTrigger>
-                          <DialogContent className='sm:max-w-md' aria-describedby="dialog-job-select">
-                            <div id="dialog-job-select" className="sr-only">Chọn nghề nghiệp của bạn</div>
+                          <DialogContent className='sm:max-w-md' aria-describedby='dialog-job-select'>
+                            <div id='dialog-job-select' className='sr-only'>
+                              Chọn nghề nghiệp của bạn
+                            </div>
                             <JobSelector
                               initialJob={formData.jobName}
                               onJobSelect={(job) => {
@@ -530,40 +517,33 @@ const AppointmentInfo = ({ appointmentId }: AppointmentInfoProps) => {
                   <div className='flex items-center gap-3'>
                     <span className='text-sm font-medium text-gray-700'>Tổ chức</span>
                   </div>
-                  {isEditing ? (
-                    <div className='w-1/2'>
-                      <div className='flex items-center justify-end gap-2'>
-                        <span className='text-sm sm:text-sm text-gray-600'>
-                          {organizations.find((org) => org.id === formData.organizationId)?.name || 'Chưa cập nhật'}
-                        </span>
-                        <Dialog>
-                          <DialogTrigger asChild>
-                            <Button variant='ghost' size='icon' className='ml-1'>
-                              <Building className='h-4 w-4 text-red-500' />
-                            </Button>
-                          </DialogTrigger>
-                          <DialogContent className='sm:max-w-md' aria-describedby="dialog-organization-select">
-                            <div id="dialog-organization-select" className="sr-only">Chọn tổ chức của bạn</div>
-                            <OrganizationSelector
-                              initialOrganization={formData.organizationId}
-                              onOrganizationSelect={(organizationId) => {
-                                setFormData((prev) => ({
-                                  ...prev,
-                                  organizationId: organizationId
-                                }))
-                              }}
-                            />
-                          </DialogContent>
-                        </Dialog>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className='flex items-center gap-2'>
-                      <span className='text-xs sm:text-sm text-gray-600'>
-                        {organizations.find((org) => org.id === userInfo.organizationId)?.name || 'Chưa cập nhật'}
-                      </span>
-                    </div>
-                  )}
+                  <div className='flex items-center gap-2'>
+                    <span className='text-xs sm:text-sm text-gray-600'>{formData.organizationName}</span>
+                    {isEditing && (
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button variant='ghost' size='icon' className='ml-1'>
+                            <Building className='h-4 w-4 text-red-500' />
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className='sm:max-w-md' aria-describedby='dialog-org-select'>
+                          <div id='dialog-org-select' className='sr-only'>
+                            Chọn tổ chức của bạn
+                          </div>
+                          <OrganizationSelector
+                            initialOrganization={formData.organizationName}
+                            onOrganizationSelect={(org) => {
+                              setFormData((prev) => ({
+                                ...prev,
+                                organizationId: org.id,
+                                organizationName: org.name
+                              }))
+                            }}
+                          />
+                        </DialogContent>
+                      </Dialog>
+                    )}
+                  </div>
                 </div>
 
                 <div className='p-2 sm:p-4 flex items-center justify-between'>
