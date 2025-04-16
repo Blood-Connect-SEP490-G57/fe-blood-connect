@@ -25,7 +25,7 @@ const UserProfilePage: React.FC = () => {
       const validOptions = ['thong-tin-ca-nhan', 'lich-su-hien-mau']
 
       if (isVerified === 'NONE') {
-        validOptions.push('xac-thuc-tai-khoan')
+        validOptions.push('tao-ho-so-hien-mau')
       }
 
       // Check if hash contains appointment view pattern
@@ -58,7 +58,7 @@ const UserProfilePage: React.FC = () => {
         return <Profile />
       case 'lich-su-hien-mau':
         return <DonationHistory />
-      case 'xac-thuc-tai-khoan':
+      case 'tao-ho-so-hien-mau':
         return isVerified === 'NONE' ? <Verification /> : <Profile />
       case 'xem-lich-hen':
         return <AppointmentInfo appointmentId={appointmentId} />
@@ -85,8 +85,8 @@ const UserProfilePage: React.FC = () => {
   // Conditionally add verification option if needed
   if (isVerified === 'NONE') {
     navigationItems.push({
-      id: 'xac-thuc-tai-khoan',
-      label: 'Xác thực tài khoản',
+      id: 'tao-ho-so-hien-mau',
+      label: 'Tạo hồ sơ hiến máu',
       icon: <CheckCircle className='w-5 h-5' />,
       color: 'bg-red-100 text-red-600'
     })

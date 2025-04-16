@@ -71,7 +71,7 @@ const Header: React.FC = () => {
       (location.hash === '#lich-hen' ||
         location.hash === '#thong-tin-ca-nhan' ||
         location.hash === '#lich-su-hien-mau' ||
-        location.hash === '#xac-thuc-tai-khoan')
+        location.hash === '#tao-ho-so-hien-mau')
     ) {
       setHeaderMenuOpen(false)
       setIsMobileNotiOpen(false)
@@ -138,8 +138,8 @@ const Header: React.FC = () => {
     if (isLoggedIn) {
       if (isVerified === 'NONE') {
         navigation.push({
-          name: 'XÁC THỰC TÀI KHOẢN',
-          href: '/trang-ca-nhan#xac-thuc-tai-khoan',
+          name: 'TẠO HỒ SƠ HIẾN MÁU',
+          href: '/trang-ca-nhan#tao-ho-so-hien-mau',
           icon: <User className='w-4 h-4 mr-2' />
         })
       }
@@ -196,7 +196,7 @@ const Header: React.FC = () => {
                   return false
                 }
                 return (
-                  item.name !== 'XÁC THỰC TÀI KHOẢN' && item.name !== 'THÔNG TIN CÁ NHÂN' && item.name !== 'CÀI ĐẶT'
+                  item.name !== 'TẠO HỒ SƠ HIẾN MÁU' && item.name !== 'THÔNG TIN CÁ NHÂN' && item.name !== 'CÀI ĐẶT'
                 )
               })
               .map((item) => (
@@ -396,7 +396,7 @@ const Header: React.FC = () => {
                           item.name === 'LỊCH SỬ ĐẶT HẸN' ||
                           item.name === 'THÔNG TIN CÁ NHÂN' ||
                           item.name === 'CÀI ĐẶT' ||
-                          item.name === 'XÁC THỰC TÀI KHOẢN')
+                          item.name === 'TẠO HỒ SƠ HIẾN MÁU')
                       ) {
                         return false
                       }
