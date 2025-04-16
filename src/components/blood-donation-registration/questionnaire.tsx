@@ -3,11 +3,12 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
 import { Question as fetchQuestions } from '@/api/campaign'
-import { Loader2, HelpCircle } from 'lucide-react'
+import { HelpCircle } from 'lucide-react'
 import { QuestionSet, Section, Question } from '@/schema/question-schema'
 import { Input } from '@/components/ui/input'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { motion } from 'framer-motion'
+import Loading from '../warnings/loading'
 
 interface QuestionnaireProps {
   questionSetId: number
@@ -195,13 +196,7 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({ questionSetId, onAnswerCh
   )
 
   if (loading) {
-    return (
-      <div className='flex flex-col items-center justify-center py-12'>
-        <Loader2 className='w-12 h-12 animate-spin text-red-500 mb-4' />
-        <p className='text-gray-600 text-lg'>Đang tải câu hỏi...</p>
-        <p className='text-gray-500 text-sm mt-2'>Vui lòng đợi trong giây lát</p>
-      </div>
-    )
+    return <Loading />
   }
 
   if (error) {

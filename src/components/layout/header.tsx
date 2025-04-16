@@ -117,8 +117,16 @@ const Header: React.FC = () => {
   // User-specific navigation items
   const userNavigation = isLoggedIn
     ? [
-        { name: 'LỊCH SỬ ĐẶT HẸN', href: '/trang-ca-nhan#lich-su-hien-mau', icon: <Calendar className='w-4 h-4 mr-2' /> },
-        { name: 'THÔNG TIN CÁ NHÂN', href: '/trang-ca-nhan#thong-tin-ca-nhan', icon: <User className='w-4 h-4 mr-2' /> },
+        {
+          name: 'LỊCH SỬ ĐẶT HẸN',
+          href: '/trang-ca-nhan#lich-su-hien-mau',
+          icon: <Calendar className='w-4 h-4 mr-2' />
+        },
+        {
+          name: 'THÔNG TIN CÁ NHÂN',
+          href: '/trang-ca-nhan#thong-tin-ca-nhan',
+          icon: <User className='w-4 h-4 mr-2' />
+        },
         { name: 'CÀI ĐẶT', href: '/cai-dat', icon: <Settings className='w-4 h-4 mr-2' /> }
       ]
     : []
@@ -126,7 +134,7 @@ const Header: React.FC = () => {
   // Add verification link if needed
   const getFilteredNavigation = () => {
     let navigation = [...baseNavigation]
-    
+
     if (isLoggedIn) {
       if (isVerified === 'NONE') {
         navigation.push({
@@ -137,7 +145,7 @@ const Header: React.FC = () => {
       }
       navigation = [...navigation, ...userNavigation]
     }
-    
+
     return navigation
   }
 
@@ -223,7 +231,9 @@ const Header: React.FC = () => {
                     <div className='relative w-full h-full'>
                       <Bell className='group-hover:text-white w-5 h-5' />
                       {unreadCount > 0 && (
-                        <span className='absolute -top-2 -right-2 bg-red-600 text-white text-xs rounded-full px-1.5 py-0.5 min-w-[18px] text-center shadow-sm'>
+                        <span
+                          className='absolute -top-3 -right-3 bg-red-600 text-white text-xs rounded-full px-1.5 py-0.5 min-w-[18px] text-center shadow-sm'
+                        >
                           {unreadCount}
                         </span>
                       )}
@@ -371,7 +381,7 @@ const Header: React.FC = () => {
                 onClick={() => setHeaderMenuOpen(false)}
               />
               <motion.div
-                className='fixed top-[70px] right-0 max-h-[80vh] w-full max-w-sm z-50 overflow-auto rounded-tl-2xl rounded-bl-2xl bg-white/95 backdrop-blur-md shadow-xl'
+                className='fixed top-[70px] right-0 max-h-[80vh] w-full max-w-sm z-50 overflow-auto rounded-tl-2xl rounded-bl-2xl'
                 initial={{ x: '100%', opacity: 0.5 }}
                 animate={{ x: 0, opacity: 1 }}
                 exit={{ x: '100%', opacity: 0.5 }}

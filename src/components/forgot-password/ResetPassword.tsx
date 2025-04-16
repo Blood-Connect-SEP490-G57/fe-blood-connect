@@ -64,9 +64,7 @@ export default function ResetPassword() {
         variant: 'default'
       })
       localStorage.clear() // Clear local storage
-      setTimeout(() => {
-        navigate('/dang-nhap')
-      }, 2000)
+      navigate('/dang-nhap')
     } catch (error) {
       toast({
         title: 'Lỗi',
@@ -81,7 +79,7 @@ export default function ResetPassword() {
       {/* Decorative elements */}
       <div className='absolute top-20 right-10 w-72 h-72 bg-red-50 rounded-full blur-3xl opacity-30 -z-10'></div>
       <div className='absolute bottom-20 left-10 w-72 h-72 bg-red-50 rounded-full blur-3xl opacity-30 -z-10'></div>
-      
+
       {/* Back button */}
       <motion.button
         onClick={() => navigate(-1)}
@@ -89,11 +87,11 @@ export default function ResetPassword() {
         whileHover={{ x: -2 }}
         whileTap={{ scale: 0.95 }}
       >
-        <ChevronLeft className="w-5 h-5" />
+        <ChevronLeft className='w-5 h-5' />
       </motion.button>
-      
+
       <div className='w-full max-w-md space-y-8 z-10'>
-        <motion.div 
+        <motion.div
           className='flex flex-col items-center'
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -111,9 +109,7 @@ export default function ResetPassword() {
             <h2 className='mt-6 text-center text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-500'>
               Đặt lại mật khẩu
             </h2>
-            <p className='mt-2 text-center text-sm text-gray-600'>
-              Tạo mật khẩu mới cho tài khoản của bạn
-            </p>
+            <p className='mt-2 text-center text-sm text-gray-600'>Tạo mật khẩu mới cho tài khoản của bạn</p>
           </motion.div>
         </motion.div>
 
@@ -137,11 +133,11 @@ export default function ResetPassword() {
                           <Lock className='text-red-500' size={16} />
                         </div>
                         <Input
-                          {...field}
-                          type='password'
-                          className='appearance-none block w-full pl-11 pr-4 py-3 border border-gray-200 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500 transition-all'
-                          placeholder='Nhập mật khẩu mới'
-                        />
+                            {...field}
+                            type={showPassword ? 'text' : 'password'}
+                            className='appearance-none block w-full pl-11 pr-4 py-3 border border-gray-200 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500 transition-all'
+                            placeholder='Nhập mật khẩu mới'
+                          />
                         <button
                           type='button'
                           onClick={() => setShowPassword(!showPassword)}
@@ -169,7 +165,7 @@ export default function ResetPassword() {
                         </div>
                         <Input
                           {...field}
-                          type='password'
+                          type={showPassword ? 'text' : 'password'}
                           className='appearance-none block w-full pl-11 pr-4 py-3 border border-gray-200 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500 transition-all'
                           placeholder='Xác nhận mật khẩu'
                         />
@@ -187,34 +183,30 @@ export default function ResetPassword() {
                 )}
               />
 
-              <motion.div 
-                className='pt-2'
-                whileHover={{ scale: 1.02 }} 
-                whileTap={{ scale: 0.98 }}
-              >
+              <motion.div className='pt-2' whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                 <Button
                   type='submit'
                   disabled={form.formState.isSubmitting}
                   className='w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-medium text-white bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all'
                 >
                   {form.formState.isSubmitting ? (
-                    <div className="flex items-center justify-center">
-                      <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                    <div className='flex items-center justify-center'>
+                      <div className='h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2'></div>
                       Đang xử lý...
                     </div>
                   ) : (
-                    <div className="flex items-center justify-center">
+                    <div className='flex items-center justify-center'>
                       Đặt lại mật khẩu
-                      <ArrowRight className="ml-2 h-4 w-4" />
+                      <ArrowRight className='ml-2 h-4 w-4' />
                     </div>
                   )}
                 </Button>
               </motion.div>
-              
-              <div className="pt-2">
-                <div className="bg-blue-50 rounded-xl p-4 text-sm text-blue-800">
-                  <p className="font-medium mb-1">Mật khẩu phải có:</p>
-                  <ul className="list-disc pl-5 space-y-1">
+
+              <div className='pt-2'>
+                <div className='bg-blue-50 rounded-xl p-4 text-sm text-blue-800'>
+                  <p className='font-medium mb-1'>Mật khẩu phải có:</p>
+                  <ul className='list-disc pl-5 space-y-1'>
                     <li>Ít nhất 8 ký tự</li>
                     <li>Ít nhất một chữ cái thường (a-z)</li>
                     <li>Ít nhất một chữ cái in hoa (A-Z)</li>

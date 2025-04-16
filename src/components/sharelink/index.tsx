@@ -1,11 +1,31 @@
-import { FacebookIcon, CopyIcon, Share2 } from 'lucide-react'
-import { useState, useRef } from 'react'
+import { FacebookIcon, CopyIcon } from 'lucide-react'
+import { useState, useRef, useEffect } from 'react'
 import { toast } from '../ui/use-toast'
 import { CampaignResponse } from '@/schema/campaign-schema'
 import { shortenUrl } from '@/api/sharelink'
+
 export default function ShareLink({ selectedCampaign }: { selectedCampaign: CampaignResponse }) {
   const [showIcons, setShowIcons] = useState(false)
   const dropdownRef = useRef<HTMLDivElement | null>(null)
+  const buttonRef = useRef<HTMLButtonElement | null>(null)
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current && 
+        !dropdownRef.current.contains(event.target as Node) &&
+        buttonRef.current &&
+        !buttonRef.current.contains(event.target as Node)
+      ) {
+        setShowIcons(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
 
   const baseUrl = `https://giotmauhyvong.org/dang-ky-hien-mau`
 
@@ -56,12 +76,12 @@ export default function ShareLink({ selectedCampaign }: { selectedCampaign: Camp
   return (
     <div className='relative flex flex-col items-center mr-4'>
       <button
+        ref={buttonRef}
         onClick={toggleIcons}
         className='flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-red-600 to-red-500 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 font-medium'
         aria-label='Chia sẻ'
       >
-        <Share2 size={20} />
-        <p>Chia sẻ ngay</p>
+        <p>Chia sẻ</p>
       </button>
 
       {showIcons && (
@@ -69,7 +89,7 @@ export default function ShareLink({ selectedCampaign }: { selectedCampaign: Camp
           ref={dropdownRef}
           tabIndex={0}
           onBlur={handleBlur}
-          className='absolute top-full mt-2 flex space-x-3 p-3 bg-white border border-gray-200 rounded-lg shadow-lg'
+          className='absolute flex space-x-3 p-3 bg-white border border-gray-200 rounded-lg shadow-lg z-50 bottom-full mb-2'
         >
           <button
             onClick={shareToFacebook}
