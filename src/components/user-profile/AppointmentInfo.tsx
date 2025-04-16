@@ -389,9 +389,12 @@ const AppointmentInfo = ({ appointmentId }: AppointmentInfoProps) => {
                     </div>
                   </div>
                 </div>
-                <Button onClick={() => setPopupOpen(true)} className='w-full bg-red-600 hover:bg-red-700 mt-2'>
+                {data.campaign?.status === 'BOOKING' || data.campaign?.status === 'DONE' && (
+                  <Button onClick={() => setPopupOpen(true)} className='w-full bg-red-600 hover:bg-red-700 mt-2'>
                   Xem chi tiết phiếu đăng ký
                 </Button>
+                )}
+                
               </CardContent>
             </Card>
           </div>
