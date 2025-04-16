@@ -138,7 +138,7 @@ const BloodDonationSlider: React.FC = () => {
                       </div>
 
                       {/* Nội dung */}
-                      <div className='p-6 sm:p-8 flex flex-col justify-center'>
+                      <div className='p-4 flex flex-col justify-center'>
                         <h3 className='text-xl sm:text-2xl font-bold text-gray-800 mb-5'>{campaign.name}</h3>
 
                         <div className='space-y-4 text-sm sm:text-base'>
@@ -220,7 +220,7 @@ const BloodDonationSlider: React.FC = () => {
                             <div className='p-2 bg-red-50 rounded-full mr-3 flex-shrink-0'>
                               <Users className='text-red-500 h-4 w-4' />
                             </div>
-                            <div>
+                            <div className='w-full'>
                               <p className='font-medium text-gray-900 mb-1'>Số người tham gia</p>
                               <div className='flex items-center gap-2'>
                                 <span className='text-gray-600'>
@@ -250,7 +250,7 @@ const BloodDonationSlider: React.FC = () => {
                           </motion.div>
 
                           <motion.div
-                            className='flex justify-end pt-5 gap-3'
+                            className='flex justify-end pt-5'
                             initial={{ opacity: 0, y: 10 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
@@ -263,7 +263,7 @@ const BloodDonationSlider: React.FC = () => {
                               whileHover={{ scale: 1.03 }}
                               whileTap={{ scale: 0.98 }}
                             >
-                              Đăng ký ngay
+                              Đăng ký
                             </motion.button>
                           </motion.div>
                         </div>
