@@ -145,7 +145,7 @@ const Verification = () => {
 
       {/* Banner section */}
       <motion.div
-        className='bg-gradient-to-r from-red-500 to-red-600 text-white py-10 px-6 relative overflow-hidden border-b-2 border-red-700 rounded-b-3xl'
+        className='bg-gradient-to-r from-red-600 to-red-400 text-white py-10 px-6 relative overflow-hidden border-b-2 border-red-700 rounded-3xl'
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
@@ -160,7 +160,7 @@ const Verification = () => {
             >
               <FileScan className='h-12 w-12 text-red-500' />
             </motion.div>
-            <h1 className='text-2xl font-bold mb-2'>Xác thực tài khoản</h1>
+            <h1 className='text-2xl font-bold mb-2'>TẠO HỒ SƠ HIẾN MÁU</h1>
             <p className='text-center text-white/90'>
               Bước {step}/4: {stepTitles[step - 1]}
             </p>

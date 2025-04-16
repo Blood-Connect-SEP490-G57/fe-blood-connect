@@ -89,7 +89,7 @@ const QuestionnaireStep: React.FC<QuestionnaireStepProps> = ({
   const handleRedirect = () => {
     switch (statusType) {
       case 'NOT_VERIFIED':
-        navigate('/trang-ca-nhan#xac-thuc-tai-khoan')
+        navigate('/trang-ca-nhan#tao-ho-so-hien-mau')
         break
       case 'ALREADY_REGISTERED':
         navigate('/trang-ca-nhan#lich-su-hien-mau')

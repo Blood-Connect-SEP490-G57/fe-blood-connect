@@ -35,7 +35,7 @@ const Step4Complete: React.FC<Step3CompleteProps> = ({ onHomeClick, onRegisterCl
         </div>
         <h2 className='text-xl font-semibold text-gray-900'>Xác thực thành công</h2>
         <p className='text-gray-600'>
-          Chúc mừng! Bạn đã hoàn tất xác thực tài khoản. Bây giờ bạn có thể đăng ký các chiến dịch hiến máu.
+          Chúc mừng! Bạn đã hoàn tất hồ sơ hiến máu. Bây giờ bạn có thể đăng ký các chiến dịch hiến máu.
         </p>
       </div>
 
