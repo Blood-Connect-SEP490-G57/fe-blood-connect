@@ -5,7 +5,6 @@ import { useExtractStore } from '@/hooks/stores/useExtractStore'
 import Loading from '@/components/warnings/loading'
 import { useEffect, useState } from 'react'
 import ScrollToTop from '@/components/scrollToTop'
-import CameraCapture from '@/components/CameraCapture'
 
 interface Step2UploadProps {
   formData: {
@@ -28,19 +27,12 @@ interface LoadingState {
 
 const Step2Upload: React.FC<Step2UploadProps> = ({ formData, setFormData, error, onNext, onPrev }) => {
   const { setExtractId, setCardDetails, setError } = useExtractStore()
-  const [cameraMode, setCameraMode] = useState<'front' | 'back' | null>(null)
   const [uploadLoading, setUploadLoading] = useState<LoadingState>({
     front: false,
     back: false
   })
 
-  const handleCameraCapture = async (file: File) => {
-    if (cameraMode === 'front') {
-      await handleFrontImageDrop([file])
-    } else if (cameraMode === 'back') {
-      await handleBackImageDrop([file])
-    }
-  }
+  
 
   useEffect(() => {
     if (!localStorage.getItem('change')) {
@@ -255,19 +247,6 @@ const Step2Upload: React.FC<Step2UploadProps> = ({ formData, setFormData, error,
                 <Upload className='mx-auto h-10 w-10 text-red-400' />
                 <p className='mt-2 text-sm font-medium text-gray-700'>Tải lên ảnh mặt trước</p>
                 <p className='text-xs text-gray-500 mt-1'>Nhấp để chọn hoặc kéo thả (JPG, PNG - tối đa 5MB)</p>
-                <div className='flex justify-center gap-3 mt-4'>
-                  <button
-                    type='button'
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      setCameraMode('back')
-                    }}
-                    className='flex items-center gap-1 px-3 py-1.5 text-xs bg-blue-100 text-blue-600 rounded-full hover:bg-blue-200'
-                  >
-                    <Camera className='h-3 w-3' />
-                    <span>Chụp ảnh</span>
-                  </button>
-                </div>
               </>
             )}
           </div>
@@ -323,19 +302,6 @@ const Step2Upload: React.FC<Step2UploadProps> = ({ formData, setFormData, error,
                 <Upload className='mx-auto h-10 w-10 text-red-400' />
                 <p className='mt-2 text-sm font-medium text-gray-700'>Tải lên ảnh mặt sau</p>
                 <p className='text-xs text-gray-500 mt-1'>Nhấp để chọn hoặc kéo thả (JPG, PNG - tối đa 5MB)</p>
-                <div className='flex justify-center gap-3 mt-4'>
-                  <button
-                    type='button'
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      setCameraMode('back')
-                    }}
-                    className='flex items-center gap-1 px-3 py-1.5 text-xs bg-blue-100 text-blue-600 rounded-full hover:bg-blue-200'
-                  >
-                    <Camera className='h-3 w-3' />
-                    <span>Chụp ảnh</span>
-                  </button>
-                </div>
               </>
             ) : (
               <>
@@ -381,9 +347,6 @@ const Step2Upload: React.FC<Step2UploadProps> = ({ formData, setFormData, error,
           )}
         </button>
       </div>
-      {cameraMode && (
-        <CameraCapture side={cameraMode} onCapture={handleCameraCapture} onClose={() => setCameraMode(null)} />
-      )}
     </div>
   )
 }
