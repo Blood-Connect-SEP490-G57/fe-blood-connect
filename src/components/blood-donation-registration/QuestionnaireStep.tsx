@@ -108,7 +108,8 @@ const QuestionnaireStep: React.FC<QuestionnaireStepProps> = ({
     <>
       <ScrollToTop />
       <Dialog open={showVerificationDialog} onOpenChange={handleCloseDialog}>
-        <DialogContent className='sm:max-w-md rounded-xl'>
+        <DialogContent className='sm:max-w-md rounded-xl' aria-describedby="dialog-questionnaire-verification">
+          <div id="dialog-questionnaire-verification" className="sr-only">Thông báo xác minh tài khoản hiến máu của bạn</div>
           <div className='flex items-center gap-3 mb-2 text-red-600'>
             <AlertTriangle className='h-6 w-6' />
             <DialogTitle>Thông báo đăng ký</DialogTitle>

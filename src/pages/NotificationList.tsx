@@ -108,7 +108,7 @@ export default function NotificationList({ onClose }: { onClose?: () => void }) 
       <div className='absolute top-20 left-10 w-72 h-72 bg-red-50 rounded-full blur-3xl opacity-30 -z-10'></div>
       <div className='absolute bottom-20 right-10 w-72 h-72 bg-red-50 rounded-full blur-3xl opacity-30 -z-10'></div>
 
-      <div ref={containerRef} className='container mx-auto px-4 max-w-4xl pt-24 pb-16 relative z-10'>
+      <div ref={containerRef} className='mx-auto px-4 max-w-7xl relative z-10 pt-20'>
         <motion.div
           className='space-y-6'
           initial={{ opacity: 0, y: 20 }}

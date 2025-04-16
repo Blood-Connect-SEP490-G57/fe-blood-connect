@@ -36,7 +36,7 @@ const OrganizationSelector: React.FC<OrganizationSelectorProps> = ({ initialOrga
   )
 
   return (
-    <div className="bg-gray-50 px-2">
+    <div className="bg-gray-50 px-2" id="dialog-org-select">
       <div className="mt-1">
         <input 
           type="text" 
@@ -44,6 +44,7 @@ const OrganizationSelector: React.FC<OrganizationSelectorProps> = ({ initialOrga
           onChange={(e) => setSearchTerm(e.target.value)}
           placeholder="Tìm kiếm tổ chức..."
           className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-red-500"
+          aria-describedby="dialog-org-select"
         />
       </div>
 

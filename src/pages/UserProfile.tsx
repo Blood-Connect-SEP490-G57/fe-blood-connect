@@ -93,7 +93,7 @@ const UserProfilePage: React.FC = () => {
   }
 
   return (
-    <div className='min-h-screen bg-gray-100 relative overflow-hidden'>
+    <div className='min-h-screen bg-gray-100 relative overflow-hidden mt-12'>
       {/* Decorative elements */}
       <div className='absolute top-20 left-10 w-72 h-72 bg-red-50 rounded-full blur-3xl opacity-30 -z-10'></div>
       <div className='absolute bottom-20 right-10 w-72 h-72 bg-red-50 rounded-full blur-3xl opacity-30 -z-10'></div>

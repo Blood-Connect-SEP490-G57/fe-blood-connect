@@ -11,10 +11,11 @@ import { User as fetchUser, updateUserDetail } from '@/api/user'
 import { toast } from '../ui/use-toast'
 import Loading from '../warnings/loading'
 import Empty from '../warnings/empty'
-import { User, MapPin, Briefcase } from 'lucide-react'
+import { User, MapPin, Briefcase, Building } from 'lucide-react'
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
 import AddressSelector from '../address/AddressSelector'
 import JobSelector from '../job/JobSelector'
+import OrganizationSelector from '../organization/OrganizationSelector'
 import React from 'react'
 
 const Profile = () => {
@@ -245,7 +246,8 @@ const Profile = () => {
                                         <MapPin className='h-4 w-4 text-red-500' />
                                       </Button>
                                     </DialogTrigger>
-                                    <DialogContent className='sm:max-w-md'>
+                                    <DialogContent className='sm:max-w-md' aria-describedby="dialog-address-select">
+                                      <div id="dialog-address-select" className="sr-only">Chọn địa chỉ liên hệ của bạn</div>
                                       <AddressSelector
                                         onAddressSelect={(address) => {
                                           field.onChange(address)
@@ -279,7 +281,7 @@ const Profile = () => {
                                 <Input
                                   {...field}
                                   type='tel'
-                                  className='w-1/2 border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0'
+                                  className='w-1/2 bg-gray-100 border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0'
                                   placeholder='Nhập số điện thoại'
                                 />
                               ) : (
@@ -306,7 +308,7 @@ const Profile = () => {
                                 <Input
                                   {...field}
                                   type='email'
-                                  className='w-1/2 border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0'
+                                  className='w-1/2 bg-gray-100 border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0'
                                   placeholder='Nhập email'
                                   readOnly={!isEdit}
                                 />
@@ -349,7 +351,8 @@ const Profile = () => {
                                         <Briefcase className='h-4 w-4 text-red-500' />
                                       </Button>
                                     </DialogTrigger>
-                                    <DialogContent className='sm:max-w-md'>
+                                    <DialogContent className='sm:max-w-md' aria-describedby="dialog-profile-job-select">
+                                      <div id="dialog-profile-job-select" className="sr-only">Chọn nghề nghiệp của bạn</div>
                                       <JobSelector
                                         onJobSelect={(job) => {
                                           field.onChange(job)
@@ -380,7 +383,7 @@ const Profile = () => {
                               {isEdit ? (
                                 <Input
                                   {...field}
-                                  className='w-1/2 border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0'
+                                  className='w-1/2 bg-gray-100 border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0'
                                   placeholder='Nhập mã sinh viên'
                                   readOnly={!isEdit}
                                 />
@@ -407,7 +410,7 @@ const Profile = () => {
                               {isEdit ? (
                                 <Input
                                   {...field}
-                                  className='w-1/2 border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0'
+                                  className='w-1/2 bg-gray-100 border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0'
                                   placeholder='Nhập mã quân nhân'
                                   readOnly={!isEdit}
                                 />
@@ -417,6 +420,54 @@ const Profile = () => {
                             </FormControl>
                           </div>
                           <FormMessage className='ml-8 text-xs' />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Organization Information Group */}
+            <div>
+              <h2 className='text-lg font-semibold text-gray-700 mb-2 px-2 '>Thông tin tổ chức</h2>
+              <Card className='overflow-hidden rounded-xl shadow-sm border-none'>
+                <CardContent className='p-0'>
+                  <div className='divide-y'>
+                    <FormField
+                      control={form.control}
+                      name='organization_id'
+                      render={({ field }) => (
+                        <FormItem className='p-2 sm:p-4'>
+                          <div className='flex items-center justify-between'>
+                            <div className='flex items-center gap-3'>
+                              <FormLabel className='text-sm font-medium text-gray-700 m-0'>Tổ chức</FormLabel>
+                            </div>
+                            <FormControl>
+                              <div className='flex items-center justify-between'>
+                                <span className='text-xs text-gray-600 '>{field.value || 'Chưa có tổ chức'}</span>
+                                {isEdit && (
+                                  <Dialog>
+                                    <DialogTrigger>
+                                      <Button variant='ghost' size='icon' className='ml-1'>
+                                        <Building className='h-4 w-4 text-red-500' />
+                                      </Button>
+                                    </DialogTrigger>
+                                    <DialogContent className='sm:max-w-md' aria-describedby="dialog-profile-org-select">
+                                      <div id="dialog-profile-org-select" className="sr-only">Chọn tổ chức của bạn</div>
+                                      <OrganizationSelector
+                                        onOrganizationSelect={(organization) => {
+                                          field.onChange(organization)
+                                        }}
+                                        initialOrganization={String(field.value)}
+                                      />
+                                    </DialogContent>
+                                  </Dialog>
+                                )}
+                              </div>
+                            </FormControl>
+                            <FormMessage className='ml-8 text-xs' />
+                          </div>
                         </FormItem>
                       )}
                     />

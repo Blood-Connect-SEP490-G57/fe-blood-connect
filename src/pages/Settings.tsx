@@ -77,7 +77,7 @@ const Settings = () => {
   }
 
   return (
-    <div className='min-h-screen bg-gray-100 py-12 overflow-hidden'>
+    <div className='min-h-screen bg-gray-100 py-12 overflow-hidden mt-6'>
       <div className='container mx-auto px-4'>
         <div className='max-w-3xl mx-auto space-y-6'>
           <Card>
@@ -98,7 +98,8 @@ const Settings = () => {
                         Đổi mật khẩu
                       </Button>
                     </DialogTrigger>
-                    <DialogContent>
+                    <DialogContent className="sm:max-w-md" aria-describedby="dialog-password-change">
+                      <div id="dialog-password-change" className="sr-only">Đổi mật khẩu tài khoản của bạn</div>
                       <DialogHeader>
                         <DialogTitle>Đổi mật khẩu</DialogTitle>
                         <DialogDescription>Vui lòng nhập mật khẩu cũ và mật khẩu mới</DialogDescription>

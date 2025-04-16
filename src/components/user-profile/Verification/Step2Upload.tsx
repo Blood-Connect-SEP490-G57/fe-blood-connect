@@ -25,7 +25,7 @@ interface LoadingState {
   back: boolean
 }
 
-const Step2Upload: React.FC<Step2UploadProps> = ({ formData, setFormData, error, onNext, onPrev}) => {
+const Step2Upload: React.FC<Step2UploadProps> = ({ formData, setFormData, error, onNext, onPrev }) => {
   const { setExtractId, setCardDetails, setError } = useExtractStore()
   const [uploadLoading, setUploadLoading] = useState<LoadingState>({
     front: false,
@@ -314,23 +314,35 @@ const Step2Upload: React.FC<Step2UploadProps> = ({ formData, setFormData, error,
 
       {error && <div className='p-4 bg-red-50 text-red-600 rounded-lg text-sm'>{error}</div>}
 
-      <div className='flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-0 sm:p-4'>
+      <div className='flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-2 p-4'>
         <button
-          className='w-full sm:w-auto flex items-center gap-1 px-6 py-3 text-sm font-medium rounded-lg transition-colors bg-gray-100 text-gray-600 hover:bg-gray-200'
+          className='w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium rounded-lg transition-colors bg-gray-200 text-gray-700 hover:bg-gray-300 focus:ring-2 focus:ring-gray-400 focus:outline-none'
           onClick={onPrev}
+          disabled={uploadLoading.front || uploadLoading.back}
         >
           <span>Quay lại</span>
         </button>
         <button
           onClick={onNext}
           disabled={!formData.frontImage || !formData.backImage || uploadLoading.front || uploadLoading.back}
-          className={`w-full sm:w-auto flex items-center gap-1 px-6 py-3 text-sm font-medium rounded-lg transition-colors ${
+          className={`w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium rounded-lg transition-colors focus:ring-2 focus:outline-none ${
             !formData.frontImage || !formData.backImage || uploadLoading.front || uploadLoading.back
-              ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-              : 'bg-red-600 text-white hover:bg-red-700'
+              ? 'bg-gray-200 text-gray-400 cursor-not-allowed focus:ring-gray-300'
+              : 'bg-red-500 text-white hover:bg-red-600 focus:ring-red-400'
           }`}
         >
-          {uploadLoading.front || uploadLoading.back ? 'Đang xử lý...' : 'Tiếp theo'}
+          {uploadLoading.front || uploadLoading.back ? (
+            <>
+              <div className='h-4 w-4'>
+                <Loading />
+              </div>
+              <span>Đang xử lý...</span>
+            </>
+          ) : (
+            <>
+              <span>Tiếp theo</span>
+            </>
+          )}
         </button>
       </div>
     </div>

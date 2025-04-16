@@ -61,7 +61,7 @@ const JobSelector: React.FC<JobSelectorProps> = ({ onJobSelect, initialJob = '' 
   };
 
   return (
-    <div className="bg-gray-50 p-4 rounded-lg">
+    <div className="bg-gray-50 p-4 rounded-lg" id="dialog-job-select">
       <div className="mb-4">
         <label className="block text-sm text-gray-500 mb-1">Tìm kiếm nghề nghiệp</label>
         <input
@@ -70,6 +70,7 @@ const JobSelector: React.FC<JobSelectorProps> = ({ onJobSelect, initialJob = '' 
           onChange={(e) => setSearchTerm(e.target.value)}
           placeholder="Nhập tên nghề nghiệp..."
           className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-red-500"
+          aria-describedby="dialog-job-select"
         />
       </div>
 
