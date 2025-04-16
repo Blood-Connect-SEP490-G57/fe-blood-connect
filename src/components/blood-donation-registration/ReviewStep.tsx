@@ -11,6 +11,8 @@ import ScrollToTop from '../scrollToTop'
 import { Badge } from '@/components/ui/badge'
 import { motion } from 'framer-motion'
 import Loading from '../warnings/loading'
+import { getUnreadCount } from '@/api/notification'
+import { useUnreadNotifications } from '@/hooks/useUnreadNotifications'
 
 // Interfaces
 
@@ -49,6 +51,7 @@ const ReviewStep: React.FC<ReviewStepProps> = ({ selectedCampaign, questionSetId
   const [hasApiData, setHasApiData] = useState(false)
   const [questionSet, setQuestionSet] = useState<QuestionSet | null>(null)
   const hasFetched = useRef(false)
+  const { invalidateUnreadCount } = useUnreadNotifications()
 
   useEffect(() => {
     if (!questionSetId || hasFetched.current) return
@@ -124,11 +127,26 @@ const ReviewStep: React.FC<ReviewStepProps> = ({ selectedCampaign, questionSetId
       const result = await submitAnswers(payload)
 
       if (result.success) {
+        // Hiển thị đồng thời 2 toast
         toast({
           title: 'Đăng ký thành công',
           description: 'Đăng ký hiến máu của bạn đã được ghi nhận',
           variant: 'default'
         })
+
+        const unreadCount = await getUnreadCount()
+        // Invalidate the unread count query to trigger a refetch
+        await invalidateUnreadCount()
+        
+        if (unreadCount > 0) {
+          setTimeout(() => {
+            toast({
+              title: 'Thông báo mới',
+              description: `Bạn có ${unreadCount} thông báo mới.`,
+              variant: 'default',
+            })
+          }, 3000) // Delay for 3 giây before showing the next toast
+        }
         setCurrentStep(STEPS.SUCCESS)
       } else {
         toast({
@@ -307,7 +325,7 @@ const ReviewStep: React.FC<ReviewStepProps> = ({ selectedCampaign, questionSetId
   return (
     <div>
       <ScrollToTop />
-      <div className='overflow-hidden rounded-xl shadow-sm border border-gray-100'>
+      <div className='overflow-hidden'>
         <div className='p-4'>
           <div className='flex items-center gap-3 mb-2'>
             <div className='bg-red-100 rounded-full p-2'>

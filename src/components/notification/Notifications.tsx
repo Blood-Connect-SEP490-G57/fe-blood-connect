@@ -126,25 +126,25 @@ export default function Notifications({ onClose }: { onClose?: () => void }) {
   return (
     <motion.div
       ref={containerRef}
-      className='h-full min-w-[250px] lg:min-w-[300px] w-full md:max-w-md lg:max-w-lg bg-white/95 backdrop-blur-md overflow-hidden max-h-[80vh]'
+      className='h-full min-w-[250px] lg:min-w-[300px] w-full md:max-w-md lg:max-w-lg backdrop-blur-md overflow-hidden max-h-[70vh] flex flex-col'
       initial={{ opacity: 0, y: -20, scale: 0.95 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: -20, scale: 0.95 }}
       transition={{ type: 'spring', damping: 25, stiffness: 300 }}
     >
-      <div className='px-5 py-4 bg-gradient-to-b from-red-50 to-white'>
-        <div>
-          <div className='flex items-center gap-2'>
-            <div className='p-2 bg-red-100 rounded-full text-red-600'>
+      <div className='flex-shrink-0'>
+        <div className='flex items-center justify-between bg-white p-2'>
+          <div className='flex items-center gap-3'>
+            <div className='p-2 bg-red-100 rounded-full text-red-600 flex-shrink-0'>
               <Bell className='h-5 w-5' />
             </div>
             <h1 className='text-xl font-bold text-gray-800'>Thông báo</h1>
           </div>
-          <div className='flex items-center mt-2'>
+          <div className='flex items-center'>
             <motion.button
               className='text-red-600 text-sm font-medium flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-red-50 hover:bg-red-100 transition-colors'
               onClick={() => {
-                handleMarkAllAsRead()
+          handleMarkAllAsRead()
               }}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -177,114 +177,120 @@ export default function Notifications({ onClose }: { onClose?: () => void }) {
         </div>
       </div>
 
-      <div className='overflow-y-auto max-h-[calc(80vh-120px)] py-3 px-5 space-y-3'>
-        {notifications?.data.data.length === 0 ? (
-          <motion.div
-            className='flex flex-col items-center justify-center py-8 text-gray-500'
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2 }}
-          >
-            <div className='bg-red-50 rounded-full p-4 mb-4'>
-              <AlertCircle className='h-10 w-10 text-red-400' />
-            </div>
-            <p className='text-lg font-medium text-gray-700'>Không có thông báo</p>
-            <p className='text-sm text-center text-gray-500 mt-1'>
-              {filter === 'Tất cả'
-                ? 'Hiện tại bạn chưa có thông báo nào'
-                : `Không có thông báo nào thuộc loại "${filter}"`}
-            </p>
-          </motion.div>
-        ) : (
-          <AnimatePresence>
-            {notifications?.data.data.map((notification, index) => (
-              <motion.div
-                key={notification.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ delay: index * 0.05, duration: 0.2 }}
-              >
-                <Card
-                  className={`p-0 transition-all duration-200 hover:shadow-md overflow-hidden ${
-                    notification.status ? 'bg-white' : 'bg-red-50'
-                  } border-0 shadow-sm rounded-2xl`}
+      <div className='overflow-y-auto flex-1 bg-gray-100'>
+        <div className='py-3 px-2 space-y-3'>
+          {notifications?.data.data.length === 0 ? (
+            <motion.div
+              className='flex flex-col items-center justify-center py-8 text-gray-500'
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2 }}
+            >
+              <div className='bg-red-50 rounded-full p-4 mb-4'>
+                <AlertCircle className='h-10 w-10 text-red-400' />
+              </div>
+              <p className='text-lg font-medium text-gray-700'>Không có thông báo</p>
+              <p className='text-sm text-center text-gray-500 mt-1'>
+                {filter === 'Tất cả'
+                  ? 'Hiện tại bạn chưa có thông báo nào'
+                  : `Không có thông báo nào thuộc loại "${filter}"`}
+              </p>
+            </motion.div>
+          ) : (
+            <AnimatePresence>
+              {notifications?.data.data.map((notification, index) => (
+                <motion.div
+                  key={notification.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ delay: index * 0.05, duration: 0.2 }}
                 >
-                  <div className='flex justify-between items-start gap-3'>
-                    <div
-                      className='flex-1 p-4 cursor-pointer'
-                      onClick={() => {
-                        navigate('/thong-bao/' + notification.id)
-                        handleToggleStatus(notification.id.toString(), true)
-                        onClose?.()
-                      }}
-                    >
-                      <div className='flex flex-wrap items-center gap-2 mb-2'>
-                        <span
-                          className={`px-2.5 py-1 rounded-full text-xs font-medium ${getTypeBadgeClasses(
-                            notification.type as NotificationType
-                          )} shadow-sm`}
-                        >
-                          {getTypeLabel(notification.type as NotificationType)}
-                        </span>
-                        <span className='text-xs text-gray-500 flex items-center gap-1'>
-                          <Calendar className='h-3 w-3' />
-                          {formatExactDate(notification.created)}
-                        </span>
-                      </div>
-                      <h3 className='font-semibold text-md text-gray-800'>{notification.title}</h3>
+                  <Card
+                    className={`p-0 transition-all duration-200 hover:shadow-md overflow-hidden ${
+                      notification.status ? 'bg-white' : 'bg-red-50'
+                    } border-0 shadow-sm rounded-2xl`}
+                  >
+                    <div className='flex justify-between items-start gap-3'>
                       <div
-                        className='text-gray-600 mt-1.5 prose prose-sm max-w-none text-sm'
-                        dangerouslySetInnerHTML={{
-                          __html:
-                            notification.content.length > 100
-                              ? notification.content.slice(0, 80) + '...'
-                              : notification.content
+                        className='flex-1 p-4 cursor-pointer'
+                        onClick={() => {
+                          navigate('/thong-bao/' + notification.id)
+                          handleToggleStatus(notification.id.toString(), true)
+                          onClose?.()
                         }}
-                      />
-                    </div>
-
-                    <div className='p-1 mt-2 mr-1'>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant='ghost' size='icon' className='h-8 w-8 rounded-full hover:bg-gray-100'>
-                            <MoreVertical className='h-4 w-4 text-gray-500' />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent
-                          className='min-w-[160px] p-1.5 rounded-xl shadow-lg border border-gray-100'
-                          align='end'
-                        >
-                          <DropdownMenuItem
-                            className='rounded-lg cursor-pointer flex items-center gap-2 py-2 px-3 hover:bg-gray-100'
-                            onClick={() => {
-                              handleToggleStatus(notification.id.toString(), !notification.status)
-                              onClose?.()
-                            }}
+                      >
+                        <div className='flex flex-wrap items-center gap-2 mb-2'>
+                          <span
+                            className={`px-2.5 py-1 rounded-full text-xs font-medium ${getTypeBadgeClasses(
+                              notification.type as NotificationType
+                            )} shadow-sm`}
                           >
-                            {notification.status ? (
-                              <>
-                                <span className='h-2 w-2 rounded-full bg-red-500'></span>
-                                <span>Đánh dấu chưa đọc</span>
-                              </>
-                            ) : (
-                              <>
-                                <span className='h-2 w-2 rounded-full bg-green-500'></span>
-                                <span>Đánh dấu đã đọc</span>
-                              </>
-                            )}
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+                            {getTypeLabel(notification.type as NotificationType)}
+                          </span>
+                          <span className='text-xs text-gray-500 flex items-center gap-1'>
+                            <Calendar className='h-3 w-3' />
+                            {formatExactDate(notification.created)}
+                          </span>
+                        </div>
+                          <h3 className='font-semibold text-md text-gray-800'>
+                          {notification.title.length > 50
+                            ? notification.title.slice(0, 50) + '...'
+                            : notification.title}
+                          </h3>
+                        <div
+                          className='text-gray-600 mt-1.5 prose prose-sm max-w-none text-sm'
+                          dangerouslySetInnerHTML={{
+                            __html:
+                              notification.content.length > 100
+                                ? notification.content.slice(0, 80) + '...'
+                                : notification.content
+                          }}
+                        />
+                      </div>
+
+                      <div className='p-1 mt-2 mr-1'>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant='ghost' size='icon' className='h-8 w-8 rounded-full hover:bg-gray-100'>
+                              <MoreVertical className='h-4 w-4 text-gray-500' />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent
+                            className='min-w-[160px] p-1.5 rounded-xl shadow-lg border border-gray-100'
+                            align='end'
+                          >
+                            <DropdownMenuItem
+                              className='rounded-lg cursor-pointer flex items-center gap-2 py-2 px-3 hover:bg-gray-100'
+                              onClick={() => {
+                                handleToggleStatus(notification.id.toString(), !notification.status)
+                                onClose?.()
+                              }}
+                            >
+                              {notification.status ? (
+                                <>
+                                  <span className='h-2 w-2 rounded-full bg-red-500'></span>
+                                  <span>Đánh dấu chưa đọc</span>
+                                </>
+                              ) : (
+                                <>
+                                  <span className='h-2 w-2 rounded-full bg-green-500'></span>
+                                  <span>Đánh dấu đã đọc</span>
+                                </>
+                              )}
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
                     </div>
-                  </div>
-                </Card>
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        )}
+                  </Card>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          )}
+        </div>
       </div>
-      <div className='p-4 border-t border-gray-100 bg-white'>
+      <div className='border-t border-gray-100 bg-white flex-shrink-0'>
         <motion.button
           className='w-full flex items-center justify-center gap-2 bg-gradient-to-r from-red-500 to-red-600 text-white py-2.5 px-4 rounded-full shadow-sm hover:shadow-md transition-all text-sm font-medium'
           onClick={() => navigate('/thong-bao')}
