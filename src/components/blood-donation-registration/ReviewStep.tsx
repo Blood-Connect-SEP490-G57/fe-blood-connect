@@ -10,6 +10,7 @@ import { AnswerType, ApiAnswerType } from '@/schema/answer-schema'
 import ScrollToTop from '../scrollToTop'
 import { Badge } from '@/components/ui/badge'
 import { motion } from 'framer-motion'
+import Loading from '../warnings/loading'
 
 // Interfaces
 
@@ -300,13 +301,7 @@ const ReviewStep: React.FC<ReviewStepProps> = ({ selectedCampaign, questionSetId
   }
 
   if (loading) {
-    return (
-      <div className='flex flex-col items-center justify-center py-12 space-y-4'>
-        <div className='w-16 h-16 border-4 border-red-200 border-t-red-600 rounded-full animate-spin'></div>
-        <p className='text-gray-700 font-medium'>Đang tải thông tin...</p>
-        <p className='text-gray-500 text-sm'>Vui lòng đợi trong giây lát</p>
-      </div>
-    )
+    return <Loading />
   }
 
   return (
