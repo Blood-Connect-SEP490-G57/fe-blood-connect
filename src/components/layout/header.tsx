@@ -175,7 +175,7 @@ const Header: React.FC = () => {
         scrolled ? 'bg-white/80 backdrop-blur-md shadow-sm' : 'bg-white shadow-sm'
       }`}
     >
-      <div className='max-w-7xl mx-auto px-4'>
+      <div className='max-w-7xl mx-auto sm:px2'>
         <div className='flex items-center justify-between h-16'>
           <motion.div
             className='flex items-center'

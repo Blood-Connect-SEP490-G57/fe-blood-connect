@@ -8,11 +8,12 @@ export default function ShareLink({ selectedCampaign }: { selectedCampaign: Camp
   const [showIcons, setShowIcons] = useState(false)
   const dropdownRef = useRef<HTMLDivElement | null>(null)
   const buttonRef = useRef<HTMLButtonElement | null>(null)
+  const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
-        dropdownRef.current && 
+        dropdownRef.current &&
         !dropdownRef.current.contains(event.target as Node) &&
         buttonRef.current &&
         !buttonRef.current.contains(event.target as Node)
@@ -28,19 +29,41 @@ export default function ShareLink({ selectedCampaign }: { selectedCampaign: Camp
   }, [])
 
   const baseUrl = `https://giotmauhyvong.org/dang-ky-hien-mau`
-
   const urlToShare = `${baseUrl}?campaignId=${selectedCampaign?.id}&questionset=${selectedCampaign?.questionSetId}`
 
   async function shareToFacebook() {
     try {
       const shortUrl = await shortenUrl(urlToShare)
-      const fbUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shortUrl)}`
-      window.open(fbUrl, '_blank')?.focus()
+
+      if (isMobile) {
+        // Try to open Facebook app first
+        window.location.href = `fb://facewebmodal/f?href=${encodeURIComponent(shortUrl)}`
+
+        // Fallback to browser if app not available
+        setTimeout(() => {
+          if (!document.hidden) {
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shortUrl)}`, '_blank')
+          }
+        }, 500)
+      } else {
+        // Desktop behavior
+        window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shortUrl)}`, '_blank')?.focus()
+      }
+
       localStorage.removeItem('selectedCampaign')
     } catch (error) {
       console.error('Lỗi khi chia sẻ:', error)
+      // Fallback with original URL if shortening fails
       window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(urlToShare)}`, '_blank')?.focus()
     }
+  }
+
+  function handleShareError() {
+    toast({
+      title: 'Không thể mở Facebook',
+      description: 'Vui lòng thử chia sẻ thủ công bằng cách sao chép liên kết',
+      variant: 'destructive'
+    })
   }
 
   function copyToClipboard() {
@@ -93,6 +116,7 @@ export default function ShareLink({ selectedCampaign }: { selectedCampaign: Camp
         >
           <button
             onClick={shareToFacebook}
+            onError={handleShareError}
             title='Chia sẻ lên Facebook'
             className='p-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-transform transform hover:scale-110 shadow-md'
             aria-label='Chia sẻ lên Facebook'
