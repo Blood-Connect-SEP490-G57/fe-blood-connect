@@ -184,7 +184,7 @@ const Header: React.FC = () => {
             transition={{ duration: 0.3 }}
           >
             <a href='/' className='flex items-center'>
-              <img src='./images/icon/icon.png' alt='Giọt Máu Hy Vọng' className='h-12 w-12 ml-2' />
+              <img src='./images/icon/logo.png' alt='Giọt Máu Hy Vọng' className='h-12 w-30 ml-2' />
             </a>
           </motion.div>
 
@@ -381,7 +381,7 @@ const Header: React.FC = () => {
                 onClick={() => setHeaderMenuOpen(false)}
               />
               <motion.div
-                className='fixed top-[70px] right-0 max-h-[80vh] w-full max-w-sm z-50 overflow-auto rounded-tl-2xl rounded-bl-2xl'
+                className='fixed top-[70px] right-0 max-h-[80vh] w-full max-w-sm z-50 overflow-auto rounded-tl-2xl rounded-bl-2xl bg-white/95 backdrop-blur-md shadow-xl'
                 initial={{ x: '100%', opacity: 0.5 }}
                 animate={{ x: 0, opacity: 1 }}
                 exit={{ x: '100%', opacity: 0.5 }}
