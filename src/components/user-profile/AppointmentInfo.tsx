@@ -428,7 +428,8 @@ const AppointmentInfo = ({ appointmentId }: AppointmentInfoProps) => {
                               <MapPin className='h-4 w-4 text-red-500' />
                             </Button>
                           </DialogTrigger>
-                          <DialogContent className='sm:max-w-md'>
+                          <DialogContent className='sm:max-w-md' aria-describedby="dialog-address-select">
+                            <div id="dialog-address-select" className="sr-only">Chọn địa chỉ liên hệ của bạn</div>
                             <AddressSelector
                               initialAddress={formData.addressContact}
                               onAddressSelect={(address) => {
@@ -507,7 +508,8 @@ const AppointmentInfo = ({ appointmentId }: AppointmentInfoProps) => {
                               <Briefcase className='h-4 w-4 text-red-500' />
                             </Button>
                           </DialogTrigger>
-                          <DialogContent className='sm:max-w-md'>
+                          <DialogContent className='sm:max-w-md' aria-describedby="dialog-job-select">
+                            <div id="dialog-job-select" className="sr-only">Chọn nghề nghiệp của bạn</div>
                             <JobSelector
                               initialJob={formData.jobName}
                               onJobSelect={(job) => {
@@ -540,7 +542,8 @@ const AppointmentInfo = ({ appointmentId }: AppointmentInfoProps) => {
                               <Building className='h-4 w-4 text-red-500' />
                             </Button>
                           </DialogTrigger>
-                          <DialogContent className='sm:max-w-md'>
+                          <DialogContent className='sm:max-w-md' aria-describedby="dialog-organization-select">
+                            <div id="dialog-organization-select" className="sr-only">Chọn tổ chức của bạn</div>
                             <OrganizationSelector
                               initialOrganization={formData.organizationId}
                               onOrganizationSelect={(organizationId) => {
@@ -629,8 +632,8 @@ const AppointmentInfo = ({ appointmentId }: AppointmentInfoProps) => {
 
                 <div className='p-2 sm:p-4'>
                   <div className='flex items-center justify-between gap-3'>
-                    <span className='text-sm font-medium text-gray-700'>Nơi cấp</span>
-                    <span className='text-xs sm:text-sm text-gray-600'>
+                    <span className='text-sm w-1/2 font-medium text-gray-700'>Nơi cấp</span>
+                    <span className='text-xs text-end sm:text-sm text-gray-600'>
                       {userInfo.issueLoc.charAt(0) + userInfo.issueLoc.slice(1).toLowerCase()}
                     </span>
                   </div>

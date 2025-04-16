@@ -21,6 +21,7 @@ export const createOrUpdateUserDetail = async (request: UserDetailType) => {
     '/api/users/create-detail',
     {
       email: request.email,
+      mobile: request.mobile, 
       job_name: request.job_name,
       student_id: request.student_id,
       military_id: request.military_id,

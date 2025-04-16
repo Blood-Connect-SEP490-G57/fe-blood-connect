@@ -75,7 +75,7 @@ const Verification = () => {
                     : 'bg-gray-200 text-gray-600' // Màu xám cho step chưa đi đến
                   }`}
                 >
-                  {stepNumber < step || (stepNumber === 4 && !isLoading) ? (
+                  {stepNumber < step ? (
                   <CheckCircle className='h-5 w-5' />
                   ) : (
                   <span className='font-medium'>{stepNumber}</span>

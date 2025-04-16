@@ -2,9 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { useExtractStore } from '@/hooks/stores/useExtractStore'
 import { getExtractById, updateExtractStatus } from '@/api/extract'
 import { createOrUpdateUserDetail, getCurrentUserDetail } from '@/api/user'
-import ScrollToTop from '@/components/scrollToTop'
 import { getOrganizationsByType } from '@/api/organization'
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import {
   ChevronDown,
@@ -103,16 +102,22 @@ const Step3ExtractedInfo: React.FC<Step2Props> = ({
       setIsSubmitting(true)
       setFieldErrors({})
 
+      // Log the form data before sending
+      console.log('Form data being sent:', formData)
+
       const userDetailData = {
-        email: formData.email,
-        job_name: formData.jobName,
-        student_id: formData.studentId,
-        military_id: formData.militaryId,
-        address_contact: contact, // Sử dụng trực tiếp giá trị contact từ AddressSelector
-        time_donation: Number(formData.timeDonation),
-        blood_group: formData.bloodGroup,
-        organization_id: Number(formData.organizationId)
+        email: formData.email || '',
+        mobile: formData.mobile, // Ensure mobile is included
+        job_name: formData.jobName || '',
+        student_id: formData.studentId || '',
+        military_id: formData.militaryId || '',
+        address_contact: contact,
+        time_donation: Number(formData.timeDonation || 0),
+        blood_group: formData.bloodGroup || '',
+        organization_id: Number(formData.organizationId || 0)
       }
+
+      console.log('User detail data being sent:', userDetailData)
 
       const userResponse = await createOrUpdateUserDetail(userDetailData)
       if (!userResponse) {
@@ -223,8 +228,7 @@ const Step3ExtractedInfo: React.FC<Step2Props> = ({
   }, [])
 
   return (
-    <div className='space-y-6 p-2 sm:p-4'>
-      <ScrollToTop />
+    <div className='space-y-6 sm:p-4 p-2'>
       <div className='text-center mb-6'>
         <div className='flex items-center justify-center mb-4'>
           <div className='w-16 h-16 bg-red-50 rounded-full flex items-center justify-center'>
@@ -270,197 +274,22 @@ const Step3ExtractedInfo: React.FC<Step2Props> = ({
             )}
           </div>
 
-          {/* Contact Information */}
-          <div className='space-y-4'>
-            <h3 className='text-lg font-semibold text-gray-900'>Thông tin liên hệ</h3>
-            <div className='bg-white sm:p-4'>
-              <div className='mb-2'>
-                <FormField label='Email' icon={<Mail className='h-5 w-5 text-gray-500' />} required={false}>
-                  <input
-                    type='email'
-                    value={formData.email}
-                    onChange={(e) => setFormData((prev: any) => ({ ...prev, email: e.target.value }))}
-                    placeholder='Nhập email'
-                    className='w-full p-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-500'
-                  />
-                </FormField>
-              </div>
+          <ContactInformationSection
+            formData={formData}
+            setFormData={setFormData}
+            contact={contact}
+            setContact={setContact}
+            fieldErrors={fieldErrors}
+          />
 
-              <div className='mb-2'>
-                <FormField
-                  label='Số điện thoại'
-                  icon={<Phone className='h-5 w-5 text-gray-500' />}
-                  required={true}
-                  error={fieldErrors.mobile}
-                >
-                  <input
-                    type='tel'
-                    value={formData.mobile}
-                    onChange={(e) => setFormData((prev: any) => ({ ...prev, mobile: e.target.value }))}
-                    placeholder='Nhập số điện thoại'
-                    className={`w-full p-2 rounded border ${
-                      fieldErrors.mobile ? 'border-red-500' : 'border-gray-300'
-                    } focus:outline-none focus:ring-2 focus:ring-red-500`}
-                  />
-                </FormField>
-              </div>
-              <div className='mb-2'>
-                <FormField
-                  label='Địa chỉ liên hệ'
-                  icon={<MapPin className='h-5 w-5 text-gray-500' />}
-                  required={true}
-                  error={fieldErrors.contact}
-                >
-                  <div className='flex items-center justify-end'>
-                    {contact ? (
-                      <span className='text-xs sm:text-sm text-gray-600 text-end'>
-                        {contact.split(',').map((part, index) => (
-                          <React.Fragment key={index}>
-                            {part.trim()}
-                            {index < 3 && <br />}
-                          </React.Fragment>
-                        ))}
-                      </span>
-                    ) : (
-                      'Chưa có địa chỉ'
-                    )}
-                    <Dialog>
-                      <DialogTrigger asChild>
-                        <Button variant='ghost' size='icon' className='ml-1'>
-                          <MapPin className='h-5 w-5 text-red-500' />
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent className='sm:max-w-md'>
-                        <AddressSelector
-                          onAddressSelect={(address) => {
-                            setContact(address)
-                          }}
-                          initialAddress={contact}
-                        />
-                      </DialogContent>
-                    </Dialog>
-                  </div>
-                </FormField>
-              </div>
-            </div>
-          </div>
+          <AdditionalInformationSection
+            formData={formData}
+            setFormData={setFormData}
+            organizations={organizations}
+            onInputChange={onInputChange}
+          />
 
-          {/* Additional Information */}
-          <div className='space-y-4'>
-            <h3 className='text-lg font-semibold text-gray-900'>Thông tin bổ sung</h3>
-            <div className='divide-y space-y-4 bg-white rounded-xl'>
-              <div>
-                <FormField label='Nghề nghiệp' icon={<Briefcase className='h-5 w-5 text-gray-500' />} required={false}>
-                  <div className='flex items-center justify-between'>
-                    <span className='text-sm text-gray-600'>{formData.jobName || 'Chưa có nghề nghiệp'}</span>
-                    <Dialog>
-                      <DialogTrigger asChild>
-                        <Button variant='ghost' size='icon' className='ml-1'>
-                          <Briefcase className='h-4 w-4 text-red-500' />
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent className='sm:max-w-md'>
-                        <JobSelector
-                          onJobSelect={(job) => {
-                            setFormData((prev: any) => ({ ...prev, jobName: job }))
-                          }}
-                          initialJob={formData.jobName}
-                        />
-                      </DialogContent>
-                    </Dialog>
-                  </div>
-                </FormField>
-              </div>
-
-              <div>
-                <FormField
-                  label='Đơn vị trực thuộc'
-                  icon={<Building className='h-5 w-5 text-gray-500' />}
-                  required={false}
-                >
-                  <div className='flex items-center justify-between'>
-                    <span className='text-xs sm:text-sm text-gray-600'>
-                      {organizations.find((org) => org.id === formData.organizationId)?.name || 'Chưa có tổ chức'}
-                    </span>
-                    <Dialog>
-                      <DialogTrigger asChild>
-                        <Button variant='ghost' size='icon' className='ml-1'>
-                          <Building className='h-4 w-4 text-red-500' />
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent className='sm:max-w-md'>
-                        <OrganizationSelector
-                          initialOrganization={formData.organizationId}
-                          onOrganizationSelect={(organizationId) => {
-                            setFormData((prev: any) => ({
-                              ...prev,
-                              organizationId: organizationId
-                            }))
-                          }}
-                        />
-                      </DialogContent>
-                    </Dialog>
-                  </div>
-                </FormField>
-              </div>
-
-              <div>
-                <FormField label='Mã sinh viên' icon={<School className='h-5 w-5 text-gray-500' />} required={false}>
-                  <input
-                    type='text'
-                    value={formData.studentId}
-                    onChange={(e) => setFormData((prev: any) => ({ ...prev, studentId: e.target.value }))}
-                    placeholder='Nhập mã sinh viên (nếu có)'
-                    className='w-full p-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-500'
-                  />
-                </FormField>
-              </div>
-
-              <div>
-                <FormField label='Mã quân nhân' icon={<Award className='h-5 w-5 text-gray-500' />} required={false}>
-                  <input
-                    type='text'
-                    value={formData.militaryId}
-                    onChange={(e) => setFormData((prev: any) => ({ ...prev, militaryId: e.target.value }))}
-                    placeholder='Nhập mã quân nhân (nếu có)'
-                    className='w-full p-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-500'
-                  />
-                </FormField>
-              </div>
-
-              <div>
-                <FormField label='Số lần hiến máu' icon={<Info className='h-5 w-5 text-gray-500' />} required={false}>
-                  <input
-                    type='number'
-                    value={formData.timeDonation || ''}
-                    onChange={(e) => setFormData((prev: any) => ({ ...prev, timeDonation: e.target.value }))}
-                    placeholder='Nhập số lần hiến máu'
-                    className='w-full p-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-500'
-                    min='0'
-                  />
-                </FormField>
-              </div>
-
-              <div>
-                <FormField label='Nhóm máu' icon={<Info className='h-5 w-5 text-gray-500' />} required={false}>
-                  <select
-                    value={formData.bloodGroup}
-                    onChange={onInputChange}
-                    name='bloodGroup'
-                    className='w-full p-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-500'
-                  >
-                    <option value=''>Chọn nhóm máu</option>
-                    {['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'].map((group) => (
-                      <option key={group} value={group}>
-                        {group}
-                      </option>
-                    ))}
-                  </select>
-                </FormField>
-              </div>
-            </div>
-          </div>
-          <div className='flex justify-between p-2'>
+          <div className='flex flex-col  sm:flex-row sm:items-center sm:justify-between'>
             <button
               onClick={onPrev}
               className='px-4 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-all shadow-sm'
@@ -469,20 +298,12 @@ const Step3ExtractedInfo: React.FC<Step2Props> = ({
             </button>
             <button
               onClick={handleConfirm}
-              className={`px-8 py-3 rounded-lg transition-all shadow-sm flex items-center gap-2 ${
+              className={`mt-2 px-4 py-3 rounded-lg transition-all shadow-sm flex items-center justify-center gap-2 ${
                 isSubmitting ? 'bg-red-400 text-white cursor-not-allowed' : 'bg-red-600 text-white hover:bg-red-700'
               }`}
               disabled={isSubmitting}
             >
-              {isSubmitting ? (
-                <>
-                  <span>Đang xử lý...</span>
-                </>
-              ) : (
-                <>
-                  <span>Xác nhận</span>
-                </>
-              )}
+              {isSubmitting ? <>Đang xử lý...</> : <>Xác nhận</>}
             </button>
           </div>
         </div>
@@ -506,21 +327,21 @@ const Step3ExtractedInfo: React.FC<Step2Props> = ({
 // Helper components
 const InfoItem = ({ label, value }: { label: string; value: string | number | null }) => (
   <div className='p-2 sm:p-4 flex items-center justify-between'>
-    <div className='flex items-center gap-3'>
-      <span className='text-sm font-medium text-gray-700'>{label}</span>
+    <div className='flex items-center gap-3 w-1/2'>
+      <span className='text-sm  font-medium text-gray-700'>{label}</span>
     </div>
     <div className='flex items-center justify-end'>
       {typeof value === 'string' && value.includes(',') ? (
-        <span className='text-xs sm:text-sm text-gray-600 text-end'>
-          {value.split(',').map((part, index) => (
-            <React.Fragment key={index}>
-              {part.trim()}
-              {index < value.split(',').length - 1 && <br />}
-            </React.Fragment>
-          ))}
-        </span>
+      <span className='text-xs sm:text-sm text-gray-600 text-end'>
+        {value.split(',').map((part, index) => (
+        <React.Fragment key={index}>
+          {part.trim()}
+          {index < value.split(',').length - 1 && <br />}
+        </React.Fragment>
+        ))}
+      </span>
       ) : (
-        <span className='text-xs max-w-[200px] sm:text-sm text-gray-600 text-end'>{value || '-'}</span>
+      <span className='text-xs sm:text-sm text-gray-600 text-end'>{value || '-'}</span>
       )}
     </div>
   </div>
@@ -549,6 +370,225 @@ const FormField = ({
     </div>
     {children}
     {error && <p className='text-red-500 text-xs mt-1'>{error}</p>}
+  </div>
+)
+
+// Component for Contact Information Section
+const ContactInformationSection = ({
+  formData,
+  setFormData,
+  contact,
+  setContact,
+  fieldErrors
+}: {
+  formData: any
+  setFormData: React.Dispatch<React.SetStateAction<any>>
+  contact: string
+  setContact: (contact: string) => void
+  fieldErrors: Record<string, string>
+}) => (
+  <div className='space-y-4'>
+    <h3 className='text-lg font-semibold text-gray-900'>Thông tin liên hệ</h3>
+    <div className='bg-white sm:p-4 p-2'>
+      <div className='mb-2'>
+        <FormField label='Email' icon={<Mail className='h-5 w-5 text-gray-500' />} required={false}>
+          <input
+            type='email'
+            value={formData.email}
+            onChange={(e) => setFormData((prev: any) => ({ ...prev, email: e.target.value }))}
+            placeholder='Nhập email'
+            className='w-full p-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-500 '
+          />
+        </FormField>
+      </div>
+
+      <div className='mb-2'>
+        <FormField
+          label='Số điện thoại'
+          icon={<Phone className='h-5 w-5 text-gray-500' />}
+          required={true}
+          error={fieldErrors.mobile}
+        >
+          <input
+            type='tel'
+            value={formData.mobile}
+            onChange={(e) => setFormData((prev: any) => ({ ...prev, mobile: e.target.value }))}
+            placeholder='Nhập số điện thoại'
+            className={`w-full p-2 rounded border ${
+              fieldErrors.mobile ? 'border-red-500' : 'border-gray-300'
+            } focus:outline-none focus:ring-2 focus:ring-red-500`}
+          />
+        </FormField>
+      </div>
+      <div className='mb-2'>
+        <FormField
+          label='Địa chỉ liên hệ'
+          icon={<MapPin className='h-5 w-5 text-gray-500' />}
+          required={true}
+          error={fieldErrors.contact}
+        >
+          <div className='flex items-center justify-end'>
+            {contact ? (
+              <span className='text-xs sm:text-sm text-gray-600 text-end'>
+                {contact.split(',').map((part, index) => (
+                  <React.Fragment key={index}>
+                    {part.trim()}
+                    {index < 3 && <br />}
+                  </React.Fragment>
+                ))}
+              </span>
+            ) : (
+              'Chưa có địa chỉ'
+            )}
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button variant='ghost' size='icon' className='ml-1'>
+                  <MapPin className='h-5 w-5 text-red-500' />
+                </Button>
+              </DialogTrigger>
+              <DialogContent className='sm:max-w-md' aria-describedby='dialog-address-select'>
+                <DialogTitle className='text-lg font-semibold text-gray-900'>Chọn địa chỉ liên hệ</DialogTitle>
+                <DialogDescription className='text-sm text-gray-600'>Chọn địa chỉ liên hệ của bạn</DialogDescription>
+                <AddressSelector
+                  onAddressSelect={(address) => {
+                    setContact(address)
+                  }}
+                  initialAddress={contact}
+                />
+              </DialogContent>
+            </Dialog>
+          </div>
+        </FormField>
+      </div>
+    </div>
+  </div>
+)
+
+// Component for Additional Information Section
+const AdditionalInformationSection = ({
+  formData,
+  setFormData,
+  organizations,
+  onInputChange
+}: {
+  formData: any
+  setFormData: React.Dispatch<React.SetStateAction<any>>
+  organizations: Organization[]
+  onInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void
+}) => (
+  <div className='space-y-4'>
+    <h3 className='text-lg font-semibold text-gray-900'>Thông tin bổ sung</h3>
+    <div className='bg-white rounded-xl p-2 sm:p-4'>
+      <div className='mb-2'>
+        <FormField label='Nghề nghiệp' icon={<Briefcase className='h-5 w-5 text-gray-500' />} required={false}>
+          <div className='flex items-center justify-between'>
+            <span className='text-sm text-gray-600'>{formData.jobName || 'Chưa có nghề nghiệp'}</span>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button variant='ghost' size='icon' className='ml-1'>
+                  <Briefcase className='h-4 w-4 text-red-500' />
+                </Button>
+              </DialogTrigger>
+              <DialogContent className='sm:max-w-md' aria-describedby='dialog-verify-job-select'>
+                <DialogTitle className='text-lg font-semibold text-gray-900'>Chọn nghề nghiệp</DialogTitle>
+                <DialogDescription className='text-sm text-gray-600'>Chọn nghề nghiệp của bạn</DialogDescription>
+                <JobSelector
+                  onJobSelect={(job) => {
+                    setFormData((prev: any) => ({ ...prev, jobName: job }))
+                  }}
+                  initialJob={formData.jobName}
+                />
+              </DialogContent>
+            </Dialog>
+          </div>
+        </FormField>
+      </div>
+
+      <div className='mb-2'>
+        <FormField label='Đơn vị trực thuộc' icon={<Building className='h-5 w-5 text-gray-500' />} required={false}>
+          <div className='flex items-center justify-between'>
+            <span className='text-xs sm:text-sm text-gray-600'>
+              {organizations.find((org) => org.id === formData.organizationId)?.name || 'Chưa có tổ chức'}
+            </span>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button variant='ghost' size='icon' className='ml-1'>
+                  <Building className='h-4 w-4 text-red-500' />
+                </Button>
+              </DialogTrigger>
+              <DialogContent className='sm:max-w-md' aria-describedby='dialog-verify-org-select'>
+                <DialogTitle className='text-lg font-semibold text-gray-900'>Chọn tổ chức</DialogTitle>
+                <DialogDescription className='text-sm text-gray-600'>Chọn tổ chức của bạn</DialogDescription>
+                <OrganizationSelector
+                  initialOrganization={formData.organizationId}
+                  onOrganizationSelect={(organizationId) => {
+                    setFormData((prev: any) => ({
+                      ...prev,
+                      organizationId: organizationId
+                    }))
+                  }}
+                />
+              </DialogContent>
+            </Dialog>
+          </div>
+        </FormField>
+      </div>
+
+      <div className='mb-2'>
+        <FormField label='Mã sinh viên' icon={<School className='h-5 w-5 text-gray-500' />} required={false}>
+          <input
+            type='text'
+            value={formData.studentId}
+            onChange={(e) => setFormData((prev: any) => ({ ...prev, studentId: e.target.value }))}
+            placeholder='Nhập mã sinh viên (nếu có)'
+            className='w-full p-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-500'
+          />
+        </FormField>
+      </div>
+
+      <div  className='mb-2'>
+        <FormField label='Mã quân nhân' icon={<Award className='h-5 w-5 text-gray-500' />} required={false}>
+          <input
+            type='text'
+            value={formData.militaryId}
+            onChange={(e) => setFormData((prev: any) => ({ ...prev, militaryId: e.target.value }))}
+            placeholder='Nhập mã quân nhân (nếu có)'
+            className='w-full p-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-500'
+          />
+        </FormField>
+      </div>
+
+      <div className='mb-2'>
+        <FormField label='Số lần hiến máu' icon={<Info className='h-5 w-5 text-gray-500' />} required={false}>
+          <input
+            type='number'
+            value={formData.timeDonation || ''}
+            onChange={(e) => setFormData((prev: any) => ({ ...prev, timeDonation: e.target.value }))}
+            placeholder='Nhập số lần hiến máu'
+            className='w-full p-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-500'
+            min='0'
+          />
+        </FormField>
+      </div>
+
+      <div >
+        <FormField label='Nhóm máu' icon={<Info className='h-5 w-5 text-gray-500' />} required={false}>
+          <select
+            value={formData.bloodGroup}
+            onChange={onInputChange}
+            name='bloodGroup'
+            className='w-full p-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-500'
+          >
+            <option value=''>Chọn nhóm máu</option>
+            {['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'].map((group) => (
+              <option key={group} value={group}>
+                {group}
+              </option>
+            ))}
+          </select>
+        </FormField>
+      </div>
+    </div>
   </div>
 )
 

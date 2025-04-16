@@ -27,17 +27,15 @@ const Step4Complete: React.FC<Step3CompleteProps> = ({ onHomeClick, onRegisterCl
   }, [])
 
   return (
-    <div className='space-y-8 max-w-md mx-auto sm:p-4'>
+    <div className='space-y-6 mx-auto sm:p-4 p-2'>
       <ScrollToTop />
-
-      <div className='flex flex-col items-center justify-center text-center space-y-4'>
+      <div className='flex flex-col items-center justify-center text-center mt-2 space-y-4'>
         <div className='w-20 h-20 bg-green-100 rounded-full flex items-center justify-center'>
           <Check className='w-10 h-10 text-green-600' />
         </div>
         <h2 className='text-xl font-semibold text-gray-900'>Xác thực thành công</h2>
         <p className='text-gray-600'>
-          Chúc mừng! Bạn đã hoàn tất xác thực tài khoản hiến máu của mình. Bây giờ bạn có thể đăng ký các chiến dịch
-          hiến máu.
+          Chúc mừng! Bạn đã hoàn tất xác thực tài khoản. Bây giờ bạn có thể đăng ký các chiến dịch hiến máu.
         </p>
       </div>
 
@@ -59,10 +57,10 @@ const Step4Complete: React.FC<Step3CompleteProps> = ({ onHomeClick, onRegisterCl
         </CardContent>
       </Card>
 
-      <div className='grid grid-cols-2 gap-4'>
+      <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between'>
         <button
           onClick={onHomeClick}
-          className='bg-gray-100 hover:bg-gray-200 text-gray-800 py-4 px-5 rounded-xl transition-colors flex items-center justify-center gap-2'
+          className='bg-gray-300 hover:bg-gray-200 text-gray-800 p-2 rounded-xl transition-colors flex items-center justify-center gap-2'
         >
           <div>
             <span>Trang chủ</span>
@@ -70,7 +68,7 @@ const Step4Complete: React.FC<Step3CompleteProps> = ({ onHomeClick, onRegisterCl
         </button>
         <button
           onClick={onRegisterClick}
-          className='bg-red-600 hover:bg-red-700 text-white py-4 px-5 rounded-xl transition-colors flex items-center justify-center gap-2'
+          className='bg-red-600 hover:bg-red-700 text-white p-2 rounded-xl transition-colors flex items-center justify-center gap-2'
         >
           <div>
             <span>Đăng ký hiến máu</span>
