@@ -260,7 +260,7 @@ const Step2Upload: React.FC<Step2UploadProps> = ({ formData, setFormData, error,
                     type='button'
                     onClick={(e) => {
                       e.stopPropagation()
-                      setCameraMode('front')
+                      setCameraMode('back')
                     }}
                     className='flex items-center gap-1 px-3 py-1.5 text-xs bg-blue-100 text-blue-600 rounded-full hover:bg-blue-200'
                   >
