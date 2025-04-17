@@ -81,11 +81,6 @@ const Step3ExtractedInfo: React.FC<Step2Props> = ({
       errors.extractId = 'Không tìm thấy thông tin CCCD'
     }
 
-    if (Object.keys(errors).length > 0) {
-      setFieldErrors(errors)
-      return
-    }
-
     try {
       setLoading(true)
       setIsSubmitting(true)
