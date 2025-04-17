@@ -8,7 +8,8 @@ import { cancelAppointment } from '@/api/campaign'
 import Loading from '../warnings/loading'
 import Empty from '../warnings/empty'
 import { AppointmentType } from '@/schema/appointment-schema'
-import { formatExactDate } from '@/api/notification'
+import { formatExactDate, getUnreadCount } from '@/api/notification'
+import { useUnreadNotifications } from '@/hooks/useUnreadNotifications'
 
 function CancelAppointmentModal({
   isOpen,
@@ -73,6 +74,7 @@ const DonationHistory = () => {
   const hasFetched = useRef(false)
   const [isModalOpen, setModalOpen] = useState(false)
   const [selectedAppointment, setSelectedAppointment] = useState<AppointmentType | null>(null)
+  const { invalidateUnreadCount } = useUnreadNotifications()
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -115,11 +117,24 @@ const DonationHistory = () => {
       // Update local state
       setAppointments(appointments.map((app) => (app.id === appointment.id ? { ...app, status: 'CANCELLED' } : app)))
 
+      const unreadCount = await getUnreadCount()
+      // Invalidate unread notifications count
+      await invalidateUnreadCount()
+
       toast({
         title: 'Đã hủy lịch hẹn',
         description: 'Lịch hẹn của bạn đã được hủy thành công',
         variant: 'default'
       })
+      if (unreadCount > 0) {
+        setTimeout(() => {
+          toast({
+            title: 'Thông báo mới',
+            description: `Bạn có ${unreadCount} thông báo mới.`,
+            variant: 'default'
+          })
+        }, 3000) // Delay for 3 giây before showing the next toast
+      }
     } catch (error) {
       toast({
         title: 'Có lỗi xảy ra',
