@@ -172,7 +172,7 @@ const Verification = () => {
         <div className='absolute bottom-0 right-0 w-40 h-40 bg-white/10 rounded-full translate-x-1/3 translate-y-1/3 blur-md'></div>
       </motion.div>
 
-      <div className='bg-gray-100 mx-auto mt-4 mb-4'>
+      <div className='bg-gray-50 mx-auto mt-4 mb-4'>
         {/* Step indicator */}
         <motion.div
           className='mb-8 px-4 pt-2'
@@ -185,7 +185,7 @@ const Verification = () => {
 
         {/* Current step content */}
         <motion.div
-          className='bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl max-w-4xl mx-auto border border-gray-100'
+          className='backdrop-blur-sm rounded-xl shadow-xl max-w-4xl mx-auto border border-gray-100'
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.4, duration: 0.5 }}

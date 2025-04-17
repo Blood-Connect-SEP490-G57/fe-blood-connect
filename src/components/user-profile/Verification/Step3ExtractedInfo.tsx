@@ -5,23 +5,12 @@ import { createOrUpdateUserDetail, getCurrentUserDetail } from '@/api/user'
 import { getOrganizationsByType } from '@/api/organization'
 import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
-import {
-  ChevronDown,
-  FileText,
-  Info,
-  Building,
-  MapPin,
-  Phone,
-  Mail,
-  School,
-  Award,
-  Loader2,
-  Briefcase
-} from 'lucide-react'
+import { ChevronDown, FileText, Info, Building, MapPin, Loader2, Briefcase } from 'lucide-react'
 import { toast } from '@/components/ui/use-toast'
 import JobSelector from '@/components/job/JobSelector'
 import AddressSelector from '@/components/address/AddressSelector'
 import OrganizationSelector from '@/components/organization/OrganizationSelector'
+import { FormField } from '@/components/ui/form-field'
 
 interface Step2Props {
   formData: any
@@ -314,7 +303,7 @@ const Step3ExtractedInfo: React.FC<Step2Props> = ({
           <p className='text-sm mt-1'>Vui lòng quay lại bước trước và tải lên ảnh CCCD của bạn</p>
           <button
             onClick={onPrev}
-            className='mt-4 px-4 py-2 bg-yellow-100 text-yellow-700 rounded-lg hover:bg-yellow-200'
+            className='mt-4 px-4  bg-yellow-100 text-yellow-700 rounded-lg hover:bg-yellow-200'
           >
             Quay lại
           </button>
@@ -326,50 +315,24 @@ const Step3ExtractedInfo: React.FC<Step2Props> = ({
 
 // Helper components
 const InfoItem = ({ label, value }: { label: string; value: string | number | null }) => (
-  <div className='p-2 sm:p-4 flex items-center justify-between'>
+  <div className='p-2 sm:p-4 flex items-center justify-between px-2'>
     <div className='flex items-center gap-3 w-1/2'>
-      <span className='text-sm  font-medium text-gray-700'>{label}</span>
+      <span className='text-base font-medium text-gray-700'>{label}</span>
     </div>
     <div className='flex items-center justify-end'>
       {typeof value === 'string' && value.includes(',') ? (
-      <span className='text-xs sm:text-sm text-gray-600 text-end'>
-        {value.split(',').map((part, index) => (
-        <React.Fragment key={index}>
-          {part.trim()}
-          {index < value.split(',').length - 1 && <br />}
-        </React.Fragment>
-        ))}
-      </span>
+        <span className='text-sm  text-gray-600 text-end'>
+          {value.split(',').map((part, index) => (
+            <React.Fragment key={index}>
+              {part.trim()}
+              {index < value.split(',').length - 1 && <br />}
+            </React.Fragment>
+          ))}
+        </span>
       ) : (
-      <span className='text-xs sm:text-sm text-gray-600 text-end'>{value || '-'}</span>
+        <span className='text-sm text-gray-600 text-end'>{value || '-'}</span>
       )}
     </div>
-  </div>
-)
-
-const FormField = ({
-  label,
-  required,
-  error,
-  children
-}: {
-  label: string
-  icon: React.ReactNode
-  required: boolean
-  error?: string
-  children: React.ReactNode
-}) => (
-  <div>
-    <div className='flex items-center justify-between mb-2'>
-      <div className='flex items-center gap-2'>
-        <label className='text-sm font-medium text-gray-700'>
-          {label}
-          {required && <span className='text-red-500 ml-1'>*</span>}
-        </label>
-      </div>
-    </div>
-    {children}
-    {error && <p className='text-red-500 text-xs mt-1'>{error}</p>}
   </div>
 )
 
@@ -389,47 +352,33 @@ const ContactInformationSection = ({
 }) => (
   <div className='space-y-4'>
     <h3 className='text-lg font-semibold text-gray-900'>Thông tin liên hệ</h3>
-    <div className='bg-white sm:p-4 p-2'>
-      <div className='mb-2'>
-        <FormField label='Email' icon={<Mail className='h-5 w-5 text-gray-500' />} required={false}>
+    <div className='bg-white sm:p-4 px-2'>
+      <div className='mb-6'>
+        <FormField label='Email'>
           <input
             type='email'
             value={formData.email}
             onChange={(e) => setFormData((prev: any) => ({ ...prev, email: e.target.value }))}
-            placeholder='Nhập email'
-            className='w-full p-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-500 '
+            className='w-full text-sm focus:outline-none border-b'
           />
         </FormField>
       </div>
 
-      <div className='mb-2'>
-        <FormField
-          label='Số điện thoại'
-          icon={<Phone className='h-5 w-5 text-gray-500' />}
-          required={true}
-          error={fieldErrors.mobile}
-        >
+      <div>
+        <FormField error={fieldErrors.mobile} label='Số điện thoại'>
           <input
             type='tel'
             value={formData.mobile}
             onChange={(e) => setFormData((prev: any) => ({ ...prev, mobile: e.target.value }))}
-            placeholder='Nhập số điện thoại'
-            className={`w-full p-2 rounded border ${
-              fieldErrors.mobile ? 'border-red-500' : 'border-gray-300'
-            } focus:outline-none focus:ring-2 focus:ring-red-500`}
+            className='w-full text-sm rounded-lg focus:outline-none border-b'
           />
         </FormField>
       </div>
-      <div className='mb-2'>
-        <FormField
-          label='Địa chỉ liên hệ'
-          icon={<MapPin className='h-5 w-5 text-gray-500' />}
-          required={true}
-          error={fieldErrors.contact}
-        >
-          <div className='flex items-center justify-end'>
+      <div>
+        <FormField error={fieldErrors.contact} label='Địa chỉ liên hệ'>
+          <div className='flex items-center justify-between'>
             {contact ? (
-              <span className='text-xs sm:text-sm text-gray-600 text-end'>
+              <span className='text-sm text-gray-600 text-start'>
                 {contact.split(',').map((part, index) => (
                   <React.Fragment key={index}>
                     {part.trim()}
@@ -438,7 +387,7 @@ const ContactInformationSection = ({
                 ))}
               </span>
             ) : (
-              'Chưa có địa chỉ'
+              <span className='text-sm text-gray-600 text-end'>Chưa có địa chỉ</span>
             )}
             <Dialog>
               <DialogTrigger asChild>
@@ -478,11 +427,11 @@ const AdditionalInformationSection = ({
 }) => (
   <div className='space-y-4'>
     <h3 className='text-lg font-semibold text-gray-900'>Thông tin bổ sung</h3>
-    <div className='bg-white rounded-xl p-2 sm:p-4'>
+    <div className='bg-white rounded-xl px-2 sm:p-4'>
       <div className='mb-2'>
-        <FormField label='Nghề nghiệp' icon={<Briefcase className='h-5 w-5 text-gray-500' />} required={false}>
-          <div className='flex items-center justify-between'>
-            <span className='text-sm text-gray-600'>{formData.jobName || 'Chưa có nghề nghiệp'}</span>
+        <FormField label='Nghề nghiệp'>
+          <div className='flex items-center justify-between border-b'>
+            <span className='text-sm  text-gray-600'>{formData.jobName || 'Chưa có nghề nghiệp'}</span>
             <Dialog>
               <DialogTrigger asChild>
                 <Button variant='ghost' size='icon' className='ml-1'>
@@ -505,9 +454,9 @@ const AdditionalInformationSection = ({
       </div>
 
       <div className='mb-2'>
-        <FormField label='Đơn vị trực thuộc' icon={<Building className='h-5 w-5 text-gray-500' />} required={false}>
-          <div className='flex items-center justify-between'>
-            <span className='text-xs sm:text-sm text-gray-600'>
+        <FormField label='Tổ chức'>
+          <div className='flex items-center justify-between border-b'>
+            <span className='text-sm  text-gray-600'>
               {organizations.find((org) => org.id === formData.organizationId)?.name || 'Chưa có tổ chức'}
             </span>
             <Dialog>
@@ -521,10 +470,10 @@ const AdditionalInformationSection = ({
                 <DialogDescription className='text-sm text-gray-600'>Chọn tổ chức của bạn</DialogDescription>
                 <OrganizationSelector
                   initialOrganization={formData.organizationId}
-                  onOrganizationSelect={(organizationId) => {
+                  onOrganizationSelect={(organization) => {
                     setFormData((prev: any) => ({
                       ...prev,
-                      organizationId: organizationId
+                      organizationId: organization.id
                     }))
                   }}
                 />
@@ -534,50 +483,47 @@ const AdditionalInformationSection = ({
         </FormField>
       </div>
 
-      <div className='mb-2'>
-        <FormField label='Mã sinh viên' icon={<School className='h-5 w-5 text-gray-500' />} required={false}>
+      <div>
+        <FormField label='Mã sinh viên'>
           <input
             type='text'
             value={formData.studentId}
             onChange={(e) => setFormData((prev: any) => ({ ...prev, studentId: e.target.value }))}
-            placeholder='Nhập mã sinh viên (nếu có)'
-            className='w-full p-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-500'
+            className='w-full   text-sm rounded-lg  focus:outline-none border-b'
           />
         </FormField>
       </div>
 
-      <div  className='mb-2'>
-        <FormField label='Mã quân nhân' icon={<Award className='h-5 w-5 text-gray-500' />} required={false}>
+      <div>
+        <FormField label='Mã quân nhân'>
           <input
             type='text'
             value={formData.militaryId}
             onChange={(e) => setFormData((prev: any) => ({ ...prev, militaryId: e.target.value }))}
-            placeholder='Nhập mã quân nhân (nếu có)'
-            className='w-full p-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-500'
+            className='w-full   text-sm rounded-lg  focus:outline-none border-b'
           />
         </FormField>
       </div>
 
-      <div className='mb-2'>
-        <FormField label='Số lần hiến máu' icon={<Info className='h-5 w-5 text-gray-500' />} required={false}>
+      <div>
+        <FormField label='Số lần hiến máu'>
           <input
             type='number'
             value={formData.timeDonation || ''}
             onChange={(e) => setFormData((prev: any) => ({ ...prev, timeDonation: e.target.value }))}
-            placeholder='Nhập số lần hiến máu'
-            className='w-full p-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-500'
+            className='w-full   text-sm rounded-lg  focus:outline-none border-b'
             min='0'
           />
         </FormField>
       </div>
 
-      <div >
-        <FormField label='Nhóm máu' icon={<Info className='h-5 w-5 text-gray-500' />} required={false}>
+      <div>
+        <FormField label='Nhóm máu'>
           <select
             value={formData.bloodGroup}
             onChange={onInputChange}
             name='bloodGroup'
-            className='w-full p-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-500'
+            className='w-full   text-sm rounded-lg  focus:outline-none'
           >
             <option value=''>Chọn nhóm máu</option>
             {['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'].map((group) => (
