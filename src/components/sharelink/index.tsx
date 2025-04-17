@@ -34,36 +34,38 @@ export default function ShareLink({ selectedCampaign }: { selectedCampaign: Camp
   async function shareToFacebook() {
     try {
       const shortUrl = await shortenUrl(urlToShare)
-
+      const encodedUrl = encodeURIComponent(shortUrl)
+      
       if (isMobile) {
-        // Try to open Facebook app first
-        window.location.href = `fb://facewebmodal/f?href=${encodeURIComponent(shortUrl)}`
-
-        // Fallback to browser if app not available
+        // Try to open Facebook app with share intent
+        const appUrl = `fb://share?u=${encodedUrl}`
+        window.location.href = appUrl
+        
+        // Fallback to web if app not available
         setTimeout(() => {
           if (!document.hidden) {
-            window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shortUrl)}`, '_blank')
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`, '_blank')
           }
         }, 500)
       } else {
         // Desktop behavior
-        window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shortUrl)}`, '_blank')?.focus()
+        window.open(
+          `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
+          'facebook-share-dialog',
+          'width=626,height=436'
+        )
       }
-
+      
       localStorage.removeItem('selectedCampaign')
     } catch (error) {
       console.error('Lỗi khi chia sẻ:', error)
       // Fallback with original URL if shortening fails
-      window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(urlToShare)}`, '_blank')?.focus()
+      const encodedOriginalUrl = encodeURIComponent(urlToShare)
+      window.open(
+        `https://www.facebook.com/sharer/sharer.php?u=${encodedOriginalUrl}`,
+        '_blank'
+      )
     }
-  }
-
-  function handleShareError() {
-    toast({
-      title: 'Không thể mở Facebook',
-      description: 'Vui lòng thử chia sẻ thủ công bằng cách sao chép liên kết',
-      variant: 'destructive'
-    })
   }
 
   function copyToClipboard() {
@@ -116,7 +118,6 @@ export default function ShareLink({ selectedCampaign }: { selectedCampaign: Camp
         >
           <button
             onClick={shareToFacebook}
-            onError={handleShareError}
             title='Chia sẻ lên Facebook'
             className='p-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-transform transform hover:scale-110 shadow-md'
             aria-label='Chia sẻ lên Facebook'

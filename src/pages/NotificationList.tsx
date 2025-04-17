@@ -104,7 +104,7 @@ export default function NotificationList({ onClose }: { onClose?: () => void }) 
   const hasNotifications = notifications?.data?.data && notifications.data.data.length > 0
 
   return (
-    <div className='min-h-screen bg-gray-100'>
+    <div className='min-h-screen bg-gray-100 sm:py-4'>
       <div className='absolute top-20 left-10 w-72 h-72 bg-red-50 rounded-full blur-3xl opacity-30 -z-10'></div>
       <div className='absolute bottom-20 right-10 w-72 h-72 bg-red-50 rounded-full blur-3xl opacity-30 -z-10'></div>
 
