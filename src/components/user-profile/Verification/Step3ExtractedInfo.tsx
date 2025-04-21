@@ -3,14 +3,14 @@ import { useExtractStore } from '@/hooks/stores/useExtractStore'
 import { getExtractById, updateExtractStatus } from '@/api/extract'
 import { createOrUpdateUserDetail, getCurrentUserDetail } from '@/api/user'
 import { getOrganizationsByType } from '@/api/organization'
-import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
-import { ChevronDown, FileText, Info, Building, MapPin, Loader2, Briefcase } from 'lucide-react'
+import { ChevronDown, FileText, Info, Loader2 } from 'lucide-react'
 import { toast } from '@/components/ui/use-toast'
-import JobSelector from '@/components/job/JobSelector'
-import AddressSelector from '@/components/address/AddressSelector'
-import OrganizationSelector from '@/components/organization/OrganizationSelector'
+import JobSelector from '@/components/Selector/job/JobSelector'
+import AddressSelector from '@/components/Selector/address/AddressSelector'
+import OrganizationSelector from '@/components/Selector/organization/OrganizationSelector'
 import { FormField } from '@/components/ui/form-field'
+import BloodTypeSelector from '@/components/Selector/bloodtype/bloodtype'
 
 interface Step2Props {
   formData: any
@@ -26,14 +26,7 @@ interface Organization {
   type: string
 }
 
-const Step3ExtractedInfo: React.FC<Step2Props> = ({
-  formData,
-  setFormData,
-  onInputChange,
-  onNext,
-  onPrev,
-  isLoading
-}) => {
+const Step3ExtractedInfo: React.FC<Step2Props> = ({ formData, setFormData, onNext, onPrev, isLoading }) => {
   const { extractId, cardDetails, setLoading, setError } = useExtractStore()
   const [fieldErrors, setFieldErrors] = React.useState<Record<string, string>>({})
   const [contact, setContact] = React.useState<string>('')
@@ -215,7 +208,7 @@ const Step3ExtractedInfo: React.FC<Step2Props> = ({
     <div className='space-y-6 sm:p-4 p-2'>
       <div className='text-center mb-6'>
         <div className='flex items-center justify-center mb-4'>
-          <div className='w-16 h-16 bg-red-50 rounded-full flex items-center justify-center'>
+          <div className='w-16 h-16 flex items-center justify-center'>
             <FileText className='h-8 w-8 text-red-500' />
           </div>
         </div>
@@ -266,12 +259,7 @@ const Step3ExtractedInfo: React.FC<Step2Props> = ({
             fieldErrors={fieldErrors}
           />
 
-          <AdditionalInformationSection
-            formData={formData}
-            setFormData={setFormData}
-            organizations={organizations}
-            onInputChange={onInputChange}
-          />
+          <AdditionalInformationSection formData={formData} setFormData={setFormData} organizations={organizations} />
 
           <div className='flex flex-col  sm:flex-row sm:items-center sm:justify-between'>
             <button
@@ -296,10 +284,7 @@ const Step3ExtractedInfo: React.FC<Step2Props> = ({
           <Info className='h-6 w-6 mx-auto mb-2' />
           <p>Không có thông tin CCCD</p>
           <p className='text-sm mt-1'>Vui lòng quay lại bước trước và tải lên ảnh CCCD của bạn</p>
-          <button
-            onClick={onPrev}
-            className='mt-4 px-4  bg-yellow-100 text-yellow-700 rounded-lg hover:bg-yellow-200'
-          >
+          <button onClick={onPrev} className='mt-4 px-4  bg-yellow-100 text-yellow-700 rounded-lg hover:bg-yellow-200'>
             Quay lại
           </button>
         </div>
@@ -316,14 +301,21 @@ const InfoItem = ({ label, value }: { label: string; value: string | number | nu
     </div>
     <div className='flex items-center justify-end'>
       {typeof value === 'string' && value.includes(',') ? (
-        <span className='text-sm  text-gray-600 text-end'>
-          {value.split(',').map((part, index) => (
-            <React.Fragment key={index}>
-              {part.trim()}
-              {index < value.split(',').length - 1 && <br />}
-            </React.Fragment>
-          ))}
-        </span>
+        <div>
+          <div className='sm:hidden'>
+            <span className='text-sm text-gray-600 text-end'>
+              {value.split(',').map((part, index) => (
+                <React.Fragment key={index}>
+                  {part.trim()}
+                  {index < value.split(',').length - 1 && <br />}
+                </React.Fragment>
+              ))}
+            </span>
+          </div>
+          <div className='hidden sm:block'>
+            <span className='text-sm text-gray-600 text-end'>{value || '-'}</span>
+          </div>
+        </div>
       ) : (
         <span className='text-sm text-gray-600 text-end'>{value || '-'}</span>
       )}
@@ -348,7 +340,7 @@ const ContactInformationSection = ({
   <div className='space-y-4'>
     <h3 className='text-lg font-semibold text-gray-900'>Thông tin liên hệ</h3>
     <div className='bg-white sm:p-4 px-2'>
-      <div className='mb-6'>
+      <div className='mb-4'>
         <FormField label='Email'>
           <input
             type='email'
@@ -358,8 +350,7 @@ const ContactInformationSection = ({
           />
         </FormField>
       </div>
-
-      <div>
+      <div className='mb-4'>
         <FormField error={fieldErrors.mobile} label='Số điện thoại'>
           <input
             type='tel'
@@ -373,34 +364,30 @@ const ContactInformationSection = ({
         <FormField error={fieldErrors.contact} label='Địa chỉ liên hệ'>
           <div className='flex items-center justify-between'>
             {contact ? (
-              <span className='text-sm text-gray-600 text-start'>
-                {contact.split(',').map((part, index) => (
-                  <React.Fragment key={index}>
-                    {part.trim()}
-                    {index < 3 && <br />}
-                  </React.Fragment>
-                ))}
-              </span>
+              <div>
+                <div className='sm:hidden'>
+                  <span className='text-sm text-gray-600 text-start'>
+                    {contact.split(',').map((part, index) => (
+                      <React.Fragment key={index}>
+                        {part.trim()}
+                        {index < 3 && <br />}
+                      </React.Fragment>
+                    ))}
+                  </span>
+                </div>
+                <div className='hidden sm:block'>
+                  <span className='text-sm text-gray-600 text-start'>{contact}</span>
+                </div>
+              </div>
             ) : (
               <span className='text-sm text-gray-600 text-end'>Chưa có địa chỉ</span>
             )}
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button variant='ghost' size='icon' className='ml-1'>
-                  <MapPin className='h-5 w-5 text-red-500' />
-                </Button>
-              </DialogTrigger>
-              <DialogContent className='sm:max-w-md' aria-describedby='dialog-address-select'>
-                <DialogTitle className='text-lg font-semibold text-gray-900'>Chọn địa chỉ liên hệ</DialogTitle>
-                <DialogDescription className='text-sm text-gray-600'>Chọn địa chỉ liên hệ của bạn</DialogDescription>
-                <AddressSelector
-                  onAddressSelect={(address) => {
-                    setContact(address)
-                  }}
-                  initialAddress={contact}
-                />
-              </DialogContent>
-            </Dialog>
+            <AddressSelector
+              trigger={<Button variant='outline'>{formData.address || 'Chọn địa chỉ'}</Button>}
+              onAddressSelect={(address) => {
+                setContact(address)
+              }}
+            />
           </div>
         </FormField>
       </div>
@@ -412,125 +399,108 @@ const ContactInformationSection = ({
 const AdditionalInformationSection = ({
   formData,
   setFormData,
-  organizations,
-  onInputChange
+  organizations
 }: {
   formData: any
   setFormData: React.Dispatch<React.SetStateAction<any>>
   organizations: Organization[]
-  onInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void
-}) => (
-  <div className='space-y-4'>
-    <h3 className='text-lg font-semibold text-gray-900'>Thông tin bổ sung</h3>
-    <div className='bg-white rounded-xl px-2 sm:p-4'>
-      <div className='mb-2'>
-        <FormField label='Nghề nghiệp'>
-          <div className='flex items-center justify-between border-b'>
-            <span className='text-sm  text-gray-600'>{formData.jobName || 'Chưa có nghề nghiệp'}</span>
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button variant='ghost' size='icon' className='ml-1'>
-                  <Briefcase className='h-4 w-4 text-red-500' />
-                </Button>
-              </DialogTrigger>
-              <DialogContent className='sm:max-w-md' aria-describedby='dialog-verify-job-select'>
-                <DialogTitle className='text-lg font-semibold text-gray-900'>Chọn nghề nghiệp</DialogTitle>
-                <DialogDescription className='text-sm text-gray-600'>Chọn nghề nghiệp của bạn</DialogDescription>
-                <JobSelector
-                  onJobSelect={(job) => {
-                    setFormData((prev: any) => ({ ...prev, jobName: job }))
-                  }}
-                  initialJob={formData.jobName}
-                />
-              </DialogContent>
-            </Dialog>
+}) => {
+  const shouldShowStudentId = formData.jobName === 'Sinh viên'
+  const shouldShowMilitaryId =
+    formData.jobName === 'Quân nhân' || formData.jobName === 'Công an' || formData.jobName === 'Bộ đội'
+
+  return (
+    <div className='space-y-4'>
+      <h3 className='text-lg font-semibold text-gray-900'>Thông tin bổ sung</h3>
+      <div className='bg-white rounded-xl px-2 sm:p-4'>
+        <div className='mb-2'>
+          <FormField label='Nghề nghiệp'>
+            <div className='flex items-center justify-between border-b'>
+              <span className='text-sm text-gray-600'>{formData.jobName || 'Chưa có nghề nghiệp'}</span>
+              <JobSelector
+                trigger={<Button variant='outline'>Chọn nghề nghiệp</Button>}
+                onJobSelect={(job) => {
+                  setFormData((prev: any) => ({ ...prev, jobName: job }))
+                }}
+              />
+            </div>
+          </FormField>
+        </div>
+
+        {shouldShowStudentId && (
+          <div>
+            <FormField label='Mã sinh viên'>
+              <input
+                type='text'
+                value={formData.studentId}
+                onChange={(e) => setFormData((prev: any) => ({ ...prev, studentId: e.target.value }))}
+                className='w-full text-sm rounded-lg focus:outline-none border-b'
+                placeholder='Nhập mã sinh viên'
+              />
+            </FormField>
           </div>
-        </FormField>
-      </div>
+        )}
 
-      <div className='mb-2'>
-        <FormField label='Tổ chức'>
-          <div className='flex items-center justify-between border-b'>
-            <span className='text-sm  text-gray-600'>
-              {organizations.find((org) => org.id === formData.organizationId)?.name || 'Chưa có tổ chức'}
-            </span>
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button variant='ghost' size='icon' className='ml-1'>
-                  <Building className='h-4 w-4 text-red-500' />
-                </Button>
-              </DialogTrigger>
-              <DialogContent className='sm:max-w-md' aria-describedby='dialog-verify-org-select'>
-                <DialogTitle className='text-lg font-semibold text-gray-900'>Chọn tổ chức</DialogTitle>
-                <DialogDescription className='text-sm text-gray-600'>Chọn tổ chức của bạn</DialogDescription>
-                <OrganizationSelector
-                  initialOrganization={formData.organizationId}
-                  onOrganizationSelect={(organization) => {
-                    setFormData((prev: any) => ({
-                      ...prev,
-                      organizationId: organization.id
-                    }))
-                  }}
-                />
-              </DialogContent>
-            </Dialog>
+        {shouldShowMilitaryId && (
+          <div>
+            <FormField label='Mã quân nhân'>
+              <input
+                type='text'
+                value={formData.militaryId}
+                onChange={(e) => setFormData((prev: any) => ({ ...prev, militaryId: e.target.value }))}
+                className='w-full text-sm rounded-lg focus:outline-none border-b'
+                placeholder='Nhập mã quân nhân'
+              />
+            </FormField>
           </div>
-        </FormField>
-      </div>
+        )}
 
-      <div>
-        <FormField label='Mã sinh viên'>
-          <input
-            type='text'
-            value={formData.studentId}
-            onChange={(e) => setFormData((prev: any) => ({ ...prev, studentId: e.target.value }))}
-            className='w-full   text-sm rounded-lg  focus:outline-none border-b'
-          />
-        </FormField>
-      </div>
+        <div className='mb-2'>
+          <FormField label='Tổ chức'>
+            <div className='flex items-center justify-between border-b'>
+              <span className='text-sm text-gray-600'>
+                {organizations.find((org) => org.id === formData.organizationId)?.name || 'Chưa có tổ chức'}
+              </span>
+              <OrganizationSelector
+                trigger={<Button variant='outline'>{formData.organization || 'Chọn tổ chức'}</Button>}
+                onOrganizationSelect={(organization) => {
+                  setFormData((prev: any) => ({ ...prev, organizationId: organization.id }))
+                }}
+              />
+            </div>
+          </FormField>
+        </div>
 
-      <div>
-        <FormField label='Mã quân nhân'>
-          <input
-            type='text'
-            value={formData.militaryId}
-            onChange={(e) => setFormData((prev: any) => ({ ...prev, militaryId: e.target.value }))}
-            className='w-full   text-sm rounded-lg  focus:outline-none border-b'
-          />
-        </FormField>
-      </div>
+        <div>
+          <FormField label='Số lần hiến máu'>
+            <input
+              type='number'
+              value={formData.timeDonation || ''}
+              onChange={(e) => setFormData((prev: any) => ({ ...prev, timeDonation: e.target.value }))}
+              className='w-full text-sm rounded-lg focus:outline-none border-b'
+              min='0'
+              placeholder='Nhập số lần hiến máu'
+            />
+          </FormField>
+        </div>
 
-      <div>
-        <FormField label='Số lần hiến máu'>
-          <input
-            type='number'
-            value={formData.timeDonation || ''}
-            onChange={(e) => setFormData((prev: any) => ({ ...prev, timeDonation: e.target.value }))}
-            className='w-full   text-sm rounded-lg  focus:outline-none border-b'
-            min='0'
-          />
-        </FormField>
-      </div>
-
-      <div>
-        <FormField label='Nhóm máu'>
-          <select
-            value={formData.bloodGroup}
-            onChange={onInputChange}
-            name='bloodGroup'
-            className='w-full   text-sm rounded-lg  focus:outline-none'
-          >
-            <option value=''>Chọn nhóm máu</option>
-            {['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'].map((group) => (
-              <option key={group} value={group}>
-                {group}
-              </option>
-            ))}
-          </select>
-        </FormField>
+        <div>
+          <FormField label='Nhóm máu'>
+            <div className='flex items-center justify-between border-b'>
+              <span className='text-sm text-gray-600'>{formData.bloodGroup || 'Chưa có nhóm máu'}</span>
+              <BloodTypeSelector
+                trigger={<Button variant='outline'>Chọn nhóm máu</Button>}
+                value={formData.bloodGroup}
+                onChange={(value) => {
+                  setFormData((prev: any) => ({ ...prev, bloodGroup: value }))
+                }}
+              />
+            </div>
+          </FormField>
+        </div>
       </div>
     </div>
-  </div>
-)
+  )
+}
 
 export default Step3ExtractedInfo
