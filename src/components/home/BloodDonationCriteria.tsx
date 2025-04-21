@@ -112,7 +112,6 @@ const BloodDonationCriteria = () => {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-50px' }}
-              transition={{ delay: 0.05 * index, duration: 0.4 }}
               whileHover={{ y: -5, transition: { duration: 0.2 } }}
             >
               <CardContent className='flex items-start gap-4 p-5'>

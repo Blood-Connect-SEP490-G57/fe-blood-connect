@@ -170,7 +170,7 @@ const Step2Upload: React.FC<Step2UploadProps> = ({ formData, setFormData, error,
       <ScrollToTop />
       <div className='text-center mb-4'>
         <div className='flex items-center justify-center mb-4'>
-          <div className='w-16 h-16 bg-red-50 rounded-full flex items-center justify-center'>
+          <div className='w-16 h-16 flex items-center justify-center'>
             <Camera className='h-8 w-8 text-red-500' />
           </div>
         </div>

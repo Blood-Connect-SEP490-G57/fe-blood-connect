@@ -20,7 +20,8 @@ import {
   Newspaper,
   HelpCircle,
   Phone,
-  Calendar
+  Calendar,
+  Lock
 } from 'lucide-react'
 import UserAvatar from '@/components/ui/user-avatar'
 import Notifications from '@/components/notification/Notifications'
@@ -29,6 +30,7 @@ import { useVerification } from '../verificationContext/VerificationContext'
 import { useUnreadNotifications } from '@/hooks/useUnreadNotifications'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useMenuStore } from '@/hooks/stores/menuStore'
+import { useToast } from '@/components/ui/use-toast'
 
 const Header: React.FC = () => {
   const navigate = useNavigate()
@@ -39,6 +41,18 @@ const Header: React.FC = () => {
   const { isVerified } = useVerification()
   const { unreadCount } = useUnreadNotifications()
   const [scrolled, setScrolled] = useState(false)
+  const { toast } = useToast()
+
+  // Show verification toast when status is NONE
+  useEffect(() => {
+    if (isLoggedIn && isVerified === 'NONE') {
+      toast({
+        title: 'Xác thực hồ sơ',
+        description: 'Vui lòng xác thực hồ sơ của bạn để có thể đăng ký hiến máu.',
+        duration: 10000
+      })
+    }
+  }, [isLoggedIn, isVerified])
 
   // Prevent body scrolling when menu or notifications are open
   useEffect(() => {
@@ -127,7 +141,7 @@ const Header: React.FC = () => {
           href: '/trang-ca-nhan#thong-tin-ca-nhan',
           icon: <User className='w-4 h-4 mr-2' />
         },
-        { name: 'CÀI ĐẶT', href: '/cai-dat', icon: <Settings className='w-4 h-4 mr-2' /> }
+        { name: 'ĐỔI MẬT KHẨU', href: '/doi-mat-khau', icon: <Lock className='w-4 h-4 mr-2' /> }
       ]
     : []
 
@@ -196,7 +210,9 @@ const Header: React.FC = () => {
                   return false
                 }
                 return (
-                  item.name !== 'TẠO HỒ SƠ HIẾN MÁU' && item.name !== 'THÔNG TIN CÁ NHÂN' && item.name !== 'CÀI ĐẶT'
+                  item.name !== 'TẠO HỒ SƠ HIẾN MÁU' &&
+                  item.name !== 'THÔNG TIN CÁ NHÂN' &&
+                  item.name !== 'ĐỔI MẬT KHẨU'
                 )
               })
               .map((item) => (
@@ -231,9 +247,7 @@ const Header: React.FC = () => {
                     <div className='relative w-full h-full'>
                       <Bell className='group-hover:text-white w-5 h-5' />
                       {unreadCount > 0 && (
-                        <span
-                          className='absolute -top-3 -right-3 bg-red-600 text-white text-xs rounded-full px-1.5 py-0.5 min-w-[18px] text-center shadow-sm'
-                        >
+                        <span className='absolute -top-3 -right-3 bg-red-600 text-white text-xs rounded-full px-1.5 py-0.5 min-w-[18px] text-center shadow-sm'>
                           {unreadCount}
                         </span>
                       )}
@@ -275,15 +289,15 @@ const Header: React.FC = () => {
                         </div>
                       </DropdownMenuItem>
                       <DropdownMenuItem
-                        onClick={() => navigate('/cai-dat')}
+                        onClick={() => navigate('/doi-mat-khau')}
                         className='rounded-xl hover:bg-red-50 focus:bg-red-50 hover:text-red-600 focus:text-red-600 gap-3 cursor-pointer p-3 mb-1 transition-all duration-200'
                       >
                         <div className='p-2 bg-red-100 rounded-full text-red-600'>
                           <Settings className='h-4 w-4' />
                         </div>
                         <div className='flex flex-col'>
-                          <span className='font-medium'>Cài đặt</span>
-                          <span className='text-xs text-gray-500'>Tùy chỉnh tài khoản</span>
+                          <span className='font-medium'>Đổi mật khẩu</span>
+                          <span className='text-xs text-gray-500'>Đổi mật khẩu tài khoản</span>
                         </div>
                       </DropdownMenuItem>
                       <DropdownMenuSeparator className='my-1.5 bg-gray-100' />
@@ -306,10 +320,10 @@ const Header: React.FC = () => {
                   <Button
                     variant='outline'
                     className='rounded-full border-red-500 text-red-600 hover:bg-red-50 hover:text-red-700 transition-all'
-                    onClick={handleLoginClick}
+                    onClick={handleRegisterClick}
                   >
-                    <LogInIcon className='w-4 h-4 mr-1.5' />
-                    Đăng nhập
+                    <UserPlusIcon className='w-4 h-4 mr-1.5' />
+                    Đăng ký
                   </Button>
                 </motion.div>
 
@@ -317,10 +331,10 @@ const Header: React.FC = () => {
                   <Button
                     variant='default'
                     className='rounded-full bg-gradient-to-r from-red-600 to-red-500 text-white hover:from-red-700 hover:to-red-600 transition-all shadow-sm'
-                    onClick={handleRegisterClick}
+                    onClick={handleLoginClick}
                   >
-                    <UserPlusIcon className='w-4 h-4 mr-1.5' />
-                    Đăng ký
+                    <LogInIcon className='w-4 h-4 mr-1.5' />
+                    Đăng nhập
                   </Button>
                 </motion.div>
               </div>
@@ -395,7 +409,7 @@ const Header: React.FC = () => {
                         (item.name === 'LỊCH HẸN CỦA TÔI' ||
                           item.name === 'LỊCH SỬ ĐẶT HẸN' ||
                           item.name === 'THÔNG TIN CÁ NHÂN' ||
-                          item.name === 'CÀI ĐẶT' ||
+                          item.name === 'ĐỔI MẬT KHẨU' ||
                           item.name === 'TẠO HỒ SƠ HIẾN MÁU')
                       ) {
                         return false

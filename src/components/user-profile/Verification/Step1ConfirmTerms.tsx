@@ -12,18 +12,18 @@ const Step1ConfirmTerms: React.FC<Step1ConfirmTermsProps> = ({ onNext }) => {
     <div className='flex flex-col sm:p-4 space-y-6'>
       <div className='text-center space-y-4'>
         <div className='flex items-center justify-center mt-2'>
-          <div className='w-16 h-16 bg-red-50 rounded-full flex items-center justify-center'>
+          <div className='w-16 h-16 flex items-center justify-center'>
             <FileText className='h-8 w-8 text-red-500' />
           </div>
         </div>
         <h2 className='text-xl font-semibold text-gray-900'>Tạo hồ sơ hiến máu</h2>
-        <p className='text-gray-600 p-2'>
+        <p className='text-gray-600'>
           Để tạo hồ sơ hiến máu, chúng tôi cần xác minh danh tính của bạn. Vui lòng đọc kỹ các quy định trước khi tiếp
           tục.
         </p>
       </div>
 
-      <div className='rounded-xl shadow-sm'>
+      <div>
         <div className='p-5 border-b'>
           <h3 className='text-lg font-medium text-gray-900'>Điều khoản sử dụng</h3>
         </div>

@@ -9,10 +9,10 @@ import { toast } from '../ui/use-toast'
 import Loading from '../warnings/loading'
 import Empty from '../warnings/empty'
 import AppointmentDetailsPopup from './AppointmentDetailsPopup'
-import JobSelector from '@/components/job/JobSelector'
-import AddressSelector from '@/components/address/AddressSelector'
+import JobSelector from '@/components/Selector/job/JobSelector'
+import AddressSelector from '@/components/Selector/address/AddressSelector'
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
-import OrganizationSelector from '@/components/organization/OrganizationSelector'
+import OrganizationSelector from '@/components/Selector/organization/OrganizationSelector'
 import { Campaign } from '@/api/campaign'
 
 interface UserInfo {

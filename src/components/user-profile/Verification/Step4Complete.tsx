@@ -5,11 +5,10 @@ import { Card, CardContent } from '@/components/ui/card'
 import { CheckExtractStatus } from '@/api/extract'
 
 interface Step3CompleteProps {
-  onHomeClick: () => void
   onRegisterClick: () => void
 }
 
-const Step4Complete: React.FC<Step3CompleteProps> = ({ onHomeClick, onRegisterClick }) => {
+const Step4Complete: React.FC<Step3CompleteProps> = ({ onRegisterClick }) => {
   const [verificationStatus, setVerificationStatus] = useState<string>('pending')
 
   const checkStatus = async (): Promise<void> => {
@@ -58,14 +57,6 @@ const Step4Complete: React.FC<Step3CompleteProps> = ({ onHomeClick, onRegisterCl
       </Card>
 
       <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between'>
-        <button
-          onClick={onHomeClick}
-          className='bg-gray-300 hover:bg-gray-200 text-gray-800 p-2 rounded-xl transition-colors flex items-center justify-center gap-2'
-        >
-          <div>
-            <span>Trang chủ</span>
-          </div>
-        </button>
         <button
           onClick={onRegisterClick}
           className='bg-red-600 hover:bg-red-700 text-white p-2 rounded-xl transition-colors flex items-center justify-center gap-2'
