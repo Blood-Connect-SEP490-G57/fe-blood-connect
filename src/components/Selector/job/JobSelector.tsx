@@ -141,7 +141,7 @@ const JobSelector: React.FC<JobSelectorProps> = ({
             <Button variant="outline" onClick={() => setOpen(false)}>
               Hủy
             </Button>
-            <Button onClick={handleConfirm}>
+            <Button variant='destructive' onClick={handleConfirm}>
               Xác nhận
             </Button>
           </div>

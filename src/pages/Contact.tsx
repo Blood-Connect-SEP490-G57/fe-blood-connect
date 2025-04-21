@@ -163,9 +163,7 @@ const ContactPage = () => {
                     placeholder='Nhập họ và tên của bạn'
                     value={form.name}
                     onChange={handleChange}
-                    className={`rounded-xl border-gray-200 focus:border-red-500 focus:ring focus:ring-red-200 focus:ring-opacity-50 ${
-                      errors.name ? 'border-red-500' : ''
-                    }`}
+                    className={`rounded-xl bg-gray-100 border-gray-200  ${errors.name ? 'border-red-500' : ''}`}
                   />
                   {errors.name && <p className='text-sm text-red-500 mt-1'>{errors.name}</p>}
                 </div>
@@ -181,9 +179,7 @@ const ContactPage = () => {
                     placeholder='Nhập email của bạn'
                     value={form.email}
                     onChange={handleChange}
-                    className={`rounded-xl border-gray-200 focus:border-red-500 focus:ring focus:ring-red-200 focus:ring-opacity-50 ${
-                      errors.email ? 'border-red-500' : ''
-                    }`}
+                    className={`rounded-xl bg-gray-100 border-gray-200  ${errors.email ? 'border-red-500' : ''}`}
                   />
                   {errors.email && <p className='text-sm text-red-500 mt-1'>{errors.email}</p>}
                 </div>
@@ -199,27 +195,28 @@ const ContactPage = () => {
                     value={form.message}
                     onChange={handleChange}
                     rows={5}
-                    className={`w-full h-[215px] resize-none rounded-xl border-gray-200 focus:border-red-500 focus:ring focus:ring-red-200 focus:ring-opacity-50 ${
+                    className={`w-full h-[215px] bg-gray-100 resize-none rounded-xl border-gray-200  ${
                       errors.message ? 'border-red-500' : ''
                     }`}
                   />
                   {errors.message && <p className='text-sm text-red-500 mt-1'>{errors.message}</p>}
                 </div>
-
-                <Button
-                  type='submit'
-                  disabled={isLoading}
-                  className='w-full rounded-xl bg-gradient-to-r from-red-600 to-red-500 text-white font-medium py-5 hover:opacity-90 transition'
-                >
-                  {isLoading ? (
-                    'Đang gửi...'
-                  ) : (
-                    <span className='flex items-center justify-center'>
-                      Gửi Phản Hồi
-                      <ArrowRight className='ml-2 h-4 w-4' />
-                    </span>
-                  )}
-                </Button>
+                <div className='flex justify-end'>
+                  <Button
+                    type='submit'
+                    disabled={isLoading}
+                    className='rounded-xl bg-gradient-to-r from-red-600 to-red-500 text-white font-medium py-5 hover:opacity-90 transition'
+                  >
+                    {isLoading ? (
+                      'Đang gửi...'
+                    ) : (
+                      <span className='flex items-center justify-center'>
+                        Gửi Phản Hồi
+                        <ArrowRight className='ml-2 h-4 w-4' />
+                      </span>
+                    )}
+                  </Button>
+                </div>
               </form>
             </CardContent>
           </Card>

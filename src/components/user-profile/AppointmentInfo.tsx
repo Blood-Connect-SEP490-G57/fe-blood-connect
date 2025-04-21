@@ -1,6 +1,6 @@
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Calendar, MapPin, Briefcase, Building, ArrowLeft, ArrowRight } from 'lucide-react'
+import { Calendar, MapPin, ArrowLeft, ArrowRight } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { getCurrent, updateinfor } from '@/api/appointment'
 import { format } from 'date-fns'
@@ -11,7 +11,6 @@ import Empty from '../warnings/empty'
 import AppointmentDetailsPopup from './AppointmentDetailsPopup'
 import JobSelector from '@/components/Selector/job/JobSelector'
 import AddressSelector from '@/components/Selector/address/AddressSelector'
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
 import OrganizationSelector from '@/components/Selector/organization/OrganizationSelector'
 import { Campaign } from '@/api/campaign'
 
@@ -445,6 +444,33 @@ const AppointmentInfo = ({ appointmentId }: AppointmentInfoProps) => {
                         <span className='text-xs sm:text-sm text-gray-600'>{userInfo.gender}</span>
                       </div>
                     </div>
+                    <div className='p-2 sm:p-4'>
+                      <div className='flex justify-between items-center gap-3'>
+                        <span className='text-sm font-medium text-gray-700'>Địa chỉ thường trú</span>
+                        <div>
+                          <span className='text-xs sm:hidden sm:text-sm text-gray-600'>
+                            {userInfo.address
+                              ? userInfo.address.split(',').map((part, index) => (
+                                  <span key={`address-part-${index}`}>
+                                    {part.trim()}
+                                    {index < 4 && <br />}
+                                  </span>
+                                ))
+                              : 'Chưa có địa chỉ'}
+                          </span>
+                          <span className='text-xs hidden sm:block sm:text-sm text-gray-600'>{userInfo.address}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className='p-2 sm:p-4'>
+                      <div className='flex items-center justify-between gap-3'>
+                        <span className='text-sm w-1/3 font-medium text-gray-700'>Nơi cấp</span>
+                        <span className='text-xs text-end sm:text-sm text-gray-600'>
+                          {userInfo.issueLoc.charAt(0) + userInfo.issueLoc.slice(1).toLowerCase()}
+                        </span>
+                      </div>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -462,7 +488,7 @@ const AppointmentInfo = ({ appointmentId }: AppointmentInfoProps) => {
                           <span className='text-sm font-medium text-gray-700'>Địa chỉ liên hệ</span>
                         </div>
                         <div className='flex items-center justify-end gap-2'>
-                          <span className='text-xs sm:text-sm text-gray-600'>
+                          <span className='text-xs sm:hidden sm:text-sm text-gray-600'>
                             {userInfo.addressContact
                               ? userInfo.addressContact.split(',').map((part, index) => (
                                   <span key={index}>
@@ -472,28 +498,19 @@ const AppointmentInfo = ({ appointmentId }: AppointmentInfoProps) => {
                                 ))
                               : 'Chưa có địa chỉ'}
                           </span>
+                          <span className='text-xs hidden sm:block sm:text-sm text-gray-600'>
+                            {userInfo.addressContact}
+                          </span>
                           {isEditing && (
-                            <Dialog>
-                              <DialogTrigger asChild>
-                                <Button variant='ghost' size='icon' className='ml-1'>
-                                  <MapPin className='h-4 w-4 text-red-500' />
-                                </Button>
-                              </DialogTrigger>
-                              <DialogContent className='sm:max-w-md' aria-describedby='dialog-address-select'>
-                                <div id='dialog-address-select' className='sr-only'>
-                                  Chọn địa chỉ liên hệ của bạn
-                                </div>
-                                <AddressSelector
-                                  initialAddress={formData.addressContact}
-                                  onAddressSelect={(address) => {
-                                    setFormData((prev) => ({
-                                      ...prev,
-                                      addressContact: address
-                                    }))
-                                  }}
-                                />
-                              </DialogContent>
-                            </Dialog>
+                            <AddressSelector
+                              initialAddress={formData.addressContact}
+                              onAddressSelect={(address) => {
+                                setFormData((prev) => ({
+                                  ...prev,
+                                  addressContact: address
+                                }))
+                              }}
+                            />
                           )}
                         </div>
                       </div>
@@ -509,7 +526,7 @@ const AppointmentInfo = ({ appointmentId }: AppointmentInfoProps) => {
                           name='phoneNumber'
                           value={formData.phoneNumber}
                           onChange={handleInputChange}
-                          className='w-1/2 p-2 text-sm text-right border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500'
+                          className='w-1/2 p-2 sm:text-sm text-xs text-right bg-gray-100 focus:outline-none focus:ring-2 focus:ring-red-500'
                         />
                       ) : (
                         <div className='flex items-center gap-2'>
@@ -528,7 +545,7 @@ const AppointmentInfo = ({ appointmentId }: AppointmentInfoProps) => {
                           name='email'
                           value={formData.email}
                           onChange={handleInputChange}
-                          className='w-1/2 p-2 text-sm text-right border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500'
+                          className='w-1/2 p-2 sm:text-sm text-xs text-right bg-gray-100 focus:outline-none focus:ring-2 focus:ring-red-500'
                         />
                       ) : (
                         <div className='flex items-center gap-2'>
@@ -542,239 +559,186 @@ const AppointmentInfo = ({ appointmentId }: AppointmentInfoProps) => {
             </div>
 
             {/* Work Information */}
-            <div className='mb-6'>
+            <div className='mb-4'>
               <h2 className='text-lg font-semibold text-gray-700 mb-2 px-2'>Thông tin nghề nghiệp</h2>
               <Card className='overflow-hidden rounded-xl shadow-sm border-none'>
                 <CardContent className='p-0'>
-                  <div className='divide-y'>
-                    <div className='p-2 sm:p-4'>
-                      <div className='flex items-center justify-between'>
-                        <div className='flex items-center gap-3'>
-                          <span className='text-sm font-medium text-gray-700'>Nghề nghiệp</span>
-                        </div>
-                        <div className='flex items-center gap-2'>
-                          <span className='text-xs sm:text-sm text-gray-600'>{formData.jobName}</span>
-                          {isEditing && (
-                            <Dialog>
-                              <DialogTrigger asChild>
-                                <Button variant='ghost' size='icon' className='ml-1'>
-                                  <Briefcase className='h-4 w-4 text-red-500' />
-                                </Button>
-                              </DialogTrigger>
-                              <DialogContent className='sm:max-w-md' aria-describedby='dialog-job-select'>
-                                <div id='dialog-job-select' className='sr-only'>
-                                  Chọn nghề nghiệp của bạn
-                                </div>
-                                <JobSelector
-                                  initialJob={formData.jobName}
-                                  onJobSelect={(job) => {
-                                    setFormData((prev) => ({
-                                      ...prev,
-                                      jobName: job
-                                    }))
-                                  }}
-                                />
-                              </DialogContent>
-                            </Dialog>
-                          )}
-                        </div>
+                  <div className='p-2 sm:p-4 divide-y'>
+                    <div className='flex items-center justify-between py-2'>
+                      <div className='flex items-center gap-3'>
+                        <span className='text-sm font-medium text-gray-700'>Nghề nghiệp</span>
+                      </div>
+                      <div className='flex items-center gap-2'>
+                        <span className='text-xs sm:text-sm text-gray-600'>{formData.jobName}</span>
+                        {isEditing && (
+                          <JobSelector
+                            initialJob={formData.jobName}
+                            onJobSelect={(job) => {
+                              setFormData((prev) => ({
+                                ...prev,
+                                jobName: job
+                              }))
+                            }}
+                          />
+                        )}
                       </div>
                     </div>
 
-                    <div className='p-2  sm:p-4 flex items-center justify-between'>
+                    {formData.jobName === 'Sinh viên' && (
+                      <div className='flex items-center justify-between py-2'>
+                        <div className='flex items-center gap-3'>
+                          <span className='text-sm font-medium text-gray-700'>Mã sinh viên</span>
+                        </div>
+                        {isEditing ? (
+                          <input
+                            type='text'
+                            name='studentId'
+                            value={formData.studentId}
+                            onChange={handleInputChange}
+                            className='w-1/2 p-2 sm:text-sm text-xs text-right bg-gray-100 focus:outline-none focus:ring-2 focus:ring-red-500'
+                          />
+                        ) : (
+                          <div className='flex items-center gap-2'>
+                            <span className='text-xs sm:text-sm text-gray-600'>{userInfo.studentId || '-'}</span>
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    {(formData.jobName === 'Công an' ||
+                      formData.jobName === 'Bộ đội' ||
+                      formData.jobName === 'Quân nhân') && (
+                      <div className='flex items-center justify-between py-2'>
+                        <div className='flex items-center gap-3'>
+                          <span className='text-sm font-medium text-gray-700'>Mã quân nhân</span>
+                        </div>
+                        {isEditing ? (
+                          <input
+                            type='text'
+                            name='militaryId'
+                            value={formData.militaryId}
+                            onChange={handleInputChange}
+                            className='w-1/2 p-2 sm:text-sm text-xs text-right bg-gray-100 focus:outline-none focus:ring-2 focus:ring-red-500'
+                          />
+                        ) : (
+                          <div className='flex items-center gap-2'>
+                            <span className='text-xs sm:text-sm text-gray-600'>{userInfo.militaryId || '-'}</span>
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    <div className='flex items-center justify-between py-2'>
                       <div className='flex items-center gap-3'>
                         <span className='text-sm font-medium text-gray-700'>Tổ chức</span>
                       </div>
                       <div className='flex items-center gap-2'>
                         <span className='text-xs sm:text-sm text-gray-600'>{formData.organizationName}</span>
                         {isEditing && (
-                          <Dialog>
-                            <DialogTrigger asChild>
-                              <Button variant='ghost' size='icon' className='ml-1'>
-                                <Building className='h-4 w-4 text-red-500' />
-                              </Button>
-                            </DialogTrigger>
-                            <DialogContent className='sm:max-w-md' aria-describedby='dialog-org-select'>
-                              <div id='dialog-org-select' className='sr-only'>
-                                Chọn tổ chức của bạn
-                              </div>
-                              <OrganizationSelector
-                                initialOrganization={formData.organizationName}
-                                onOrganizationSelect={(org) => {
-                                  setFormData((prev) => ({
-                                    ...prev,
-                                    organizationId: org.id,
-                                    organizationName: org.name
-                                  }))
-                                }}
-                              />
-                            </DialogContent>
-                          </Dialog>
+                          <OrganizationSelector
+                            initialOrganization={formData.organizationName}
+                            onOrganizationSelect={(org) => {
+                              setFormData((prev) => ({
+                                ...prev,
+                                organizationId: org.id,
+                                organizationName: org.name
+                              }))
+                            }}
+                          />
                         )}
                       </div>
                     </div>
-
-                    <div className='p-2 sm:p-4 flex items-center justify-between'>
-                      <div className='flex items-center gap-3'>
-                        <span className='text-sm font-medium text-gray-700'>Mã sinh viên</span>
-                      </div>
-                      {isEditing ? (
-                        <input
-                          type='text'
-                          name='studentId'
-                          value={formData.studentId}
-                          onChange={handleInputChange}
-                          className='w-1/2 p-2 text-sm text-right border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500'
-                        />
-                      ) : (
-                        <div className='flex items-center gap-2'>
-                          <span className='text-xs sm:text-sm text-gray-600'>{userInfo.studentId || '-'}</span>
-                        </div>
-                      )}
-                    </div>
-
-                    <div className='p-2 sm:p-4 flex items-center justify-between'>
-                      <div className='flex items-center gap-3'>
-                        <span className='text-sm font-medium text-gray-700'>Mã quân nhân</span>
-                      </div>
-                      {isEditing ? (
-                        <input
-                          type='text'
-                          name='militaryId'
-                          value={formData.militaryId}
-                          onChange={handleInputChange}
-                          className='w-1/2 p-2 text-sm text-right border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500'
-                        />
-                      ) : (
-                        <div className='flex items-center gap-2'>
-                          <span className='text-xs sm:text-sm text-gray-600'>{userInfo.militaryId || '-'}</span>
-                        </div>
-                      )}
-                    </div>
                   </div>
                 </CardContent>
               </Card>
             </div>
 
-            {/* CCCD Information */}
-            <div className='mb-6'>
-              <h2 className='text-lg font-semibold text-gray-700 mb-2 px-2'>Thông tin CCCD</h2>
-              <Card className='overflow-hidden rounded-xl shadow-sm border-none'>
-                <CardContent className='p-0'>
-                  <div className='divide-y'>
-                    <div className='p-2 sm:p-4'>
-                      <div className='flex justify-between items-center gap-3'>
-                        <span className='text-sm font-medium text-gray-700'>Địa chỉ thường trú</span>
-                        <span className='text-xs sm:text-sm text-gray-600'>
-                          {userInfo.address
-                            ? userInfo.address.split(',').map((part, index) => (
-                                <span key={`address-part-${index}`}>
-                                  {part.trim()}
-                                  {index < 3 && <br />}
-                                </span>
-                              ))
-                            : 'Chưa có địa chỉ'}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className='p-2 sm:p-4'>
-                      <div className='flex items-center justify-between gap-3'>
-                        <span className='text-sm w-1/2 font-medium text-gray-700'>Nơi cấp</span>
-                        <span className='text-xs text-end sm:text-sm text-gray-600'>
-                          {userInfo.issueLoc.charAt(0) + userInfo.issueLoc.slice(1).toLowerCase()}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            <div className='py-4 space-y-4 flex justify-end'>
+            <div className='py-4 space-y-4 flex flex-row justify-end items-center gap-4'>
               {isEditing ? (
                 <>
                   <Button
-                    onClick={updateUserInfo}
-                    className='w-full bg-red-600 text-white hover:bg-red-700 py-5 rounded-xl'
-                  >
-                    Lưu thay đổi
-                  </Button>
-                  <Button
                     onClick={() => setIsEditing(false)}
-                    className='w-full bg-gray-200 text-gray-800 hover:bg-gray-300 py-5 rounded-xl'
+                    className='bg-gray-200 text-gray-800 hover:bg-gray-300 rounded-xl px-6'
                   >
                     Hủy
                   </Button>
+                  <Button onClick={updateUserInfo} className='bg-red-600 text-white hover:bg-red-700 rounded-xl px-6'>
+                    Lưu thay đổi
+                  </Button>
                 </>
               ) : (
-                  <Button
-                    onClick={() => setIsEditing(true)}
-                    className='bg-red-600 text-white hover:bg-red-700 py-5 rounded-xl'
-                  >
-                    Chỉnh sửa thông tin
-                  </Button>
+                <Button
+                  onClick={() => setIsEditing(true)}
+                  className='bg-red-600 text-white hover:bg-red-700 py-5 rounded-xl w-full'
+                >
+                  Chỉnh sửa thông tin
+                </Button>
               )}
             </div>
           </div>
         ) : (
-          <div className='flex flex-col items-center justify-center bg-white shadow-md rounded-lg p-6 w-full'>
+          <div>
             <h2 className='text-lg font-semibold text-gray-700 mb-4'>Phản hồi của bạn</h2>
-            <form onSubmit={handleSubmit} className='w-full'>
-              <div className='mb-4 space-y-4 w-full'>
-                <div className='w-full'>
-                  <label htmlFor='campaign' className='block text-sm font-medium text-gray-700 mb-1'>
-                    Tên buổi hiến máu
-                  </label>
-                  <input
-                    type='text'
-                    id='campaign'
-                    name='campaign'
-                    value={data.campaign?.campaignName}
-                    readOnly
-                    className='w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-sm bg-gray-100'
-                  />
-                </div>
 
-                <div className='w-full'>
-                  <label htmlFor='message' className='block text-sm font-medium text-gray-700 mb-1'>
-                    Nội dung phản hồi <span className='text-red-500'>*</span>
-                  </label>
-                  <textarea
-                    id='message'
-                    name='message'
-                    rows={4}
-                    value={formFeedback.message}
-                    onChange={handleChange}
-                    className='w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-sm'
-                    placeholder='Nhập phản hồi của bạn tại đây...'
-                  ></textarea>
-                  {errors.message && <p className='text-sm text-red-500 mt-1'>{errors.message}</p>}
+            <div className='flex flex-col items-center justify-center bg-white shadow-md rounded-xl p-6 w-full'>
+              <form onSubmit={handleSubmit} className='w-full'>
+                <div className='mb-4 space-y-4 w-full'>
+                  <div className='w-full'>
+                    <label htmlFor='campaign' className='block text-sm font-medium text-gray-700 mb-1'>
+                      Tên buổi hiến máu
+                    </label>
+                    <input
+                      type='text'
+                      id='campaign'
+                      name='campaign'
+                      value={data.campaign?.campaignName}
+                      readOnly
+                      className='w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-sm bg-gray-100'
+                    />
+                  </div>
+
+                  <div className='w-full'>
+                    <label htmlFor='message' className='block text-sm font-medium text-gray-700 mb-1'>
+                      Nội dung phản hồi <span className='text-red-500'>*</span>
+                    </label>
+                    <textarea
+                      id='message'
+                      name='message'
+                      rows={4}
+                      value={formFeedback.message}
+                      onChange={handleChange}
+                      className='w-full bg-gray-100 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-sm'
+                      placeholder='Nhập phản hồi của bạn tại đây...'
+                    ></textarea>
+                    {errors.message && <p className='text-sm text-red-500 mt-1'>{errors.message}</p>}
+                  </div>
                 </div>
-              </div>
-              <Button
-                type='submit'
-                disabled={isLoading}
-                onClick={() => {
-                  setFormFeedback((prev) => ({
-                    ...prev,
-                    name: userInfo.fullName || '',
-                    email: userInfo.email || '',
-                    campaign: data.campaign?.campaignName || ''
-                  }))
-                }}
-                className='w-full rounded-xl bg-gradient-to-r from-red-600 to-red-500 text-white font-medium py-5 hover:opacity-90 transition'
-              >
-                {isLoading ? (
-                  'Đang gửi...'
-                ) : (
-                  <span className='flex items-center justify-center'>
-                    Gửi Phản Hồi
-                    <ArrowRight className='ml-2 h-4 w-4' />
-                  </span>
-                )}
-              </Button>
-            </form>
+                <div className='flex justify-end'>
+                  <Button
+                    type='submit'
+                    disabled={isLoading}
+                    onClick={() => {
+                      setFormFeedback((prev) => ({
+                        ...prev,
+                        name: userInfo.fullName || '',
+                        email: userInfo.email || '',
+                        campaign: data.campaign?.campaignName || ''
+                      }))
+                    }}
+                    className='rounded-xl bg-gradient-to-r from-red-600 to-red-500 text-white font-medium py-5 hover:opacity-90 transition'
+                  >
+                    {isLoading ? (
+                      'Đang gửi...'
+                    ) : (
+                      <span className='flex items-center justify-center'>
+                        Gửi Phản Hồi
+                        <ArrowRight className='ml-2 h-4 w-4' />
+                      </span>
+                    )}
+                  </Button>
+                </div>
+              </form>
+            </div>
           </div>
         )}
       </div>

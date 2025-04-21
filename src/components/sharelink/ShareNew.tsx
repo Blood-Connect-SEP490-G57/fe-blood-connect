@@ -1,0 +1,140 @@
+import { FacebookIcon, CopyIcon, Share2 } from 'lucide-react'
+import { useState, useRef, useEffect } from 'react'
+import { toast } from '../ui/use-toast'
+import { shortenUrl } from '@/api/sharelink'
+import { useParams } from 'react-router-dom'
+
+export default function ShareLink() {
+  const { id } = useParams()
+  const [showIcons, setShowIcons] = useState(false)
+  const dropdownRef = useRef<HTMLDivElement | null>(null)
+  const buttonRef = useRef<HTMLButtonElement | null>(null)
+  const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node) &&
+        buttonRef.current &&
+        !buttonRef.current.contains(event.target as Node)
+      ) {
+        setShowIcons(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
+
+  const baseUrl = `https://giotmauhyvong.org/tin-tuc`
+  const urlToShare = `${baseUrl}/${id}`
+
+  async function shareToFacebook() {
+    try {
+      const shortUrl = await shortenUrl(urlToShare)
+      const encodedUrl = encodeURIComponent(shortUrl)
+      
+      if (isMobile) {
+        // Try to open Facebook app with share intent
+        const appUrl = `fb://share?u=${encodedUrl}`
+        window.location.href = appUrl
+        
+        // Fallback to web if app not available
+        setTimeout(() => {
+          if (!document.hidden) {
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`, '_blank')
+          }
+        }, 500)
+      } else {
+        // Desktop behavior
+        window.open(
+          `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
+          'facebook-share-dialog',
+          'width=626,height=436'
+        )
+      }
+      
+      localStorage.removeItem('selectedCampaign')
+    } catch (error) {
+      console.error('Lỗi khi chia sẻ:', error)
+      // Fallback with original URL if shortening fails
+      const encodedOriginalUrl = encodeURIComponent(urlToShare)
+      window.open(
+        `https://www.facebook.com/sharer/sharer.php?u=${encodedOriginalUrl}`,
+        '_blank'
+      )
+    }
+  }
+
+  function copyToClipboard() {
+    navigator.clipboard
+      .writeText(urlToShare)
+      .then(() =>
+        toast({
+          title: '✅ Đã sao chép liên kết!',
+          description: 'Đã sao chép liên kết thành công!',
+          variant: 'default'
+        })
+      )
+      .catch(() =>
+        toast({
+          title: '❌ Lỗi khi sao chép!',
+          description: 'Lỗi khi sao chép liên kết!',
+          variant: 'destructive'
+        })
+      )
+    localStorage.removeItem('selectedCampaign')
+  }
+
+  function toggleIcons() {
+    setShowIcons(!showIcons)
+  }
+
+  function handleBlur(event: React.FocusEvent<HTMLDivElement>) {
+    if (!dropdownRef.current?.contains(event.relatedTarget)) {
+      setShowIcons(false)
+    }
+  }
+
+  return (
+    <div className='relative flex flex-col items-center mr-4'>
+      <button
+        ref={buttonRef}
+        onClick={toggleIcons}
+        className='flex items-center gap-2 p-2 bg-gradient-to-r from-red-600 to-red-500 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 font-medium'
+        aria-label='Chia sẻ'
+      >
+        <Share2 className='h-4 w-4' />
+      </button>
+
+      {showIcons && (
+        <div
+          ref={dropdownRef}
+          tabIndex={0}
+          onBlur={handleBlur}
+          className='absolute flex space-x-3 p-3 bg-white border border-gray-200 rounded-lg shadow-lg z-50 bottom-full mb-2'
+        >
+          <button
+            onClick={shareToFacebook}
+            title='Chia sẻ lên Facebook'
+            className='p-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-transform transform hover:scale-110 shadow-md'
+            aria-label='Chia sẻ lên Facebook'
+          >
+            <FacebookIcon size={20} />
+          </button>
+          <button
+            onClick={copyToClipboard}
+            title='Sao chép liên kết'
+            className='p-2 bg-gray-300 text-black rounded-full hover:bg-gray-400 transition-transform transform hover:scale-110 shadow-md'
+            aria-label='Sao chép liên kết'
+          >
+            <CopyIcon size={20} />
+          </button>
+        </div>
+      )}
+    </div>
+  )
+}

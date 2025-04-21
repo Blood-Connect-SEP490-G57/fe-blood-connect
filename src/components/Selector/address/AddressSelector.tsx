@@ -201,7 +201,7 @@ const AddressSelector: React.FC<AddressSelectorProps> = ({ onAddressSelect, init
             <Button variant='outline' onClick={() => setOpen(false)}>
               Hủy
             </Button>
-            <Button onClick={handleConfirm} disabled={!selectedProvince || !selectedDistrict || !selectedWard}>
+            <Button variant='destructive' onClick={handleConfirm} disabled={!selectedProvince || !selectedDistrict || !selectedWard}>
               Xác nhận
             </Button>
           </div>
