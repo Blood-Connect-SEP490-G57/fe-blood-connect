@@ -143,7 +143,7 @@ const OrganizationSelector: React.FC<OrganizationSelectorProps> = ({
                 <Button 
                   onClick={handleConfirm}
                   disabled={!selectedOrganization}
-                  className="bg-red-500 hover:bg-red-600 text-white"
+                  variant='destructive'
                 >
                   Xác nhận
                 </Button>
