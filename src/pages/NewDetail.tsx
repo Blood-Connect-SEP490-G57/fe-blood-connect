@@ -2,9 +2,10 @@ import { getNews, getNewsById } from '@/api/news'
 import Empty from '@/components/warnings/empty'
 import Loading from '@/components/warnings/loading'
 import { useQuery } from '@tanstack/react-query'
-import { Calendar, ArrowLeft, Clock, Share2, BookmarkPlus, ChevronRight, Tags } from 'lucide-react'
+import { Calendar, ArrowLeft, Clock, BookmarkPlus, ChevronRight, Tags } from 'lucide-react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
+import ShareLink from '@/components/sharelink/ShareNew'
 
 const NewsDetailPage = () => {
   const { id } = useParams()
@@ -56,7 +57,7 @@ const NewsDetailPage = () => {
   }
 
   return (
-    <div className='min-h-screen mt-10 bg-gray-100'>
+    <div className='min-h-screen mt-12 bg-gray-100'>
       <div className='max-w-7xl mx-auto px-2 py-6'>
         <div className='grid grid-cols-1 lg:grid-cols-3 gap-8'>
           <div className='lg:col-span-2'>
@@ -104,12 +105,10 @@ const NewsDetailPage = () => {
                     </div>
 
                     <div className='flex items-center space-x-2'>
-                      <button className='p-2 rounded-full bg-gray-100 text-gray-500 hover:bg-red-50 hover:text-red-500 transition-colors'>
+                      {/* <button className='p-2 rounded-full bg-gray-100 text-gray-500 hover:bg-red-50 hover:text-red-500 transition-colors'>
                         <BookmarkPlus className='h-4 w-4' />
-                      </button>
-                      <button className='p-2 rounded-full bg-gray-100 text-gray-500 hover:bg-red-50 hover:text-red-500 transition-colors'>
-                        <Share2 className='h-4 w-4' />
-                      </button>
+                      </button> */}
+                      <ShareLink />
                     </div>
                   </div>
 
@@ -139,7 +138,7 @@ const NewsDetailPage = () => {
 
           {/* Sidebar Column */}
           <div className='lg:col-span-1'>
-            <div className='sticky top-24'>
+            <div className='sticky top-0'>
               <div className='bg-white rounded-xl shadow-sm overflow-hidden p-6'>
                 <h2 className='text-xl font-bold text-gray-900 mb-6 flex items-center'>
                   <span className='bg-red-500 w-1 h-6 rounded-full mr-3'></span>

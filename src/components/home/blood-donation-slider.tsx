@@ -5,7 +5,7 @@ import { CampaignResponse } from '@/schema/campaign-schema'
 import { useNavigate } from 'react-router-dom'
 import Loading from '../warnings/loading'
 import Empty from '../warnings/empty'
-import ShareLink from '../sharelink'
+import ShareLink from '../sharelink/ShareCampaign'
 import { motion } from 'framer-motion'
 
 const BloodDonationSlider: React.FC = () => {
