@@ -11,8 +11,7 @@ import { User as fetchUser, updateUserDetail } from '@/api/user'
 import { toast } from '../ui/use-toast'
 import Loading from '../warnings/loading'
 import Empty from '../warnings/empty'
-import { User, MapPin, Briefcase, Building } from 'lucide-react'
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
+import { User } from 'lucide-react'
 import AddressSelector from '../Selector/address/AddressSelector'
 import JobSelector from '../Selector/job/JobSelector'
 import OrganizationSelector from '../Selector/organization/OrganizationSelector'
@@ -76,6 +75,8 @@ const Profile = () => {
       organization_name: ''
     }
   })
+
+  const jobName = form2.watch('job_name')
 
   useEffect(() => {
     if (hasFetched.current) return
@@ -235,7 +236,7 @@ const Profile = () => {
                             </div>
                             <FormControl>
                               <div className='flex items-center justify-between'>
-                                <span className='text-xs sm:text-sm text-gray-600 text-end'>
+                                <span className='text-xs sm:hidden text-gray-600 text-end'>
                                   {field.value
                                     ? field.value.split(',').map((part, index) => (
                                         <React.Fragment key={index}>
@@ -245,25 +246,16 @@ const Profile = () => {
                                       ))
                                     : 'Chưa có địa chỉ'}
                                 </span>
+                                <span className='text-sm hidden sm:block text-gray-600 text-start'>
+                                  {field.value || 'Chưa có địa chỉ'}
+                                </span>
                                 {isEdit && (
-                                  <Dialog>
-                                    <DialogTrigger asChild>
-                                      <Button variant='ghost' size='icon' className='ml-1'>
-                                        <MapPin className='h-4 w-4 text-red-500' />
-                                      </Button>
-                                    </DialogTrigger>
-                                    <DialogContent className='sm:max-w-md' aria-describedby='dialog-address-select'>
-                                      <div id='dialog-address-select' className='sr-only'>
-                                        Chọn địa chỉ liên hệ của bạn
-                                      </div>
-                                      <AddressSelector
-                                        onAddressSelect={(address) => {
-                                          field.onChange(address)
-                                        }}
-                                        initialAddress={field.value}
-                                      />
-                                    </DialogContent>
-                                  </Dialog>
+                                  <AddressSelector
+                                    initialAddress={field.value}
+                                    onAddressSelect={(address) => {
+                                      field.onChange(address)
+                                    }}
+                                  />
                                 )}
                               </div>
                             </FormControl>
@@ -333,17 +325,7 @@ const Profile = () => {
                         </FormItem>
                       )}
                     />
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
 
-            {/* Work Information Group with updated FormField for job_name */}
-            <div>
-              <h2 className='text-lg font-semibold text-gray-700 mb-2 px-2 '>Thông tin nghề nghiệp</h2>
-              <Card className='overflow-hidden rounded-xl shadow-sm border-none'>
-                <CardContent className='p-0'>
-                  <div className='divide-y'>
                     <FormField
                       control={form2.control}
                       name='job_name'
@@ -354,29 +336,17 @@ const Profile = () => {
                               <FormLabel className='text-sm font-medium text-gray-700 m-0'>Nghề nghiệp</FormLabel>
                             </div>
                             <FormControl>
-                              <div className='flex items-center justify-between'>
-                                <span className='text-xs sm:text-sm text-gray-600 '>
+                              <div className='flex items-center '>
+                                <span className='text-xs sm:text-sm text-gray-600'>
                                   {field.value || 'Chưa có nghề nghiệp'}
                                 </span>
                                 {isEdit && (
-                                  <Dialog>
-                                    <DialogTrigger>
-                                      <Button variant='ghost' size='icon' className='ml-1'>
-                                        <Briefcase className='h-4 w-4 text-red-500' />
-                                      </Button>
-                                    </DialogTrigger>
-                                    <DialogContent className='sm:max-w-md' aria-describedby='dialog-profile-job-select'>
-                                      <div id='dialog-profile-job-select' className='sr-only'>
-                                        Chọn nghề nghiệp của bạn
-                                      </div>
-                                      <JobSelector
-                                        initialJob={form2.getValues('job_name')}
-                                        onJobSelect={(job) => {
-                                          form2.setValue('job_name', job)
-                                        }}
-                                      />
-                                    </DialogContent>
-                                  </Dialog>
+                                  <JobSelector
+                                    initialJob={form2.getValues('job_name')}
+                                    onJobSelect={(job) => {
+                                      form2.setValue('job_name', job)
+                                    }}
+                                  />
                                 )}
                               </div>
                             </FormControl>
@@ -386,70 +356,66 @@ const Profile = () => {
                       )}
                     />
 
-                    <FormField
-                      control={form2.control}
-                      name='student_id'
-                      render={({ field }) => (
-                        <FormItem className='p-2 sm:p-4'>
-                          <div className='flex items-center justify-between'>
-                            <div className='flex items-center gap-3'>
-                              <FormLabel className='text-sm font-medium text-gray-700 m-0'>Mã sinh viên</FormLabel>
+                    {jobName === 'Sinh viên' && (
+                      <FormField
+                        control={form2.control}
+                        name='student_id'
+                        render={({ field }) => (
+                          <FormItem className='p-2 sm:p-4'>
+                            <div className='flex items-center justify-between'>
+                              <div className='flex items-center gap-3'>
+                                <FormLabel className='text-sm font-medium text-gray-700 m-0'>Mã sinh viên</FormLabel>
+                              </div>
+                              <FormControl>
+                                {isEdit ? (
+                                  <Input
+                                    {...field}
+                                    className='w-1/2 bg-gray-100 border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0'
+                                    placeholder='Nhập mã sinh viên'
+                                    readOnly={!isEdit}
+                                  />
+                                ) : (
+                                  <span className='text-xs sm:text-sm text-gray-600'>{field.value || '-'}</span>
+                                )}
+                              </FormControl>
                             </div>
-                            <FormControl>
-                              {isEdit ? (
-                                <Input
-                                  {...field}
-                                  className='w-1/2 bg-gray-100 border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0'
-                                  placeholder='Nhập mã sinh viên'
-                                  readOnly={!isEdit}
-                                />
-                              ) : (
-                                <span className='text-xs sm:text-sm text-gray-600'>{field.value || '-'}</span>
-                              )}
-                            </FormControl>
-                          </div>
-                          <FormMessage className='ml-8 text-xs' />
-                        </FormItem>
-                      )}
-                    />
+                            <FormMessage className='ml-8 text-xs' />
+                          </FormItem>
+                        )}
+                      />
+                    )}
 
-                    <FormField
-                      control={form2.control}
-                      name='military_id'
-                      render={({ field }) => (
-                        <FormItem className='p-2 sm:p-4'>
-                          <div className='flex items-center justify-between'>
-                            <div className='flex items-center gap-3'>
-                              <FormLabel className='text-sm font-medium text-gray-700 m-0'>Mã quân nhân</FormLabel>
+                    {(jobName === 'Bộ đội' ||
+                      jobName === 'Công an' ||
+                      jobName === 'Quân nhân') && (
+                      <FormField
+                        control={form2.control}
+                        name='military_id'
+                        render={({ field }) => (
+                          <FormItem className='p-2 sm:p-4'>
+                            <div className='flex items-center justify-between'>
+                              <div className='flex items-center gap-3'>
+                                <FormLabel className='text-sm font-medium text-gray-700 m-0'>Mã quân nhân</FormLabel>
+                              </div>
+                              <FormControl>
+                                {isEdit ? (
+                                  <Input
+                                    {...field}
+                                    className='w-1/2 bg-gray-100 border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0'
+                                    placeholder='Nhập mã quân nhân'
+                                    readOnly={!isEdit}
+                                  />
+                                ) : (
+                                  <span className='text-xs sm:text-sm text-gray-600'>{field.value || '-'}</span>
+                                )}
+                              </FormControl>
                             </div>
-                            <FormControl>
-                              {isEdit ? (
-                                <Input
-                                  {...field}
-                                  className='w-1/2 bg-gray-100 border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0'
-                                  placeholder='Nhập mã quân nhân'
-                                  readOnly={!isEdit}
-                                />
-                              ) : (
-                                <span className='text-xs sm:text-sm text-gray-600'>{field.value || '-'}</span>
-                              )}
-                            </FormControl>
-                          </div>
-                          <FormMessage className='ml-8 text-xs' />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
+                            <FormMessage className='ml-8 text-xs' />
+                          </FormItem>
+                        )}
+                      />
+                    )}
 
-            {/* Organization Information Group */}
-            <div>
-              <h2 className='text-lg font-semibold text-gray-700 mb-2 px-2 '>Thông tin tổ chức</h2>
-              <Card className='overflow-hidden rounded-xl shadow-sm border-none'>
-                <CardContent className='p-0'>
-                  <div className='divide-y'>
                     <FormField
                       control={form.control}
                       name='organization_name'
@@ -457,7 +423,7 @@ const Profile = () => {
                         <FormItem className='p-2 sm:p-4'>
                           <div className='flex items-center justify-between'>
                             <div className='flex items-center gap-3'>
-                              <FormLabel className='text-sm font-medium text-gray-700 m-0'>Tổ chức</FormLabel>
+                              <FormLabel className='text-sm font-medium text-gray-700 m-0'>Đơn vị</FormLabel>
                             </div>
                             <FormControl>
                               <div className='flex items-center justify-between'>
@@ -465,25 +431,13 @@ const Profile = () => {
                                   {field.value || 'Chưa có tổ chức'}
                                 </span>
                                 {isEdit && (
-                                  <Dialog>
-                                    <DialogTrigger>
-                                      <Button variant='ghost' size='icon' className='ml-1'>
-                                        <Building className='h-4 w-4 text-red-500' />
-                                      </Button>
-                                    </DialogTrigger>
-                                    <DialogContent className='sm:max-w-md' aria-describedby='dialog-profile-org-select'>
-                                      <div id='dialog-profile-org-select' className='sr-only'>
-                                        Chọn tổ chức của bạn
-                                      </div>
-                                      <OrganizationSelector
-                                        initialOrganization={form.getValues('organization_name')}
-                                        onOrganizationSelect={(organization) => {
-                                          form.setValue('organization_name', organization.name)
-                                          form.setValue('organization_id', organization.id)
-                                        }}
-                                      />
-                                    </DialogContent>
-                                  </Dialog>
+                                  <OrganizationSelector
+                                    initialOrganization={form.getValues('organization_name')}
+                                    onOrganizationSelect={(organization) => {
+                                      form.setValue('organization_name', organization.name)
+                                      form.setValue('organization_id', organization.id)
+                                    }}
+                                  />
                                 )}
                               </div>
                             </FormControl>
@@ -539,16 +493,23 @@ const InfoItem = ({
     </div>
     <div className='flex items-center justify-end'>
       {isAddress ? (
-        <span className='text-xs sm:text-sm text-gray-600 text-end'>
-          {String(value)
-            .split(',')
-            .map((part, index) => (
-              <React.Fragment key={index}>
-                {part.trim()}
-                {index < 3 && <br />}
-              </React.Fragment>
-            ))}
-        </span>
+        <div>
+          <div className='sm:hidden'>
+            <span className='text-xs text-gray-600 text-end'>
+              {String(value)
+                .split(',')
+                .map((part, index) => (
+                  <React.Fragment key={index}>
+                    {part.trim()}
+                    {index < 3 && <br />}
+                  </React.Fragment>
+                ))}
+            </span>
+          </div>
+          <div className='hidden sm:block'>
+            <span className='text-xs sm:text-sm text-gray-600 text-end'>{value}</span>
+          </div>
+        </div>
       ) : (
         <span className='text-xs sm:text-sm text-gray-600 text-end'>{value}</span>
       )}

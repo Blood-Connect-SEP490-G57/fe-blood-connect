@@ -389,12 +389,12 @@ const AppointmentInfo = ({ appointmentId }: AppointmentInfoProps) => {
                     </div>
                   </div>
                 </div>
-                {data.campaign?.status === 'BOOKING' || data.campaign?.status === 'DONE' && (
-                  <Button onClick={() => setPopupOpen(true)} className='w-full bg-red-600 hover:bg-red-700 mt-2'>
-                  Xem chi tiết phiếu đăng ký
-                </Button>
-                )}
-                
+                {data.campaign?.status === 'BOOKING' ||
+                  (data.campaign?.status === 'DONE' && (
+                    <Button onClick={() => setPopupOpen(true)} className='w-full bg-red-600 hover:bg-red-700 mt-2'>
+                      Xem chi tiết phiếu đăng ký
+                    </Button>
+                  ))}
               </CardContent>
             </Card>
           </div>
@@ -691,7 +691,7 @@ const AppointmentInfo = ({ appointmentId }: AppointmentInfoProps) => {
               </Card>
             </div>
 
-            <div className='py-4 space-y-4'>
+            <div className='py-4 space-y-4 flex justify-end'>
               {isEditing ? (
                 <>
                   <Button
@@ -708,12 +708,12 @@ const AppointmentInfo = ({ appointmentId }: AppointmentInfoProps) => {
                   </Button>
                 </>
               ) : (
-                <Button
-                  onClick={() => setIsEditing(true)}
-                  className='w-full bg-red-600 text-white hover:bg-red-700 py-5 rounded-xl'
-                >
-                  Chỉnh sửa thông tin
-                </Button>
+                  <Button
+                    onClick={() => setIsEditing(true)}
+                    className='bg-red-600 text-white hover:bg-red-700 py-5 rounded-xl'
+                  >
+                    Chỉnh sửa thông tin
+                  </Button>
               )}
             </div>
           </div>

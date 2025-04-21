@@ -106,7 +106,7 @@ const UserProfilePage: React.FC = () => {
           transition={{ duration: 0.5 }}
         >
           {/* Sidebar for desktop */}
-          <div className='hidden lg:block lg:w-1/4 sticky top-24 h-fit'>
+          <div className='hidden lg:block lg:w-1/4 sticky top-0 h-fit'>
             <Card className='rounded-3xl overflow-hidden border border-gray-100 bg-white/80 backdrop-blur-sm shadow-lg'>
               <CardHeader className='pb-3 border-b border-gray-100'>
                 <CardTitle className='text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-500 flex items-center gap-2'>

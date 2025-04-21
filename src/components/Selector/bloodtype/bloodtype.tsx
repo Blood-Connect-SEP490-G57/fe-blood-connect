@@ -3,6 +3,7 @@
 import React, { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { Heart } from 'lucide-react'
 
 interface BloodTypeSelectorProps {
   value: string
@@ -26,8 +27,9 @@ const BloodTypeSelector: React.FC<BloodTypeSelectorProps> = ({ value, onChange, 
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         {trigger || (
-          <Button variant='outline' className='w-full justify-start'>
-            Chọn nhóm máu
+          <Button variant='outline' className='ml-2 justify-start w-1/2'>
+            <Heart className='w-4 h-4' />
+            <span className='text-sm hidden sm:block text-gray-600 text-start'>Chọn nhóm máu</span>
           </Button>
         )}
       </DialogTrigger>

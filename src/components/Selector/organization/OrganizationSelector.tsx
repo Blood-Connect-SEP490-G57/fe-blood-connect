@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { getOrganizationsByType } from '@/api/organization'
 import { toast } from '@/components/ui/use-toast'
-import { Loader2 } from 'lucide-react'
+import { Building2, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -85,8 +85,9 @@ const OrganizationSelector: React.FC<OrganizationSelectorProps> = ({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         {trigger || (
-          <Button variant='outline' className='w-full justify-start'>
-            Chọn tổ chức
+          <Button variant='outline' className='ml-2 justify-start'>
+            <Building2 className='w-4 h-4' />
+            <span className='text-sm hidden sm:block text-gray-600 text-start ml-2'>Chọn tổ chức</span>
           </Button>
         )}
       </DialogTrigger>
