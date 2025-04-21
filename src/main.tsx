@@ -76,7 +76,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
               }
             />
             <Route
-              path='/cai-dat'
+              path='/doi-mat-khau'
               element={
                 <Protected tokenRequired={true} destination='/dang-nhap'>
                   <Settings />

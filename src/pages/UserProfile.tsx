@@ -161,7 +161,7 @@ const UserProfilePage: React.FC = () => {
           </AnimatePresence>
           {/* Mobile menu - hide when header menu is open */}
           {!isHeaderMenuOpen && (
-            <div className='lg:hidden fixed bottom-0 left-0 w-full bg-white shadow-lg border-t border-gray-200 z-[999]'>
+            <div className='lg:hidden md:hidden fixed bottom-0 left-0 w-full bg-white shadow-lg border-t border-gray-200 z-[999]'>
               <div className='flex justify-around'>
                 {navigationItems.map((item) => (
                   <motion.button
