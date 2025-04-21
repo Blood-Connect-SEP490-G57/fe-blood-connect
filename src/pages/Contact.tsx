@@ -201,21 +201,22 @@ const ContactPage = () => {
                   />
                   {errors.message && <p className='text-sm text-red-500 mt-1'>{errors.message}</p>}
                 </div>
-
-                <Button
-                  type='submit'
-                  disabled={isLoading}
-                  className='w-full rounded-xl bg-gradient-to-r from-red-600 to-red-500 text-white font-medium py-5 hover:opacity-90 transition'
-                >
-                  {isLoading ? (
-                    'Đang gửi...'
-                  ) : (
-                    <span className='flex items-center justify-center'>
-                      Gửi Phản Hồi
-                      <ArrowRight className='ml-2 h-4 w-4' />
-                    </span>
-                  )}
-                </Button>
+                <div className='flex justify-end'>
+                  <Button
+                    type='submit'
+                    disabled={isLoading}
+                    className='rounded-xl bg-gradient-to-r from-red-600 to-red-500 text-white font-medium py-5 hover:opacity-90 transition'
+                  >
+                    {isLoading ? (
+                      'Đang gửi...'
+                    ) : (
+                      <span className='flex items-center justify-center'>
+                        Gửi Phản Hồi
+                        <ArrowRight className='ml-2 h-4 w-4' />
+                      </span>
+                    )}
+                  </Button>
+                </div>
               </form>
             </CardContent>
           </Card>
