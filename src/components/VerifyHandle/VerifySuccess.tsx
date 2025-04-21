@@ -15,7 +15,7 @@ export default function VerifySuccess() {
         className="w-full max-w-md z-10"
       >
         <motion.div 
-          className='backdrop-blur-sm bg-white/70 p-8 rounded-3xl text-center space-y-8 shadow-xl border border-gray-100'
+          className='backdrop-blur-sm bg-white/70 p-8 text-center space-y-8'
           initial={{ scale: 0.95, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.4 }}
@@ -63,7 +63,7 @@ export default function VerifySuccess() {
             
             <motion.a
               href="/"
-              className="px-6 py-3 bg-white text-gray-700 font-medium rounded-xl shadow-sm border border-gray-200 flex items-center justify-center gap-2 hover:bg-gray-50 transition-all"
+              className="px-6 py-3 bg-gray-100 text-gray-700 font-medium rounded-xl shadow-sm border border-gray-200 flex items-center justify-center gap-2 transition-all"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >

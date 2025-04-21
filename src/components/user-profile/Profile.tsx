@@ -13,9 +13,9 @@ import Loading from '../warnings/loading'
 import Empty from '../warnings/empty'
 import { User, MapPin, Briefcase, Building } from 'lucide-react'
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
-import AddressSelector from '../address/AddressSelector'
-import JobSelector from '../job/JobSelector'
-import OrganizationSelector from '../organization/OrganizationSelector'
+import AddressSelector from '../Selector/address/AddressSelector'
+import JobSelector from '../Selector/job/JobSelector'
+import OrganizationSelector from '../Selector/organization/OrganizationSelector'
 import React from 'react'
 
 const Profile = () => {
