@@ -129,7 +129,7 @@ const Verification = () => {
           />
         )
       case 4:
-        return <Step4Complete onHomeClick={() => navigate('/')} onRegisterClick={() => navigate('/dang-ky-hien-mau')} />
+        return <Step4Complete onRegisterClick={() => navigate('/dang-ky-hien-mau')} />
       default:
         return null
     }
@@ -185,7 +185,7 @@ const Verification = () => {
 
         {/* Current step content */}
         <motion.div
-          className='backdrop-blur-sm rounded-xl shadow-xl max-w-4xl mx-auto border border-gray-100'
+          className='backdrop-blur-sm max-w-4xl mx-auto'
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.4, duration: 0.5 }}
