@@ -57,11 +57,11 @@ const HeroSection: React.FC = () => {
       <div className='absolute bottom-20 right-[15%] w-32 h-32 bg-red-300 opacity-20 rounded-full blur-xl'></div>
       <div className='absolute top-40 right-[20%] w-16 h-16 bg-red-200 opacity-20 rounded-full blur-md'></div>
 
-      <div className='max-w-7xl mx-auto px-2 relative'>
-        <div className='flex flex-col lg:flex-row items-center justify-between gap-12'>
+      <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative'>
+        <div className='flex flex-col md:flex-row items-center justify-between gap-12'>
           {/* Left Content */}
           <motion.div 
-            className='lg:w-1/2 text-white z-10'
+            className='md:w-1/2 text-white z-10'
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
@@ -84,19 +84,19 @@ const HeroSection: React.FC = () => {
               <span>Mỗi giọt máu là một món quà của sự sống</span>
             </div>
 
-            <h1 className='text-4xl lg:text-5xl font-bold mb-6 leading-tight text-center lg:text-left'>
-              Giọt Máu Hi Vọng
-              <span className='block text-xl lg:text-2xl font-normal mt-3 text-red-50 opacity-90'>
+            <h1 className='text-3xl md:text-4xl font-bold mb-6 leading-tight text-center md:text-left'>
+              Giọt Máu Hy Vọng
+              <span className='block text-xl md:text-xl font-normal mt-3 text-red-50 opacity-90'>
               Kết nối yêu thương - Lan tỏa sự sống
               </span>
             </h1>
 
-            <p className='text-base lg:text-lg mb-8 text-red-50 max-w-xl opacity-90 text-center lg:text-left'>
+            <p className='text-base md:text-lg mb-8 text-red-50 max-w-xl opacity-90 text-center md:text-left'>
               Mỗi giọt máu hiến tặng là một cơ hội để cứu sống người khác. Hãy chung tay vì một cộng đồng khỏe mạnh và
               nhân ái.
             </p>
 
-            <div className='flex flex-wrap gap-4 justify-center lg:justify-start'>
+            <div className='flex flex-wrap gap-4 justify-center md:justify-start'>
                 <Button
                 size='lg'
                 className='bg-white text-red-600 hover:bg-red-50 rounded-full shadow-lg group transition-all duration-300 font-medium px-8'
@@ -132,7 +132,7 @@ const HeroSection: React.FC = () => {
             
             {/* iOS style scroll indicator */}
             <motion.div 
-              className='hidden lg:flex justify-center mt-12'
+              className='hidden md:flex justify-center mt-12'
               initial={{ opacity: 0 }}
               animate={{ opacity: 0.7 }}
               transition={{ delay: 1, duration: 0.6 }}
@@ -155,13 +155,13 @@ const HeroSection: React.FC = () => {
 const HeroImage: React.FC = () => {
   const floatingCards = [
     {
-      position: 'lg:-bottom-4 lg:-left-6 bottom-2 left-2',
+      position: 'md:-bottom-4 md:-left-6 bottom-2 left-2',
       icon: <Heart className='h-5 w-5 text-red-600' />,
       title: 'Cứu sống',
       subtitle: '3 người/ngày'
     },
     {
-      position: 'lg:-top-6 lg:-right-6 top-2 right-2',
+      position: 'md:-top-6 md:-right-6 top-2 right-2',
       icon: <Users className='h-5 w-5 text-red-600' />,
       title: 'Tình nguyện viên',
       subtitle: '500+ người'
@@ -170,7 +170,7 @@ const HeroImage: React.FC = () => {
 
   return (
     <motion.div 
-      className='lg:w-1/2 relative'
+      className='md:w-1/2 relative'
       initial={{ opacity: 0, x: 50 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.7, delay: 0.2 }}
