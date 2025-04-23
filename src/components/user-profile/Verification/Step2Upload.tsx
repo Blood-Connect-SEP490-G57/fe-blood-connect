@@ -1,4 +1,4 @@
-import { Upload, Camera, ChevronRight, X } from 'lucide-react'
+import { Upload ,ChevronRight, X } from 'lucide-react'
 import { useDropzone } from 'react-dropzone'
 import { extractFront, extractBack } from '@/api/extract'
 import { useExtractStore } from '@/hooks/stores/useExtractStore'
@@ -168,17 +168,7 @@ const Step2Upload: React.FC<Step2UploadProps> = ({ formData, setFormData, error,
   return (
     <div className='mt-2'>
       <ScrollToTop />
-      <div className='text-center mb-4'>
-        <div className='flex items-center justify-center mb-4'>
-          <div className='w-16 h-16 flex items-center justify-center'>
-            <Camera className='h-8 w-8 text-red-500' />
-          </div>
-        </div>
-        <h2 className='text-xl font-semibold text-gray-900 mb-2'>Tải lên CCCD</h2>
-        <p className='text-sm text-gray-600 max-w-xl mx-auto'>
-          Vui lòng tải lên ảnh căn cước công dân (mặt trước và mặt sau) để xác thực thông tin.
-        </p>
-      </div>
+      
 
       <div className='p-5'>
         <div className='space-y-4'>

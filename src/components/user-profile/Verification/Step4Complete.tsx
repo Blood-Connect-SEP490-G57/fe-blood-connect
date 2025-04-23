@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { Check } from 'lucide-react'
 import ScrollToTop from '@/components/scrollToTop'
 import { Card, CardContent } from '@/components/ui/card'
 import { CheckExtractStatus } from '@/api/extract'
@@ -29,9 +28,6 @@ const Step4Complete: React.FC<Step3CompleteProps> = ({ onRegisterClick }) => {
     <div className='space-y-6 mx-auto sm:p-4 p-2'>
       <ScrollToTop />
       <div className='flex flex-col items-center justify-center text-center mt-2 space-y-4'>
-        <div className='w-20 h-20 bg-green-100 rounded-full flex items-center justify-center'>
-          <Check className='w-10 h-10 text-green-600' />
-        </div>
         <h2 className='text-xl font-semibold text-gray-900'>Xác thực thành công</h2>
         <p className='text-gray-600'>
           Chúc mừng! Bạn đã hoàn tất hồ sơ hiến máu. Bây giờ bạn có thể đăng ký các chiến dịch hiến máu.

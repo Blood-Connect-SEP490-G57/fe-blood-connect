@@ -4,7 +4,7 @@ import { getExtractById, updateExtractStatus } from '@/api/extract'
 import { createOrUpdateUserDetail, getCurrentUserDetail } from '@/api/user'
 import { getOrganizationsByType } from '@/api/organization'
 import { Button } from '@/components/ui/button'
-import { ChevronDown, FileText, Info, Loader2 } from 'lucide-react'
+import { ChevronDown,  Info, Loader2 } from 'lucide-react'
 import { toast } from '@/components/ui/use-toast'
 import JobSelector from '@/components/Selector/job/JobSelector'
 import AddressSelector from '@/components/Selector/address/AddressSelector'
@@ -206,7 +206,7 @@ const Step3ExtractedInfo: React.FC<Step2Props> = ({ formData, setFormData, onNex
 
   return (
     <div className='space-y-6 sm:p-4 p-2'>
-      <div className='text-center mb-6'>
+      {/* <div className='text-center mb-6'>
         <div className='flex items-center justify-center mb-4'>
           <div className='w-16 h-16 flex items-center justify-center'>
             <FileText className='h-8 w-8 text-red-500' />
@@ -216,7 +216,7 @@ const Step3ExtractedInfo: React.FC<Step2Props> = ({ formData, setFormData, onNex
         <p className='text-sm text-gray-600 max-w-xl mx-auto'>
           Vui lòng kiểm tra thông tin được trích xuất từ CCCD và điền bổ sung các thông tin liên hệ.
         </p>
-      </div>
+      </div> */}
 
       {isLoading ? (
         <LoadingSpinner />
