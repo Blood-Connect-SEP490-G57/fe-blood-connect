@@ -4,24 +4,56 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { Home, Calendar, User, History, CheckCircle } from 'lucide-react'
 import { useMenuStore } from '@/hooks/stores/menuStore'
 import { useVerification } from '../verificationContext/VerificationContext'
+import { useAuth } from '../authContext/AuthContext'
 
 const MobileMenu: React.FC = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const { isHeaderMenuOpen } = useMenuStore()
   const { isVerified } = useVerification()
-
+  const { isLoggedIn } = useAuth()
   const navigationItems = [
-    { id: 'home', label: 'Trang chủ', icon: <Home className='w-5 h-5' />, path: '/' },
-    { id: 'register', label: 'Đăng ký', icon: <Calendar className='w-5 h-5' />, path: '/dang-ky-hien-mau' },
-    { id: 'profile', label: 'Thông tin', icon: <User className='w-5 h-5' />, path: '/trang-ca-nhan#thong-tin-ca-nhan' },
-    {
+    { id: 'trang-chu', label: 'Trang chủ', icon: <Home className='w-5 h-5' />, path: '/' },
+    { id: 'dang-ky-hien-mau', label: 'Đăng ký', icon: <Calendar className='w-5 h-5' />, path: '/dang-ky-hien-mau' }
+  ]
+
+ 
+
+  if (!isLoggedIn) {
+    navigationItems.push({
+      id: 'dang-nhap',
+      label: 'Đăng nhập',
+      icon: <User className='w-5 h-5' />,
+      path: '/dang-nhap'
+    })
+  }
+
+  if (!isLoggedIn) {
+    navigationItems.push({
+      id: 'dang-ky',
+      label: 'Đăng ký',
+      icon: <User className='w-5 h-5' />,
+      path: '/dang-ky'
+    })
+  }
+
+  if (isLoggedIn) {
+    navigationItems.push({
+      id: 'trang-ca-nhan',
+      label: 'Thông tin',
+      icon: <User className='w-5 h-5' />,
+      path: '/trang-ca-nhan#thong-tin-ca-nhan'
+    })
+  }
+
+  if (isLoggedIn) {
+    navigationItems.push({
       id: 'lich-su-hien-mau',
       label: 'Lịch sử đặt hẹn',
       icon: <History className='w-5 h-5' />,
       path: '/trang-ca-nhan#lich-su-hien-mau'
-    }
-  ]
+    })
+  }
 
   if (isVerified === 'NONE') {
     navigationItems.push({

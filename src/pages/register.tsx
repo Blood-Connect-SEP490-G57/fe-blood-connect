@@ -38,9 +38,7 @@ export default function Register() {
         description: response.data.message,
         variant: 'default'
       })
-      setTimeout(() => {
-        navigate('/hoan-thanh-dang-ky')
-      }, 2000)
+      navigate('/hoan-thanh-dang-ky')
     },
     onError: (error: Error) => {
       if (isAxiosError(error)) {
@@ -63,7 +61,7 @@ export default function Register() {
       {/* Decorative elements */}
       <div className='absolute top-20 right-10 w-72 h-72 bg-red-50 rounded-full blur-3xl opacity-30 -z-10'></div>
       <div className='absolute bottom-20 left-10 w-72 h-72 bg-red-50 rounded-full blur-3xl opacity-30 -z-10'></div>
-      
+
       {/* Back button */}
       <motion.button
         onClick={() => navigate('/dang-nhap')}
@@ -71,14 +69,11 @@ export default function Register() {
         whileHover={{ x: -2 }}
         whileTap={{ scale: 0.95 }}
       >
-        <ChevronLeft className="w-5 h-5" />
+        <ChevronLeft className='w-5 h-5' />
       </motion.button>
-      
+
       <div className='sm:mx-auto sm:w-full sm:max-w-md'>
-        <div 
-          className='flex justify-center mb-8'
-        >
-        </div>
+        <div className='flex justify-center mb-8'></div>
 
         <motion.div
           initial={{ y: 20, opacity: 0 }}
@@ -94,7 +89,7 @@ export default function Register() {
         </motion.div>
       </div>
 
-      <motion.div 
+      <motion.div
         className='mt-8 sm:mx-auto sm:w-full sm:max-w-md'
         initial={{ y: 30, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -213,11 +208,7 @@ export default function Register() {
                 )}
               />
 
-              <motion.div 
-                className='pt-2'
-                whileHover={{ scale: 1.02 }} 
-                whileTap={{ scale: 0.98 }}
-              >
+              <motion.div className='pt-2' whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                 <Button
                   type='submit'
                   disabled={isLoading}
@@ -240,10 +231,8 @@ export default function Register() {
           </Form>
 
           <div className='mt-8 text-center'>
-            <p className='text-sm text-gray-600 mb-3'>
-              Đã có tài khoản?
-            </p>
-            <motion.button 
+            <p className='text-sm text-gray-600 mb-3'>Đã có tài khoản?</p>
+            <motion.button
               onClick={() => navigate('/dang-nhap')}
               className='inline-flex items-center justify-center py-2 px-6 border border-red-100 rounded-full text-sm font-medium text-red-600 bg-white hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all shadow-sm'
               whileHover={{ scale: 1.05 }}
