@@ -15,7 +15,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
       <AuthProvider>
         <VerificationProvider>
           <Header></Header>
-          <div className='flex flex-col min-h-screen pb-16'>
+          <div className='flex flex-col min-h-screen'>
             <main className='flex-1'>{children}</main>
           </div>
           <Footer></Footer>
