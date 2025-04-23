@@ -1,6 +1,7 @@
 import React from 'react'
 import Footer from './footer.tsx'
 import Header from './header.tsx'
+import MobileMenu from './mobile-menu.tsx'
 import { AuthProvider } from '../authContext/AuthContext.tsx'
 import { VerificationProvider } from '../verificationContext/VerificationContext.tsx'
 
@@ -14,10 +15,11 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
       <AuthProvider>
         <VerificationProvider>
           <Header></Header>
-          <div className='flex flex-col min-h-screen'>
+          <div className='flex flex-col min-h-screen pb-16'>
             <main className='flex-1'>{children}</main>
           </div>
           <Footer></Footer>
+          <MobileMenu />
         </VerificationProvider>
       </AuthProvider>
     </>
