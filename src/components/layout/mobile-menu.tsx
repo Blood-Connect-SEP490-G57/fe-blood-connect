@@ -12,50 +12,35 @@ const MobileMenu: React.FC = () => {
   const { isHeaderMenuOpen } = useMenuStore()
   const { isVerified } = useVerification()
   const { isLoggedIn } = useAuth()
+
   const navigationItems = [
     { id: 'trang-chu', label: 'Trang chủ', icon: <Home className='w-5 h-5' />, path: '/' },
     { id: 'dang-ky-hien-mau', label: 'Đăng ký', icon: <Calendar className='w-5 h-5' />, path: '/dang-ky-hien-mau' }
   ]
 
- 
-
   if (!isLoggedIn) {
-    navigationItems.push({
-      id: 'dang-nhap',
-      label: 'Đăng nhập',
-      icon: <User className='w-5 h-5' />,
-      path: '/dang-nhap'
-    })
-  }
-
-  if (!isLoggedIn) {
-    navigationItems.push({
-      id: 'dang-ky',
-      label: 'Đăng ký',
-      icon: <User className='w-5 h-5' />,
-      path: '/dang-ky'
-    })
+    navigationItems.push(
+      { id: 'dang-nhap', label: 'Đăng nhập', icon: <User className='w-5 h-5' />, path: '/dang-nhap' },
+      { id: 'dang-ky', label: 'Đăng ký', icon: <User className='w-5 h-5' />, path: '/dang-ky' }
+    )
   }
 
   if (isLoggedIn) {
-    navigationItems.push({
-      id: 'lich-su-hien-mau',
-      label: 'Lịch sử đặt hẹn',
-      icon: <History className='w-5 h-5' />,
-      path: '/trang-ca-nhan#lich-su-hien-mau'
-    })
+    navigationItems.push(
+      {
+        id: 'lich-su-hien-mau',
+        label: 'Lịch sử đặt hẹn',
+        icon: <History className='w-5 h-5' />,
+        path: '/trang-ca-nhan#lich-su-hien-mau'
+      },
+      {
+        id: 'trang-ca-nhan',
+        label: 'Thông tin',
+        icon: <User className='w-5 h-5' />,
+        path: '/trang-ca-nhan#thong-tin-ca-nhan'
+      }
+    )
   }
-  
-  if (isLoggedIn) {
-    navigationItems.push({
-      id: 'trang-ca-nhan',
-      label: 'Thông tin',
-      icon: <User className='w-5 h-5' />,
-      path: '/trang-ca-nhan#thong-tin-ca-nhan'
-    })
-  }
-
-  
 
   if (isVerified === 'NONE') {
     navigationItems.push({
@@ -71,7 +56,17 @@ const MobileMenu: React.FC = () => {
     if (hash) {
       return location.pathname === pathname && location.hash === `#${hash}`
     }
-    return location.pathname === path
+    return location.pathname === pathname
+  }
+
+  const handleNavigation = (path: string) => {
+    // Nếu đang ở cùng trang nhưng khác hash, force reload
+    const [pathname] = path.split('#')
+    if (location.pathname === pathname) {
+      window.location.href = path // Sử dụng full page reload
+    } else {
+      navigate(path) // Navigation bình thường
+    }
   }
 
   if (isHeaderMenuOpen) return null
@@ -85,7 +80,7 @@ const MobileMenu: React.FC = () => {
             className={`flex flex-col items-center justify-center px-4 py-2 transition-all ${
               isActive(item.path) ? 'text-red-600' : 'text-gray-500 hover:text-gray-700'
             }`}
-            onClick={() => navigate(item.path)}
+            onClick={() => handleNavigation(item.path)}
             whileTap={{ scale: 0.95 }}
           >
             <div className={`p-2 rounded-full ${isActive(item.path) ? 'bg-red-100' : 'bg-gray-100'}`}>{item.icon}</div>

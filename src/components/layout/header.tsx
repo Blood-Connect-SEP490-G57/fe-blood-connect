@@ -82,8 +82,7 @@ const Header: React.FC = () => {
   useEffect(() => {
     if (
       location.pathname === '/trang-ca-nhan' &&
-      (location.hash === '#lich-hen' ||
-        location.hash === '#thong-tin-ca-nhan' ||
+      (location.hash === '#thong-tin-ca-nhan' ||
         location.hash === '#lich-su-hien-mau' ||
         location.hash === '#tao-ho-so-hien-mau')
     ) {
@@ -422,7 +421,20 @@ const Header: React.FC = () => {
                         className='flex items-center p-3 rounded-xl hover:bg-red-50 transition-all cursor-pointer'
                         onClick={() => {
                           setHeaderMenuOpen(false)
-                          navigate(item.href)
+                          const [pathname, hash] = item.href.split('#')
+                          if (location.pathname === pathname) {
+                            window.location.hash = hash || ''
+                            if (hash) {
+                              setTimeout(() => {
+                                const element = document.getElementById(hash)
+                                if (element) {
+                                  element.scrollIntoView({ behavior: 'smooth' })
+                                }
+                              }, 100)
+                            }
+                          } else {
+                            navigate(item.href)
+                          }
                         }}
                       >
                         <div className='w-10 h-10 rounded-full bg-red-100 flex items-center justify-center mr-3'>
