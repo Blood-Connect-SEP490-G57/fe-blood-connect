@@ -39,6 +39,15 @@ const MobileMenu: React.FC = () => {
 
   if (isLoggedIn) {
     navigationItems.push({
+      id: 'lich-su-hien-mau',
+      label: 'Lịch sử đặt hẹn',
+      icon: <History className='w-5 h-5' />,
+      path: '/trang-ca-nhan#lich-su-hien-mau'
+    })
+  }
+  
+  if (isLoggedIn) {
+    navigationItems.push({
       id: 'trang-ca-nhan',
       label: 'Thông tin',
       icon: <User className='w-5 h-5' />,
@@ -46,14 +55,7 @@ const MobileMenu: React.FC = () => {
     })
   }
 
-  if (isLoggedIn) {
-    navigationItems.push({
-      id: 'lich-su-hien-mau',
-      label: 'Lịch sử đặt hẹn',
-      icon: <History className='w-5 h-5' />,
-      path: '/trang-ca-nhan#lich-su-hien-mau'
-    })
-  }
+  
 
   if (isVerified === 'NONE') {
     navigationItems.push({
