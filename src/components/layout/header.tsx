@@ -30,7 +30,7 @@ import { useVerification } from '../verificationContext/VerificationContext'
 import { useUnreadNotifications } from '@/hooks/useUnreadNotifications'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useMenuStore } from '@/hooks/stores/menuStore'
-import { useToast } from '@/components/ui/use-toast'
+// import { useToast } from '@/components/ui/use-toast'
 
 const Header: React.FC = () => {
   const navigate = useNavigate()
@@ -41,18 +41,18 @@ const Header: React.FC = () => {
   const { isVerified } = useVerification()
   const { unreadCount } = useUnreadNotifications()
   const [scrolled, setScrolled] = useState(false)
-  const { toast } = useToast()
+  // const { toast } = useToast()
 
   // Show verification toast when status is NONE
-  useEffect(() => {
-    if (isLoggedIn && isVerified === 'NONE') {
-      toast({
-        title: 'Xác thực hồ sơ',
-        description: 'Vui lòng xác thực hồ sơ của bạn để có thể đăng ký hiến máu.',
-        duration: 10000
-      })
-    }
-  }, [isLoggedIn, isVerified])
+  // useEffect(() => {
+  //   if (isLoggedIn && isVerified === 'NONE') {
+  //     toast({
+  //       title: 'Xác thực hồ sơ',
+  //       description: 'Vui lòng xác thực hồ sơ của bạn để có thể đăng ký hiến máu.',
+  //       duration: 10000
+  //     })
+  //   }
+  // }, [isLoggedIn, isVerified])
 
   // Prevent body scrolling when menu or notifications are open
   useEffect(() => {
