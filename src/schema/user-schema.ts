@@ -11,7 +11,7 @@ export const UserFullInfoResponseSchema = z.object({
   organization_name: z.string(),
 
   // User Detail info
-  job_name: z.string(),
+  job_name: z.string().optional(),
   student_id: z.string().optional(),
   military_id: z.string().optional(),
   address_contact: z.string(),
