@@ -30,7 +30,6 @@ import { useVerification } from '../verificationContext/VerificationContext'
 import { useUnreadNotifications } from '@/hooks/useUnreadNotifications'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useMenuStore } from '@/hooks/stores/menuStore'
-// import { useToast } from '@/components/ui/use-toast'
 
 const Header: React.FC = () => {
   const navigate = useNavigate()
@@ -41,18 +40,6 @@ const Header: React.FC = () => {
   const { isVerified } = useVerification()
   const { unreadCount } = useUnreadNotifications()
   const [scrolled, setScrolled] = useState(false)
-  // const { toast } = useToast()
-
-  // Show verification toast when status is NONE
-  // useEffect(() => {
-  //   if (isLoggedIn && isVerified === 'NONE') {
-  //     toast({
-  //       title: 'Xác thực hồ sơ',
-  //       description: 'Vui lòng xác thực hồ sơ của bạn để có thể đăng ký hiến máu.',
-  //       duration: 10000
-  //     })
-  //   }
-  // }, [isLoggedIn, isVerified])
 
   // Prevent body scrolling when menu or notifications are open
   useEffect(() => {
@@ -383,7 +370,7 @@ const Header: React.FC = () => {
         </div>
 
         {/* Mobile Navigation */}
-        <AnimatePresence>
+        {/* <AnimatePresence>
           {isHeaderMenuOpen && (
             <>
               <motion.div
@@ -405,8 +392,7 @@ const Header: React.FC = () => {
                     .filter((item) => {
                       if (
                         !isLoggedIn &&
-                        (item.name === 'LỊCH HẸN CỦA TÔI' ||
-                          item.name === 'LỊCH SỬ ĐẶT HẸN' ||
+                        (item.name === 'LỊCH SỬ ĐẶT HẸN' ||
                           item.name === 'THÔNG TIN CÁ NHÂN' ||
                           item.name === 'ĐỔI MẬT KHẨU' ||
                           item.name === 'TẠO HỒ SƠ HIẾN MÁU')
@@ -491,6 +477,139 @@ const Header: React.FC = () => {
                       </motion.div>
                     </>
                   )}
+                </div>
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence> */}
+
+        {/* Mobile Navigation - Phiên bản tối ưu cho touchpad */}
+        <AnimatePresence>
+          {isHeaderMenuOpen && (
+            <>
+              {/* Overlay với delay đóng menu */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 0.5 }}
+                exit={{ opacity: 0, transition: { delay: 0.2 } }} // Thêm delay khi đóng
+                className='fixed inset-0 bg-black/60 backdrop-blur-sm z-40'
+                onClick={() => {
+                  // Delay đóng menu để tránh đóng ngay lập tức
+                  setTimeout(() => setHeaderMenuOpen(false), 200)
+                }}
+              />
+
+              {/* Menu chính với kích thước touch-friendly */}
+              <motion.div
+                className='fixed top-[70px] max-h-[80vh] right-0 w-full max-w-sm z-50 overflow-y-auto bg-white/95 backdrop-blur-md shadow-xl rounded-tl-2xl rounded-bl-2xl'
+                initial={{ x: '100%' }}
+                animate={{ x: 0 }}
+                exit={{ x: '100%' }}
+                transition={{
+                  type: 'spring',
+                  stiffness: 300,
+                  damping: 30,
+                  mass: 0.5
+                }}
+              >
+                <div className='p-2 flex flex-col gap-1'>
+                  {getFilteredNavigation()
+                    .filter((item) => {
+                      if (
+                        !isLoggedIn &&
+                        (item.name === 'LỊCH SỬ ĐẶT HẸN' ||
+                          item.name === 'THÔNG TIN CÁ NHÂN' ||
+                          item.name === 'ĐỔI MẬT KHẨU' ||
+                          item.name === 'TẠO HỒ SƠ HIẾN MÁU')
+                      ) {
+                        return false
+                      }
+                      return true
+                    })
+                    .map((item) => (
+                      <motion.div
+                        key={item.name}
+                        className='flex items-center p-2 rounded-xl active:bg-red-100 transition-colors cursor-pointer'
+                        whileTap={{ scale: 0.98 }} // Hiệu ứng nhấn rõ ràng
+                        onClick={() => {
+                          // Delay đóng menu để người dùng thấy feedback
+                          setTimeout(() => {
+                            setHeaderMenuOpen(false)
+                            const [pathname, hash] = item.href.split('#')
+                            if (location.pathname === pathname) {
+                              window.location.hash = hash || ''
+                              if (hash) {
+                                const element = document.getElementById(hash)
+                                element?.scrollIntoView({ behavior: 'smooth' })
+                              }
+                            } else {
+                              navigate(item.href)
+                            }
+                          }, 150)
+                        }}
+                      >
+                        {/* Icon với kích thước lớn hơn */}
+                        <div className='w-12 h-12 rounded-full bg-red-100 flex items-center justify-center mr-3'>
+                          {React.cloneElement(item.icon, { className: 'w-5 h-5' })}
+                        </div>
+                        <div className='font-medium text-gray-800'>{item.name}</div>
+                      </motion.div>
+                    ))}
+
+                  {/* Phần tài khoản với vùng chạm lớn */}
+                  <hr />
+                  <div className='pt-2 border-t border-gray-100'>
+                    {isLoggedIn ? (
+                      <motion.div
+                        className='flex items-center p-2 rounded-xl bg-red-50 active:bg-red-200 transition-colors'
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => {
+                          setTimeout(() => {
+                            setHeaderMenuOpen(false)
+                            handleLogout()
+                          }, 150)
+                        }}
+                      >
+                        <div className='w-12 h-12 rounded-full bg-red-100 flex items-center justify-center mr-3'>
+                          <LogOut className='h-5 w-5 text-red-600' />
+                        </div>
+                        <div className='font-medium text-gray-800'>Đăng xuất</div>
+                      </motion.div>
+                    ) : (
+                      <>
+                        <motion.div
+                          className='flex items-center p-2 rounded-xl bg-red-50 active:bg-red-200 mb-2'
+                          whileTap={{ scale: 0.98 }}
+                          onClick={() => {
+                            setTimeout(() => {
+                              setHeaderMenuOpen(false)
+                              handleLoginClick()
+                            }, 150)
+                          }}
+                        >
+                          <div className='w-12 h-12 rounded-full bg-red-200 flex items-center justify-center mr-3'>
+                            <LogInIcon className='h-5 w-5 text-red-600' />
+                          </div>
+                          <div className='font-medium text-gray-800'>Đăng nhập</div>
+                        </motion.div>
+                        <motion.div
+                          className='flex items-center p-2 rounded-xl bg-gradient-to-r from-red-600 to-red-500 active:from-red-700 active:to-red-600'
+                          whileTap={{ scale: 0.98 }}
+                          onClick={() => {
+                            setTimeout(() => {
+                              setHeaderMenuOpen(false)
+                              handleRegisterClick()
+                            }, 150)
+                          }}
+                        >
+                          <div className='w-12 h-12 rounded-full bg-white/20 flex items-center justify-center mt-1 mr-3'>
+                            <UserPlusIcon className='h-5 w-5 text-white' />
+                          </div>
+                          <div className='font-medium text-white'>Đăng ký</div>
+                        </motion.div>
+                      </>
+                    )}
+                  </div>
                 </div>
               </motion.div>
             </>
