@@ -350,8 +350,8 @@ const Profile = () => {
                                 )}
                               </div>
                             </FormControl>
-                            <FormMessage className='ml-8 text-xs' />
                           </div>
+                          <FormMessage className='ml-8 text-xs' />
                         </FormItem>
                       )}
                     />
