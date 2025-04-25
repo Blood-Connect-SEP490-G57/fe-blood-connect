@@ -44,13 +44,19 @@ const Header: React.FC = () => {
   // Prevent body scrolling when menu or notifications are open
   useEffect(() => {
     if (isHeaderMenuOpen || isMobileNotiOpen) {
-      document.body.classList.add('overflow-hidden')
+      document.body.style.overflow = 'hidden'
+      document.body.style.position = 'fixed'
+      document.body.style.width = '100%'
     } else {
-      document.body.classList.remove('overflow-hidden')
+      document.body.style.overflow = ''
+      document.body.style.position = ''
+      document.body.style.width = ''
     }
 
     return () => {
-      document.body.classList.remove('overflow-hidden')
+      document.body.style.overflow = ''
+      document.body.style.position = ''
+      document.body.style.width = ''
     }
   }, [isHeaderMenuOpen, isMobileNotiOpen])
 
@@ -369,139 +375,21 @@ const Header: React.FC = () => {
           </div>
         </div>
 
-        {/* Mobile Navigation */}
-        {/* <AnimatePresence>
-          {isHeaderMenuOpen && (
-            <>
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 0.5 }}
-                exit={{ opacity: 0 }}
-                className='fixed inset-0 bg-black/60 backdrop-blur-sm z-40'
-                onClick={() => setHeaderMenuOpen(false)}
-              />
-              <motion.div
-                className='fixed top-[70px] right-0 max-h-[80vh] w-full max-w-sm z-50 overflow-auto rounded-tl-2xl rounded-bl-2xl bg-white/95 backdrop-blur-md shadow-xl'
-                initial={{ x: '100%', opacity: 0.5 }}
-                animate={{ x: 0, opacity: 1 }}
-                exit={{ x: '100%', opacity: 0.5 }}
-                transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-              >
-                <div className='p-4 flex flex-col gap-2'>
-                  {getFilteredNavigation()
-                    .filter((item) => {
-                      if (
-                        !isLoggedIn &&
-                        (item.name === 'LỊCH SỬ ĐẶT HẸN' ||
-                          item.name === 'THÔNG TIN CÁ NHÂN' ||
-                          item.name === 'ĐỔI MẬT KHẨU' ||
-                          item.name === 'TẠO HỒ SƠ HIẾN MÁU')
-                      ) {
-                        return false
-                      }
-                      return true
-                    })
-                    .map((item) => (
-                      <motion.div
-                        key={item.name}
-                        className='flex items-center p-3 rounded-xl hover:bg-red-50 transition-all cursor-pointer'
-                        onClick={() => {
-                          setHeaderMenuOpen(false)
-                          const [pathname, hash] = item.href.split('#')
-                          if (location.pathname === pathname) {
-                            window.location.hash = hash || ''
-                            if (hash) {
-                              setTimeout(() => {
-                                const element = document.getElementById(hash)
-                                if (element) {
-                                  element.scrollIntoView({ behavior: 'smooth' })
-                                }
-                              }, 100)
-                            }
-                          } else {
-                            navigate(item.href)
-                          }
-                        }}
-                      >
-                        <div className='w-10 h-10 rounded-full bg-red-100 flex items-center justify-center mr-3'>
-                          <span className='h-4 w-4'> {item.icon} </span>
-                        </div>
-                        <div>
-                          <div className='font-medium'>{item.name}</div>
-                        </div>
-                      </motion.div>
-                    ))}
-
-                  {isLoggedIn ? (
-                    <>
-                      <hr className='my-2' />
-                      <motion.div
-                        className='flex items-center p-3 rounded-xl bg-red-50 hover:bg-red-100 transition-all'
-                        onClick={() => {
-                          setHeaderMenuOpen(false)
-                          handleLogout()
-                        }}
-                      >
-                        <div className='w-10 h-10 rounded-full bg-red-100 flex items-center justify-center mr-3'>
-                          <LogOut className='h-5 w-5 text-red-500' />
-                        </div>
-                        <div className='font-medium'>Đăng xuất</div>
-                      </motion.div>
-                    </>
-                  ) : (
-                    <>
-                      <hr className='my-2' />
-                      <motion.div
-                        className='flex items-center p-3 rounded-xl bg-red-50 hover:bg-red-100 transition-all'
-                        onClick={() => {
-                          setHeaderMenuOpen(false)
-                          handleLoginClick()
-                        }}
-                      >
-                        <div className='w-10 h-10 rounded-full bg-red-100 flex items-center justify-center mr-3'>
-                          <LogInIcon className='h-5 w-5 text-red-500' />
-                        </div>
-                        <div className='font-medium'>Đăng nhập</div>
-                      </motion.div>
-                      <motion.div
-                        className='flex items-center p-3 rounded-xl bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 transition-all'
-                        onClick={() => {
-                          setHeaderMenuOpen(false)
-                          handleRegisterClick()
-                        }}
-                      >
-                        <div className='w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center mr-3'>
-                          <UserPlusIcon className='h-5 w-5 text-white' />
-                        </div>
-                        <div className='font-medium text-white'>Đăng ký</div>
-                      </motion.div>
-                    </>
-                  )}
-                </div>
-              </motion.div>
-            </>
-          )}
-        </AnimatePresence> */}
-
         {/* Mobile Navigation - Phiên bản tối ưu cho touchpad */}
         <AnimatePresence>
           {isHeaderMenuOpen && (
             <>
-              {/* Overlay với delay đóng menu */}
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 0.5 }}
-                exit={{ opacity: 0, transition: { delay: 0.2 } }} // Thêm delay khi đóng
+                exit={{transition: { delay: 0.2 } }} // Thêm delay khi đóng
                 className='fixed inset-0 bg-black/60 backdrop-blur-sm z-40'
                 onClick={() => {
-                  // Delay đóng menu để tránh đóng ngay lập tức
                   setTimeout(() => setHeaderMenuOpen(false), 200)
                 }}
               />
-
-              {/* Menu chính với kích thước touch-friendly */}
               <motion.div
-                className='fixed top-[70px] max-h-[80vh] right-0 w-full max-w-sm z-50 overflow-y-auto bg-white/95 backdrop-blur-md shadow-xl rounded-tl-2xl rounded-bl-2xl'
+                className='fixed top-[70px] max-h-[100vh] right-0 w-full max-w-sm z-50 overflow-y-auto bg-white/95 backdrop-blur-md shadow-xl rounded-tl-2xl rounded-bl-2xl'
                 initial={{ x: '100%' }}
                 animate={{ x: 0 }}
                 exit={{ x: '100%' }}
@@ -628,7 +516,7 @@ const Header: React.FC = () => {
                 onClick={() => setIsMobileNotiOpen(false)}
               />
               <motion.div
-                className='fixed top-[70px] right-0 max-h-[80vh] w-full max-w-sm z-50 overflow-auto rounded-tl-2xl rounded-bl-2xl bg-white/95 backdrop-blur-md shadow-xl'
+                className='fixed top-[70px] right-0 max-h-[80vh] w-full max-w-sm z-50 overflow-auto rounded-tl-2xl rounded-bl-2xl bg-white backdrop-blur-md shadow-xl'
                 initial={{ x: '100%', opacity: 0.5 }}
                 animate={{ x: 0, opacity: 1 }}
                 exit={{ x: '100%', opacity: 0.5 }}
