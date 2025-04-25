@@ -348,9 +348,9 @@ const Header: React.FC = () => {
                   className='group relative rounded-full p-2 bg-red-50 border border-red-100 text-red-600 hover:bg-red-100'
                 >
                   <div className='relative w-full h-full'>
-                    <Bell className='w-5 h-5' />
+                    <Bell className='w-6 h-6' />
                     {unreadCount > 0 && (
-                      <span className='absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full px-1.5 py-0.5 min-w-[18px] text-center'>
+                      <span className='absolute -top-3 -right-3 bg-red-600 text-white text-xs rounded-full px-1.5 py-0.5 min-w-[18px] text-center md:min-w-[20px] md:px-2 md:py-1 md:text-sm'>
                         {unreadCount}
                       </span>
                     )}
