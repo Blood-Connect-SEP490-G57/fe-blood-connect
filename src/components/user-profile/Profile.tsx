@@ -16,6 +16,8 @@ import AddressSelector from '../Selector/address/AddressSelector'
 import JobSelector from '../Selector/job/JobSelector'
 import OrganizationSelector from '../Selector/organization/OrganizationSelector'
 import React from 'react'
+import PhoneSelector from '../Selector/phone/PhoneSelector'
+import EmailSelector from '../Selector/email/emailSelector'
 
 const Profile = () => {
   // Scroll to top when component mounts
@@ -178,8 +180,8 @@ const Profile = () => {
   return (
     <div className='min-h-screen bg-gray-100'>
       {/* Banner section */}
-      <div className='bg-gradient-to-r from-red-600 to-red-400 text-white p-8 relative rounded-xl border-2 border-red-500'>
-        <div className='container mx-auto'>
+      <div className='px-2'>
+        <div className='bg-gradient-to-r from-red-600 to-red-400 text-white p-8 relative rounded-xl border-2 border-red-500 '>
           <div className='flex flex-col items-center'>
             <div className='h-24 w-24 bg-white rounded-full flex items-center justify-center shadow-md mb-4'>
               <User className='h-12 w-12 text-red-500' />
@@ -198,10 +200,10 @@ const Profile = () => {
         </div>
       </div>
 
-      <div className='py-2'>
+      <div className='py-6'>
         {/* Personal Information Group */}
-        <div className='mb-6'>
-          <h2 className='text-lg font-semibold text-gray-700 mb-2 px-2'>Thông tin cá nhân</h2>
+        <div className='mb-6 '>
+          <h2 className='text-xl font-semibold text-gray-700 mb-2 px-2'>Thông tin cá nhân</h2>
           <Card className='overflow-hidden rounded-xl shadow-sm border-none'>
             <CardContent className='p-0'>
               <div className='divide-y'>
@@ -220,8 +222,8 @@ const Profile = () => {
         {/* Contact Information Group */}
         <Form {...form2}>
           <form className='space-y-6 '>
-            <div>
-              <h2 className='text-lg font-semibold text-gray-700 mb-2 px-2'>Thông tin liên hệ</h2>
+            <div className='mb-6 '>
+              <h2 className='text-xl font-semibold text-gray-700 mb-2 px-2'>Thông tin liên hệ</h2>
               <Card className='overflow-hidden rounded-xl shadow-sm border-none'>
                 <CardContent className='p-0'>
                   <div className='divide-y'>
@@ -236,7 +238,7 @@ const Profile = () => {
                             </div>
                             <FormControl>
                               <div className='flex items-center justify-between'>
-                                <span className='text-xs sm:hidden text-gray-600 text-end'>
+                                <span className='text-sm sm:hidden  text-end'>
                                   {field.value
                                     ? field.value.split(',').map((part, index) => (
                                         <React.Fragment key={index}>
@@ -246,7 +248,7 @@ const Profile = () => {
                                       ))
                                     : 'Chưa có địa chỉ'}
                                 </span>
-                                <span className='text-sm hidden sm:block text-gray-600 text-start'>
+                                <span className='text-sm hidden sm:block  text-start'>
                                   {field.value || 'Chưa có địa chỉ'}
                                 </span>
                                 {isEdit && (
@@ -278,16 +280,17 @@ const Profile = () => {
                             </div>
                             <FormControl>
                               {isEdit ? (
-                                <Input
-                                  {...field}
-                                  type='tel'
-                                  className='w-1/2 bg-gray-100 border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0'
-                                  placeholder='Nhập số điện thoại'
-                                />
+                                <div className='flex items-center justify-between'>
+                                  <span className='text-sm  '>{field.value || 'Chưa có điện thoại'}</span>
+                                  <PhoneSelector
+                                    initialPhone={field.value}
+                                    onPhoneSelect={(phone: string) => {
+                                      field.onChange(phone)
+                                    }}
+                                  />
+                                </div>
                               ) : (
-                                <span className='text-xs sm:text-sm text-gray-600'>
-                                  {field.value || 'Chưa có điện thoại'}
-                                </span>
+                                <span className='text-sm  '>{field.value || 'Chưa có điện thoại'}</span>
                               )}
                             </FormControl>
                           </div>
@@ -307,17 +310,17 @@ const Profile = () => {
                             </div>
                             <FormControl>
                               {isEdit ? (
-                                <Input
-                                  {...field}
-                                  type='email'
-                                  className='w-1/2 bg-gray-100 border-0 text-right focus-visible:ring-0 focus-visible:ring-offset-0'
-                                  placeholder='Nhập email'
-                                  readOnly={!isEdit}
-                                />
+                                <div className='flex items-center justify-end'>
+                                  <span className='text-sm   '>{field.value || 'Chưa có email'}</span>
+                                  <EmailSelector
+                                    initialEmail={field.value}
+                                    onEmailSelect={(email: string) => {
+                                      field.onChange(email)
+                                    }}
+                                  />
+                                </div>
                               ) : (
-                                <span className='text-xs sm:text-sm text-gray-600 '>
-                                  {field.value || 'Chưa có email'}
-                                </span>
+                                <span className='text-sm   '>{field.value || 'Chưa có email'}</span>
                               )}
                             </FormControl>
                           </div>
@@ -337,9 +340,7 @@ const Profile = () => {
                             </div>
                             <FormControl>
                               <div className='flex items-center '>
-                                <span className='text-xs sm:text-sm text-gray-600'>
-                                  {field.value || 'Chưa có nghề nghiệp'}
-                                </span>
+                                <span className='text-sm  '>{field.value || 'Chưa có nghề nghiệp'}</span>
                                 {isEdit && (
                                   <JobSelector
                                     initialJob={form2.getValues('job_name')}
@@ -375,7 +376,7 @@ const Profile = () => {
                                     readOnly={!isEdit}
                                   />
                                 ) : (
-                                  <span className='text-xs sm:text-sm text-gray-600'>{field.value || '-'}</span>
+                                  <span className='text-sm  '>{field.value || '-'}</span>
                                 )}
                               </FormControl>
                             </div>
@@ -385,9 +386,7 @@ const Profile = () => {
                       />
                     )}
 
-                    {(jobName === 'Bộ đội' ||
-                      jobName === 'Công an' ||
-                      jobName === 'Quân nhân') && (
+                    {(jobName === 'Bộ đội' || jobName === 'Công an' || jobName === 'Quân nhân') && (
                       <FormField
                         control={form2.control}
                         name='military_id'
@@ -406,7 +405,7 @@ const Profile = () => {
                                     readOnly={!isEdit}
                                   />
                                 ) : (
-                                  <span className='text-xs sm:text-sm text-gray-600'>{field.value || '-'}</span>
+                                  <span className='text-sm  '>{field.value || '-'}</span>
                                 )}
                               </FormControl>
                             </div>
@@ -427,9 +426,7 @@ const Profile = () => {
                             </div>
                             <FormControl>
                               <div className='flex items-center justify-between'>
-                                <span className='text-xs sm:text-sm text-gray-600 '>
-                                  {field.value || 'Chưa có tổ chức'}
-                                </span>
+                                <span className='text-sm   '>{field.value || 'Chưa có tổ chức'}</span>
                                 {isEdit && (
                                   <OrganizationSelector
                                     initialOrganization={form.getValues('organization_name')}
@@ -495,7 +492,7 @@ const InfoItem = ({
       {isAddress ? (
         <div>
           <div className='sm:hidden'>
-            <span className='text-xs text-gray-600 text-end'>
+            <span className='text-sm  text-end'>
               {String(value)
                 .split(',')
                 .map((part, index) => (
@@ -507,11 +504,11 @@ const InfoItem = ({
             </span>
           </div>
           <div className='hidden sm:block'>
-            <span className='text-xs sm:text-sm text-gray-600 text-end'>{value}</span>
+            <span className='text-sm   text-end'>{value}</span>
           </div>
         </div>
       ) : (
-        <span className='text-xs sm:text-sm text-gray-600 text-end'>{value}</span>
+        <span className='text-sm   text-end'>{value}</span>
       )}
     </div>
   </div>

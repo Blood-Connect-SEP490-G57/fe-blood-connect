@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { staticJobApi } from '@/api/static';
 import { toast } from '@/components/ui/use-toast';
-import { Briefcase, Loader2 } from 'lucide-react';
+import { Pencil, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -83,8 +83,7 @@ const JobSelector: React.FC<JobSelectorProps> = ({
       <DialogTrigger asChild>
         {trigger || (
           <Button variant="outline" className="ml-2 justify-start">
-            <Briefcase className='w-4 h-4' />
-            <span className='text-sm hidden sm:block text-gray-600 text-start ml-2'>Chọn nghề nghiệp</span>
+            <Pencil className='w-4 h-4' />
           </Button>
         )}
       </DialogTrigger>
@@ -138,7 +137,10 @@ const JobSelector: React.FC<JobSelectorProps> = ({
           )}
 
           <div className="flex justify-end gap-2 mt-4">
-            <Button variant="outline" onClick={() => setOpen(false)}>
+            <Button variant='outline' onClick={() => {
+              setOpen(false)
+              setSelectedJob('')
+            }}>
               Hủy
             </Button>
             <Button variant='destructive' onClick={handleConfirm}>
