@@ -45,7 +45,7 @@ const BloodDonationCriteria = () => {
       <div className='absolute top-0 left-[10%] w-32 h-32 bg-white/10 rounded-full blur-xl'></div>
       <div className='absolute bottom-0 right-[10%] w-40 h-40 bg-red-400/20 rounded-full blur-2xl'></div>
       
-      <div className='max-w-7xl mx-auto px-2 relative z-10'>
+      <div className='max-w-7xl mx-auto px-4 relative z-10'>
         <motion.div 
           className='text-center mb-12 lg:mb-16'
           initial={{ opacity: 0, y: 20 }}

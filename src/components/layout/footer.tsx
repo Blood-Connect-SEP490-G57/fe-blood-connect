@@ -1,4 +1,4 @@
-import { FacebookIcon, Globe, Mail, MapPin, Phone, Heart, ExternalLink } from 'lucide-react'
+import { FacebookIcon, Globe, Mail, MapPin, Phone, Heart } from 'lucide-react'
 import React from 'react'
 import { motion } from 'framer-motion'
 
@@ -20,21 +20,21 @@ const Footer: React.FC = () => {
   }
 
   return (
-    <footer className='relative overflow-hidden bg-gradient-to-b from-gray-900 to-gray-800 text-white pt-16 pb-10'>
+    <footer className='relative overflow-hidden bg-gradient-to-b from-gray-900 to-gray-800 text-white pt-4 pb-10'>
       {/* Decorative Elements */}
       <div className='absolute -top-40 left-[20%] w-80 h-80 rounded-full bg-red-500/5 blur-3xl'></div>
       <div className='absolute -bottom-40 right-[20%] w-80 h-80 rounded-full bg-red-500/5 blur-3xl'></div>
       
-      <div className='container mx-auto px-4 relative z-10'>
+      <div className='container mx-auto max-w-7xl px-4 relative z-10'>
         <motion.div 
-          className='grid grid-cols-1 md:grid-cols-3 gap-10'
+          className='grid grid-cols-1 md:grid-cols-3 gap-4'
           variants={containerVariants}
           initial="initial"
           whileInView="animate"
           viewport={{ once: true, margin: "-100px" }}
         >
           <motion.div
-            className='bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-700/50'
+            className='bg-gray-800/50 backdrop-blur-sm rounded-2xl p-4 border border-gray-700/50'
             variants={fadeIn}
           >
             <h3 className='text-lg font-semibold mb-4 flex items-center text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-red-300'>
@@ -49,22 +49,11 @@ const Footer: React.FC = () => {
               <p className='text-gray-300 leading-relaxed'>
                 Dự án này được thực hiện dưới sự hợp tác với Hội chữ thập đỏ Tỉnh Ninh Bình
               </p>
-
-              <motion.div
-                className='pt-4 inline-block'
-                whileHover={{ y: -3 }}
-                transition={{ type: "spring", stiffness: 300 }}
-              >
-                <button className='flex items-center gap-2 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 transition-all duration-300 px-5 py-2.5 rounded-full text-white font-medium shadow-lg shadow-red-500/20'>
-                  <span>Tìm hiểu thêm</span>
-                  <ExternalLink className='w-4 h-4' />
-                </button>
-              </motion.div>
             </div>
           </motion.div>
           
           <motion.div
-            className='bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-700/50'
+            className='bg-gray-800/50 backdrop-blur-sm rounded-2xl p-4 border border-gray-700/50'
             variants={fadeIn}
           >
             <h3 className='text-lg font-semibold mb-4 flex items-center text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-red-300'>
@@ -128,7 +117,7 @@ const Footer: React.FC = () => {
           </motion.div>
           
           <motion.div
-            className='bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-700/50'
+            className='bg-gray-800/50 backdrop-blur-sm rounded-2xl p-4 border border-gray-700/50'
             variants={fadeIn}
           >
             <h3 className='text-lg font-semibold mb-4 flex items-center text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-red-300'>
@@ -176,19 +165,19 @@ const Footer: React.FC = () => {
         </motion.div>
         
         <motion.div 
-          className='border-t border-gray-700/50 mb-10 sm:mb-2 mt-12 pt-8 text-center'
+          className='border-t border-gray-700/50 mb-10 sm:mb-2 mt-2 pt-4 text-center'
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ delay: 0.5, duration: 0.5 }}
         >
-          <p className='text-gray-400 text-sm flex flex-col sm:flex-row items-center justify-center gap-2'>
+          <p className='text-gray-400 text-sm flex flex-col sm:flex-row items-center justify-center gap-4'>
             <span>© {new Date().getFullYear()} Giọt Máu Hy Vọng.</span>
             <span className='hidden sm:block h-1 w-1 rounded-full bg-gray-500'></span>
             <span>Tất cả quyền được bảo lưu.</span>
           </p>
-          <div className='mt-4 text-gray-500 text-xs'>
-            <p>Phát triển bởi nhóm SEP490_G57 - 2024</p>
+          <div className='mt-2 text-gray-500 text-xs'>
+            <p>Phát triển bởi nhóm SEP490_G57 - 2025</p>
           </div>
         </motion.div>
       </div>

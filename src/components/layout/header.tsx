@@ -21,7 +21,8 @@ import {
   HelpCircle,
   Phone,
   Calendar,
-  Lock
+  Lock,
+  X
 } from 'lucide-react'
 import UserAvatar from '@/components/ui/user-avatar'
 import Notifications from '@/components/notification/Notifications'
@@ -382,14 +383,14 @@ const Header: React.FC = () => {
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 0.5 }}
-                exit={{transition: { delay: 0.2 } }} // Thêm delay khi đóng
+                exit={{transition: { delay: 0.2 } }} 
                 className='fixed inset-0 bg-black/60 backdrop-blur-sm z-40'
                 onClick={() => {
                   setTimeout(() => setHeaderMenuOpen(false), 200)
                 }}
               />
               <motion.div
-                className='fixed top-[70px] max-h-[100vh] right-0 w-full max-w-sm z-50 overflow-y-auto bg-white/95 backdrop-blur-md shadow-xl rounded-tl-2xl rounded-bl-2xl'
+                className='fixed right-0 w-[70%] max-w-sm z-50 overflow-y-auto bg-white backdrop-blur-md shadow-xl rounded-tl-2xl rounded-bl-2xl'
                 initial={{ x: '100%' }}
                 animate={{ x: 0 }}
                 exit={{ x: '100%' }}
@@ -401,6 +402,18 @@ const Header: React.FC = () => {
                 }}
               >
                 <div className='p-2 flex flex-col gap-1'>
+                  {/* Header with close button */}
+                  <div className='flex justify-end items-center p-2 border-b border-gray-100'>
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => setHeaderMenuOpen(false)}
+                      className='p-2 rounded-full hover:bg-gray-100 text-gray-500 hover:text-gray-700'
+                    >
+                      <X className='w-5 h-5' />
+                    </motion.button>
+                  </div>
+
                   {getFilteredNavigation()
                     .filter((item) => {
                       if (

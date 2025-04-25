@@ -69,9 +69,9 @@ const ContactPage = () => {
   }
 
   return (
-    <div className='min-h-screen mt-10 bg-gray-100'>
+    <div className='min-h-screen mt-20 bg-gray-100'>
       {/* Banner section */}
-      <div className='bg-gradient-to-r from-red-600 to-red-400 text-white p-8 relative'>
+      <div className='bg-gradient-to-r from-red-600 to-red-400 text-white p-8 relative rounded-xl'>
         <div className='container mx-auto'>
           <div className='flex flex-col items-center'>
             <div className='h-24 w-24 bg-white rounded-full flex items-center justify-center shadow-md mb-4'>
@@ -89,8 +89,8 @@ const ContactPage = () => {
         <div className='absolute bottom-6 right-10 w-20 h-20 bg-red-300 rounded-full opacity-15'></div>
       </div>
 
-      <div className='max-w-7xl mx-auto px-2 py-6'>
-        <div className='max-w-7xl mx-auto flex flex-col lg:flex-row gap-6'>
+      <div className='max-w-7xl mx-auto px-4 py-6'>
+        <div className='flex flex-col lg:flex-row gap-6'>
           {/* Contact Info */}
           <Card className='w-full lg:w-1/2 overflow-hidden rounded-xl shadow-sm border-none'>
             <CardContent className='p-6'>
