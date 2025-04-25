@@ -144,7 +144,7 @@ export default function Notifications({ onClose }: { onClose?: () => void }) {
             <motion.button
               className='text-red-600 text-sm font-medium flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-red-50 hover:bg-red-100 transition-colors'
               onClick={() => {
-          handleMarkAllAsRead()
+                handleMarkAllAsRead()
               }}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -177,7 +177,7 @@ export default function Notifications({ onClose }: { onClose?: () => void }) {
         </div>
       </div>
 
-      <div className='overflow-y-auto flex-1 bg-gray-100'>
+      <div className='overflow-y-auto flex-1 bg-white'>
         <div className='py-3 px-2 space-y-3'>
           {notifications?.data.data.length === 0 ? (
             <motion.div
@@ -233,11 +233,11 @@ export default function Notifications({ onClose }: { onClose?: () => void }) {
                             {formatExactDate(notification.created)}
                           </span>
                         </div>
-                          <h3 className='font-semibold text-md text-gray-800'>
+                        <h3 className='font-semibold text-md text-gray-800'>
                           {notification.title.length > 50
                             ? notification.title.slice(0, 50) + '...'
                             : notification.title}
-                          </h3>
+                        </h3>
                         <div
                           className='text-gray-600 mt-1.5 prose prose-sm max-w-none text-sm'
                           dangerouslySetInnerHTML={{
