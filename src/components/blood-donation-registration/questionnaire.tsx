@@ -3,7 +3,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
 import { Question as fetchQuestions } from '@/api/campaign'
-import { HelpCircle } from 'lucide-react'
+import { HelpCircle, Star } from 'lucide-react'
 import { QuestionSet, Section, Question } from '@/schema/question-schema'
 import { Input } from '@/components/ui/input'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
@@ -77,7 +77,9 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({ questionSetId, onAnswerCh
                       {question.order}
                     </span>
                     <span>{question.content}</span>
-                    <span className='text-red-500 ml-1'>*</span>
+                    <div className='bg-red-800 text-white px-2 rounded-md text-sm font-medium ml-1 shrink-0'>
+                      <Star className='w-4 h-4' />
+                    </div>
                   </Label>
                   
                   {question.hasDetail && (

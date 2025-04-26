@@ -147,9 +147,9 @@ const BloodDonationRegistration: React.FC = () => {
   }
 
   return (
-    <div className='min-h-screen mt-10 bg-gray-100'>
+    <div className='min-h-screen mt-20 bg-gray-100 rounded-lg px-4'>
       {/* Banner section */}
-      <div className='bg-gradient-to-r from-red-600 to-red-400 text-white p-8 relative'>
+      <div className='bg-gradient-to-r from-red-600 to-red-400 text-white p-8 relative rounded-lg'>
         <div className='container mx-auto'>
           <div className='flex flex-col items-center'>
             <div className='h-24 w-24 bg-white rounded-full flex items-center justify-center shadow-md mb-4'>
@@ -167,7 +167,7 @@ const BloodDonationRegistration: React.FC = () => {
         <div className='absolute bottom-6 right-10 w-20 h-20 bg-red-300 rounded-full opacity-15'></div>
       </div>
 
-      <div className='max-w-7xl mx-auto px-2 py-6'>
+      <div className='max-w-7xl mx-auto py-6'>
         <div className='max-w-7xl mx-auto'>
           {renderStepIndicator()}
           {renderStep()}
