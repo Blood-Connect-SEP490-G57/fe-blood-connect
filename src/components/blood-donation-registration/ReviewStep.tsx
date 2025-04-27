@@ -278,9 +278,9 @@ const ReviewStep: React.FC<ReviewStepProps> = ({ selectedCampaign, questionSetId
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: sectionIndex * 0.1 }}
       >
-        <div className='flex items-center'>
-          <Badge className='bg-red-100 text-red-600 border-none'>Phần {section.order}</Badge>
-          <h4 className='font-medium text-gray-800 ml-2'>{section.name}</h4>
+        <div className='flex flex-row items-center'>
+          <Badge className='bg-red-100 text-red-600 border-none whitespace-nowrap'>Phần {section.order}</Badge>
+          <span className='text-sm font-bold text-gray-800 ml-2'>{section.name}</span>
         </div>
 
         <div className='space-y-4 pl-2 mt-2'>

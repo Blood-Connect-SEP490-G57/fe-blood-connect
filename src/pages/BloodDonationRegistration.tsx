@@ -147,31 +147,31 @@ const BloodDonationRegistration: React.FC = () => {
   }
 
   return (
-    <div className='min-h-screen mt-10 bg-gray-100'>
+    <div className='min-h-screen pt-16 bg-gray-100 rounded-lg'>
       {/* Banner section */}
-      <div className='bg-gradient-to-r from-red-600 to-red-400 text-white p-8 relative'>
-        <div className='container mx-auto'>
-          <div className='flex flex-col items-center'>
-            <div className='h-24 w-24 bg-white rounded-full flex items-center justify-center shadow-md mb-4'>
-              <Droplet className='h-12 w-12 text-red-500' />
+      <div className='max-w-7xl mx-auto px-4 py-6'>
+        <div className='bg-gradient-to-r from-red-600 to-red-400 text-white p-8 relative rounded-lg'>
+          <div className='container mx-auto'>
+            <div className='flex flex-col items-center'>
+              <div className='h-24 w-24 bg-white rounded-full flex items-center justify-center shadow-md mb-4'>
+                <Droplet className='h-12 w-12 text-red-500' />
+              </div>
+              <h1 className='text-xl font-bold mb-1'>{getStepTitle()}</h1>
+              <p className='text-center text-white/80 max-w-2xl text-sm'>
+                Mỗi giọt máu hiến tặng có thể cứu sống một người. Hãy đăng ký hiến máu để cùng chia sẻ yêu thương.
+              </p>
             </div>
-            <h1 className='text-2xl font-bold mb-1'>{getStepTitle()}</h1>
-            <p className='text-center text-white/80 max-w-2xl'>
-              Mỗi giọt máu hiến tặng có thể cứu sống một người. Hãy đăng ký hiến máu để cùng chia sẻ yêu thương.
-            </p>
           </div>
+          {/* Decorative elements */}
+          <div className='absolute -bottom-0 left-1/4 w-16 h-16 bg-red-400 rounded-full opacity-20'></div>
+          <div className='absolute top-8 right-1/4 w-12 h-12 bg-white rounded-full opacity-10'></div>
+          <div className='absolute bottom-6 right-10 w-20 h-20 bg-red-300 rounded-full opacity-15'></div>
         </div>
-        {/* Decorative elements */}
-        <div className='absolute -bottom-0 left-1/4 w-16 h-16 bg-red-400 rounded-full opacity-20'></div>
-        <div className='absolute top-8 right-1/4 w-12 h-12 bg-white rounded-full opacity-10'></div>
-        <div className='absolute bottom-6 right-10 w-20 h-20 bg-red-300 rounded-full opacity-15'></div>
       </div>
 
-      <div className='max-w-7xl mx-auto px-2 py-6'>
-        <div className='max-w-7xl mx-auto'>
+      <div className='max-w-7xl mx-auto py-6 px-4'>
           {renderStepIndicator()}
           {renderStep()}
-        </div>
       </div>
     </div>
   )

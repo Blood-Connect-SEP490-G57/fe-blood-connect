@@ -47,7 +47,7 @@ const EventsSection: React.FC<EventsSectionProps> = ({ events }) => {
       <div className='absolute top-20 left-10 w-64 h-64 bg-red-100 rounded-full blur-3xl opacity-30 -z-10'></div>
       <div className='absolute bottom-20 right-10 w-64 h-64 bg-red-50 rounded-full blur-3xl opacity-30 -z-10'></div>
       
-      <div className='max-w-7xl mx-auto px-2 sm:px-4 relative'>
+      <div className='max-w-7xl mx-auto px-4 relative'>
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}

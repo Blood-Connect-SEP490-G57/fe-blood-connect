@@ -164,8 +164,8 @@ const DonationHistory = () => {
   return (
     <div className='min-h-screen bg-gray-100'>
       {/* Banner */}
-      <div className='bg-gradient-to-r from-red-600 to-red-400 text-white rounded-xl p-8 md:p-12'>
-        <div className='container mx-auto'>
+      <div className='max-w-7xl mx-auto'>
+        <div className='bg-gradient-to-r from-red-600 to-red-400 text-white rounded-xl p-8 md:p-12'>
           <div className='flex flex-col items-center md:flex-row md:justify-center md:space-x-8'>
             <div className='h-24 w-24 bg-white rounded-full flex items-center justify-center shadow-md mb-4 md:mb-0 md:h-32 md:w-32'>
               <Droplet className='h-12 w-12 text-red-500 md:h-16 md:w-16' />
@@ -178,29 +178,27 @@ const DonationHistory = () => {
         </div>
       </div>
 
-      <div className='mt-4'>
-        {/* Stats Cards */}
+      <div className='mt-4 max-w-7xl  mx-auto'>
         <div className='grid grid-cols-3 gap-3 mb-6 md:gap-6 md:mx-auto'>
           <Card className='overflow-hidden rounded-xl shadow-sm border-none hover:shadow-md transition-shadow'>
-            <CardContent className='p-4 md:p-6'>
-              <div className='flex flex-col items-center'>
-                <p className='text-sm md:text-base text-gray-500 mb-1'>Hiến máu</p>
-                <p className='text-2xl md:text-4xl font-bold text-green-600'>{doneAppointments}</p>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className='overflow-hidden rounded-xl shadow-sm border-none hover:shadow-md transition-shadow'>
-            <CardContent className='p-4 md:p-6'>
+            <CardContent className='p-2 md:p-4'>
               <div className='flex flex-col items-center'>
                 <p className='text-sm md:text-base text-gray-500 mb-1'>Sắp tới</p>
                 <p className='text-2xl md:text-4xl font-bold text-yellow-600'>{upcomingAppointments}</p>
               </div>
             </CardContent>
           </Card>
+          <Card className='overflow-hidden rounded-xl shadow-sm border-none hover:shadow-md transition-shadow'>
+            <CardContent className='p-2 md:p-4'>
+              <div className='flex flex-col items-center'>
+                <p className='text-sm md:text-base text-gray-500 mb-1'>Hoàn thành</p>
+                <p className='text-2xl md:text-4xl font-bold text-green-600'>{doneAppointments}</p>
+              </div>
+            </CardContent>
+          </Card>
 
           <Card className='overflow-hidden rounded-xl shadow-sm border-none hover:shadow-md transition-shadow'>
-            <CardContent className='p-4 md:p-6'>
+            <CardContent className='p-2 md:p-4'>
               <div className='flex flex-col items-center'>
                 <p className='text-sm md:text-base text-gray-500 mb-1'>Đã hủy</p>
                 <p className='text-2xl md:text-4xl font-bold text-red-600'>{cancelledAppointments}</p>
@@ -210,9 +208,8 @@ const DonationHistory = () => {
         </div>
 
         {/* Appointment List */}
-        <div className=' md:mx-auto'>
-          <h2 className='text-lg md:text-2xl font-semibold text-gray-700 mb-2 px-2'>Tất cả lịch hẹn</h2>
-
+        <div className='max-w-7xl  mx-auto'>
+          <h2 className='text-xl font-semibold text-gray-700 mb-2 '>Tất cả lịch hẹn</h2>
           {appointments.length === 0 ? (
             <Card className='overflow-hidden rounded-xl shadow-sm border-none'>
               <CardContent className='p-6 flex flex-col items-center'>

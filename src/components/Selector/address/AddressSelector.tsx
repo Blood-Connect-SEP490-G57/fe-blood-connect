@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
-import { MapPin } from 'lucide-react'
+import { Pencil } from 'lucide-react'
 
 interface Province {
   code: number
@@ -101,8 +101,7 @@ const AddressSelector: React.FC<AddressSelectorProps> = ({ onAddressSelect, init
       <DialogTrigger asChild>
         {trigger || (
           <Button variant='outline' className='ml-2 justify-start'>
-            <MapPin className='w-4 h-4' />
-            <span className='text-sm hidden sm:block text-gray-600 text-start'>Chọn địa chỉ</span>
+            <Pencil className='w-4 h-4' />
           </Button>
         )}
       </DialogTrigger>
@@ -198,10 +197,23 @@ const AddressSelector: React.FC<AddressSelectorProps> = ({ onAddressSelect, init
           </div>
 
           <div className='flex justify-end gap-2 mt-4'>
-            <Button variant='outline' onClick={() => setOpen(false)}>
+            <Button
+              variant='outline'
+              onClick={() => {
+                setOpen(false)
+                setSelectedProvince(null)
+                setSelectedDistrict(null)
+                setSelectedWard(null)
+                setSpecificAddress('')
+              }}
+            >
               Hủy
             </Button>
-            <Button variant='destructive' onClick={handleConfirm} disabled={!selectedProvince || !selectedDistrict || !selectedWard}>
+            <Button
+              variant='destructive'
+              onClick={handleConfirm}
+              disabled={!selectedProvince || !selectedDistrict || !selectedWard}
+            >
               Xác nhận
             </Button>
           </div>

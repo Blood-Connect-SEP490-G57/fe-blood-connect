@@ -4,13 +4,16 @@ import { getExtractById, updateExtractStatus } from '@/api/extract'
 import { createOrUpdateUserDetail, getCurrentUserDetail } from '@/api/user'
 import { getOrganizationsByType } from '@/api/organization'
 import { Button } from '@/components/ui/button'
-import { ChevronDown,  Info, Loader2 } from 'lucide-react'
+import { ChevronDown, Info, Loader2, Pencil } from 'lucide-react'
 import { toast } from '@/components/ui/use-toast'
 import JobSelector from '@/components/Selector/job/JobSelector'
 import AddressSelector from '@/components/Selector/address/AddressSelector'
 import OrganizationSelector from '@/components/Selector/organization/OrganizationSelector'
 import { FormField } from '@/components/ui/form-field'
 import BloodTypeSelector from '@/components/Selector/bloodtype/bloodtype'
+import NumberDonateSelector from '@/components/Selector/NumberDonate.tsx/DonateSelector'
+import EmailSelector from '@/components/Selector/email/emailSelector'
+import PhoneSelector from '@/components/Selector/phone/PhoneSelector'
 
 interface Step2Props {
   formData: any
@@ -225,7 +228,7 @@ const Step3ExtractedInfo: React.FC<Step2Props> = ({ formData, setFormData, onNex
           {/* CCCD Information */}
           <div className='space-y-4'>
             <div className='flex items-center justify-between'>
-              <h3 className='text-lg font-semibold text-gray-900'>Thông tin CCCD</h3>
+              <h3 className='text-xl font-semibold text-gray-900'>Thông tin CCCD</h3>
               <button
                 onClick={() => setShowCardDetails(!showCardDetails)}
                 className='text-red-600 text-sm flex items-center gap-1'
@@ -338,35 +341,41 @@ const ContactInformationSection = ({
   fieldErrors: Record<string, string>
 }) => (
   <div className='space-y-4'>
-    <h3 className='text-lg font-semibold text-gray-900'>Thông tin liên hệ</h3>
-    <div className='bg-white sm:p-4 px-2'>
-      <div className='mb-4'>
+    <h3 className='text-xl font-semibold text-gray-900'>Thông tin liên hệ</h3>
+    <div className='bg-white rounded-xl p-4 space-y-4'>
+      <div>
         <FormField label='Email'>
-          <input
-            type='email'
-            value={formData.email}
-            onChange={(e) => setFormData((prev: any) => ({ ...prev, email: e.target.value }))}
-            className='w-full text-sm focus:outline-none border-b'
-          />
+          <div className='flex items-center justify-between border-b pb-2'>
+            <span className='text-sm text-gray-600'>{formData.email || 'Chưa có email'}</span>
+            <EmailSelector
+              initialEmail={formData.email}
+              onEmailSelect={(email) => {
+                setFormData((prev: any) => ({ ...prev, email: email }))
+              }}
+            />
+          </div>
         </FormField>
       </div>
-      <div className='mb-4'>
+      <div>
         <FormField error={fieldErrors.mobile} label='Số điện thoại'>
-          <input
-            type='tel'
-            value={formData.mobile}
-            onChange={(e) => setFormData((prev: any) => ({ ...prev, mobile: e.target.value }))}
-            className='w-full text-sm rounded-lg focus:outline-none border-b'
-          />
+          <div className='flex items-center justify-between border-b pb-2'>
+            <span className='text-sm text-gray-600'>{formData.mobile || 'Chưa có số điện thoại'}</span>
+            <PhoneSelector
+              initialPhone={formData.mobile}
+              onPhoneSelect={(phone) => {
+                setFormData((prev: any) => ({ ...prev, mobile: phone }))
+              }}
+            />
+          </div>
         </FormField>
       </div>
       <div>
         <FormField error={fieldErrors.contact} label='Địa chỉ liên hệ'>
-          <div className='flex items-center justify-between'>
+          <div className='flex items-center justify-between border-b pb-2'>
             {contact ? (
-              <div>
+              <div className='flex-1'>
                 <div className='sm:hidden'>
-                  <span className='text-sm text-gray-600 text-start'>
+                  <span className='text-sm text-gray-600'>
                     {contact.split(',').map((part, index) => (
                       <React.Fragment key={index}>
                         {part.trim()}
@@ -376,14 +385,13 @@ const ContactInformationSection = ({
                   </span>
                 </div>
                 <div className='hidden sm:block'>
-                  <span className='text-sm text-gray-600 text-start'>{contact}</span>
+                  <span className='text-sm text-gray-600'>{contact}</span>
                 </div>
               </div>
             ) : (
-              <span className='text-sm text-gray-600 text-end'>Chưa có địa chỉ</span>
+              <span className='text-sm text-gray-600'>Chưa có địa chỉ</span>
             )}
             <AddressSelector
-              trigger={<Button variant='outline'>{formData.address || 'Chọn địa chỉ'}</Button>}
               onAddressSelect={(address) => {
                 setContact(address)
               }}
@@ -411,14 +419,18 @@ const AdditionalInformationSection = ({
 
   return (
     <div className='space-y-4'>
-      <h3 className='text-lg font-semibold text-gray-900'>Thông tin bổ sung</h3>
-      <div className='bg-white rounded-xl px-2 sm:p-4'>
-        <div className='mb-2'>
+      <h3 className='text-xl font-semibold text-gray-900'>Thông tin bổ sung</h3>
+      <div className='bg-white rounded-xl p-4 space-y-4'>
+        <div>
           <FormField label='Nghề nghiệp'>
-            <div className='flex items-center justify-between border-b'>
+            <div className='flex items-center justify-between border-b pb-2'>
               <span className='text-sm text-gray-600'>{formData.jobName || 'Chưa có nghề nghiệp'}</span>
               <JobSelector
-                trigger={<Button variant='outline'>Chọn nghề nghiệp</Button>}
+                trigger={
+                  <Button variant='outline' size='sm'>
+                    <Pencil className='w-4 h-4' />
+                  </Button>
+                }
                 onJobSelect={(job) => {
                   setFormData((prev: any) => ({ ...prev, jobName: job }))
                 }}
@@ -434,7 +446,7 @@ const AdditionalInformationSection = ({
                 type='text'
                 value={formData.studentId}
                 onChange={(e) => setFormData((prev: any) => ({ ...prev, studentId: e.target.value }))}
-                className='w-full text-sm rounded-lg focus:outline-none border-b'
+                className='w-full text-sm rounded-lg focus:outline-none border-b pb-2'
                 placeholder='Nhập mã sinh viên'
               />
             </FormField>
@@ -448,21 +460,20 @@ const AdditionalInformationSection = ({
                 type='text'
                 value={formData.militaryId}
                 onChange={(e) => setFormData((prev: any) => ({ ...prev, militaryId: e.target.value }))}
-                className='w-full text-sm rounded-lg focus:outline-none border-b'
+                className='w-full text-sm rounded-lg focus:outline-none border-b pb-2'
                 placeholder='Nhập mã quân nhân'
               />
             </FormField>
           </div>
         )}
 
-        <div className='mb-2'>
+        <div>
           <FormField label='Tổ chức'>
-            <div className='flex items-center justify-between border-b'>
+            <div className='flex items-center justify-between border-b pb-2'>
               <span className='text-sm text-gray-600'>
                 {organizations.find((org) => org.id === formData.organizationId)?.name || 'Chưa có tổ chức'}
               </span>
               <OrganizationSelector
-                trigger={<Button variant='outline'>{formData.organization || 'Chọn tổ chức'}</Button>}
                 onOrganizationSelect={(organization) => {
                   setFormData((prev: any) => ({ ...prev, organizationId: organization.id }))
                 }}
@@ -473,23 +484,22 @@ const AdditionalInformationSection = ({
 
         <div>
           <FormField label='Số lần hiến máu'>
-            <input
-              type='number'
-              value={formData.timeDonation || ''}
-              onChange={(e) => setFormData((prev: any) => ({ ...prev, timeDonation: e.target.value }))}
-              className='w-full text-sm rounded-lg focus:outline-none border-b'
-              min='0'
-              placeholder='Nhập số lần hiến máu'
-            />
+            <div className='flex items-center justify-between border-b pb-2'>
+              <span className='text-sm text-gray-600'>{formData.timeDonation || 'Chưa có số lần hiến máu'}</span>
+              <NumberDonateSelector
+                onNumberSelect={(number) => {
+                  setFormData((prev: any) => ({ ...prev, timeDonation: number }))
+                }}
+              />
+            </div>
           </FormField>
         </div>
 
         <div>
           <FormField label='Nhóm máu'>
-            <div className='flex items-center justify-between border-b'>
+            <div className='flex items-center justify-between border-b pb-2'>
               <span className='text-sm text-gray-600'>{formData.bloodGroup || 'Chưa có nhóm máu'}</span>
               <BloodTypeSelector
-                trigger={<Button variant='outline'>Chọn nhóm máu</Button>}
                 value={formData.bloodGroup}
                 onChange={(value) => {
                   setFormData((prev: any) => ({ ...prev, bloodGroup: value }))

@@ -3,10 +3,9 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
 import { Question as fetchQuestions } from '@/api/campaign'
-import { HelpCircle } from 'lucide-react'
+import { Star } from 'lucide-react'
 import { QuestionSet, Section, Question } from '@/schema/question-schema'
 import { Input } from '@/components/ui/input'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { motion } from 'framer-motion'
 import Loading from '../warnings/loading'
 
@@ -33,8 +32,7 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({ questionSetId, onAnswerCh
 
         if (response.success && response.data) {
           setQuestionSet(response.data)
-          const totalQuestions = response.data.sections
-            .reduce((total, section) => total + section.questions.length, 0)
+          const totalQuestions = response.data.sections.reduce((total, section) => total + section.questions.length, 0)
           onQuestionsLoaded?.(totalQuestions)
         } else {
           setError('Cấu trúc dữ liệu không hợp lệ')
@@ -65,39 +63,28 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({ questionSetId, onAnswerCh
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: index * 0.05, duration: 0.3 }}
       >
-        <Card 
-          className={`overflow-hidden border transition-all duration-200 ${!isAnswered ? 'border-red-200 bg-red-50/30' : 'border-gray-100'}`}
+        <Card
+          className={`overflow-hidden border transition-all duration-200 relative ${
+            !isAnswered ? 'border-red-200 bg-red-50/30' : 'border-gray-100'
+          }`}
         >
-          <CardContent className='p-5'>
+          <div className='absolute top-0 right-0 w-0 h-0 border-l-[40px] border-l-transparent border-t-[40px]  border-r-0 border-b-0'>
+            <Star className='h-4 w-4 text-red-500 absolute -top-[36px] right-[2px] fill-red-500' />
+          </div>
+          <CardContent className='p-5 border-gray-200 border relative'>
             <div className='space-y-4'>
               <div className='flex items-start'>
-                <div className='flex-1'>
+                <div className='flex'>
                   <Label className='text-base font-medium flex items-start gap-2'>
                     <span className='bg-red-100 text-red-600 px-2 rounded-md text-sm font-medium mr-1 shrink-0'>
                       {question.order}
                     </span>
                     <span>{question.content}</span>
-                    <span className='text-red-500 ml-1'>*</span>
                   </Label>
-                  
-                  {question.hasDetail && (
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <span className='inline-flex items-center ml-2 text-gray-400 hover:text-gray-600 cursor-help'>
-                            <HelpCircle className='h-4 w-4' />
-                          </span>
-                        </TooltipTrigger>
-                        <TooltipContent className='bg-white p-3 text-gray-700 shadow-lg rounded-lg max-w-xs'>
-                          <p>Câu hỏi này yêu cầu thông tin chi tiết nếu bạn trả lời "Có"</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  )}
                 </div>
               </div>
 
-              <div className='flex items-center justify-start space-x-6'>
+              <div className='flex items-center justify-start space-x-6 ml-8'>
                 <div className='flex items-center space-x-2'>
                   <div className='relative'>
                     <Checkbox
@@ -154,10 +141,10 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({ questionSetId, onAnswerCh
               </div>
 
               {question.hasDetail && currentAnswer?.value === 'Có' && (
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: 'auto' }}
-                  className='ml-2 pl-4 border-l-2 border-red-200'
+                  className='ml-8 pl-4 border-l-2 border-red-200'
                 >
                   <Label htmlFor={`detail-${question.id}`} className='text-sm text-gray-600 mb-1 block'>
                     Vui lòng cung cấp thêm chi tiết:
@@ -191,7 +178,9 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({ questionSetId, onAnswerCh
         </h3>
         <div className='h-px flex-1 bg-gray-200'></div>
       </div>
-      <div className='space-y-4'>{section.questions.sort((a, b) => a.order - b.order).map((q, i) => renderQuestion(q, i))}</div>
+      <div className='space-y-4'>
+        {section.questions.sort((a, b) => a.order - b.order).map((q, i) => renderQuestion(q, i))}
+      </div>
     </div>
   )
 
@@ -205,7 +194,7 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({ questionSetId, onAnswerCh
         <div className='text-red-500 text-4xl mb-2'>⚠️</div>
         <h3 className='text-lg font-medium text-red-700 mb-2'>Đã xảy ra lỗi</h3>
         <p className='text-red-600 mb-4'>{error}</p>
-        <button 
+        <button
           className='bg-red-100 hover:bg-red-200 text-red-700 px-4 py-2 rounded-lg transition-colors'
           onClick={() => window.location.reload()}
         >
@@ -221,9 +210,7 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({ questionSetId, onAnswerCh
 
   return (
     <div className='space-y-8'>
-      {questionSet.sections
-        .sort((a, b) => a.order - b.order)
-        .map((section, index) => renderSection(section, index))}
+      {questionSet.sections.sort((a, b) => a.order - b.order).map((section, index) => renderSection(section, index))}
     </div>
   )
 }

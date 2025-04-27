@@ -57,7 +57,7 @@ const HeroSection: React.FC = () => {
       <div className='absolute bottom-20 right-[15%] w-32 h-32 bg-red-300 opacity-20 rounded-full blur-xl'></div>
       <div className='absolute top-40 right-[20%] w-16 h-16 bg-red-200 opacity-20 rounded-full blur-md'></div>
 
-      <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative'>
+      <div className='max-w-7xl mx-auto px-4 relative'>
         <div className='flex flex-col md:flex-row items-center justify-between gap-12'>
           {/* Left Content */}
           <motion.div 
@@ -66,7 +66,7 @@ const HeroSection: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <div className='inline-flex items-center px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full text-sm mb-8 border border-white/20 shadow-sm'>
+            <div className='sm:inline-flex flex justify-center items-center px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full text-sm mb-4 border border-white/20 shadow-sm'>
               <motion.span 
                 className='mr-2'
                 animate={{ 
@@ -84,19 +84,19 @@ const HeroSection: React.FC = () => {
               <span>Mỗi giọt máu là một món quà của sự sống</span>
             </div>
 
-            <h1 className='text-3xl md:text-4xl font-bold mb-6 leading-tight text-center md:text-left'>
+            <h1 className='text-3xl font-bold mb-4 leading-tight text-center md:text-left'>
               Giọt Máu Hy Vọng
-              <span className='block text-xl md:text-xl font-normal mt-3 text-red-50 opacity-90'>
+              <span className='block text-xl font-normal mt-3 text-red-50 opacity-90'>
               Kết nối yêu thương - Lan tỏa sự sống
               </span>
             </h1>
 
-            <p className='text-base md:text-lg mb-8 text-red-50 max-w-xl opacity-90 text-center md:text-left'>
+            <p className='text-base md:text-lg mb-4 text-red-50 max-w-xl opacity-90 text-center md:text-left'>
               Mỗi giọt máu hiến tặng là một cơ hội để cứu sống người khác. Hãy chung tay vì một cộng đồng khỏe mạnh và
               nhân ái.
             </p>
 
-            <div className='flex flex-wrap gap-4 justify-center md:justify-start'>
+            <div className='flex flex-wrap gap-4 justify-center md:justify-start mb-2'>
                 <Button
                 size='lg'
                 className='bg-white text-red-600 hover:bg-red-50 rounded-full shadow-lg group transition-all duration-300 font-medium px-8'
@@ -132,7 +132,7 @@ const HeroSection: React.FC = () => {
             
             {/* iOS style scroll indicator */}
             <motion.div 
-              className='hidden md:flex justify-center mt-12'
+              className='hidden md:flex justify-center mt-8'
               initial={{ opacity: 0 }}
               animate={{ opacity: 0.7 }}
               transition={{ delay: 1, duration: 0.6 }}

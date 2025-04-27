@@ -198,7 +198,7 @@ const Step2Upload: React.FC<Step2UploadProps> = ({ formData, setFormData, error,
           <div className='flex items-center justify-between mb-4'>
             <h3 className='font-medium text-gray-900'>Mặt trước CCCD</h3>
             {formData.frontImage && (
-              <span className='px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full'>Đã tải lên</span>
+              <span className='px-2 py-1 bg-green-100 text-green-800 text-sm rounded-full'>Đã tải lên</span>
             )}
           </div>
 
@@ -226,7 +226,7 @@ const Step2Upload: React.FC<Step2UploadProps> = ({ formData, setFormData, error,
                     e.stopPropagation()
                     setFormData((prev: any) => ({ ...prev, frontImage: null }))
                   }}
-                  className='flex items-center gap-1 px-3 py-1.5 text-xs bg-red-100 text-red-600 rounded-full hover:bg-red-200'
+                  className='flex items-center gap-1 px-3 py-1.5 text-sm bg-red-100 text-red-600 rounded-full hover:bg-red-200'
                 >
                   <X className='h-3 w-3' />
                   <span>Xóa</span>
@@ -236,7 +236,7 @@ const Step2Upload: React.FC<Step2UploadProps> = ({ formData, setFormData, error,
               <>
                 <Upload className='mx-auto h-10 w-10 text-red-400' />
                 <p className='mt-2 text-sm font-medium text-gray-700'>Tải lên ảnh mặt trước</p>
-                <p className='text-xs text-gray-500 mt-1'>Nhấp để chọn hoặc kéo thả (JPG, PNG - tối đa 5MB)</p>
+                <p className='text-sm text-gray-500 mt-1'>Nhấp để chọn hoặc kéo thả (JPG, PNG - tối đa 5MB)</p>
               </>
             )}
           </div>
@@ -249,7 +249,7 @@ const Step2Upload: React.FC<Step2UploadProps> = ({ formData, setFormData, error,
           <div className='flex items-center justify-between mb-4'>
             <h3 className='font-medium text-gray-900'>Mặt sau CCCD</h3>
             {formData.backImage && (
-              <span className='px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full'>Đã tải lên</span>
+              <span className='px-2 py-1 bg-green-100 text-green-800 text-sm rounded-full'>Đã tải lên</span>
             )}
           </div>
 
@@ -281,7 +281,7 @@ const Step2Upload: React.FC<Step2UploadProps> = ({ formData, setFormData, error,
                     e.stopPropagation()
                     setFormData((prev: any) => ({ ...prev, backImage: null }))
                   }}
-                  className='flex items-center gap-1 px-3 py-1.5 text-xs bg-red-100 text-red-600 rounded-full hover:bg-red-200'
+                  className='flex items-center gap-1 px-3 py-1.5 text-sm bg-red-100 text-red-600 rounded-full hover:bg-red-200'
                 >
                   <X className='h-3 w-3' />
                   <span>Xóa</span>
@@ -291,13 +291,13 @@ const Step2Upload: React.FC<Step2UploadProps> = ({ formData, setFormData, error,
               <>
                 <Upload className='mx-auto h-10 w-10 text-red-400' />
                 <p className='mt-2 text-sm font-medium text-gray-700'>Tải lên ảnh mặt sau</p>
-                <p className='text-xs text-gray-500 mt-1'>Nhấp để chọn hoặc kéo thả (JPG, PNG - tối đa 5MB)</p>
+                <p className='text-sm text-gray-500 mt-1'>Nhấp để chọn hoặc kéo thả (JPG, PNG - tối đa 5MB)</p>
               </>
             ) : (
               <>
                 <Upload className='mx-auto h-10 w-10 text-gray-300' />
                 <p className='mt-2 text-sm font-medium text-gray-400'>Tải lên ảnh mặt sau</p>
-                <p className='text-xs text-gray-400 mt-1'>Vui lòng tải lên mặt trước trước</p>
+                <p className='text-sm text-gray-400 mt-1'>Vui lòng tải lên mặt trước trước</p>
               </>
             )}
           </div>

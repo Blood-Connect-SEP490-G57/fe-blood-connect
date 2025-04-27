@@ -13,6 +13,8 @@ import JobSelector from '@/components/Selector/job/JobSelector'
 import AddressSelector from '@/components/Selector/address/AddressSelector'
 import OrganizationSelector from '@/components/Selector/organization/OrganizationSelector'
 import { Campaign } from '@/api/campaign'
+import EmailSelector from '../Selector/email/emailSelector'
+import PhoneSelector from '../Selector/phone/PhoneSelector'
 
 interface UserInfo {
   userId: string
@@ -521,12 +523,11 @@ const AppointmentInfo = ({ appointmentId }: AppointmentInfoProps) => {
                         <span className='text-sm font-medium text-gray-700'>Điện thoại</span>
                       </div>
                       {isEditing ? (
-                        <input
-                          type='number'
-                          name='phoneNumber'
-                          value={formData.phoneNumber}
-                          onChange={handleInputChange}
-                          className='w-1/2 p-2 sm:text-sm text-xs text-right bg-gray-100 focus:outline-none focus:ring-2 focus:ring-red-500'
+                        <PhoneSelector
+                          initialPhone={formData.phoneNumber}
+                          onPhoneSelect={(phone) => {
+                            setFormData((prev) => ({ ...prev, phoneNumber: phone }))
+                          }}
                         />
                       ) : (
                         <div className='flex items-center gap-2'>
@@ -540,12 +541,11 @@ const AppointmentInfo = ({ appointmentId }: AppointmentInfoProps) => {
                         <span className='text-sm font-medium text-gray-700'>Email</span>
                       </div>
                       {isEditing ? (
-                        <input
-                          type='text'
-                          name='email'
-                          value={formData.email}
-                          onChange={handleInputChange}
-                          className='w-1/2 p-2 sm:text-sm text-xs text-right bg-gray-100 focus:outline-none focus:ring-2 focus:ring-red-500'
+                        <EmailSelector
+                          initialEmail={userInfo.email}
+                          onEmailSelect={(email) => {
+                            setFormData((prev) => ({ ...prev, email }))
+                          }}
                         />
                       ) : (
                         <div className='flex items-center gap-2'>

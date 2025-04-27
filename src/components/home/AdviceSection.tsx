@@ -4,7 +4,7 @@ import AdviceItem from './AdviceItem'
 const AdviceSection = () => {
   return (
     <div className='py-8 bg-gradient-to-b from-red-600 via-red-500 to-red-400 overflow-hidden'>
-      <div className='max-w-7xl mx-auto px-2 relative'>
+      <div className='max-w-7xl mx-auto px-4 relative'>
         {/* iOS style decorative elements */}
         <div className='absolute top-10 left-1/4 w-32 h-32 bg-white opacity-10 rounded-full blur-xl'></div>
         <div className='absolute bottom-20 right-1/4 w-24 h-24 bg-red-300 opacity-20 rounded-full blur-xl'></div>

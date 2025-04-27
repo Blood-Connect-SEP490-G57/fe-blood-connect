@@ -12,7 +12,6 @@ import {
   User,
   Settings,
   LogOut,
-  Menu,
   Bell,
   LogInIcon,
   UserPlusIcon,
@@ -21,7 +20,8 @@ import {
   HelpCircle,
   Phone,
   Calendar,
-  Lock
+  Lock,
+  X
 } from 'lucide-react'
 import UserAvatar from '@/components/ui/user-avatar'
 import Notifications from '@/components/notification/Notifications'
@@ -44,13 +44,19 @@ const Header: React.FC = () => {
   // Prevent body scrolling when menu or notifications are open
   useEffect(() => {
     if (isHeaderMenuOpen || isMobileNotiOpen) {
-      document.body.classList.add('overflow-hidden')
+      document.body.style.overflow = 'hidden'
+      document.body.style.position = 'fixed'
+      document.body.style.width = '100%'
     } else {
-      document.body.classList.remove('overflow-hidden')
+      document.body.style.overflow = ''
+      document.body.style.position = ''
+      document.body.style.width = ''
     }
 
     return () => {
-      document.body.classList.remove('overflow-hidden')
+      document.body.style.overflow = ''
+      document.body.style.position = ''
+      document.body.style.width = ''
     }
   }, [isHeaderMenuOpen, isMobileNotiOpen])
 
@@ -189,7 +195,7 @@ const Header: React.FC = () => {
           </motion.div>
 
           {/* Desktop and Tablet Navigation */}
-          <div className='hidden xl:flex items-center space-x-6'>
+          <div className='hidden lg:flex items-center space-x-6'>
             {getFilteredNavigation()
               .filter((item) => {
                 if (!isLoggedIn && (item.name === 'LỊCH HẸN CỦA TÔI' || item.name === 'LỊCH SỬ ĐẶT HẸN')) {
@@ -218,7 +224,7 @@ const Header: React.FC = () => {
               ))}
           </div>
 
-          <div className='hidden xl:flex items-center space-x-3'>
+          <div className='hidden lg:flex items-center space-x-3'>
             {isLoggedIn ? (
               <>
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
@@ -328,7 +334,7 @@ const Header: React.FC = () => {
           </div>
 
           {/* Mobile menu button */}
-          <div className='xl:hidden flex items-center space-x-2'>
+          <div className='lg:hidden flex items-center space-x-2 mr-2'>
             {isLoggedIn && location.pathname !== '/dang-nhap' && location.pathname !== '/dang-ky' && (
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Button
@@ -341,9 +347,9 @@ const Header: React.FC = () => {
                   className='group relative rounded-full p-2 bg-red-50 border border-red-100 text-red-600 hover:bg-red-100'
                 >
                   <div className='relative w-full h-full'>
-                    <Bell className='w-5 h-5' />
+                    <Bell className='w-6 h-6' />
                     {unreadCount > 0 && (
-                      <span className='absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full px-1.5 py-0.5 min-w-[18px] text-center'>
+                      <span className='absolute -top-3 -right-3 bg-red-600 text-white text-xs rounded-full px-1.5 py-0.5 min-w-[18px] text-center md:min-w-[20px] md:px-2 md:py-1 md:text-sm'>
                         {unreadCount}
                       </span>
                     )}
@@ -351,157 +357,23 @@ const Header: React.FC = () => {
                 </Button>
               </motion.div>
             )}
-
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Button
-                variant='ghost'
-                size='sm'
-                onClick={() => {
-                  setHeaderMenuOpen(!isHeaderMenuOpen)
-                  setIsMobileNotiOpen(false)
-                }}
-                className='rounded-full p-2 text-red-600 hover:bg-red-50'
-              >
-                <Menu className='w-6 h-6' />
-                <span className='sr-only'>Open menu</span>
-              </Button>
-            </motion.div>
           </div>
         </div>
-
-        {/* Mobile Navigation */}
-        {/* <AnimatePresence>
-          {isHeaderMenuOpen && (
-            <>
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 0.5 }}
-                exit={{ opacity: 0 }}
-                className='fixed inset-0 bg-black/60 backdrop-blur-sm z-40'
-                onClick={() => setHeaderMenuOpen(false)}
-              />
-              <motion.div
-                className='fixed top-[70px] right-0 max-h-[80vh] w-full max-w-sm z-50 overflow-auto rounded-tl-2xl rounded-bl-2xl bg-white/95 backdrop-blur-md shadow-xl'
-                initial={{ x: '100%', opacity: 0.5 }}
-                animate={{ x: 0, opacity: 1 }}
-                exit={{ x: '100%', opacity: 0.5 }}
-                transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-              >
-                <div className='p-4 flex flex-col gap-2'>
-                  {getFilteredNavigation()
-                    .filter((item) => {
-                      if (
-                        !isLoggedIn &&
-                        (item.name === 'LỊCH SỬ ĐẶT HẸN' ||
-                          item.name === 'THÔNG TIN CÁ NHÂN' ||
-                          item.name === 'ĐỔI MẬT KHẨU' ||
-                          item.name === 'TẠO HỒ SƠ HIẾN MÁU')
-                      ) {
-                        return false
-                      }
-                      return true
-                    })
-                    .map((item) => (
-                      <motion.div
-                        key={item.name}
-                        className='flex items-center p-3 rounded-xl hover:bg-red-50 transition-all cursor-pointer'
-                        onClick={() => {
-                          setHeaderMenuOpen(false)
-                          const [pathname, hash] = item.href.split('#')
-                          if (location.pathname === pathname) {
-                            window.location.hash = hash || ''
-                            if (hash) {
-                              setTimeout(() => {
-                                const element = document.getElementById(hash)
-                                if (element) {
-                                  element.scrollIntoView({ behavior: 'smooth' })
-                                }
-                              }, 100)
-                            }
-                          } else {
-                            navigate(item.href)
-                          }
-                        }}
-                      >
-                        <div className='w-10 h-10 rounded-full bg-red-100 flex items-center justify-center mr-3'>
-                          <span className='h-4 w-4'> {item.icon} </span>
-                        </div>
-                        <div>
-                          <div className='font-medium'>{item.name}</div>
-                        </div>
-                      </motion.div>
-                    ))}
-
-                  {isLoggedIn ? (
-                    <>
-                      <hr className='my-2' />
-                      <motion.div
-                        className='flex items-center p-3 rounded-xl bg-red-50 hover:bg-red-100 transition-all'
-                        onClick={() => {
-                          setHeaderMenuOpen(false)
-                          handleLogout()
-                        }}
-                      >
-                        <div className='w-10 h-10 rounded-full bg-red-100 flex items-center justify-center mr-3'>
-                          <LogOut className='h-5 w-5 text-red-500' />
-                        </div>
-                        <div className='font-medium'>Đăng xuất</div>
-                      </motion.div>
-                    </>
-                  ) : (
-                    <>
-                      <hr className='my-2' />
-                      <motion.div
-                        className='flex items-center p-3 rounded-xl bg-red-50 hover:bg-red-100 transition-all'
-                        onClick={() => {
-                          setHeaderMenuOpen(false)
-                          handleLoginClick()
-                        }}
-                      >
-                        <div className='w-10 h-10 rounded-full bg-red-100 flex items-center justify-center mr-3'>
-                          <LogInIcon className='h-5 w-5 text-red-500' />
-                        </div>
-                        <div className='font-medium'>Đăng nhập</div>
-                      </motion.div>
-                      <motion.div
-                        className='flex items-center p-3 rounded-xl bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 transition-all'
-                        onClick={() => {
-                          setHeaderMenuOpen(false)
-                          handleRegisterClick()
-                        }}
-                      >
-                        <div className='w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center mr-3'>
-                          <UserPlusIcon className='h-5 w-5 text-white' />
-                        </div>
-                        <div className='font-medium text-white'>Đăng ký</div>
-                      </motion.div>
-                    </>
-                  )}
-                </div>
-              </motion.div>
-            </>
-          )}
-        </AnimatePresence> */}
 
         {/* Mobile Navigation - Phiên bản tối ưu cho touchpad */}
         <AnimatePresence>
           {isHeaderMenuOpen && (
             <>
-              {/* Overlay với delay đóng menu */}
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 0.5 }}
-                exit={{ opacity: 0, transition: { delay: 0.2 } }} // Thêm delay khi đóng
                 className='fixed inset-0 bg-black/60 backdrop-blur-sm z-40'
                 onClick={() => {
-                  // Delay đóng menu để tránh đóng ngay lập tức
                   setTimeout(() => setHeaderMenuOpen(false), 200)
                 }}
               />
-
-              {/* Menu chính với kích thước touch-friendly */}
               <motion.div
-                className='fixed top-[70px] max-h-[80vh] right-0 w-full max-w-sm z-50 overflow-y-auto bg-white/95 backdrop-blur-md shadow-xl rounded-tl-2xl rounded-bl-2xl'
+                className='fixed inset-y-0 right-0 w-full sm:w-[320px] h-full z-50 overflow-y-auto bg-white/95 backdrop-blur-md shadow-xl'
                 initial={{ x: '100%' }}
                 animate={{ x: 0 }}
                 exit={{ x: '100%' }}
@@ -513,6 +385,16 @@ const Header: React.FC = () => {
                 }}
               >
                 <div className='p-2 flex flex-col gap-1'>
+                  <div className='flex justify-end mb-2'>
+                    <Button
+                      variant='ghost'
+                      size='sm'
+                      onClick={() => setHeaderMenuOpen(false)}
+                      className='rounded-full p-2 text-gray-500 hover:text-red-600 hover:bg-red-50'
+                    >
+                      <X className='w-5 h-5' />
+                    </Button>
+                  </div>
                   {getFilteredNavigation()
                     .filter((item) => {
                       if (
@@ -628,7 +510,7 @@ const Header: React.FC = () => {
                 onClick={() => setIsMobileNotiOpen(false)}
               />
               <motion.div
-                className='fixed top-[70px] right-0 max-h-[80vh] w-full max-w-sm z-50 overflow-auto rounded-tl-2xl rounded-bl-2xl bg-white/95 backdrop-blur-md shadow-xl'
+                className='fixed top-[70px] right-0 max-h-[80vh] w-full max-w-sm z-50 overflow-auto rounded-tl-2xl rounded-bl-2xl bg-white backdrop-blur-md shadow-xl'
                 initial={{ x: '100%', opacity: 0.5 }}
                 animate={{ x: 0, opacity: 1 }}
                 exit={{ x: '100%', opacity: 0.5 }}
