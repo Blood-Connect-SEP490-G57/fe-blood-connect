@@ -12,7 +12,6 @@ import {
   User,
   Settings,
   LogOut,
-  Menu,
   Bell,
   LogInIcon,
   UserPlusIcon,
@@ -196,7 +195,7 @@ const Header: React.FC = () => {
           </motion.div>
 
           {/* Desktop and Tablet Navigation */}
-          <div className='hidden xl:flex items-center space-x-6'>
+          <div className='hidden lg:flex items-center space-x-6'>
             {getFilteredNavigation()
               .filter((item) => {
                 if (!isLoggedIn && (item.name === 'LỊCH HẸN CỦA TÔI' || item.name === 'LỊCH SỬ ĐẶT HẸN')) {
@@ -225,7 +224,7 @@ const Header: React.FC = () => {
               ))}
           </div>
 
-          <div className='hidden xl:flex items-center space-x-3'>
+          <div className='hidden lg:flex items-center space-x-3'>
             {isLoggedIn ? (
               <>
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
@@ -335,7 +334,7 @@ const Header: React.FC = () => {
           </div>
 
           {/* Mobile menu button */}
-          <div className='xl:hidden flex items-center space-x-2'>
+          <div className='lg:hidden flex items-center space-x-2 mr-2'>
             {isLoggedIn && location.pathname !== '/dang-nhap' && location.pathname !== '/dang-ky' && (
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Button
@@ -358,21 +357,6 @@ const Header: React.FC = () => {
                 </Button>
               </motion.div>
             )}
-
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Button
-                variant='ghost'
-                size='sm'
-                onClick={() => {
-                  setHeaderMenuOpen(!isHeaderMenuOpen)
-                  setIsMobileNotiOpen(false)
-                }}
-                className='rounded-full p-2 text-red-600 hover:bg-red-50'
-              >
-                <Menu className='w-6 h-6' />
-                <span className='sr-only'>Open menu</span>
-              </Button>
-            </motion.div>
           </div>
         </div>
 
@@ -383,14 +367,13 @@ const Header: React.FC = () => {
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 0.5 }}
-                exit={{transition: { delay: 0.2 } }} 
                 className='fixed inset-0 bg-black/60 backdrop-blur-sm z-40'
                 onClick={() => {
                   setTimeout(() => setHeaderMenuOpen(false), 200)
                 }}
               />
               <motion.div
-                className='fixed right-0 w-[70%] max-w-sm z-50 overflow-y-auto bg-white backdrop-blur-md shadow-xl rounded-tl-2xl rounded-bl-2xl'
+                className='fixed inset-y-0 right-0 w-full sm:w-[320px] h-full z-50 overflow-y-auto bg-white/95 backdrop-blur-md shadow-xl'
                 initial={{ x: '100%' }}
                 animate={{ x: 0 }}
                 exit={{ x: '100%' }}
@@ -402,18 +385,16 @@ const Header: React.FC = () => {
                 }}
               >
                 <div className='p-2 flex flex-col gap-1'>
-                  {/* Header with close button */}
-                  <div className='flex justify-end items-center p-2 border-b border-gray-100'>
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
+                  <div className='flex justify-end mb-2'>
+                    <Button
+                      variant='ghost'
+                      size='sm'
                       onClick={() => setHeaderMenuOpen(false)}
-                      className='p-2 rounded-full hover:bg-gray-100 text-gray-500 hover:text-gray-700'
+                      className='rounded-full p-2 text-gray-500 hover:text-red-600 hover:bg-red-50'
                     >
                       <X className='w-5 h-5' />
-                    </motion.button>
+                    </Button>
                   </div>
-
                   {getFilteredNavigation()
                     .filter((item) => {
                       if (
