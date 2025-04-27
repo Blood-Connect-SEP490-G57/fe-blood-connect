@@ -75,9 +75,9 @@ const NewsPage = () => {
   }
 
   return (
-    <div className='min-h-screen mt-20 bg-gray-100'>
+    <div className='min-h-screen mt-20 bg-gray-100 px-4 md:px-4 lg:px-0'>
       {/* Banner section */}
-      <div className='bg-gradient-to-r from-red-600 to-red-400 text-white p-8 relative rounded-xl'>
+      <div className='bg-gradient-to-r from-red-600 to-red-400 text-white p-8 relative rounded-xl max-w-7xl mx-auto'>
         <div className='container mx-auto'>
           <div className='flex flex-col items-center'>
             <div className='h-20 w-20 bg-white rounded-full flex items-center justify-center shadow-md mb-4'>

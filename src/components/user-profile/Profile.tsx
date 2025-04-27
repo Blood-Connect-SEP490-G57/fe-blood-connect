@@ -180,7 +180,7 @@ const Profile = () => {
   return (
     <div className='min-h-screen bg-gray-100'>
       {/* Banner section */}
-      <div className='px-2'>
+      <div>
         <div className='bg-gradient-to-r from-red-600 to-red-400 text-white p-8 relative rounded-xl border-2 border-red-500 '>
           <div className='flex flex-col items-center'>
             <div className='h-24 w-24 bg-white rounded-full flex items-center justify-center shadow-md mb-4'>

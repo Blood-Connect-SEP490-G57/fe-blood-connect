@@ -164,7 +164,7 @@ const DonationHistory = () => {
   return (
     <div className='min-h-screen bg-gray-100'>
       {/* Banner */}
-      <div className='max-w-7xl px-2 mx-auto'>
+      <div className='max-w-7xl mx-auto'>
         <div className='bg-gradient-to-r from-red-600 to-red-400 text-white rounded-xl p-8 md:p-12'>
           <div className='flex flex-col items-center md:flex-row md:justify-center md:space-x-8'>
             <div className='h-24 w-24 bg-white rounded-full flex items-center justify-center shadow-md mb-4 md:mb-0 md:h-32 md:w-32'>
@@ -178,7 +178,7 @@ const DonationHistory = () => {
         </div>
       </div>
 
-      <div className='mt-4 max-w-7xl px-2 mx-auto'>
+      <div className='mt-4 max-w-7xl  mx-auto'>
         <div className='grid grid-cols-3 gap-3 mb-6 md:gap-6 md:mx-auto'>
           <Card className='overflow-hidden rounded-xl shadow-sm border-none hover:shadow-md transition-shadow'>
             <CardContent className='p-2 md:p-4'>
@@ -208,8 +208,8 @@ const DonationHistory = () => {
         </div>
 
         {/* Appointment List */}
-        <div className='max-w-7xl px-2 mx-auto'>
-          <h2 className='text-xl font-semibold text-gray-700 mb-2 px-2'>Tất cả lịch hẹn</h2>
+        <div className='max-w-7xl  mx-auto'>
+          <h2 className='text-xl font-semibold text-gray-700 mb-2 '>Tất cả lịch hẹn</h2>
           {appointments.length === 0 ? (
             <Card className='overflow-hidden rounded-xl shadow-sm border-none'>
               <CardContent className='p-6 flex flex-col items-center'>

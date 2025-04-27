@@ -122,7 +122,7 @@ const BloodDonationBenefits: React.FC = () => {
       {/* iOS style decorative elements */}
       <div className='absolute top-40 left-10 w-72 h-72 bg-red-100 rounded-full blur-3xl opacity-30 -z-10'></div>
       <div className='absolute bottom-40 right-10 w-72 h-72 bg-red-50 rounded-full blur-3xl opacity-30 -z-10'></div>
-      
+
       <div className='max-w-7xl mx-auto px-4 relative'>
         <motion.div
           className='text-center mb-12'
@@ -145,12 +145,12 @@ const BloodDonationBenefits: React.FC = () => {
           >
             {/* iOS style decorative pattern */}
             <div className='absolute inset-0 bg-[url("data:image/svg+xml,%3Csvg%20width%3D%2760%27%20height%3D%2760%27%20viewBox%3D%270%200%2060%2060%27%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%3E%3Cg%20fill%3D%27none%27%20fill-rule%3D%27evenodd%27%3E%3Cg%20fill%3D%27%23ffffff%27%20fill-opacity%3D%270.1%27%3E%3Cpath%20d%3D%27M36%2034v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6%2034v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6%204V0H4v4H0v2h4v4h2V6h4V4H6z%27%2F%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E")] opacity-10'></div>
-            
-            <motion.div 
+
+            <motion.div
               className='relative w-48 h-48 mb-8'
               initial={{ scale: 0.8 }}
               whileInView={{ scale: 1 }}
-              transition={{ duration: 0.5, type: "spring" }}
+              transition={{ duration: 0.5, type: 'spring' }}
             >
               <div className='absolute inset-0 bg-red-400 rounded-full animate-ping opacity-20'></div>
               <div className='absolute inset-0 bg-red-300 rounded-full animate-pulse opacity-30'></div>
@@ -160,8 +160,8 @@ const BloodDonationBenefits: React.FC = () => {
                 className='w-full h-full rounded-full object-cover border-4 border-white/80 shadow-lg z-10 relative'
               />
             </motion.div>
-            
-            <motion.p 
+
+            <motion.p
               className='text-xl sm:text-2xl text-center font-medium mb-8'
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -169,24 +169,6 @@ const BloodDonationBenefits: React.FC = () => {
             >
               Người hiến máu tình nguyện sẽ được những quyền lợi sau:
             </motion.p>
-            
-            <motion.div 
-              className='flex space-x-3 mt-2'
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              transition={{ delay: 0.5, duration: 0.5 }}
-            >
-              {slides.map((_, index) => (
-                <button
-                  key={index}
-                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                    index === currentSlide ? 'bg-white w-8' : 'bg-white/50 hover:bg-white/70'
-                  }`}
-                  onClick={() => goToSlide(index)}
-                  aria-label={`Go to slide ${index + 1}`}
-                />
-              ))}
-            </motion.div>
 
             <motion.button
               whileHover={{ scale: 1.05 }}
@@ -223,7 +205,7 @@ const BloodDonationBenefits: React.FC = () => {
                 <div className='overflow-auto flex-grow pr-2 custom-scrollbar'>
                   <ul className='list-none pl-1 text-gray-700 space-y-4'>
                     {slides[currentSlide].content.map((item, index) => (
-                      <motion.li 
+                      <motion.li
                         key={index}
                         initial={{ opacity: 0, x: 10 }}
                         animate={{ opacity: 1, x: 0 }}

@@ -100,10 +100,10 @@ const FAQPage = () => {
   }, [faqs, searchTerm])
 
   return (
-    <div className='min-h-screen mt-20 bg-gray-100'>
+    <div className='min-h-screen mt-20 bg-gray-100 max-w-7xl mx-auto px-4 py-6'>
       {/* Banner section */}
-      <div className='bg-gradient-to-r from-red-600 to-red-400 text-white p-8 relative rounded-xl'>
-        <div className='container mx-auto'>
+      <div className='bg-gradient-to-r from-red-600 to-red-400 text-white relative rounded-xl p-6'>
+        <div className='mx-auto'>
           <div className='flex flex-col items-center'>
             <div className='h-20 w-20 bg-white rounded-full flex items-center justify-center shadow-md mb-4'>
               <HelpCircle className='h-12 w-12 text-red-500' />
@@ -120,7 +120,7 @@ const FAQPage = () => {
         <div className='absolute bottom-6 right-10 w-20 h-20 bg-red-300 rounded-full opacity-15'></div>
       </div>
 
-      <div className='max-w-7xl mx-auto px-4 py-6'>
+      <div className='max-w-7xl mx-auto py-6'>
         {/* Search section */}
         <Card className='overflow-hidden rounded-xl shadow-sm border-none mb-6'>
           <CardContent className='p-4'>

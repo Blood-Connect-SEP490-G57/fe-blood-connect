@@ -69,24 +69,26 @@ const ContactPage = () => {
   }
 
   return (
-    <div className='min-h-screen mt-20 bg-gray-100'>
+    <div className='min-h-screen pt-16 bg-gray-100 '>
       {/* Banner section */}
-      <div className='bg-gradient-to-r from-red-600 to-red-400 text-white p-8 relative rounded-xl'>
-        <div className='container mx-auto'>
-          <div className='flex flex-col items-center'>
-            <div className='h-24 w-24 bg-white rounded-full flex items-center justify-center shadow-md mb-4'>
-              <MessageCircle className='h-12 w-12 text-red-500' />
+      <div className='max-w-7xl mx-auto px-4 py-6'>
+        <div className='bg-gradient-to-r from-red-600 to-red-400 text-white p-8 relative rounded-xl'>
+          <div className='container mx-auto'>
+            <div className='flex flex-col items-center'>
+              <div className='h-24 w-24 bg-white rounded-full flex items-center justify-center shadow-md mb-4'>
+                <MessageCircle className='h-12 w-12 text-red-500' />
+              </div>
+              <h1 className='text-2xl font-bold mb-1'>Liên Hệ Với Chúng Tôi</h1>
+              <p className='text-center text-white/80 max-w-2xl'>
+                Gửi phản hồi hoặc liên hệ trực tiếp với chúng tôi để được hỗ trợ tốt nhất!
+              </p>
             </div>
-            <h1 className='text-2xl font-bold mb-1'>Liên Hệ Với Chúng Tôi</h1>
-            <p className='text-center text-white/80 max-w-2xl'>
-              Gửi phản hồi hoặc liên hệ trực tiếp với chúng tôi để được hỗ trợ tốt nhất!
-            </p>
           </div>
+          {/* Decorative elements */}
+          <div className='absolute -bottom-0 left-1/4 w-16 h-16 bg-red-400 rounded-full opacity-20'></div>
+          <div className='absolute top-8 right-1/4 w-12 h-12 bg-white rounded-full opacity-10'></div>
+          <div className='absolute bottom-6 right-10 w-20 h-20 bg-red-300 rounded-full opacity-15'></div>
         </div>
-        {/* Decorative elements */}
-        <div className='absolute -bottom-0 left-1/4 w-16 h-16 bg-red-400 rounded-full opacity-20'></div>
-        <div className='absolute top-8 right-1/4 w-12 h-12 bg-white rounded-full opacity-10'></div>
-        <div className='absolute bottom-6 right-10 w-20 h-20 bg-red-300 rounded-full opacity-15'></div>
       </div>
 
       <div className='max-w-7xl mx-auto px-4 py-6'>
