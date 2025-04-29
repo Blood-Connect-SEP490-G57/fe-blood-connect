@@ -105,7 +105,7 @@ const AddressSelector: React.FC<AddressSelectorProps> = ({ onAddressSelect, init
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent className='sm:max-w-[425px] rounded-xl mx-4 my-4 sm:mx-auto'>
+      <DialogContent className='sm:max-w-[425px] max-w-[90%] rounded-xl mx-auto sm:mx-auto'>
         <DialogHeader>
           <DialogTitle>Chọn địa chỉ</DialogTitle>
         </DialogHeader>

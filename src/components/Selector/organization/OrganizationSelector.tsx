@@ -82,7 +82,7 @@ const OrganizationSelector: React.FC<OrganizationSelectorProps> = ({
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent className='sm:max-w-[425px]'>
+      <DialogContent className='sm:max-w-[425px] max-w-[90%] rounded-xl mx-auto sm:mx-auto'>
         <DialogHeader>
           <DialogTitle>Chọn tổ chức</DialogTitle>
         </DialogHeader>
