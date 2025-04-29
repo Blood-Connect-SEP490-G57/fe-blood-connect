@@ -33,7 +33,7 @@ const BloodTypeSelector: React.FC<BloodTypeSelectorProps> = ({ value, onChange, 
             </Button>
           )}
         </DialogTrigger>
-        <DialogContent className='sm:max-w-[425px]'>
+        <DialogContent className='sm:max-w-[425px] max-w-[90%] rounded-xl mx-auto sm:mx-auto'>
           <DialogHeader>
             <DialogTitle>Chọn nhóm máu</DialogTitle>
           </DialogHeader>

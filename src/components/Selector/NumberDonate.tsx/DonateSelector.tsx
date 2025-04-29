@@ -43,7 +43,7 @@ const NumberDonateSelector: React.FC<NumberDonateSelectorProps> = ({
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent className='sm:max-w-[425px]'>
+      <DialogContent className='sm:max-w-[425px] max-w-[90%] rounded-xl mx-auto sm:mx-auto'>
         <DialogHeader>
           <DialogTitle>Nhập số lần hiến máu</DialogTitle>
         </DialogHeader>

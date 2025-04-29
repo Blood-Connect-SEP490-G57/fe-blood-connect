@@ -60,7 +60,7 @@ const PhoneSelector: React.FC<PhoneSelectorProps> = ({
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[425px] max-w-[90%] rounded-xl mx-auto sm:mx-auto">
         <DialogHeader>
           <DialogTitle>Nhập số điện thoại</DialogTitle>
         </DialogHeader>

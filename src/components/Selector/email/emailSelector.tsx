@@ -47,7 +47,7 @@ const EmailSelector: React.FC<EmailSelectorProps> = ({ onEmailSelect, initialEma
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent className='sm:max-w-[425px]'>
+      <DialogContent className='sm:max-w-[425px] max-w-[90%] rounded-xl mx-auto sm:mx-auto'>
         <DialogHeader>
           <DialogTitle>Nhập email</DialogTitle>
         </DialogHeader>
