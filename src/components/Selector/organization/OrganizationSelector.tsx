@@ -77,7 +77,7 @@ const OrganizationSelector: React.FC<OrganizationSelectorProps> = ({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         {trigger || (
-          <Button variant='outline' className='ml-2 justify-start'>
+          <Button variant='outline' size='sm' className='ml-2 justify-start'>
             <Pencil className='w-4 h-4' />
           </Button>
         )}
