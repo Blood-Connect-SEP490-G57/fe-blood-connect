@@ -100,161 +100,163 @@ const FAQPage = () => {
   }, [faqs, searchTerm])
 
   return (
-    <div className='min-h-screen mt-20 bg-gray-100 max-w-7xl mx-auto px-4 py-6'>
-      {/* Banner section */}
-      <div className='bg-gradient-to-r from-red-600 to-red-400 text-white relative rounded-xl p-6'>
-        <div className='mx-auto'>
-          <div className='flex flex-col items-center'>
-            <div className='h-20 w-20 bg-white rounded-full flex items-center justify-center shadow-md mb-4'>
-              <HelpCircle className='h-12 w-12 text-red-500' />
+    <div className='min-h-screen bg-gray-100 '>
+      <div className='max-w-7xl mx-auto px-4 py-6'>
+        {/* Banner section */}
+        <div className='bg-gradient-to-r from-red-600 to-red-400 text-white relative rounded-xl p-6'>
+          <div className='mx-auto'>
+            <div className='flex flex-col items-center'>
+              <div className='h-20 w-20 bg-white rounded-full flex items-center justify-center shadow-md mb-4'>
+                <HelpCircle className='h-12 w-12 text-red-500' />
+              </div>
+              <h1 className='text-xl font-bold mb-1'>Câu Hỏi Thường Gặp</h1>
+              <p className='text-center text-white/80 max-w-2xl text-sm'>
+                Tìm hiểu thêm về quy trình hiến máu và giải đáp các thắc mắc của bạn
+              </p>
             </div>
-            <h1 className='text-xl font-bold mb-1'>Câu Hỏi Thường Gặp</h1>
-            <p className='text-center text-white/80 max-w-2xl text-sm'>
-              Tìm hiểu thêm về quy trình hiến máu và giải đáp các thắc mắc của bạn
-            </p>
           </div>
+          {/* Decorative elements */}
+          <div className='absolute -bottom-0 left-1/4 w-16 h-16 bg-red-400 rounded-full opacity-20'></div>
+          <div className='absolute top-8 right-1/4 w-12 h-12 bg-white rounded-full opacity-10'></div>
+          <div className='absolute bottom-6 right-10 w-20 h-20 bg-red-300 rounded-full opacity-15'></div>
         </div>
-        {/* Decorative elements */}
-        <div className='absolute -bottom-0 left-1/4 w-16 h-16 bg-red-400 rounded-full opacity-20'></div>
-        <div className='absolute top-8 right-1/4 w-12 h-12 bg-white rounded-full opacity-10'></div>
-        <div className='absolute bottom-6 right-10 w-20 h-20 bg-red-300 rounded-full opacity-15'></div>
-      </div>
 
-      <div className='max-w-7xl mx-auto py-6'>
-        {/* Search section */}
-        <Card className='overflow-hidden rounded-xl shadow-sm border-none mb-6'>
-          <CardContent className='p-4'>
-            <div className='relative'>
-              <Input
-                type='text'
-                placeholder='Tìm kiếm câu hỏi...'
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className='pl-10 pr-4 py-2 rounded-xl border border-gray-200 w-full focus:border-red-500 focus:ring focus:ring-red-200 focus:ring-opacity-50'
-              />
-              <Search className='absolute left-3 top-2.5 h-5 w-5 text-gray-400' />
-            </div>
-          </CardContent>
-        </Card>
+        <div className='max-w-7xl mx-auto py-6'>
+          {/* Search section */}
+          <Card className='overflow-hidden rounded-xl shadow-sm border-none mb-6'>
+            <CardContent className='p-4'>
+              <div className='relative'>
+                <Input
+                  type='text'
+                  placeholder='Tìm kiếm câu hỏi...'
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className='pl-10 pr-4 py-2 rounded-xl border border-gray-200 w-full focus:border-red-500 focus:ring focus:ring-red-200 focus:ring-opacity-50'
+                />
+                <Search className='absolute left-3 top-2.5 h-5 w-5 text-gray-400' />
+              </div>
+            </CardContent>
+          </Card>
 
-        {/* Category cards */}
-        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8'>
-          {faqs.map((category, index) => (
-            <Card
-              key={index}
-              className={`overflow-hidden rounded-xl shadow-sm border-none cursor-pointer transition-all hover:shadow-md ${
-                activeCategory === category.category ? 'ring-2 ring-red-500 ring-offset-2' : ''
-              }`}
-              onClick={() => {
-                setActiveCategory(activeCategory === category.category ? null : category.category)
-                document.getElementById(`category-${index}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-              }}
-            >
-              <CardContent className='p-4 flex flex-col items-center text-center'>
-                <div
-                  className={`w-14 h-14 rounded-full flex items-center justify-center mb-3 ${
-                    activeCategory === category.category ? 'bg-red-500' : 'bg-red-100'
-                  }`}
-                >
-                  <div className={activeCategory === category.category ? 'text-white' : 'text-red-500'}>
-                    {categoryIcons[category.category] || <HelpCircle className='w-6 h-6' />}
+          {/* Category cards */}
+          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8'>
+            {faqs.map((category, index) => (
+              <Card
+                key={index}
+                className={`overflow-hidden rounded-xl shadow-sm border-none cursor-pointer transition-all hover:shadow-md ${
+                  activeCategory === category.category ? 'ring-2 ring-red-500 ring-offset-2' : ''
+                }`}
+                onClick={() => {
+                  setActiveCategory(activeCategory === category.category ? null : category.category)
+                  document.getElementById(`category-${index}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                }}
+              >
+                <CardContent className='p-4 flex flex-col items-center text-center'>
+                  <div
+                    className={`w-14 h-14 rounded-full flex items-center justify-center mb-3 ${
+                      activeCategory === category.category ? 'bg-red-500' : 'bg-red-100'
+                    }`}
+                  >
+                    <div className={activeCategory === category.category ? 'text-white' : 'text-red-500'}>
+                      {categoryIcons[category.category] || <HelpCircle className='w-6 h-6' />}
+                    </div>
                   </div>
-                </div>
-                <h3 className='font-medium text-gray-800'>{category.category}</h3>
-                <p className='text-gray-500 mt-1 text-sm'>{category.questions.length} câu hỏi</p>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+                  <h3 className='font-medium text-gray-800'>{category.category}</h3>
+                  <p className='text-gray-500 mt-1 text-sm'>{category.questions.length} câu hỏi</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
 
-        {/* FAQ Sections */}
-        <div className='max-w-7xl mx-auto space-y-8'>
-          {filteredFaqs.map(
-            (category, index) =>
-              category.questions.length > 0 && (
-                <motion.div
-                  id={`category-${index}`}
-                  key={index}
-                  className='scroll-mt-16'
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.4 }}
-                >
-                  <Card className='overflow-hidden rounded-xl shadow-sm border-none mb-2'>
-                    <CardContent className='p-4'>
-                      <div className='flex items-center'>
-                        <div className='p-2.5 bg-red-100 rounded-lg mr-3'>
-                          {categoryIcons[category.category] || <HelpCircle className='w-5 h-5 text-red-500' />}
+          {/* FAQ Sections */}
+          <div className='max-w-7xl mx-auto space-y-8'>
+            {filteredFaqs.map(
+              (category, index) =>
+                category.questions.length > 0 && (
+                  <motion.div
+                    id={`category-${index}`}
+                    key={index}
+                    className='scroll-mt-16'
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4 }}
+                  >
+                    <Card className='overflow-hidden rounded-xl shadow-sm border-none mb-2'>
+                      <CardContent className='p-4'>
+                        <div className='flex items-center'>
+                          <div className='p-2.5 bg-red-100 rounded-lg mr-3'>
+                            {categoryIcons[category.category] || <HelpCircle className='w-5 h-5 text-red-500' />}
+                          </div>
+                          <h2 className='text-xl font-semibold text-gray-900'>{category.category}</h2>
                         </div>
-                        <h2 className='text-xl font-semibold text-gray-900'>{category.category}</h2>
-                      </div>
-                    </CardContent>
-                  </Card>
+                      </CardContent>
+                    </Card>
 
-                  <Accordion type='single' collapsible className='space-y-2'>
-                    {category.questions.map((faq, faqIndex) => (
-                      <Card key={faqIndex} className='overflow-hidden rounded-xl shadow-sm border-none'>
-                        <AccordionItem value={`item-${index}-${faqIndex}`} className='border-none'>
-                          <AccordionTrigger className='px-5 py-4 hover:no-underline group'>
-                            <div className='flex items-center text-left'>
-                              <span className='w-6 h-6 rounded-full bg-red-100 text-red-500 flex items-center justify-center text-xs mr-3 font-medium shrink-0'>
-                                {faqIndex + 1}
-                              </span>
-                              <span className='text-gray-800 group-hover:text-red-600 transition-colors font-medium'>
-                                {faq.question}
-                              </span>
-                            </div>
-                          </AccordionTrigger>
-                          <AccordionContent className='px-5 pb-5 pt-0 text-gray-600 whitespace-pre-line'>
-                            <div className='pl-9 border-l-2 border-red-100'>{faq.answer}</div>
-                          </AccordionContent>
-                        </AccordionItem>
-                      </Card>
-                    ))}
-                  </Accordion>
-                </motion.div>
-              )
-          )}
+                    <Accordion type='single' collapsible className='space-y-2'>
+                      {category.questions.map((faq, faqIndex) => (
+                        <Card key={faqIndex} className='overflow-hidden rounded-xl shadow-sm border-none'>
+                          <AccordionItem value={`item-${index}-${faqIndex}`} className='border-none'>
+                            <AccordionTrigger className='px-5 py-4 hover:no-underline group'>
+                              <div className='flex items-center text-left'>
+                                <span className='w-6 h-6 rounded-full bg-red-100 text-red-500 flex items-center justify-center text-xs mr-3 font-medium shrink-0'>
+                                  {faqIndex + 1}
+                                </span>
+                                <span className='text-gray-800 group-hover:text-red-600 transition-colors font-medium'>
+                                  {faq.question}
+                                </span>
+                              </div>
+                            </AccordionTrigger>
+                            <AccordionContent className='px-5 pb-5 pt-0 text-gray-600 whitespace-pre-line'>
+                              <div className='pl-9 border-l-2 border-red-100'>{faq.answer}</div>
+                            </AccordionContent>
+                          </AccordionItem>
+                        </Card>
+                      ))}
+                    </Accordion>
+                  </motion.div>
+                )
+            )}
 
-          {filteredFaqs.every((category) => category.questions.length === 0) && (
-            <div className='bg-white rounded-xl shadow-sm p-8 text-center'>
-              <Search className='h-12 w-12 text-gray-300 mx-auto mb-4' />
-              <h3 className='text-lg font-medium text-gray-900 mb-2'>Không tìm thấy kết quả</h3>
-              <p className='text-gray-500'>Không tìm thấy câu hỏi nào phù hợp với tìm kiếm của bạn.</p>
-            </div>
-          )}
+            {filteredFaqs.every((category) => category.questions.length === 0) && (
+              <div className='bg-white rounded-xl shadow-sm p-8 text-center'>
+                <Search className='h-12 w-12 text-gray-300 mx-auto mb-4' />
+                <h3 className='text-lg font-medium text-gray-900 mb-2'>Không tìm thấy kết quả</h3>
+                <p className='text-gray-500'>Không tìm thấy câu hỏi nào phù hợp với tìm kiếm của bạn.</p>
+              </div>
+            )}
+          </div>
+
+          {/* CTA Section */}
+          <Card className='overflow-hidden rounded-xl shadow-sm border-none bg-gradient-to-r from-red-500 to-red-600 text-white mt-12 mb-4 max-w-7xl mx-auto'>
+            <CardContent className='p-8 text-center'>
+              <h3 className='text-2xl font-bold mb-3'>Bạn vẫn còn thắc mắc?</h3>
+              <p className='text-white/90 mb-6 max-w-2xl mx-auto'>
+                Nếu bạn không tìm thấy câu trả lời cho thắc mắc của mình, hãy liên hệ với chúng tôi qua hotline hoặc
+                email.
+              </p>
+              <div className='flex flex-col sm:flex-row justify-center gap-3'>
+                <Button
+                  onClick={() => navigate('/lien-he')}
+                  variant='default'
+                  className='bg-white text-red-600 hover:bg-gray-100 font-medium'
+                  size='lg'
+                >
+                  <Award className='mr-2 h-4 w-4' />
+                  Liên hệ tư vấn
+                </Button>
+                <Button
+                  onClick={() => navigate('/dang-ky-hien-mau')}
+                  variant='outline'
+                  className='bg-transparent border-white text-white hover:bg-white/10 font-medium'
+                  size='lg'
+                >
+                  Đăng ký hiến máu
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
         </div>
-
-        {/* CTA Section */}
-        <Card className='overflow-hidden rounded-xl shadow-sm border-none bg-gradient-to-r from-red-500 to-red-600 text-white mt-12 mb-4 max-w-7xl mx-auto'>
-          <CardContent className='p-8 text-center'>
-            <h3 className='text-2xl font-bold mb-3'>Bạn vẫn còn thắc mắc?</h3>
-            <p className='text-white/90 mb-6 max-w-2xl mx-auto'>
-              Nếu bạn không tìm thấy câu trả lời cho thắc mắc của mình, hãy liên hệ với chúng tôi qua hotline hoặc
-              email.
-            </p>
-            <div className='flex flex-col sm:flex-row justify-center gap-3'>
-              <Button
-                onClick={() => navigate('/lien-he')}
-                variant='default'
-                className='bg-white text-red-600 hover:bg-gray-100 font-medium'
-                size='lg'
-              >
-                <Award className='mr-2 h-4 w-4' />
-                Liên hệ tư vấn
-              </Button>
-              <Button
-                onClick={() => navigate('/dang-ky-hien-mau')}
-                variant='outline'
-                className='bg-transparent border-white text-white hover:bg-white/10 font-medium'
-                size='lg'
-              >
-                Đăng ký hiến máu
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
       </div>
     </div>
   )

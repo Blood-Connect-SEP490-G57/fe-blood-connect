@@ -69,17 +69,17 @@ const ContactPage = () => {
   }
 
   return (
-    <div className='min-h-screen pt-16 bg-gray-100 '>
+    <div className='min-h-screen bg-gray-100 '>
       {/* Banner section */}
       <div className='max-w-7xl mx-auto px-4 py-6'>
-        <div className='bg-gradient-to-r from-red-600 to-red-400 text-white p-8 relative rounded-xl'>
+        <div className='bg-gradient-to-r from-red-600 to-red-400 text-white p-6 relative rounded-xl'>
           <div className='container mx-auto'>
             <div className='flex flex-col items-center'>
-              <div className='h-24 w-24 bg-white rounded-full flex items-center justify-center shadow-md mb-4'>
+              <div className='h-20 w-20 bg-white rounded-full flex items-center justify-center shadow-md mb-4'>
                 <MessageCircle className='h-12 w-12 text-red-500' />
               </div>
-              <h1 className='text-2xl font-bold mb-1'>Liên Hệ Với Chúng Tôi</h1>
-              <p className='text-center text-white/80 max-w-2xl'>
+              <h1 className='text-xl font-bold mb-1'>Liên Hệ Với Chúng Tôi</h1>
+              <p className='text-center text-white/80 max-w-2xl text-sm'>
                 Gửi phản hồi hoặc liên hệ trực tiếp với chúng tôi để được hỗ trợ tốt nhất!
               </p>
             </div>
@@ -91,7 +91,7 @@ const ContactPage = () => {
         </div>
       </div>
 
-      <div className='max-w-7xl mx-auto px-4 py-6'>
+      <div className='max-w-7xl mx-auto px-4'>
         <div className='flex flex-col lg:flex-row gap-6'>
           {/* Contact Info */}
           <Card className='w-full lg:w-1/2 overflow-hidden rounded-xl shadow-sm border-none'>

@@ -100,12 +100,12 @@ const AddressSelector: React.FC<AddressSelectorProps> = ({ onAddressSelect, init
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         {trigger || (
-          <Button variant='outline' className='ml-2 justify-start'>
+          <Button variant='outline' size='sm' className='ml-2 justify-start'>
             <Pencil className='w-4 h-4' />
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent className='sm:max-w-[425px]'>
+      <DialogContent className='sm:max-w-[425px] rounded-xl mx-4 my-4 sm:mx-auto'>
         <DialogHeader>
           <DialogTitle>Chọn địa chỉ</DialogTitle>
         </DialogHeader>

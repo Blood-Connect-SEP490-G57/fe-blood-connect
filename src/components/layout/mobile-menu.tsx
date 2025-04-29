@@ -1,7 +1,7 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { Home, Calendar, User, History, CheckCircle, Menu } from 'lucide-react'
+import { Home, Calendar, User, History, CheckCircle, Menu, LogIn, UserPlus } from 'lucide-react'
 import { useMenuStore } from '@/hooks/stores/menuStore'
 import { useVerification } from '../verificationContext/VerificationContext'
 import { useAuth } from '../authContext/AuthContext'
@@ -14,14 +14,14 @@ const MobileMenu: React.FC = () => {
   const { isLoggedIn } = useAuth()
 
   const navigationItems = [
-    { id: 'trang-chu', icon: <Home className='w-5 h-5' />, path: '/' },
-    { id: 'dang-ky-hien-mau', icon: <Calendar className='w-5 h-5' />, path: '/dang-ky-hien-mau' }
+    { id: 'trang-chu', label: 'Trang chủ', icon: <Home className='w-5 h-5' />, path: '/' },
+    { id: 'dang-ky-hien-mau', label: 'Đăng ký ', icon: <Calendar className='w-5 h-5' />, path: '/dang-ky-hien-mau' }
   ]
 
   if (!isLoggedIn) {
     navigationItems.push(
-      { id: 'dang-nhap', icon: <User className='w-5 h-5' />, path: '/dang-nhap' },
-      { id: 'dang-ky', icon: <User className='w-5 h-5' />, path: '/dang-ky' }
+      { id: 'dang-nhap', label: 'Đăng nhập', icon: <LogIn className='w-5 h-5' />, path: '/dang-nhap' },
+      { id: 'dang-ky', label: 'Đăng ký', icon: <UserPlus className='w-5 h-5' />, path: '/dang-ky' }
     )
   }
 
@@ -29,11 +29,13 @@ const MobileMenu: React.FC = () => {
     navigationItems.push(
       {
         id: 'lich-su-hien-mau',
+        label: 'Lịch sử',
         icon: <History className='w-5 h-5' />,
         path: '/trang-ca-nhan#lich-su-hien-mau'
       },
       {
         id: 'trang-ca-nhan',
+        label: 'Thông tin',
         icon: <User className='w-5 h-5' />,
         path: '/trang-ca-nhan#thong-tin-ca-nhan'
       }
@@ -43,6 +45,7 @@ const MobileMenu: React.FC = () => {
   if (isVerified === 'NONE') {
     navigationItems.push({
       id: 'tao-ho-so-hien-mau',
+      label: 'Hồ sơ',
       icon: <CheckCircle className='w-5 h-5' />,
       path: '/trang-ca-nhan#tao-ho-so-hien-mau'
     })
@@ -50,6 +53,7 @@ const MobileMenu: React.FC = () => {
 
   navigationItems.push({
     id: 'menu',
+    label: 'Điều hướng',
     icon: <Menu className='w-5 h-5' />,
     path: '#'
   })
@@ -97,6 +101,7 @@ const MobileMenu: React.FC = () => {
             whileTap={{ scale: 0.95 }}
           >
             <div className={`p-2 rounded-full ${isActive(item.path) ? 'bg-red-100' : 'bg-gray-100'}`}>{item.icon}</div>
+            <div className='text-xs'>{item.label}</div>
           </motion.button>
         ))}
       </div>

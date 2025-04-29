@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useToast } from '@/components/ui/use-toast'
 import * as z from 'zod'
-import { Loader2Icon, Lock, Mail, ArrowRight, ChevronLeft, Eye, EyeOff } from 'lucide-react'
+import { Loader2Icon, Lock, Mail, ArrowRight, Eye, EyeOff } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
@@ -57,30 +57,14 @@ export default function Register() {
   }
 
   return (
-    <div className='min-h-screen bg-gray-100 py-12 flex flex-col justify-center relative overflow-hidden'>
-      {/* Decorative elements */}
-      <div className='absolute top-20 right-10 w-72 h-72 bg-red-50 rounded-full blur-3xl opacity-30 -z-10'></div>
-      <div className='absolute bottom-20 left-10 w-72 h-72 bg-red-50 rounded-full blur-3xl opacity-30 -z-10'></div>
-
-      {/* Back button */}
-      <motion.button
-        onClick={() => navigate('/dang-nhap')}
-        className='absolute top-8 left-8 p-2 rounded-full bg-white/70 backdrop-blur-sm shadow-sm border border-gray-100 text-gray-600 hover:text-red-600 transition-all'
-        whileHover={{ x: -2 }}
-        whileTap={{ scale: 0.95 }}
-      >
-        <ChevronLeft className='w-5 h-5' />
-      </motion.button>
-
+    <div className='min-h-screen pb-10 bg-gray-100 flex flex-col justify-center relative overflow-hidden'>
       <div className='sm:mx-auto sm:w-full sm:max-w-md'>
-        <div className='flex justify-center mb-8'></div>
-
         <motion.div
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.4 }}
         >
-          <h2 className='mt-3 text-center text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-500'>
+          <h2 className='text-center text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-500'>
             Đăng Ký
           </h2>
           <p className='mt-2 text-center text-sm text-gray-600'>

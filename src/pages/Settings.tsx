@@ -15,7 +15,6 @@ import { useState } from 'react'
 
 const Settings = () => {
   const [showPassword, setShowPassword] = useState(false)
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [showOldPassword, setShowOldPassword] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
@@ -66,7 +65,7 @@ const Settings = () => {
   }
 
   return (
-    <div className='min-h-screen bg-gray-100 py-12 overflow-hidden mt-6'>
+    <div className='min-h-screen bg-gray-100 py-6 overflow-hidden'>
       <div className='container mx-auto px-4'>
         <div className='max-w-3xl mx-auto space-y-6'>
           <Card>
@@ -90,7 +89,12 @@ const Settings = () => {
                           <FormLabel>Mật khẩu hiện tại</FormLabel>
                           <FormControl>
                             <div className='relative'>
-                              <Input className='placeholder:text-gray-400 bg-gray-100' placeholder='Nhập mật khẩu hiện tại' {...field} type={showOldPassword ? 'text' : 'password'} />
+                              <Input
+                                className='placeholder:text-gray-400 bg-gray-100'
+                                placeholder='Nhập mật khẩu hiện tại'
+                                {...field}
+                                type={showOldPassword ? 'text' : 'password'}
+                              />
                               <button
                                 type='button'
                                 onClick={() => setShowOldPassword(!showOldPassword)}
@@ -112,7 +116,12 @@ const Settings = () => {
                           <FormLabel>Mật khẩu mới</FormLabel>
                           <FormControl>
                             <div className='relative'>
-                              <Input className='placeholder:text-gray-400 bg-gray-100' placeholder='Nhập mật khẩu mới' {...field} type={showPassword ? 'text' : 'password'} />
+                              <Input
+                                className='placeholder:text-gray-400 bg-gray-100'
+                                placeholder='Nhập mật khẩu mới'
+                                {...field}
+                                type={showPassword ? 'text' : 'password'}
+                              />
                               <button
                                 type='button'
                                 onClick={() => setShowPassword(!showPassword)}
@@ -134,13 +143,18 @@ const Settings = () => {
                           <FormLabel>Xác nhận mật khẩu mới</FormLabel>
                           <FormControl>
                             <div className='relative'>
-                              <Input className='placeholder:text-gray-400 bg-gray-100' placeholder='Nhập lại mật khẩu mới' {...field} type={showConfirmPassword ? 'text' : 'password'} />
+                              <Input
+                                className='placeholder:text-gray-400 bg-gray-100'
+                                placeholder='Nhập lại mật khẩu mới'
+                                {...field}
+                                type={showPassword ? 'text' : 'password'}
+                              />
                               <button
                                 type='button'
-                                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                onClick={() => setShowPassword(!showPassword)}
                                 className='absolute right-3 top-3 text-gray-500 hover:text-gray-700 focus:outline-none'
                               >
-                                {showConfirmPassword ? <Eye size={18} /> : <EyeOff size={18} />}
+                                {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
                               </button>
                             </div>
                           </FormControl>

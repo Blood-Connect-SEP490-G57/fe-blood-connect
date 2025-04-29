@@ -92,76 +92,78 @@ Mỗi đơn vị máu hiến tặng có thể cứu sống đến 3 người b�
   }
 
   return (
-    <div className='min-h-screen bg-gray-100 pt-10'>
-      {/* Banner section */}
-      <div className='bg-gradient-to-r from-red-600 to-red-400 text-white p-8 relative'>
-        <div className='container mx-auto'>
-          <div className='flex flex-col items-center'>
-            <div className='h-24 w-24 bg-white rounded-full flex items-center justify-center shadow-md mb-4'>
-              <FileText className='h-12 w-12 text-red-500' />
+    <div className='min-h-screen bg-gray-100 '>
+      <div className='max-w-7xl mx-auto px-4 py-6'>
+        {/* Banner section */}
+        <div className='bg-gradient-to-r from-red-600 to-red-400 text-white p-6 relative rounded-xl'>
+          <div className='container mx-auto'>
+            <div className='flex flex-col items-center'>
+              <div className='h-20 w-20 bg-white rounded-full flex items-center justify-center shadow-md mb-4'>
+                <FileText className='h-12 w-12 text-red-500' />
+              </div>
+              <h1 className='text-xl font-bold mb-1'>Điều Khoản & Điều Kiện</h1>
+              <p className='text-center text-white/80 max-w-2xl text-sm'>
+                Các quy định và điều khoản khi sử dụng dịch vụ hiến máu của chúng tôi
+              </p>
             </div>
-            <h1 className='text-2xl font-bold mb-1'>Điều Khoản & Điều Kiện</h1>
-            <p className='text-center text-white/80 max-w-2xl'>
-              Các quy định và điều khoản khi sử dụng dịch vụ hiến máu của chúng tôi
-            </p>
           </div>
+          <div className='absolute -bottom-0 left-1/4 w-16 h-16 bg-red-400 rounded-full opacity-20'></div>
+          <div className='absolute top-8 right-1/4 w-12 h-12 bg-white rounded-full opacity-10'></div>
+          <div className='absolute bottom-6 right-10 w-20 h-20 bg-red-300 rounded-full opacity-15'></div>
         </div>
-        <div className='absolute -bottom-0 left-1/4 w-16 h-16 bg-red-400 rounded-full opacity-20'></div>
-        <div className='absolute top-8 right-1/4 w-12 h-12 bg-white rounded-full opacity-10'></div>
-        <div className='absolute bottom-6 right-10 w-20 h-20 bg-red-300 rounded-full opacity-15'></div>
-      </div>
 
-      <div className='max-w-7xl mx-auto px-8 py-6'>
-        <motion.div
-          className='overflow-hidden rounded-xl shadow-sm border-none mb-6'
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-        >
-          {termItems.map((item) => (
-            <motion.div
-              key={item.id}
-              className='bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 mt-4'
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-              whileHover={{ y: -2, boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.05)' }}
-            >
-              <button
-                className='w-full p-5 flex justify-between items-center focus:outline-none'
-                onClick={() => toggleItem(item.id)}
+        <div className='max-w-7xl mx-auto py-6'>
+          <motion.div
+            className='overflow-hidden rounded-xl shadow-sm border-none mb-6'
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+          >
+            {termItems.map((item) => (
+              <motion.div
+                key={item.id}
+                className='bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 mt-4'
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+                whileHover={{ y: -2, boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.05)' }}
               >
-                <div className='flex items-center gap-3'>
-                  <div className={`rounded-full p-2 bg-gradient-to-r ${item.color} text-white`}>{item.icon}</div>
-                  <h3 className='text-lg font-semibold text-gray-900'>{item.title}</h3>
-                </div>
-                <div className='bg-gray-100 rounded-full p-1.5 transition-transform duration-200 ease-in-out transform'>
-                  {openItems.includes(item.id) ? (
-                    <ChevronUp className='h-5 w-5 text-gray-500' />
-                  ) : (
-                    <ChevronDown className='h-5 w-5 text-gray-500' />
-                  )}
-                </div>
-              </button>
+                <button
+                  className='w-full p-5 flex justify-between items-center focus:outline-none'
+                  onClick={() => toggleItem(item.id)}
+                >
+                  <div className='flex items-center gap-3'>
+                    <div className={`rounded-full p-2 bg-gradient-to-r ${item.color} text-white`}>{item.icon}</div>
+                    <h3 className='text-lg font-semibold text-gray-900'>{item.title}</h3>
+                  </div>
+                  <div className='bg-gray-100 rounded-full p-1.5 transition-transform duration-200 ease-in-out transform'>
+                    {openItems.includes(item.id) ? (
+                      <ChevronUp className='h-5 w-5 text-gray-500' />
+                    ) : (
+                      <ChevronDown className='h-5 w-5 text-gray-500' />
+                    )}
+                  </div>
+                </button>
 
-              <AnimatePresence>
-                {openItems.includes(item.id) && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: 'auto', opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.3, ease: 'easeInOut' }}
-                    className='overflow-hidden'
-                  >
-                    <div className='px-5 py-4 border-t border-gray-100'>
-                      <p className='text-gray-700 whitespace-pre-line leading-relaxed text-sm'>{item.content}</p>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.div>
-          ))}
-        </motion.div>
+                <AnimatePresence>
+                  {openItems.includes(item.id) && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.3, ease: 'easeInOut' }}
+                      className='overflow-hidden'
+                    >
+                      <div className='px-5 py-4 border-t border-gray-100'>
+                        <p className='text-gray-700 whitespace-pre-line leading-relaxed text-sm'>{item.content}</p>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
       </div>
     </div>
   )

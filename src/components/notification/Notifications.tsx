@@ -126,11 +126,9 @@ export default function Notifications({ onClose }: { onClose?: () => void }) {
   return (
     <motion.div
       ref={containerRef}
-      className='h-full min-w-[250px] lg:min-w-[300px] w-full md:max-w-md lg:max-w-lg backdrop-blur-md overflow-hidden max-h-[70vh] flex flex-col'
+      className='h-full min-w-[250px] lg:min-w-[300px] w-full md:max-w-md lg:max-w-lg backdrop-blur-md  max-h-[70vh] flex flex-col'
       initial={{ opacity: 0, y: -20, scale: 0.95 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, y: -20, scale: 0.95 }}
-      transition={{ type: 'spring', damping: 25, stiffness: 300 }}
     >
       <div className='flex-shrink-0'>
         <div className='flex items-center justify-between bg-white p-2'>
@@ -207,7 +205,7 @@ export default function Notifications({ onClose }: { onClose?: () => void }) {
                   transition={{ delay: index * 0.05, duration: 0.2 }}
                 >
                   <Card
-                    className={`p-0 transition-all duration-200 hover:shadow-md overflow-hidden ${
+                    className={`p-0 transition-all duration-200 hover:shadow-md  ${
                       notification.status ? 'bg-white' : 'bg-red-50'
                     } border-0 shadow-sm rounded-2xl`}
                   >
@@ -293,7 +291,10 @@ export default function Notifications({ onClose }: { onClose?: () => void }) {
       <div className='border-t border-gray-100 bg-white flex-shrink-0'>
         <motion.button
           className='w-full flex items-center justify-center gap-2 bg-gradient-to-r from-red-500 to-red-600 text-white py-2.5 px-4 rounded-full shadow-sm hover:shadow-md transition-all text-sm font-medium'
-          onClick={() => navigate('/thong-bao')}
+          onClick={() => {
+            navigate('/thong-bao')
+            onClose?.()
+          }}
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
         >

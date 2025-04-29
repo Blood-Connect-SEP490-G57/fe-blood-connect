@@ -4,7 +4,7 @@ import { OtpInput } from 'reactjs-otp-input'
 import { toast } from '../ui/use-toast'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { ArrowRight, ChevronLeft, Mail } from 'lucide-react'
+import { ArrowRight, Mail } from 'lucide-react'
 
 export default function OTPInput() {
   const navigate = useNavigate()
@@ -43,6 +43,7 @@ export default function OTPInput() {
         variant: 'default'
       })
       navigate('/thay-doi-mat-khau')
+      localStorage.setItem('resetToken', response.data.resetToken)
     } catch (error) {
       toast({
         title: 'Lỗi',
@@ -95,21 +96,7 @@ export default function OTPInput() {
   const emailAddress = localStorage.getItem('email') || ''
 
   return (
-    <div className='min-h-screen bg-gradient-to-b from-gray-50 to-white flex flex-col items-center justify-center py-12 px-4 relative overflow-hidden'>
-      {/* Decorative elements */}
-      <div className='absolute top-20 right-10 w-72 h-72 bg-red-50 rounded-full blur-3xl opacity-30 -z-10'></div>
-      <div className='absolute bottom-20 left-10 w-72 h-72 bg-red-50 rounded-full blur-3xl opacity-30 -z-10'></div>
-
-      {/* Back button */}
-      <motion.button
-        onClick={() => navigate(-1)}
-        className='absolute top-8 left-8 p-2 rounded-full bg-white/70 backdrop-blur-sm shadow-sm border border-gray-100 text-gray-600 hover:text-red-600 transition-all'
-        whileHover={{ x: -2 }}
-        whileTap={{ scale: 0.95 }}
-      >
-        <ChevronLeft className='w-5 h-5' />
-      </motion.button>
-
+    <div className='min-h-screen bg-gray-100 flex flex-col items-center justify-center pb-10 px-4 relative overflow-hidden'>
       <div className='w-full max-w-md space-y-8 z-10'>
         <motion.div
           className='flex flex-col items-center'

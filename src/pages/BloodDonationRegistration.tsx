@@ -147,13 +147,13 @@ const BloodDonationRegistration: React.FC = () => {
   }
 
   return (
-    <div className='min-h-screen pt-16 bg-gray-100 rounded-lg'>
+    <div className='min-h-screen bg-gray-100 rounded-lg'>
       {/* Banner section */}
       <div className='max-w-7xl mx-auto px-4 py-6'>
-        <div className='bg-gradient-to-r from-red-600 to-red-400 text-white p-8 relative rounded-lg'>
+        <div className='bg-gradient-to-r from-red-600 to-red-400 text-white p-6 relative rounded-lg'>
           <div className='container mx-auto'>
             <div className='flex flex-col items-center'>
-              <div className='h-24 w-24 bg-white rounded-full flex items-center justify-center shadow-md mb-4'>
+              <div className='h-20 w-20 bg-white rounded-full flex items-center justify-center shadow-md mb-4'>
                 <Droplet className='h-12 w-12 text-red-500' />
               </div>
               <h1 className='text-xl font-bold mb-1'>{getStepTitle()}</h1>
