@@ -202,7 +202,7 @@ const BloodDonationBenefits: React.FC = () => {
                   <h3 className='text-xl sm:text-2xl font-semibold text-red-600'>{slides[currentSlide].title}</h3>
                 </div>
 
-                <div className='overflow-auto flex-grow pr-2 custom-scrollbar'>
+                <div className='overflow-hidden flex-grow pr-2 custom-scrollbar'>
                   <ul className='list-none pl-1 text-gray-700 space-y-4'>
                     {slides[currentSlide].content.map((item, index) => (
                       <motion.li

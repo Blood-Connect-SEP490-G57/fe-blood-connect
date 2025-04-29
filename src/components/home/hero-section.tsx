@@ -40,7 +40,7 @@ const HeroSection: React.FC = () => {
   }
 
   return (
-    <section className='relative py-4 overflow-hidden bg-gradient-to-br from-red-500 via-red-600 to-red-500'>
+    <section className='relative py-8 overflow-hidden bg-gradient-to-br from-red-500 via-red-600 to-red-500'>
       {/* Background Pattern - iOS style subtle pattern */}
       <div className='absolute inset-0 opacity-10'>
         <div
