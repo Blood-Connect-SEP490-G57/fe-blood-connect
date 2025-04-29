@@ -126,7 +126,7 @@ export default function Notifications({ onClose }: { onClose?: () => void }) {
   return (
     <motion.div
       ref={containerRef}
-      className='h-full min-w-[250px] lg:min-w-[300px] w-full md:max-w-md lg:max-w-lg backdrop-blur-md overflow-hidden max-h-[70vh] flex flex-col'
+      className='h-full min-w-[250px] lg:min-w-[300px] w-full md:max-w-md lg:max-w-lg backdrop-blur-md  max-h-[70vh] flex flex-col'
       initial={{ opacity: 0, y: -20, scale: 0.95 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: -20, scale: 0.95 }}
@@ -207,7 +207,7 @@ export default function Notifications({ onClose }: { onClose?: () => void }) {
                   transition={{ delay: index * 0.05, duration: 0.2 }}
                 >
                   <Card
-                    className={`p-0 transition-all duration-200 hover:shadow-md overflow-hidden ${
+                    className={`p-0 transition-all duration-200 hover:shadow-md  ${
                       notification.status ? 'bg-white' : 'bg-red-50'
                     } border-0 shadow-sm rounded-2xl`}
                   >
