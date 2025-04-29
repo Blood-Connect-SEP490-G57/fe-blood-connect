@@ -69,7 +69,7 @@ const ContactPage = () => {
   }
 
   return (
-    <div className='min-h-screen pt-16 bg-gray-100 '>
+    <div className='min-h-screen bg-gray-100 '>
       {/* Banner section */}
       <div className='max-w-7xl mx-auto px-4 py-6'>
         <div className='bg-gradient-to-r from-red-600 to-red-400 text-white p-6 relative rounded-xl'>
@@ -91,7 +91,7 @@ const ContactPage = () => {
         </div>
       </div>
 
-      <div className='max-w-7xl mx-auto px-4 py-6'>
+      <div className='max-w-7xl mx-auto px-4'>
         <div className='flex flex-col lg:flex-row gap-6'>
           {/* Contact Info */}
           <Card className='w-full lg:w-1/2 overflow-hidden rounded-xl shadow-sm border-none'>

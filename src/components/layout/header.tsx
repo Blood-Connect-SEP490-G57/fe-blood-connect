@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import {
@@ -28,7 +28,7 @@ import Notifications from '@/components/notification/Notifications'
 import { useAuth } from '@/components/authContext/AuthContext'
 import { useVerification } from '../verificationContext/VerificationContext'
 import { useUnreadNotifications } from '@/hooks/useUnreadNotifications'
-import { motion, AnimatePresence } from 'framer-motion'
+import { AnimatePresence } from 'framer-motion'
 import { useMenuStore } from '@/hooks/stores/menuStore'
 
 const Header: React.FC = () => {
@@ -39,70 +39,6 @@ const Header: React.FC = () => {
   const { isLoggedIn, setIsLoggedIn } = useAuth()
   const { isVerified } = useVerification()
   const { unreadCount } = useUnreadNotifications()
-  const [scrolled, setScrolled] = useState(false)
-
-  // Prevent body scrolling when menu or notifications are open
-  useEffect(() => {
-    if (isHeaderMenuOpen || isMobileNotiOpen) {
-      document.body.style.overflow = 'hidden'
-      document.body.style.position = 'fixed'
-      document.body.style.width = '100%'
-    } else {
-      document.body.style.overflow = ''
-      document.body.style.position = ''
-      document.body.style.width = ''
-    }
-
-    return () => {
-      document.body.style.overflow = ''
-      document.body.style.position = ''
-      document.body.style.width = ''
-    }
-  }, [isHeaderMenuOpen, isMobileNotiOpen])
-
-  // Monitor scrolling for glass effect
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 10)
-    }
-
-    window.addEventListener('scroll', handleScroll)
-    return () => {
-      window.removeEventListener('scroll', handleScroll)
-    }
-  }, [])
-
-  useEffect(() => {
-    if (
-      location.pathname === '/trang-ca-nhan' &&
-      (location.hash === '#thong-tin-ca-nhan' ||
-        location.hash === '#lich-su-hien-mau' ||
-        location.hash === '#tao-ho-so-hien-mau')
-    ) {
-      setHeaderMenuOpen(false)
-      setIsMobileNotiOpen(false)
-    }
-  }, [location])
-
-  useEffect(() => {
-    setHeaderMenuOpen(false)
-    setIsMobileNotiOpen(false)
-  }, [location])
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (event.target instanceof Element && !event.target.closest('.mobile-menu') && isHeaderMenuOpen) {
-        setHeaderMenuOpen(false)
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [isHeaderMenuOpen, setHeaderMenuOpen])
-
-  useEffect(() => {
-    const token = localStorage.getItem('access_token')
-    setIsLoggedIn(!!token)
-  }, [setIsLoggedIn])
 
   const handleLogout = () => {
     localStorage.clear()
@@ -169,30 +105,21 @@ const Header: React.FC = () => {
 
   // Get current page for active status
   const isActive = (path: string) => {
-    const [basePath, hash] = path.split('#') // Tách pathname và hash
-    const isPathMatch = location.pathname === basePath // Kiểm tra pathname
-    const isHashMatch = !hash || location.hash === `#${hash}` // Kiểm tra hash (nếu có)
+    const [basePath, hash] = path.split('#')
+    const isPathMatch = location.pathname === basePath
+    const isHashMatch = !hash || location.hash === `#${hash}`
     return isPathMatch && isHashMatch
   }
 
   return (
-    <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? 'bg-white/80 backdrop-blur-md shadow-sm' : 'bg-white shadow-sm'
-      }`}
-    >
-      <div className='max-w-7xl mx-auto sm:px2'>
+    <header className="sticky top-0 left-0 right-0 z-50 bg-white shadow-sm">
+      <div className='max-w-7xl mx-auto px-2'>
         <div className='flex items-center justify-between h-16'>
-          <motion.div
-            className='flex items-center'
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.3 }}
-          >
+          <div className='flex items-center'>
             <a href='/' className='flex items-center'>
               <img src='./images/icon/logo.png' alt='Giọt Máu Hy Vọng' className='h-12 w-30 ml-2' />
             </a>
-          </motion.div>
+          </div>
 
           {/* Desktop and Tablet Navigation */}
           <div className='hidden lg:flex items-center space-x-6'>
@@ -208,138 +135,25 @@ const Header: React.FC = () => {
                 )
               })
               .map((item) => (
-                <motion.a
+                <a
                   key={item.name}
                   href={item.href}
-                  className={`text-sm font-medium transition-colors px-3 py-2 rounded-full ${
+                  className={`text-sm font-medium px-3 py-2 rounded-full ${
                     isActive(item.href)
                       ? 'text-gray-700 underline underline-offset-4 decoration-2 decoration-red-500'
                       : 'text-gray-700 hover:text-red-600 hover:bg-red-50'
                   }`}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
                 >
                   {item.name}
-                </motion.a>
+                </a>
               ))}
           </div>
 
           <div className='hidden lg:flex items-center space-x-3'>
             {isLoggedIn ? (
               <>
-                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                  <Button
-                    variant='ghost'
-                    onClick={() => {
-                      setIsMobileNotiOpen((prev) => !prev)
-                      setHeaderMenuOpen(false)
-                    }}
-                    className='group relative rounded-full p-2 bg-red-50 border border-red-100 text-red-600 hover:bg-red-100'
-                  >
-                    <div className='relative w-full h-full'>
-                      <Bell className='group-hover:text-white w-5 h-5' />
-                      {unreadCount > 0 && (
-                        <span className='absolute -top-3 -right-3 bg-red-600 text-white text-xs rounded-full px-1.5 py-0.5 min-w-[18px] text-center shadow-sm'>
-                          {unreadCount}
-                        </span>
-                      )}
-                    </div>
-                  </Button>
-                </motion.div>
-
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                      <Button
-                        variant='ghost'
-                        className='relative rounded-full overflow-hidden p-0 h-10 w-10 border-2 border-red-100 hover:border-red-200 transition-colors shadow-sm'
-                      >
-                        <UserAvatar size='sm' />
-                      </Button>
-                    </motion.div>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent
-                    className='w-64 mt-2 rounded-2xl backdrop-blur-sm bg-white/95 shadow-xl border border-gray-100 p-1.5 overflow-hidden'
-                    align='end'
-                    forceMount
-                  >
-                    <motion.div
-                      initial={{ opacity: 0, y: -5 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      <DropdownMenuItem
-                        onClick={() => navigate('/trang-ca-nhan#thong-tin-ca-nhan')}
-                        className='rounded-xl hover:bg-red-50 focus:bg-red-50 hover:text-red-600 focus:text-red-600 gap-3 cursor-pointer p-3 mb-1 transition-all duration-200'
-                      >
-                        <div className='p-2 bg-red-100 rounded-full text-red-600'>
-                          <User className='h-4 w-4' />
-                        </div>
-                        <div className='flex flex-col'>
-                          <span className='font-medium'>Hồ sơ cá nhân</span>
-                          <span className='text-xs text-gray-500'>Xem thông tin tài khoản</span>
-                        </div>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={() => navigate('/doi-mat-khau')}
-                        className='rounded-xl hover:bg-red-50 focus:bg-red-50 hover:text-red-600 focus:text-red-600 gap-3 cursor-pointer p-3 mb-1 transition-all duration-200'
-                      >
-                        <div className='p-2 bg-red-100 rounded-full text-red-600'>
-                          <Settings className='h-4 w-4' />
-                        </div>
-                        <div className='flex flex-col'>
-                          <span className='font-medium'>Đổi mật khẩu</span>
-                          <span className='text-xs text-gray-500'>Đổi mật khẩu tài khoản</span>
-                        </div>
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator className='my-1.5 bg-gray-100' />
-                      <DropdownMenuItem
-                        className='rounded-xl bg-red-50 hover:bg-red-100 focus:bg-red-100 text-red-600 gap-3 cursor-pointer p-3 transition-all duration-200'
-                        onClick={handleLogout}
-                      >
-                        <div className='p-2 bg-white/80 backdrop-blur-sm rounded-full text-red-600 shadow-sm'>
-                          <LogOut className='h-4 w-4' />
-                        </div>
-                        <span className='font-medium'>Đăng xuất</span>
-                      </DropdownMenuItem>
-                    </motion.div>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </>
-            ) : (
-              <div className='flex items-center gap-3'>
-                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                  <Button
-                    variant='outline'
-                    className='rounded-full border-red-500 text-red-600 hover:bg-red-50 hover:text-red-700 transition-all'
-                    onClick={handleRegisterClick}
-                  >
-                    <UserPlusIcon className='w-4 h-4 mr-1.5' />
-                    Đăng ký
-                  </Button>
-                </motion.div>
-
-                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                  <Button
-                    variant='default'
-                    className='rounded-full bg-gradient-to-r from-red-600 to-red-500 text-white hover:from-red-700 hover:to-red-600 transition-all shadow-sm'
-                    onClick={handleLoginClick}
-                  >
-                    <LogInIcon className='w-4 h-4 mr-1.5' />
-                    Đăng nhập
-                  </Button>
-                </motion.div>
-              </div>
-            )}
-          </div>
-
-          {/* Mobile menu button */}
-          <div className='lg:hidden flex items-center space-x-2 mr-2'>
-            {isLoggedIn && location.pathname !== '/dang-nhap' && location.pathname !== '/dang-ky' && (
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Button
                   variant='ghost'
-                  data-notifications-trigger
                   onClick={() => {
                     setIsMobileNotiOpen((prev) => !prev)
                     setHeaderMenuOpen(false)
@@ -347,44 +161,123 @@ const Header: React.FC = () => {
                   className='group relative rounded-full p-2 bg-red-50 border border-red-100 text-red-600 hover:bg-red-100'
                 >
                   <div className='relative w-full h-full'>
-                    <Bell className='w-6 h-6' />
+                    <Bell className='group-hover:text-white w-5 h-5' />
                     {unreadCount > 0 && (
-                      <span className='absolute -top-3 -right-3 bg-red-600 text-white text-xs rounded-full px-1.5 py-0.5 min-w-[18px] text-center md:min-w-[20px] md:px-2 md:py-1 md:text-sm'>
+                      <span className='absolute -top-3 -right-3 bg-red-600 text-white text-xs rounded-full px-1.5 py-0.5 min-w-[18px] text-center shadow-sm'>
                         {unreadCount}
                       </span>
                     )}
                   </div>
                 </Button>
-              </motion.div>
+
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant='ghost'
+                      className='relative rounded-full overflow-hidden p-0 h-10 w-10 border-2 border-red-100 hover:border-red-200'
+                    >
+                      <UserAvatar size='sm' />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    className='w-64 mt-2 rounded-2xl bg-white shadow-xl border border-gray-100 p-1.5'
+                    align='end'
+                  >
+                    <DropdownMenuItem
+                      onClick={() => navigate('/trang-ca-nhan#thong-tin-ca-nhan')}
+                      className='rounded-xl hover:bg-red-50 focus:bg-red-50 hover:text-red-600 focus:text-red-600 gap-3 cursor-pointer p-3 mb-1'
+                    >
+                      <div className='p-2 bg-red-100 rounded-full text-red-600'>
+                        <User className='h-4 w-4' />
+                      </div>
+                      <div className='flex flex-col'>
+                        <span className='font-medium'>Hồ sơ cá nhân</span>
+                        <span className='text-xs text-gray-500'>Xem thông tin tài khoản</span>
+                      </div>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => navigate('/doi-mat-khau')}
+                      className='rounded-xl hover:bg-red-50 focus:bg-red-50 hover:text-red-600 focus:text-red-600 gap-3 cursor-pointer p-3 mb-1'
+                    >
+                      <div className='p-2 bg-red-100 rounded-full text-red-600'>
+                        <Settings className='h-4 w-4' />
+                      </div>
+                      <div className='flex flex-col'>
+                        <span className='font-medium'>Đổi mật khẩu</span>
+                        <span className='text-xs text-gray-500'>Đổi mật khẩu tài khoản</span>
+                      </div>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator className='my-1.5 bg-gray-100' />
+                    <DropdownMenuItem
+                      className='rounded-xl bg-red-50 hover:bg-red-100 focus:bg-red-100 text-red-600 gap-3 cursor-pointer p-3'
+                      onClick={handleLogout}
+                    >
+                      <div className='p-2 bg-white rounded-full text-red-600'>
+                        <LogOut className='h-4 w-4' />
+                      </div>
+                      <span className='font-medium'>Đăng xuất</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </>
+            ) : (
+              <div className='flex items-center gap-3'>
+                <Button
+                  variant='outline'
+                  className='rounded-full border-red-500 text-red-600 hover:bg-red-50 hover:text-red-700'
+                  onClick={handleRegisterClick}
+                >
+                  <UserPlusIcon className='w-4 h-4 mr-1.5' />
+                  Đăng ký
+                </Button>
+
+                <Button
+                  variant='default'
+                  className='rounded-full bg-gradient-to-r from-red-600 to-red-500 text-white hover:from-red-700 hover:to-red-600'
+                  onClick={handleLoginClick}
+                >
+                  <LogInIcon className='w-4 h-4 mr-1.5' />
+                  Đăng nhập
+                </Button>
+              </div>
+            )}
+          </div>
+
+          {/* Mobile menu button */}
+          <div className='lg:hidden flex items-center space-x-2 mr-2'>
+            {isLoggedIn && location.pathname !== '/dang-nhap' && location.pathname !== '/dang-ky' && (
+              <Button
+                variant='ghost'
+                data-notifications-trigger
+                onClick={() => {
+                  setIsMobileNotiOpen((prev) => !prev)
+                  setHeaderMenuOpen(false)
+                }}
+                className='group relative rounded-full p-2 bg-red-50 border border-red-100 text-red-600 hover:bg-red-100'
+              >
+                <div className='relative w-full h-full'>
+                  <Bell className='w-6 h-6' />
+                  {unreadCount > 0 && (
+                    <span className='absolute -top-3 -right-3 bg-red-600 text-white text-xs rounded-full px-1.5 py-0.5 min-w-[18px] text-center md:min-w-[20px] md:px-2 md:py-1 md:text-sm'>
+                      {unreadCount}
+                    </span>
+                  )}
+                </div>
+              </Button>
             )}
           </div>
         </div>
 
-        {/* Mobile Navigation - Phiên bản tối ưu cho touchpad */}
+        {/* Mobile Navigation */}
         <AnimatePresence>
           {isHeaderMenuOpen && (
             <>
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 0.5 }}
+              <div
                 className='fixed inset-0 bg-black/60 backdrop-blur-sm z-40'
-                onClick={() => {
-                  setTimeout(() => setHeaderMenuOpen(false), 200)
-                }}
+                onClick={() => setHeaderMenuOpen(false)}
               />
-              <motion.div
-                className='fixed inset-y-0 right-0 w-full sm:w-[320px] h-full z-50 overflow-y-auto bg-white/95 backdrop-blur-md shadow-xl'
-                initial={{ x: '100%' }}
-                animate={{ x: 0 }}
-                exit={{ x: '100%' }}
-                transition={{
-                  type: 'spring',
-                  stiffness: 300,
-                  damping: 30,
-                  mass: 0.5
-                }}
-              >
-                <div className='p-2 flex flex-col gap-1'>
+              <div className='fixed inset-y-0 right-0 w-full sm:w-[320px] h-full z-50 overflow-y-auto bg-white shadow-xl'>
+                <div className='p-4 flex flex-col gap-2'>
                   <div className='flex justify-end mb-2'>
                     <Button
                       variant='ghost'
@@ -409,91 +302,77 @@ const Header: React.FC = () => {
                       return true
                     })
                     .map((item) => (
-                      <motion.div
+                      <div
                         key={item.name}
-                        className='flex items-center p-2 rounded-xl active:bg-red-100 transition-colors cursor-pointer'
-                        whileTap={{ scale: 0.98 }} // Hiệu ứng nhấn rõ ràng
+                        className='flex items-center p-3 rounded-xl hover:bg-red-50 active:bg-red-100 cursor-pointer'
                         onClick={() => {
-                          // Delay đóng menu để người dùng thấy feedback
-                          setTimeout(() => {
-                            setHeaderMenuOpen(false)
-                            const [pathname, hash] = item.href.split('#')
-                            if (location.pathname === pathname) {
-                              window.location.hash = hash || ''
-                              if (hash) {
-                                const element = document.getElementById(hash)
-                                element?.scrollIntoView({ behavior: 'smooth' })
-                              }
-                            } else {
-                              navigate(item.href)
+                          setHeaderMenuOpen(false)
+                          const [pathname, hash] = item.href.split('#')
+                          if (location.pathname === pathname) {
+                            window.location.hash = hash || ''
+                            if (hash) {
+                              const element = document.getElementById(hash)
+                              element?.scrollIntoView({ behavior: 'smooth' })
                             }
-                          }, 150)
+                          } else {
+                            navigate(item.href)
+                          }
                         }}
                       >
-                        {/* Icon với kích thước lớn hơn */}
                         <div className='w-12 h-12 rounded-full bg-red-100 flex items-center justify-center mr-3'>
                           {React.cloneElement(item.icon, { className: 'w-5 h-5' })}
                         </div>
                         <div className='font-medium text-gray-800'>{item.name}</div>
-                      </motion.div>
+                      </div>
                     ))}
 
-                  {/* Phần tài khoản với vùng chạm lớn */}
-                  <hr />
+                  {/* Phần tài khoản */}
+                  <hr className='my-2' />
                   <div className='pt-2 border-t border-gray-100'>
                     {isLoggedIn ? (
-                      <motion.div
-                        className='flex items-center p-2 rounded-xl bg-red-50 active:bg-red-200 transition-colors'
-                        whileTap={{ scale: 0.98 }}
+                      <div
+                        className='flex items-center p-3 rounded-xl bg-red-50 hover:bg-red-100 active:bg-red-200 cursor-pointer'
                         onClick={() => {
-                          setTimeout(() => {
-                            setHeaderMenuOpen(false)
-                            handleLogout()
-                          }, 150)
+                          setHeaderMenuOpen(false)
+                          handleLogout()
                         }}
                       >
                         <div className='w-12 h-12 rounded-full bg-red-100 flex items-center justify-center mr-3'>
                           <LogOut className='h-5 w-5 text-red-600' />
                         </div>
                         <div className='font-medium text-gray-800'>Đăng xuất</div>
-                      </motion.div>
+                      </div>
                     ) : (
                       <>
-                        <motion.div
-                          className='flex items-center p-2 rounded-xl bg-red-50 active:bg-red-200 mb-2'
-                          whileTap={{ scale: 0.98 }}
+                        <div
+                          className='flex items-center p-3 rounded-xl bg-red-50 hover:bg-red-100 active:bg-red-200 mb-2 cursor-pointer'
                           onClick={() => {
-                            setTimeout(() => {
-                              setHeaderMenuOpen(false)
-                              handleLoginClick()
-                            }, 150)
+                            setHeaderMenuOpen(false)
+                            handleLoginClick()
                           }}
                         >
                           <div className='w-12 h-12 rounded-full bg-red-200 flex items-center justify-center mr-3'>
                             <LogInIcon className='h-5 w-5 text-red-600' />
                           </div>
                           <div className='font-medium text-gray-800'>Đăng nhập</div>
-                        </motion.div>
-                        <motion.div
-                          className='flex items-center p-2 rounded-xl bg-gradient-to-r from-red-600 to-red-500 active:from-red-700 active:to-red-600'
-                          whileTap={{ scale: 0.98 }}
+                        </div>
+                        <div
+                          className='flex items-center p-3 rounded-xl bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 cursor-pointer'
                           onClick={() => {
-                            setTimeout(() => {
-                              setHeaderMenuOpen(false)
-                              handleRegisterClick()
-                            }, 150)
+                            setHeaderMenuOpen(false)
+                            handleRegisterClick()
                           }}
                         >
-                          <div className='w-12 h-12 rounded-full bg-white/20 flex items-center justify-center mt-1 mr-3'>
+                          <div className='w-12 h-12 rounded-full bg-white/20 flex items-center justify-center mr-3'>
                             <UserPlusIcon className='h-5 w-5 text-white' />
                           </div>
                           <div className='font-medium text-white'>Đăng ký</div>
-                        </motion.div>
+                        </div>
                       </>
                     )}
                   </div>
                 </div>
-              </motion.div>
+              </div>
             </>
           )}
         </AnimatePresence>
@@ -502,24 +381,15 @@ const Header: React.FC = () => {
         <AnimatePresence>
           {isMobileNotiOpen && (
             <>
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 0.5 }}
-                exit={{ opacity: 0 }}
+              <div
                 className='fixed inset-0 bg-black/60 backdrop-blur-sm z-40'
                 onClick={() => setIsMobileNotiOpen(false)}
               />
-              <motion.div
-                className='fixed top-[70px] right-0 max-h-[80vh] w-full max-w-sm z-50 overflow-auto rounded-tl-2xl rounded-bl-2xl bg-white backdrop-blur-md shadow-xl'
-                initial={{ x: '100%', opacity: 0.5 }}
-                animate={{ x: 0, opacity: 1 }}
-                exit={{ x: '100%', opacity: 0.5 }}
-                transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-              >
+              <div className='fixed top-[70px] right-0 max-h-[80vh] w-full max-w-sm z-50 overflow-auto rounded-tl-2xl rounded-bl-2xl bg-white shadow-xl'>
                 <div className='p-2'>
                   <Notifications onClose={handleNotificationClose} />
                 </div>
-              </motion.div>
+              </div>
             </>
           )}
         </AnimatePresence>

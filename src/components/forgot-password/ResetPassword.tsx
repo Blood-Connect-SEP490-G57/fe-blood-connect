@@ -6,7 +6,7 @@ import { Button } from '../ui/button'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
-import { Lock, ArrowRight, ChevronLeft, Eye, EyeOff } from 'lucide-react'
+import { Lock, ArrowRight, Eye, EyeOff } from 'lucide-react'
 import { resetPassword } from '@/api/auth'
 import { motion } from 'framer-motion'
 import { useState } from 'react'
@@ -34,7 +34,6 @@ export default function ResetPassword() {
   const { toast } = useToast()
   const navigate = useNavigate()
   const [showPassword, setShowPassword] = useState(false)
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
   const form = useForm({
     resolver: zodResolver(resetPasswordSchema),
@@ -75,21 +74,7 @@ export default function ResetPassword() {
   }
 
   return (
-    <div className='min-h-screen bg-gradient-to-b from-gray-50 to-white flex flex-col items-center justify-center py-12 px-4 relative overflow-hidden'>
-      {/* Decorative elements */}
-      <div className='absolute top-20 right-10 w-72 h-72 bg-red-50 rounded-full blur-3xl opacity-30 -z-10'></div>
-      <div className='absolute bottom-20 left-10 w-72 h-72 bg-red-50 rounded-full blur-3xl opacity-30 -z-10'></div>
-
-      {/* Back button */}
-      <motion.button
-        onClick={() => navigate(-1)}
-        className='absolute top-8 left-8 p-2 rounded-full bg-white/70 backdrop-blur-sm shadow-sm border border-gray-100 text-gray-600 hover:text-red-600 transition-all'
-        whileHover={{ x: -2 }}
-        whileTap={{ scale: 0.95 }}
-      >
-        <ChevronLeft className='w-5 h-5' />
-      </motion.button>
-
+    <div className='min-h-screen bg-gray-100 flex flex-col items-center justify-center pb-10 px-4 relative overflow-hidden'>
       <div className='w-full max-w-md space-y-8 z-10'>
         <motion.div
           className='flex flex-col items-center'
@@ -97,10 +82,6 @@ export default function ResetPassword() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <div className='w-24 h-24 bg-gradient-to-br from-red-500 to-red-600 rounded-3xl flex items-center justify-center shadow-lg'>
-            <span className='text-4xl'>🩸</span>
-          </div>
-
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -133,11 +114,11 @@ export default function ResetPassword() {
                           <Lock className='text-red-500' size={16} />
                         </div>
                         <Input
-                            {...field}
-                            type={showPassword ? 'text' : 'password'}
-                            className='appearance-none block w-full pl-11 pr-4 py-3 border border-gray-200 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500 transition-all'
-                            placeholder='Nhập mật khẩu mới'
-                          />
+                          {...field}
+                          type={showPassword ? 'text' : 'password'}
+                          className='appearance-none block w-full pl-11 pr-4 py-3 border border-gray-200 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500 transition-all'
+                          placeholder='Nhập mật khẩu mới'
+                        />
                         <button
                           type='button'
                           onClick={() => setShowPassword(!showPassword)}
@@ -171,10 +152,10 @@ export default function ResetPassword() {
                         />
                         <button
                           type='button'
-                          onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                          onClick={() => setShowPassword(!showPassword)}
                           className='absolute right-3 top-3 text-gray-500 hover:text-gray-700 focus:outline-none'
                         >
-                          {showConfirmPassword ? <Eye size={18} /> : <EyeOff size={18} />}
+                          {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
                         </button>
                       </div>
                     </FormControl>

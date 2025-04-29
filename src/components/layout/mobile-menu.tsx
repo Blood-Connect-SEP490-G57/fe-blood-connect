@@ -1,7 +1,7 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { Home, Calendar, User, History, CheckCircle, Menu } from 'lucide-react'
+import { Home, Calendar, User, History, CheckCircle, Menu, LogIn, UserPlus } from 'lucide-react'
 import { useMenuStore } from '@/hooks/stores/menuStore'
 import { useVerification } from '../verificationContext/VerificationContext'
 import { useAuth } from '../authContext/AuthContext'
@@ -20,8 +20,8 @@ const MobileMenu: React.FC = () => {
 
   if (!isLoggedIn) {
     navigationItems.push(
-      { id: 'dang-nhap', icon: <User className='w-5 h-5' />, path: '/dang-nhap' },
-      { id: 'dang-ky', icon: <User className='w-5 h-5' />, path: '/dang-ky' }
+      { id: 'dang-nhap', icon: <LogIn className='w-5 h-5' />, path: '/dang-nhap' },
+      { id: 'dang-ky', icon: <UserPlus className='w-5 h-5' />, path: '/dang-ky' }
     )
   }
 

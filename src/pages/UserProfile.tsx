@@ -87,12 +87,12 @@ const UserProfilePage: React.FC = () => {
   }
 
   return (
-    <div className='min-h-screen bg-gray-100 relative overflow-hidden mt-10'>
+    <div className='min-h-screen bg-gray-100 relative overflow-hidden'>
       {/* Decorative elements */}
       <div className='absolute top-20 left-10 w-72 h-72 bg-red-50 rounded-full blur-3xl opacity-30 -z-10'></div>
       <div className='absolute bottom-20 right-10 w-72 h-72 bg-red-50 rounded-full blur-3xl opacity-30 -z-10'></div>
 
-      <div className='max-w-7xl mx-auto pt-10 px-4'>
+      <div className='max-w-7xl mx-auto py-6 px-4'>
         <motion.div
           className='flex flex-col lg:flex-row gap-6 relative'
           initial={{ opacity: 0, y: 20 }}

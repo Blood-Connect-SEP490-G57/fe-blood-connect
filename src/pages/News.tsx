@@ -75,7 +75,7 @@ const NewsPage = () => {
 
   return (
     <div className='min-h-screen bg-gray-100 '>
-      <div className='pt-20 max-w-7xl mx-auto px-4 py-6'>
+      <div className='max-w-7xl mx-auto px-4 py-6'>
         {/* Banner section */}
         <div className='bg-gradient-to-r from-red-600 to-red-400 text-white p-6 relative rounded-xl'>
           <div className='container mx-auto'>
@@ -94,7 +94,7 @@ const NewsPage = () => {
           <div className='absolute bottom-6 right-10 w-20 h-20 bg-red-300 rounded-full opacity-15'></div>
         </div>
 
-        <div className=''>
+        <div className='mt-6'>
           {/* Search and filter section */}
           <Card className='overflow-hidden rounded-xl shadow-sm border-none mb-6'>
             <CardContent className='p-4'>

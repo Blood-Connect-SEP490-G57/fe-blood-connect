@@ -53,7 +53,7 @@ const NotificationDetail = () => {
 
   if (isError) {
     return (
-      <div className='min-h-screen bg-gray-100 py-10'>
+      <div className='min-h-screen bg-gray-100'>
         <div className='container mx-auto px-4 max-w-4xl'>
           <motion.button 
             className='flex items-center gap-2 text-gray-700 hover:text-red-600 transition-colors mb-6 px-3 py-2 rounded-full hover:bg-red-50'
@@ -119,11 +119,11 @@ const NotificationDetail = () => {
   if (!notification) return null
 
   return (
-    <div className='min-h-screen bg-gradient-to-b from-gray-50 to-white'>
+    <div className='min-h-screen bg-gray-100'>
       <div className='absolute top-20 left-10 w-72 h-72 bg-red-50 rounded-full blur-3xl opacity-30 -z-10'></div>
       <div className='absolute bottom-20 right-10 w-72 h-72 bg-red-50 rounded-full blur-3xl opacity-30 -z-10'></div>
       
-      <div className='container mx-auto px-4 max-w-4xl pt-24 pb-16 relative z-10'>
+      <div className='container mx-auto px-4 max-w-4xl py-6 relative z-10'>
         <motion.button 
           className='flex items-center gap-2 text-gray-700 hover:text-red-600 transition-colors mb-8 px-3 py-2 rounded-full hover:bg-red-50'
           onClick={() => navigate('/thong-bao')}

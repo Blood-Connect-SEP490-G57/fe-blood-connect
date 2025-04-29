@@ -147,7 +147,7 @@ const BloodDonationRegistration: React.FC = () => {
   }
 
   return (
-    <div className='min-h-screen pt-14 bg-gray-100 rounded-lg'>
+    <div className='min-h-screen bg-gray-100 rounded-lg'>
       {/* Banner section */}
       <div className='max-w-7xl mx-auto px-4 py-6'>
         <div className='bg-gradient-to-r from-red-600 to-red-400 text-white p-6 relative rounded-lg'>

@@ -104,11 +104,11 @@ export default function NotificationList({ onClose }: { onClose?: () => void }) 
   const hasNotifications = notifications?.data?.data && notifications.data.data.length > 0
 
   return (
-    <div className='min-h-screen bg-gray-100 sm:py-4'>
+    <div className='min-h-screen bg-gray-100'>
       <div className='absolute top-20 left-10 w-72 h-72 bg-red-50 rounded-full blur-3xl opacity-30 -z-10'></div>
       <div className='absolute bottom-20 right-10 w-72 h-72 bg-red-50 rounded-full blur-3xl opacity-30 -z-10'></div>
 
-      <div ref={containerRef} className='mx-auto px-4 max-w-7xl relative z-10 pt-20'>
+      <div ref={containerRef} className='mx-auto px-4 max-w-7xl relative z-10 py-6'>
         <motion.div
           className='space-y-6'
           initial={{ opacity: 0, y: 20 }}
@@ -122,34 +122,38 @@ export default function NotificationList({ onClose }: { onClose?: () => void }) 
               </div>
               <h1 className='text-2xl sm:text-3xl font-bold text-gray-800'>Thông báo</h1>
             </div>
-            <motion.button
-              className='text-red-600 text-sm font-medium flex items-center gap-1.5 px-4 py-2 rounded-full bg-red-50 hover:bg-red-100 transition-colors shadow-sm'
-              onClick={handleMarkAllAsRead}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <CheckCircle className='h-4 w-4' />
-              <span>Đánh dấu đã đọc</span>
-            </motion.button>
           </div>
 
           {/* Filter buttons */}
-          <div className='flex flex-wrap gap-2 my-4'>
-            {filterButtons.map((button) => (
+          <div className='flex flex-wrap justify-between gap-2 my-4'>
+            <div className='flex flex-wrap gap-2'>
+              {filterButtons.map((button) => (
+                <motion.button
+                  key={button.value}
+                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                    filter === button.value
+                      ? 'bg-gradient-to-r from-red-600 to-red-500 text-white shadow-sm'
+                      : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
+                  }`}
+                  onClick={() => setFilter(button.value)}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  {button.label}
+                </motion.button>
+              ))}
+            </div>
+            <div>
               <motion.button
-                key={button.value}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
-                  filter === button.value
-                    ? 'bg-gradient-to-r from-red-600 to-red-500 text-white shadow-sm'
-                    : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
-                }`}
-                onClick={() => setFilter(button.value)}
+                className='text-red-600 text-sm font-medium flex items-center gap-1.5 px-4 py-2 rounded-full bg-red-50 hover:bg-red-100 transition-colors shadow-sm'
+                onClick={handleMarkAllAsRead}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                {button.label}
+                <CheckCircle className='h-4 w-4' />
+                <span>Đánh dấu đã đọc</span>
               </motion.button>
-            ))}
+            </div>
           </div>
 
           {!hasNotifications ? (

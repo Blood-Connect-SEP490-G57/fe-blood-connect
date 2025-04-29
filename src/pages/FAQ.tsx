@@ -101,7 +101,7 @@ const FAQPage = () => {
 
   return (
     <div className='min-h-screen bg-gray-100 '>
-      <div className='max-w-7xl mx-auto px-4 py-6 mt-14'>
+      <div className='max-w-7xl mx-auto px-4 py-6'>
         {/* Banner section */}
         <div className='bg-gradient-to-r from-red-600 to-red-400 text-white relative rounded-xl p-6'>
           <div className='mx-auto'>
