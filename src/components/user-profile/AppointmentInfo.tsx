@@ -416,7 +416,7 @@ const AppointmentInfo = ({ appointmentId }: AppointmentInfoProps) => {
                         </div>
                       </div>
                       <div className='flex items-center gap-2'>
-                        <span className='text-xs sm:text-sm text-gray-600'>{userInfo.fullName}</span>
+                        <span className='text-sm text-gray-600'>{userInfo.fullName}</span>
                       </div>
                     </div>
 
@@ -425,7 +425,7 @@ const AppointmentInfo = ({ appointmentId }: AppointmentInfoProps) => {
                         <span className='text-sm font-medium text-gray-700'>Số CCCD/Hộ chiếu</span>
                       </div>
                       <div className='flex items-center gap-2'>
-                        <span className='text-xs sm:text-sm text-gray-600'>{userInfo.identityNumber}</span>
+                        <span className='text-sm text-gray-600'>{userInfo.identityNumber}</span>
                       </div>
                     </div>
 
@@ -434,7 +434,7 @@ const AppointmentInfo = ({ appointmentId }: AppointmentInfoProps) => {
                         <span className='text-sm font-medium text-gray-700'>Ngày sinh</span>
                       </div>
                       <div className='flex items-center gap-2'>
-                        <span className='text-xs sm:text-sm text-gray-600'>{formatDate(userInfo.dob)}</span>
+                        <span className='text-sm text-gray-600'>{formatDate(userInfo.dob)}</span>
                       </div>
                     </div>
 
@@ -443,14 +443,14 @@ const AppointmentInfo = ({ appointmentId }: AppointmentInfoProps) => {
                         <span className='text-sm font-medium text-gray-700'>Giới tính</span>
                       </div>
                       <div className='flex items-center gap-2'>
-                        <span className='text-xs sm:text-sm text-gray-600'>{userInfo.gender}</span>
+                        <span className='text-sm text-gray-600'>{userInfo.gender}</span>
                       </div>
                     </div>
                     <div className='p-2 sm:p-4'>
                       <div className='flex justify-between items-center gap-3'>
                         <span className='text-sm font-medium text-gray-700'>Địa chỉ thường trú</span>
                         <div>
-                          <span className='text-xs sm:hidden sm:text-sm text-gray-600'>
+                          <span className='hidden sm:text-sm text-gray-600'>
                             {userInfo.address
                               ? userInfo.address.split(',').map((part, index) => (
                                   <span key={`address-part-${index}`}>
@@ -490,7 +490,7 @@ const AppointmentInfo = ({ appointmentId }: AppointmentInfoProps) => {
                           <span className='text-sm font-medium text-gray-700'>Địa chỉ liên hệ</span>
                         </div>
                         <div className='flex items-center justify-end gap-2'>
-                          <span className='text-xs sm:hidden sm:text-sm text-gray-600'>
+                          <span className='hidden sm:text-sm text-gray-600'>
                             {userInfo.addressContact
                               ? userInfo.addressContact.split(',').map((part, index) => (
                                   <span key={index}>
@@ -531,7 +531,7 @@ const AppointmentInfo = ({ appointmentId }: AppointmentInfoProps) => {
                         />
                       ) : (
                         <div className='flex items-center gap-2'>
-                          <span className='text-xs sm:text-sm text-gray-600'>{userInfo.phoneNumber}</span>
+                          <span className='text-sm text-gray-600'>{userInfo.phoneNumber}</span>
                         </div>
                       )}
                     </div>
@@ -549,7 +549,7 @@ const AppointmentInfo = ({ appointmentId }: AppointmentInfoProps) => {
                         />
                       ) : (
                         <div className='flex items-center gap-2'>
-                          <span className='text-xs sm:text-sm text-gray-600'>{userInfo.email}</span>
+                          <span className='text-sm text-gray-600'>{userInfo.email}</span>
                         </div>
                       )}
                     </div>
@@ -569,7 +569,7 @@ const AppointmentInfo = ({ appointmentId }: AppointmentInfoProps) => {
                         <span className='text-sm font-medium text-gray-700'>Nghề nghiệp</span>
                       </div>
                       <div className='flex items-center gap-2'>
-                        <span className='text-xs sm:text-sm text-gray-600'>{formData.jobName}</span>
+                        <span className='text-sm text-gray-600'>{formData.jobName}</span>
                         {isEditing && (
                           <JobSelector
                             initialJob={formData.jobName}
@@ -599,7 +599,7 @@ const AppointmentInfo = ({ appointmentId }: AppointmentInfoProps) => {
                           />
                         ) : (
                           <div className='flex items-center gap-2'>
-                            <span className='text-xs sm:text-sm text-gray-600'>{userInfo.studentId || '-'}</span>
+                            <span className='text-sm text-gray-600'>{userInfo.studentId || '-'}</span>
                           </div>
                         )}
                       </div>
@@ -622,7 +622,7 @@ const AppointmentInfo = ({ appointmentId }: AppointmentInfoProps) => {
                           />
                         ) : (
                           <div className='flex items-center gap-2'>
-                            <span className='text-xs sm:text-sm text-gray-600'>{userInfo.militaryId || '-'}</span>
+                            <span className='text-sm text-gray-600'>{userInfo.militaryId || '-'}</span>
                           </div>
                         )}
                       </div>
@@ -633,7 +633,7 @@ const AppointmentInfo = ({ appointmentId }: AppointmentInfoProps) => {
                         <span className='text-sm font-medium text-gray-700'>Tổ chức</span>
                       </div>
                       <div className='flex items-center gap-2'>
-                        <span className='text-xs sm:text-sm text-gray-600'>{formData.organizationName}</span>
+                        <span className='text-sm text-gray-600'>{formData.organizationName}</span>
                         {isEditing && (
                           <OrganizationSelector
                             initialOrganization={formData.organizationName}
