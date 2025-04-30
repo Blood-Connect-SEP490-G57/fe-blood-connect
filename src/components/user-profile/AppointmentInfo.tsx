@@ -366,9 +366,7 @@ const AppointmentInfo = ({ appointmentId }: AppointmentInfoProps) => {
             <Card className='overflow-hidden rounded-xl shadow-sm bg-white border-none'>
               <CardContent className='p-2 sm:p-4'>
                 <div className='flex items-center justify-between mb-3'>
-                  <h3 className='font-semibold text-red-600 flex items-center'>
-                    <div>{data.campaign?.campaignName}</div>
-                  </h3>
+                  <h2 className='text-lg font-bold text-red-600'>{data.campaign?.campaignName}</h2>
                 </div>
                 <div className='space-y-3 mb-4'>
                   <div className='flex items-start gap-2'>
@@ -450,7 +448,7 @@ const AppointmentInfo = ({ appointmentId }: AppointmentInfoProps) => {
                       <div className='flex justify-between items-center gap-3'>
                         <span className='text-sm font-medium text-gray-700'>Địa chỉ thường trú</span>
                         <div>
-                          <span className='hidden sm:text-sm text-gray-600'>
+                          <span className='sm:hidden text-sm text-gray-600'>
                             {userInfo.address
                               ? userInfo.address.split(',').map((part, index) => (
                                   <span key={`address-part-${index}`}>
@@ -460,15 +458,15 @@ const AppointmentInfo = ({ appointmentId }: AppointmentInfoProps) => {
                                 ))
                               : 'Chưa có địa chỉ'}
                           </span>
-                          <span className='text-xs hidden sm:block sm:text-sm text-gray-600'>{userInfo.address}</span>
+                          <span className='hidden sm:block text-sm text-gray-600'>{userInfo.address}</span>
                         </div>
                       </div>
                     </div>
 
                     <div className='p-2 sm:p-4'>
                       <div className='flex items-center justify-between gap-3'>
-                        <span className='text-sm w-1/3 font-medium text-gray-700'>Nơi cấp</span>
-                        <span className='text-xs text-end sm:text-sm text-gray-600'>
+                        <span className='text-sm font-medium text-gray-700'>Nơi cấp</span>
+                        <span className='text-end w-1/2 text-sm text-gray-600'>
                           {userInfo.issueLoc.charAt(0) + userInfo.issueLoc.slice(1).toLowerCase()}
                         </span>
                       </div>
@@ -490,7 +488,7 @@ const AppointmentInfo = ({ appointmentId }: AppointmentInfoProps) => {
                           <span className='text-sm font-medium text-gray-700'>Địa chỉ liên hệ</span>
                         </div>
                         <div className='flex items-center justify-end gap-2'>
-                          <span className='hidden sm:text-sm text-gray-600'>
+                          <span className='sm:hidden text-sm text-gray-600'>
                             {userInfo.addressContact
                               ? userInfo.addressContact.split(',').map((part, index) => (
                                   <span key={index}>
@@ -500,9 +498,7 @@ const AppointmentInfo = ({ appointmentId }: AppointmentInfoProps) => {
                                 ))
                               : 'Chưa có địa chỉ'}
                           </span>
-                          <span className='text-xs hidden sm:block sm:text-sm text-gray-600'>
-                            {userInfo.addressContact}
-                          </span>
+                          <span className='hidden sm:block text-sm text-gray-600'>{userInfo.addressContact}</span>
                           {isEditing && (
                             <AddressSelector
                               initialAddress={formData.addressContact}
@@ -522,49 +518,37 @@ const AppointmentInfo = ({ appointmentId }: AppointmentInfoProps) => {
                       <div className='flex items-center gap-3'>
                         <span className='text-sm font-medium text-gray-700'>Điện thoại</span>
                       </div>
-                      {isEditing ? (
-                        <PhoneSelector
-                          initialPhone={formData.phoneNumber}
-                          onPhoneSelect={(phone) => {
-                            setFormData((prev) => ({ ...prev, phoneNumber: phone }))
-                          }}
-                        />
-                      ) : (
-                        <div className='flex items-center gap-2'>
-                          <span className='text-sm text-gray-600'>{userInfo.phoneNumber}</span>
-                        </div>
-                      )}
+                      <div className='flex items-center justify-end gap-2'>
+                        <span className='text-sm text-gray-600'>{userInfo.phoneNumber}</span>
+                        {isEditing && (
+                          <PhoneSelector
+                            initialPhone={formData.phoneNumber}
+                            onPhoneSelect={(phone) => {
+                              setFormData((prev) => ({ ...prev, phoneNumber: phone }))
+                            }}
+                          />
+                        )}
+                      </div>
                     </div>
 
                     <div className='p-2 sm:p-4 flex items-center justify-between'>
                       <div className='flex items-center gap-3'>
                         <span className='text-sm font-medium text-gray-700'>Email</span>
                       </div>
-                      {isEditing ? (
-                        <EmailSelector
-                          initialEmail={userInfo.email}
-                          onEmailSelect={(email) => {
-                            setFormData((prev) => ({ ...prev, email }))
-                          }}
-                        />
-                      ) : (
-                        <div className='flex items-center gap-2'>
-                          <span className='text-sm text-gray-600'>{userInfo.email}</span>
-                        </div>
-                      )}
+                      <div className='flex items-center justify-end gap-2'>
+                        <span className='text-sm text-end text-gray-600'>{userInfo.email}</span>
+                        {isEditing && (
+                          <EmailSelector
+                            initialEmail={userInfo.email}
+                            onEmailSelect={(email) => {
+                              setFormData((prev) => ({ ...prev, email }))
+                            }}
+                          />
+                        )}
+                      </div>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
 
-            {/* Work Information */}
-            <div className='mb-4'>
-              <h2 className='text-lg font-semibold text-gray-700 mb-2 px-2'>Thông tin nghề nghiệp</h2>
-              <Card className='overflow-hidden rounded-xl shadow-sm border-none'>
-                <CardContent className='p-0'>
-                  <div className='p-2 sm:p-4 divide-y'>
-                    <div className='flex items-center justify-between py-2'>
+                    <div className='flex items-center justify-between p-2 sm:p-4'>
                       <div className='flex items-center gap-3'>
                         <span className='text-sm font-medium text-gray-700'>Nghề nghiệp</span>
                       </div>
@@ -585,22 +569,19 @@ const AppointmentInfo = ({ appointmentId }: AppointmentInfoProps) => {
                     </div>
 
                     {formData.jobName === 'Sinh viên' && (
-                      <div className='flex items-center justify-between py-2'>
+                      <div className='flex items-center justify-between p-2 sm:p-4'>
                         <div className='flex items-center gap-3'>
                           <span className='text-sm font-medium text-gray-700'>Mã sinh viên</span>
                         </div>
-                        {isEditing ? (
+                        <span className='text-sm text-end text-gray-600'>{formData.studentId}</span>
+                        {isEditing && (
                           <input
                             type='text'
                             name='studentId'
                             value={formData.studentId}
                             onChange={handleInputChange}
-                            className='w-1/2 p-2 sm:text-sm text-xs text-right bg-gray-100 focus:outline-none focus:ring-2 focus:ring-red-500'
+                            className='w-1/2 p-2 text-sm  text-right bg-gray-100 focus:outline-none focus:ring-2 focus:ring-red-500'
                           />
-                        ) : (
-                          <div className='flex items-center gap-2'>
-                            <span className='text-sm text-gray-600'>{userInfo.studentId || '-'}</span>
-                          </div>
                         )}
                       </div>
                     )}
@@ -608,27 +589,24 @@ const AppointmentInfo = ({ appointmentId }: AppointmentInfoProps) => {
                     {(formData.jobName === 'Công an' ||
                       formData.jobName === 'Bộ đội' ||
                       formData.jobName === 'Quân nhân') && (
-                      <div className='flex items-center justify-between py-2'>
+                      <div className='flex items-center justify-between p-2 sm:p-4'>
                         <div className='flex items-center gap-3'>
                           <span className='text-sm font-medium text-gray-700'>Mã quân nhân</span>
                         </div>
-                        {isEditing ? (
+                        <span className='text-sm text-end text-gray-600'>{formData.militaryId}</span>
+                        {isEditing && (
                           <input
                             type='text'
                             name='militaryId'
                             value={formData.militaryId}
                             onChange={handleInputChange}
-                            className='w-1/2 p-2 sm:text-sm text-xs text-right bg-gray-100 focus:outline-none focus:ring-2 focus:ring-red-500'
+                            className='w-1/2 p-2 text-sm  text-right bg-gray-100 focus:outline-none focus:ring-2 focus:ring-red-500'
                           />
-                        ) : (
-                          <div className='flex items-center gap-2'>
-                            <span className='text-sm text-gray-600'>{userInfo.militaryId || '-'}</span>
-                          </div>
                         )}
                       </div>
                     )}
 
-                    <div className='flex items-center justify-between py-2'>
+                    <div className='flex items-center justify-between p-2 sm:p-4'>
                       <div className='flex items-center gap-3'>
                         <span className='text-sm font-medium text-gray-700'>Tổ chức</span>
                       </div>
@@ -653,9 +631,9 @@ const AppointmentInfo = ({ appointmentId }: AppointmentInfoProps) => {
               </Card>
             </div>
 
-            <div className='py-4 space-y-4 flex flex-row justify-end items-center gap-4'>
+            <div className='py-2 space-y-4 flex flex-row justify-end items-center gap-4'>
               {isEditing ? (
-                <>
+                <div className='flex flex-row justify-end items-center gap-4'>
                   <Button
                     onClick={() => setIsEditing(false)}
                     className='bg-gray-200 text-gray-800 hover:bg-gray-300 rounded-xl px-6'
@@ -665,14 +643,16 @@ const AppointmentInfo = ({ appointmentId }: AppointmentInfoProps) => {
                   <Button onClick={updateUserInfo} className='bg-red-600 text-white hover:bg-red-700 rounded-xl px-6'>
                     Lưu thay đổi
                   </Button>
-                </>
+                </div>
               ) : (
-                <Button
-                  onClick={() => setIsEditing(true)}
-                  className='bg-red-600 text-white hover:bg-red-700 py-5 rounded-xl w-full'
-                >
-                  Chỉnh sửa thông tin
-                </Button>
+                <div className='flex flex-row justify-end items-center gap-4'>
+                  <Button
+                    onClick={() => setIsEditing(true)}
+                    className='bg-red-600 text-white hover:bg-red-700 py-5 rounded-xl w-full'
+                  >
+                    Chỉnh sửa thông tin
+                  </Button>
+                </div>
               )}
             </div>
           </div>
@@ -693,7 +673,7 @@ const AppointmentInfo = ({ appointmentId }: AppointmentInfoProps) => {
                       name='campaign'
                       value={data.campaign?.campaignName}
                       readOnly
-                      className='w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-sm bg-gray-100'
+                      className='w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 text-sm bg-gray-100'
                     />
                   </div>
 
@@ -707,7 +687,7 @@ const AppointmentInfo = ({ appointmentId }: AppointmentInfoProps) => {
                       rows={4}
                       value={formFeedback.message}
                       onChange={handleChange}
-                      className='w-full bg-gray-100 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-sm'
+                      className='w-full bg-gray-100 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 text-sm'
                       placeholder='Nhập phản hồi của bạn tại đây...'
                     ></textarea>
                     {errors.message && <p className='text-sm text-red-500 mt-1'>{errors.message}</p>}
