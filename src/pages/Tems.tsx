@@ -113,6 +113,19 @@ Mỗi đơn vị máu hiến tặng có thể cứu sống đến 3 người b�
         </div>
 
         <div className='max-w-7xl mx-auto py-6'>
+          <div className='flex flex-col items-center mb-6'>
+            <p className='text-center text-black max-w-2xl text-sm'>
+              Bạn vui lòng đọc kỹ các Điều khoản & Điều kiện trong Điều Khoản Sử Dụng này trước khi đăng ký, truy cập và
+              sử dụng Website https://giotmauhyvong.org Bằng việc truy cập vào Website https://giotmauhyvong.org bạn đã
+              chấp thuận với các điều khoản này. Trang web có quyền thay đổi, chỉnh sửa, thêm hoặc lược bỏ bất kỳ phần
+              nào trong Quy định và Điều kiện sử dụng, vào bất cứ lúc nào. Các thay đổi có hiệu lực ngay khi được đăng
+              trên trang web mà không cần thông báo trước. Và khi bạn tiếp tục sử dụng trang web, sau khi các thay đổi
+              về Quy định và Điều kiện được đăng tải, có nghĩa là bạn chấp nhận với những thay đổi đó. Nếu bạn có bất kỳ
+              câu hỏi nào về bản Điều Khoản Sử Dụng này, vui lòng liên hệ chúng tôi qua email: ctdninhbinh@gmail.com để
+              biết thêm chi tiết.
+            </p>
+          </div>
+
           <motion.div
             className='overflow-hidden rounded-xl shadow-sm border-none mb-6'
             initial={{ opacity: 0, y: 20 }}

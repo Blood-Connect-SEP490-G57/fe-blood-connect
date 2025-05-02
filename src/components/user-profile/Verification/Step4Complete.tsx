@@ -22,6 +22,11 @@ const Step4Complete: React.FC<Step3CompleteProps> = ({ onRegisterClick }) => {
 
   useEffect(() => {
     checkStatus()
+    if (verificationStatus === 'EXTRACTED') {
+      setTimeout(() => {
+        window.location.reload()
+      }, 10000)
+    }
   }, [])
 
   return (
