@@ -5,9 +5,9 @@ import { motion } from 'framer-motion'
 
 const HeroSection: React.FC = () => {
   const stats = [
-    { value: '1,234+', label: 'Người hiến máu' },
-    { value: '98%', label: 'Độ an toàn' },
-    { value: '5,670', label: 'Người được cứu' }
+    { value: '10,117 ', label: 'Đơn vị máu đã được hiến tặng' },
+    { value: '30,351 ', label: 'Người được cứu' },
+    { value: '100%', label: 'Tuân thủ quy trình y tế' },
   ]
 
   // Thêm các hàm xử lý cuộn trang
