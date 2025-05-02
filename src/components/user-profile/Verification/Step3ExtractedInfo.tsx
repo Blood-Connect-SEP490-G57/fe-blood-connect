@@ -5,7 +5,6 @@ import { createOrUpdateUserDetail, getCurrentUserDetail } from '@/api/user'
 import { getOrganizationsByType } from '@/api/organization'
 import { Button } from '@/components/ui/button'
 import { ChevronDown, Info, Loader2, Pencil } from 'lucide-react'
-import { toast } from '@/components/ui/use-toast'
 import JobSelector from '@/components/Selector/job/JobSelector'
 import AddressSelector from '@/components/Selector/address/AddressSelector'
 import OrganizationSelector from '@/components/Selector/organization/OrganizationSelector'
@@ -14,6 +13,7 @@ import BloodTypeSelector from '@/components/Selector/bloodtype/bloodtype'
 import NumberDonateSelector from '@/components/Selector/NumberDonate.tsx/DonateSelector'
 import EmailSelector from '@/components/Selector/email/emailSelector'
 import PhoneSelector from '@/components/Selector/phone/PhoneSelector'
+import { toast } from '@/components/ui/use-toast'
 
 interface Step2Props {
   formData: any
@@ -45,45 +45,34 @@ const Step3ExtractedInfo: React.FC<Step2Props> = ({ formData, setFormData, onNex
 
   const handleConfirm = async () => {
     const errors: Record<string, string> = {}
+    let hasErrors = false
+
     if (!formData.mobile) {
       errors.mobile = 'Vui lòng điền số điện thoại'
-      toast({
-        title: 'Lỗi',
-        description: 'Vui lòng điền số điện thoại',
-        variant: 'destructive'
-      })
-      return
+      hasErrors = true
     } else if (!/^[0-9]{10}$/.test(formData.mobile)) {
       errors.mobile = 'Số điện thoại không hợp lệ'
-      toast({
-        title: 'Lỗi',
-        description: 'Số điện thoại không hợp lệ',
-        variant: 'destructive'
-      })
-      return
+      hasErrors = true
     }
 
     if (!contact) {
       errors.contact = 'Vui lòng điền địa chỉ liên hệ'
-      toast({
-        title: 'Lỗi',
-        description: 'Vui lòng điền địa chỉ liên hệ',
-        variant: 'destructive'
-      })
-      return
+      hasErrors = true
     }
 
     if (!extractId) {
       errors.extractId = 'Không tìm thấy thông tin CCCD'
+      hasErrors = true
+    }
+
+    setFieldErrors(errors)
+    if (hasErrors) {
+      return
     }
 
     try {
       setLoading(true)
       setIsSubmitting(true)
-      setFieldErrors({})
-
-      // Log the form data before sending
-      console.log('Form data being sent:', formData)
 
       const userDetailData = {
         email: formData.email || '',
@@ -97,8 +86,6 @@ const Step3ExtractedInfo: React.FC<Step2Props> = ({ formData, setFormData, onNex
         organization_id: Number(formData.organizationId || 0)
       }
 
-      console.log('User detail data being sent:', userDetailData)
-
       const userResponse = await createOrUpdateUserDetail(userDetailData)
       if (!userResponse) {
         throw new Error('Lỗi khi cập nhật thông tin người dùng')
@@ -107,19 +94,20 @@ const Step3ExtractedInfo: React.FC<Step2Props> = ({ formData, setFormData, onNex
       if (userResponse.success) {
         const extractResponse = await updateExtractStatus(extractId, 'CONFIRM_MATCHED')
         if (!extractResponse.success) {
-          throw new Error(extractResponse.message || 'Lỗi khi xác nhận thông tin CCCD')
+          throw extractResponse
         }
       }
 
       setError(null)
       onNext()
-    } catch (err) {
-      console.error('Confirm error:', err)
-      if (err instanceof Error) {
-        setError(err.message)
-      } else {
-        setError('Lỗi không xác định khi xác nhận thông tin')
-      }
+    } catch (err: any) {
+      const errorMessage = err?.response?.data?.message || err?.message || 'Lỗi không xác định khi xác nhận thông tin'
+      setError(errorMessage)
+      toast({
+        title: 'Lỗi',
+        description: errorMessage,
+        variant: 'destructive'
+      })
     } finally {
       setLoading(false)
       setIsSubmitting(false)
@@ -131,7 +119,6 @@ const Step3ExtractedInfo: React.FC<Step2Props> = ({ formData, setFormData, onNex
       try {
         setLoading(true)
         const response = await getCurrentUserDetail()
-        console.log('User detail response:', response)
 
         if (response.success && response.data) {
           const userData = response.data
@@ -209,17 +196,6 @@ const Step3ExtractedInfo: React.FC<Step2Props> = ({ formData, setFormData, onNex
 
   return (
     <div className='space-y-6 sm:p-4 p-2'>
-      {/* <div className='text-center mb-6'>
-        <div className='flex items-center justify-center mb-4'>
-          <div className='w-16 h-16 flex items-center justify-center'>
-            <FileText className='h-8 w-8 text-red-500' />
-          </div>
-        </div>
-        <h2 className='text-xl font-semibold text-gray-900 mb-2'>Thông tin xác thực</h2>
-        <p className='text-sm text-gray-600 max-w-xl mx-auto'>
-          Vui lòng kiểm tra thông tin được trích xuất từ CCCD và điền bổ sung các thông tin liên hệ.
-        </p>
-      </div> */}
 
       {isLoading ? (
         <LoadingSpinner />
@@ -300,7 +276,7 @@ const Step3ExtractedInfo: React.FC<Step2Props> = ({ formData, setFormData, onNex
 const InfoItem = ({ label, value }: { label: string; value: string | number | null }) => (
   <div className='p-2 sm:p-4 flex items-center justify-between px-2'>
     <div className='flex items-center gap-3 w-1/2'>
-      <span className='text-base font-medium text-gray-700'>{label}</span>
+      <span className='text-sm font-medium text-gray-700'>{label}</span>
     </div>
     <div className='flex items-center justify-end'>
       {typeof value === 'string' && value.includes(',') ? (
@@ -345,57 +321,72 @@ const ContactInformationSection = ({
     <div className='bg-white rounded-xl p-4 space-y-4'>
       <div>
         <FormField label='Email'>
-          <div className='flex items-center justify-between border-b pb-2'>
-            <span className='text-sm text-gray-600'>{formData.email || 'Chưa có email'}</span>
-            <EmailSelector
-              initialEmail={formData.email}
-              onEmailSelect={(email) => {
-                setFormData((prev: any) => ({ ...prev, email: email }))
-              }}
-            />
-          </div>
-        </FormField>
-      </div>
-      <div>
-        <FormField error={fieldErrors.mobile} label='Số điện thoại'>
-          <div className='flex items-center justify-between border-b pb-2'>
-            <span className='text-sm text-gray-600'>{formData.mobile || 'Chưa có số điện thoại'}</span>
-            <PhoneSelector
-              initialPhone={formData.mobile}
-              onPhoneSelect={(phone) => {
-                setFormData((prev: any) => ({ ...prev, mobile: phone }))
-              }}
-            />
-          </div>
-        </FormField>
-      </div>
-      <div>
-        <FormField error={fieldErrors.contact} label='Địa chỉ liên hệ'>
-          <div className='flex items-center justify-between border-b pb-2'>
-            {contact ? (
-              <div className='flex-1'>
-                <div className='sm:hidden'>
-                  <span className='text-sm text-gray-600'>
-                    {contact.split(',').map((part, index) => (
-                      <React.Fragment key={index}>
-                        {part.trim()}
-                        {index < 3 && <br />}
-                      </React.Fragment>
-                    ))}
-                  </span>
-                </div>
-                <div className='hidden sm:block'>
-                  <span className='text-sm text-gray-600'>{contact}</span>
-                </div>
-              </div>
-            ) : (
-              <span className='text-sm text-gray-600'>Chưa có địa chỉ</span>
+          <div className='flex flex-col space-y-2'>
+            <div className='flex items-center justify-between border-b pb-2'>
+              <span className='text-sm text-gray-600'>{formData.email || 'Chưa có email'}</span>
+              <EmailSelector
+                initialEmail={formData.email}
+                onEmailSelect={(email) => {
+                  setFormData((prev: any) => ({ ...prev, email: email }))
+                }}
+              />
+            </div>
+            {fieldErrors.email && (
+              <span className='text-sm text-red-500'>{fieldErrors.email}</span>
             )}
-            <AddressSelector
-              onAddressSelect={(address) => {
-                setContact(address)
-              }}
-            />
+          </div>
+        </FormField>
+      </div>
+      <div>
+        <FormField label='Số điện thoại'>
+          <div className='flex flex-col space-y-2'>
+            <div className='flex items-center justify-between border-b pb-2'>
+              <span className='text-sm text-gray-600'>{formData.mobile || 'Chưa có số điện thoại'}</span>
+              <PhoneSelector
+                initialPhone={formData.mobile}
+                onPhoneSelect={(phone) => {
+                  setFormData((prev: any) => ({ ...prev, mobile: phone }))
+                }}
+              />
+            </div>
+            {fieldErrors.mobile && (
+              <span className='text-sm text-red-500'>{fieldErrors.mobile}</span>
+            )}
+          </div>
+        </FormField>
+      </div>
+      <div>
+        <FormField label='Địa chỉ liên hệ'>
+          <div className='flex flex-col space-y-2'>
+            <div className='flex items-center justify-between border-b pb-2'>
+              {contact ? (
+                <div className='flex-1'>
+                  <div className='sm:hidden'>
+                    <span className='text-sm text-gray-600'>
+                      {contact.split(',').map((part, index) => (
+                        <React.Fragment key={index}>
+                          {part.trim()}
+                          {index < 3 && <br />}
+                        </React.Fragment>
+                      ))}
+                    </span>
+                  </div>
+                  <div className='hidden sm:block'>
+                    <span className='text-sm text-gray-600'>{contact}</span>
+                  </div>
+                </div>
+              ) : (
+                <span className='text-sm text-gray-600'>Chưa có địa chỉ</span>
+              )}
+              <AddressSelector
+                onAddressSelect={(address) => {
+                  setContact(address)
+                }}
+              />
+            </div>
+            {fieldErrors.contact && (
+              <span className='text-sm text-red-500'>{fieldErrors.contact}</span>
+            )}
           </div>
         </FormField>
       </div>
