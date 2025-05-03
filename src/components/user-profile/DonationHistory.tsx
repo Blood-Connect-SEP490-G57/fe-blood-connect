@@ -62,6 +62,10 @@ const StatusBadge = ({ status }: { status: string }) => {
       color = 'bg-red-100 text-red-800'
       label = 'Đã hủy'
       break
+    case 'FAILED':
+      color = 'bg-gray-100 text-gray-800'
+      label = 'Không thành công'
+      break
   }
 
   return <span className={`px-3 py-1 rounded-full text-sm font-medium ${color}`}>{label}</span>
@@ -157,6 +161,7 @@ const DonationHistory = () => {
   const doneAppointments = appointments.filter((a) => a.status === 'DONE').length
   const upcomingAppointments = appointments.filter((a) => a.status === 'BOOKING').length
   const cancelledAppointments = appointments.filter((a) => a.status === 'CANCELLED').length
+  const falseAppointments = appointments.filter((a) => a.status === 'FAILED').length
 
   if (loading) return <Loading />
   if (error) return <Empty />
@@ -179,7 +184,7 @@ const DonationHistory = () => {
       </div>
 
       <div className='mt-4 max-w-7xl  mx-auto'>
-        <div className='grid grid-cols-3 gap-3 mb-6 md:gap-6 md:mx-auto'>
+        <div className='grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-3 mb-6 md:gap-6 md:mx-auto'>
           <Card className='overflow-hidden rounded-xl shadow-sm border-none hover:shadow-md transition-shadow'>
             <CardContent className='p-2 md:p-4'>
               <div className='flex flex-col items-center'>
@@ -202,6 +207,15 @@ const DonationHistory = () => {
               <div className='flex flex-col items-center'>
                 <p className='text-sm md:text-base text-gray-500 mb-1'>Đã hủy</p>
                 <p className='text-2xl md:text-4xl font-bold text-red-600'>{cancelledAppointments}</p>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className='overflow-hidden rounded-xl shadow-sm border-none hover:shadow-md transition-shadow'>
+            <CardContent className='p-2 md:p-4'>
+              <div className='flex flex-col items-center'>
+                <p className='text-sm md:text-base text-gray-500 mb-1'>Không thành công</p>
+                <p className='text-2xl md:text-4xl font-bold text-gray-600'>{falseAppointments}</p>
               </div>
             </CardContent>
           </Card>
@@ -272,14 +286,16 @@ const DonationHistory = () => {
                             )}
                           </div>
                           <div className='flex items-center justify-end mt-2 gap-2'>
-                            <Button
-                              variant='outline'
-                              size='sm'
-                              className='text-gray-600 border-gray-300 hover:bg-gray-50 md:text-base md:px-6'
-                              onClick={() => handleViewAppointment(appointment)}
+                            {appointment.status !== 'FAILED' && appointment.status !== 'CANCELLED' && (
+                              <Button
+                                variant='outline'
+                                size='sm'
+                                className='text-gray-600 border-gray-300 hover:bg-gray-50 md:text-base md:px-6'
+                                onClick={() => handleViewAppointment(appointment)}
                             >
                               Xem lịch hẹn
-                            </Button>
+                              </Button>
+                            )}
                             {appointment.status === 'BOOKING' && (
                               <Button
                                 variant='outline'
