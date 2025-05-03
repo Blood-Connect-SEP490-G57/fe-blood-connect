@@ -43,6 +43,15 @@ interface Campaign {
   status: string
 }
 
+interface UserDonationInfo {
+  organization_id: number
+  blood_donation_volume: number
+  is_donated: boolean
+  is_received_gift: boolean
+  is_received_certificate: boolean
+  organization_name: string
+}
+
 interface Answer {
   id: number
   sectionId: number
@@ -79,6 +88,7 @@ interface AppointmentData {
     userId: number
     campaignId: number
   } | null
+  userDonationInfo?: UserDonationInfo
 }
 
 interface AppointmentInfoProps {
@@ -106,7 +116,8 @@ const AppointmentInfo = ({ appointmentId }: AppointmentInfoProps) => {
           setData({
             userInfo: response.data.userInfo || {},
             campaign: response.data.campaign || null,
-            answer: response.data.answer || null
+            answer: response.data.answer || null,
+            userDonationInfo: response.data.userDonationInfo || null
           })
         } else {
           setError('Không thể tải dữ liệu. Vui lòng thử lại sau.')
@@ -186,7 +197,7 @@ const AppointmentInfo = ({ appointmentId }: AppointmentInfoProps) => {
   const renderStatusBadge = (status: string) => {
     const statusConfig: Record<string, { label: string }> = {
       BOOKING: { label: 'Đã đặt lịch' },
-      COMPLETED: { label: 'Hoàn thành' },
+      DONE: { label: 'Hoàn thành' },
       CANCELLED: { label: 'Đã hủy' },
       PENDING: { label: 'Đang chờ' }
     }
@@ -394,6 +405,54 @@ const AppointmentInfo = ({ appointmentId }: AppointmentInfoProps) => {
                       Xem chi tiết phiếu đăng ký
                     </Button>
                   ))}
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
+        {/* Donation Information when status is DONE */}
+        {data.campaign?.status === 'DONE' && data.userDonationInfo && (
+          <div className='mb-6'>
+            <h2 className='text-lg font-semibold text-gray-700 mb-2 px-2'>Thông tin hiến máu</h2>
+            <Card className='overflow-hidden rounded-xl shadow-sm bg-white border-none'>
+              <CardContent className='p-0'>
+                <div className='divide-y'>
+                  <div className='p-2 sm:p-4 flex items-center justify-between'>
+                    <div className='flex items-center gap-3'>
+                      <span className='text-sm font-medium text-gray-700'>Đơn vị tiếp nhận</span>
+                    </div>
+                    <div className='flex items-center gap-2'>
+                      <span className='text-sm text-black'>{data.userDonationInfo.organization_name}</span>
+                    </div>
+                  </div>
+
+                  <div className='p-2 sm:p-4 flex items-center justify-between'>
+                    <div className='flex items-center gap-3'>
+                      <span className='text-sm font-medium text-gray-700'>Lượng máu hiến</span>
+                    </div>
+                    <div className='flex items-center gap-2'>
+                      <span className='text-sm text-black'>{data.userDonationInfo.blood_donation_volume} ml</span>
+                    </div>
+                  </div>
+
+                  <div className='p-2 sm:p-4 flex items-center justify-between'>
+                    <div className='flex items-center gap-3'>
+                      <span className='text-sm font-medium text-gray-700'>Đã nhận quà</span>
+                    </div>
+                    <div className='flex items-center gap-2'>
+                      <span className='text-sm text-black'>{data.userDonationInfo.is_received_gift ? 'Có' : 'Không'}</span>
+                    </div>
+                  </div>
+
+                  <div className='p-2 sm:p-4 flex items-center justify-between'>
+                    <div className='flex items-center gap-3'>
+                      <span className='text-sm font-medium text-gray-700'>Đã nhận giấy chứng nhận</span>
+                    </div>
+                    <div className='flex items-center gap-2'>
+                      <span className='text-sm text-black'>{data.userDonationInfo.is_received_certificate ? 'Có' : 'Không'}</span>
+                    </div>
+                  </div>
+                </div>
               </CardContent>
             </Card>
           </div>
