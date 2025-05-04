@@ -13,7 +13,7 @@ const HeroSection: React.FC = () => {
   useEffect(() => {
     const fetchBloodStatistics = async () => {
       try {
-        const response = await fetch('http://localhost:8081/api/public/blood-statistics');
+        const response = await fetch('https://api.user.giotmauhyvong.org/api/public/blood-statistics');
         const result = await response.json();
         
         if (result.success) {
