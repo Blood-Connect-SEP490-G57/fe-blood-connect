@@ -1,14 +1,37 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Heart, Users, ChevronDown } from 'lucide-react'
 import { motion } from 'framer-motion'
 
 const HeroSection: React.FC = () => {
-  const stats = [
-    { value: '10,117 ', label: 'Đơn vị máu đã được hiến tặng' },
-    { value: '30,351 ', label: 'Người được cứu' },
+  const [stats, setStats] = useState([
+    { value: '0', label: 'Đơn vị máu đã được hiến tặng' },
+    { value: '0', label: 'Người được cứu' },
     { value: '100%', label: 'Tuân thủ quy trình y tế' },
-  ]
+  ]);
+
+  useEffect(() => {
+    const fetchBloodStatistics = async () => {
+      try {
+        const response = await fetch('http://localhost:8081/api/public/blood-statistics');
+        const result = await response.json();
+        
+        if (result.success) {
+          const { totalBloodUnits, totalSavedPeople } = result.data;
+          
+          setStats([
+            { value: Math.ceil(totalBloodUnits).toLocaleString('vi-VN'), label: 'Đơn vị máu đã được hiến tặng' },
+            { value: totalSavedPeople.toLocaleString('vi-VN'), label: 'Người được cứu' },
+            { value: '100%', label: 'Tuân thủ quy trình y tế' },
+          ]);
+        }
+      } catch (error) {
+        console.error('Failed to fetch blood statistics:', error);
+      }
+    };
+
+    fetchBloodStatistics();
+  }, []);
 
   // Thêm các hàm xử lý cuộn trang
   const scrollToRegister = () => {
