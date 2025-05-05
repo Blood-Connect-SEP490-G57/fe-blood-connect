@@ -5,8 +5,8 @@ import { motion } from 'framer-motion'
 
 const HeroSection: React.FC = () => {
   const [stats, setStats] = useState([
-    { value: '0', label: 'Đơn vị máu đã được hiến tặng' },
-    { value: '0', label: 'Người được cứu' },
+    { value: '27,294', label: 'Đơn vị máu đã được hiến tặng' },
+    { value: '9,098', label: 'Người được cứu' },
     { value: '100%', label: 'Tuân thủ quy trình y tế' },
   ]);
 
